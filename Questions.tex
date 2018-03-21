@@ -1,0 +1,108 @@
+This file is an initial attempt to 
+   understand various alternative 
+   approaches to a constructive theory 
+   of algebraic reductions.
+
+   Sections: 
+
+   Basics. Basic type and operator definitions. 
+
+   Properties. Algebraic properties for equivalence 
+      relations and semigroups. 
+
+   EqualityTheory. Record structure to hold proofs for 
+      equivalence relations, plus a few useful lemmas. 
+
+   Semigroups. Record structures to hold all the bits of a semigroup. 
+
+   ProductTheory. Property preservation theorems for 
+      brel_product and bop_product operators. 
+
+   Product_Semigroup. Uses results of ProductTheory to define 
+      combinators constructing product semigroups. 
+      This is just a simple example of how to build "combinators"
+
+   ReductionProperties. Properties on unary operators capturing reductions. 
+      NEW: split reduction_proofs record into two records: reduction_eqv_proofs and reduction_bop_proofs
+
+   ReductionTheory. This is a "direct representation" of 
+      reductions r using proof-carrying type {s : S & eq (r s) s = true}. 
+      Binary operator must manipulate proof objects. 
+      Not extraction friendly! 
+      NEW in this section : exploration of isomorphism between "direct" and "indirect" representation. 
+          This should *guide* out design of "rsemigroups" ... 
+      NEW isomprhoism lemmas: 
+          inj_homomorphism
+          proj1_homomorphism
+          inj_proj1_is_id
+          proj1_inj_is_id_on_image_of_r
+          congruence_iso 
+          commutative_iso_1
+          commutative_iso_2
+          sanity 
+          commutative_iso
+          associative_iso
+
+   Reduced_Semigroup_Direct. Uses results of ReductionTheory to define 
+      combinators constructing reduced semigroup and products 
+      of reduced semigroups (all using "direct representation"). 
+      NOT extraction friendly! 
+
+   Reduced_Semigroup. Inspired by the "isomorphism theorems" of 
+      Section ReductionTheory, define "extraction friendly" 
+      semigroups that are isomomprhic to the direct representation. 
+
+   Rsemigroup. NEW (well, completely redone). 
+       There is a problem with the approach of the last section. 
+       We have lost the reduction r --- but this is needed for 
+       injecting elements of S into the reduced subset of S. 
+       This section introduces a new structure, rsemigroup, that 
+       remembers r. 
+
+   Product_Rsemigroup.  This is simply a rewrite 
+     of section Product_Semigroup using rsemigroups. 
+
+   SimpleExample. A simple sanity check that everything works.  
+
+   Reduce_Annihilators. NEW. A more interesting example! 
+      This section contains theory and defintion of a new 
+      generic reduction that reduces annihilators in pairs. 
+      NEEDS TO BE FINISHED 
+
+   Reduced_Rsemigroup. NEW. Can we reduce rsemigroups?    
+      Just some NOTES on how hard this is going to be ... 
+
+
+
+
+THE BIG QUESTION: CAN WE REDUCE RSEMIGROUPS? 
+
+ Some notes on this questions: 
+
+Suppose we have a reduction r1 over bop b0 : 
+
+   b1 x y = r1(b0 (r1 x) (r1 y)) 
+   r1_idem  : r1 (r1 x) = r1 x 
+   r1_left  : r1 (b0 (r1 s1) s2) = r1 (b0 s1 s2)
+   r1_right : r1 (b0 s1 (r1 s2)) = r1 (b0 s1 s2)
+
+Now, suppose we want to define reduction r2 over b1.  New need
+
+    b2 x y = r2(b1 (r2 x) (r2 y)) 
+           = r2(r1(b0 (r1 (r2 x)) (r1 (r2 y))))
+           = (r2 . r1)(b0 ((r1 . r2) x) ((r1 . r2) y))   ( the . is function composition) 
+
+    r2_idem : r2 (r2 x) = r2 x 
+
+    r2_left  : r2 (b1 (r2 s1) s2) = r2 (b1 s1 s2)
+           <-> r2 (r1 (b0 (r1 (r2 s1)) (r1 s2)) = r2 (r1(b0 (r1 s1) (r1 s2)) )
+           <-> (r2 . r1) (b0 ((r1. r2) s1) (r1 s2)) = (r2 . r1) (b0 (r1 s1) (r1 s2)) )
+    r2_right : r2 (b1 s1 (r2 s2)) = r2 (b1 s1 s2)
+
+Note something rather unexpected here:  we now need to reason about all of these
+functions: 
+   1) r1 
+   3) r2 . r1  
+   3) r1 . r2
+and their interactions with b0.  This may be very difficult in general .... 
+
