@@ -1,0 +1,15 @@
+## backups
+*.*~
+*.bak
+
+## coq 
+*.v.d
+*.glob
+*.vo
+*.vo.aux
+
+##ocaml 
+_build/
+extraction/*.ml
+extraction/*.mli
+extraction/STAMP

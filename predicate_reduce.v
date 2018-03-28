@@ -3,6 +3,9 @@ Require Import Coq.Bool.Bool.
 Require Import CAS.basic. 
 Require Import CAS.properties. 
 Require Import CAS.structures.
+Require Import CAS.product.
+Require Import CAS.facts.
+Require Import CAS.bop_full_reduce.
 
 (* I think with this we can define 
    our annihilator combinator. 
@@ -546,4 +549,146 @@ Qed.
 
 
 
-End PredicateReduce. 
+End PredicateReduce.
+
+
+
+
+
+
+
+Section ReduceAnnihilators.
+
+  Variable S : Type.
+  Variable T : Type.     
+  Variable eqS : brel S.
+  Variable eqT : brel T.
+  Variable refS : brel_reflexive S eqS.
+  Variable symS : brel_symmetric S eqS.
+  Variable tranS : brel_transitive S eqS.    
+  Variable refT : brel_reflexive T eqT.
+  Variable symT : brel_symmetric T eqT.
+  Variable tranT : brel_transitive T eqT.      
+  Variable aS : S.
+  Variable aT : T.
+  Variable mulS : binary_op S.
+  Variable mulT : binary_op T.
+  Variable cong_mulS : bop_congruence S eqS mulS.
+  Variable cong_mulT : bop_congruence T eqT mulT.
+  Variable ass_mulS : bop_associative S eqS mulS.
+  Variable ass_mulT : bop_associative T eqT mulT.
+  Variable is_annS : bop_is_ann S eqS mulS aS.
+  Variable is_annT : bop_is_ann T eqT mulT aT.
+  Variable no_annS_div : ∀ a b : S,  eqS (mulS a b) aS = true -> (eqS a aS = true) + (eqS b aS = true).  
+  Variable no_annT_div : ∀ a b : T,  eqT (mulT a b) aT = true -> (eqT a aT = true) + (eqT b aT = true).  
+
+  Definition P : (S *T) -> bool := λ p, match p with (s, t) => orb (eqS s aS) (eqT t aT) end. 
+
+  Definition uop_rap : unary_op (S * T) := uop_predicate_reduce (aS, aT) P.
+
+  Definition bop_rap : binary_op (S * T) := bop_fpr (aS, aT) P (bop_product mulS mulT).
+
+  Lemma P_congruence : ∀ (p1 p2 : S * T), brel_product eqS eqT p1 p2 = true -> P p1 = P p2.
+  Proof. intros [s1 t1] [s2 t2]; compute; intro H.
+         case_eq(eqS s1 aS); intro J1; case_eq(eqS s2 aS); intro J2; auto.
+         assert (J3 : eqS s1 s2 = false).
+(*  HERE WE ARE         
+           apply (brel_transitive_f1 S eqS symS tranS s2 aS s1 J2 (symS _ _ J1)). 
+*)       admit. 
+         rewrite J3 in H. discriminate H. 
+         case_eq(eqS s1 s2); intro J3.
+         rewrite J3 in H. admit. 
+         rewrite J3 in H. discriminate H. 
+Admitted.           
+
+Lemma P_true : P(aS, aT) = true. Proof. compute; auto. rewrite refS; auto. Qed.
+
+  Lemma P_false_preservation : ∀ (p1 p2 : S * T), P p1 = false -> P p2 = false -> P (bop_product mulS mulT p1 p2) = false.
+  Proof. intros [s1 t1] [s2 t2]; compute.
+         case_eq(eqS s1 aS); intro J1;
+         case_eq(eqS s2 aS); intro J2;           
+           intros H1 H2.
+         discriminate H1.
+         discriminate H1.
+         discriminate H2.
+         case_eq(eqS (mulS s1 s2) aS); intro K1.
+         destruct (no_annS_div s1 s2 K1) as [L | R]. 
+            rewrite L in J1. discriminate J1. 
+            rewrite R in J2. discriminate J2.
+         case_eq(eqT (mulT t1 t2) aT); intro K2.            
+         destruct (no_annT_div t1 t2 K2) as [L | R]. 
+            rewrite L in H1. discriminate H1. 
+            rewrite R in H2. discriminate H2.             
+         reflexivity. 
+Qed. 
+
+Lemma bop_rap_congruence : bop_congruence (S * T) (brel_product eqS eqT) bop_rap.
+Proof. unfold bop_rap. unfold bop_fpr. 
+       apply bop_full_reduce_congruence; auto.
+       apply uop_predicate_reduce_congruence; auto.
+       apply brel_product_reflexive; auto.
+       apply P_congruence; auto.
+       apply bop_product_congruence; auto. 
+Qed.        
+
+(* move this .... *) 
+Lemma  bop_product_is_ann : bop_is_ann (S * T) (brel_product eqS eqT) (bop_product mulS mulT) (aS, aT).
+Proof. intros [s t]; compute. destruct (is_annS s) as [LS RS]. destruct (is_annT t) as [LT RT].
+       rewrite LS, RS. rewrite LT, RT; auto. 
+Qed.
+
+Lemma  bop_rap_is_ann : bop_is_ann (S * T) (brel_product eqS eqT) bop_rap (aS, aT).
+Proof.  intros [s t]; compute. rewrite refS.
+        case_eq(eqS s aS); intro J1. 
+        destruct (is_annS aS) as [LS RS]. destruct (is_annT aT) as [LT RT].
+        rewrite LS.  rewrite refS. rewrite refT; auto.
+        case_eq(eqT t aT); intro J2.
+        destruct (is_annS aS) as [LS RS]. destruct (is_annT aT) as [LT RT].
+        rewrite LS.  rewrite refS. rewrite refT; auto.
+        destruct (is_annS s) as [LS RS]. destruct (is_annT t) as [LT RT].
+       rewrite LS, RS. rewrite refS. rewrite refT; auto.
+Qed.  
+
+Lemma bop_rap_associative :  bop_associative (S * T) (brel_product eqS eqT) bop_rap.
+Proof. apply bop_associative_fpr_ann; auto.
+       apply brel_product_reflexive; auto. 
+       apply P_true; auto. 
+       apply P_congruence; auto. 
+       apply P_false_preservation; auto.
+       apply bop_product_congruence; auto.
+       apply bop_product_is_ann; auto.
+       apply bop_product_associative; auto.
+Qed.
+
+
+
+
+Lemma bop_rap_commutative :  bop_commutative S eqS mulS -> bop_commutative T eqT mulT -> bop_commutative (S * T) (brel_product eqS eqT) bop_rap.
+Proof. intros C1 C2 [s1 t1] [s2 t2]. unfold bop_rap. unfold bop_fpr.
+       apply bop_full_reduce_commutative; auto. 
+       apply uop_predicate_reduce_congruence; auto.
+       apply brel_product_reflexive; auto.
+       apply P_congruence; auto.
+       apply bop_product_commutative; auto.
+Qed.        
+  
+End ReduceAnnihilators.
+
+(*
+Definition rap_product (S T : Type) : commutative_semigroup_with_ann S ->  commutative_semigroup_with_ann T ->  commutative_semigroup_with_ann (S * T) := 
+  λ sg1 sg2,
+{|
+   ceqa   := brel_product (ceqa S sg1) (ceqa T sg2)
+;  cbopa  := bop_rap S T (ceqa S sg1) (ceqa T sg2) (canna S sg1) (canna T sg2) (cbopa S sg1) (cbopa T sg2)
+;  canna  := (canna S sg1, canna T sg2) 
+;  ceqva  := eqv_proofs_product S T  (ceqa S sg1) (ceqa T sg2) (ceqva S sg1) (ceqva T sg2) 
+;  csgpa  := {|
+                csgwa_associative   := bop_rap_associative
+              ; csgwa_congruence    := bop_rap_congruence
+              ; csgwa_commutative   := bop_rap_commutative
+              ; csgwa_is_ann        := bop_rap_is_ann
+            |}
+
+|}.
+  
+*) 

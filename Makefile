@@ -3,6 +3,7 @@
 all:
 	coqc -q -R . CAS  basic.v
 	coqc -q -R . CAS  properties.v
+	coqc -q -R . CAS  bop_full_reduce.v
 	coqc -q -R . CAS  structures.v
 	coqc -q -R . CAS  brel_reduce.v
 	coqc -q -R . CAS  facts.v
