@@ -3,7 +3,6 @@ Require Import Coq.Bool.Bool.
 Require Import CAS.basic. 
 Close Scope nat.
 
-
 (* equiv relations *) 
 Definition brel_reflexive (S : Type) (r : brel S) :=
   ∀ s : S, r s s = true.
@@ -12,7 +11,10 @@ Definition brel_symmetric (S : Type) (r : brel S) :=
     ∀ s t : S, (r s t = true) → (r t s = true). 
 
 Definition brel_transitive (S : Type) (r : brel S) := 
-    ∀ s t u: S, (r s t = true) → (r t u = true) → (r s u = true). 
+  ∀ s t u: S, (r s t = true) → (r t u = true) → (r s u = true).
+
+Definition brel_congruence (S : Type) (eq : brel S) (r : brel S) := 
+   ∀ s t u v : S, eq s u = true → eq t v = true → r s t = r u v. 
 
 (* simple properties for binary operators (bops)  *) 
 Definition bop_congruence (S : Type) (r : brel S) (b : binary_op S) := 
@@ -117,3 +119,12 @@ Definition uop_preserves_id (S : Type) (eq : brel S) (b : binary_op S) (r : unar
 
 Definition uop_preserves_ann (S : Type) (eq : brel S) (b : binary_op S) (r : unary_op S) :=
   ∀ (s : S), bop_is_ann S eq b s -> eq (r s) s = true.
+
+(* new properties added 28/03/2018 *)
+
+Definition bop_self_divisor (S : Type) (eqS : brel S) (bS : binary_op S) (aS : S) :=
+  ∀ a b : S, eqS (bS a b) aS = true → (eqS a aS = true) + (eqS b aS = true).
+
+Definition bop_self_square (S : Type) (eqS : brel S) (bS : binary_op S) (aS : S) :=
+  ∀ a b : S, eqS (bS a b) aS = true → (eqS a aS = true) * (eqS b aS = true).
+

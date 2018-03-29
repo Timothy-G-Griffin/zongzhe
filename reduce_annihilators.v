@@ -611,6 +611,9 @@ assert (C:= congT t1 t2 t3 t4 HR1 HR2). apply symT in C. assert (D :=  brel_tran
 apply symS in A; rewrite A. apply symT in C; rewrite C. auto.
 Qed.
 
+
+
+
 Definition reduced_ann_eqv_proofs : forall (S T: Type) (aS : S) (aT : T)(eqS : brel S) (eqT : brel T)
     (bS : binary_op S)(bT : binary_op T) (brS: brel_reflexive S eqS)(brT:brel_reflexive T eqT),
     eqv_proofs S eqS -> eqv_proofs T eqT ->
@@ -636,6 +639,11 @@ Definition reduced_ann_eqv_proofs : forall (S T: Type) (aS : S) (aT : T)(eqS : b
                                               (eqv_symmetric (S*T) 
                                                                         (brel_product eqS eqT) 
                                                                         (eqv_proofs_product S T eqS eqT eqvS eqvT));
+ eqv_congruence := red_cong (S*T) 
+                                              (bop_reduce_annihilators aS aT eqS eqT)
+                                              (brel_product eqS eqT)
+                                              (brel_product_congruence S T eqS eqT (eqv_congruence S eqS eqvS) (eqv_congruence T eqT eqvT)); 
+    
   eqv_witness := inj (S*T) 
                                (bop_reduce_annihilators aS aT eqS eqT) 
                                (brel_product eqS eqT) 
@@ -725,6 +733,13 @@ assert (A := isAnnS annS). destruct A as [A1 A2]. rewrite A1.  rewrite refS. rew
 assert (A := isAnnS s). destruct A as [A1 A2]. rewrite A1. rewrite A2.  rewrite refS. rewrite refT. auto.
 Qed.
 
+Lemma bop_self_divisor_product (S : Type) ( T : Type)(eqS : brel S)(eqT : brel T) (bS : binary_op S)(bT : binary_op T)  (annS : S) (annT : T) : 
+  bop_self_divisor (S * T)
+                   (brel_product eqS eqT)
+                    (bop_full_reduce (bop_reduce_annihilators annS annT eqS eqT)
+                                     (bop_product bS bT)) (annS, annT). 
+Admitted. 
+
 Definition commutative_semigroup_ann_reduced_proof : 
   forall (S T : Type)(eqS : brel S)(eqT : brel T) (bS : binary_op S)(bT : binary_op T)  (annS : S) (annT : T)
           (eqvS:eqv_proofs S eqS) (eqvT:eqv_proofs T eqT)
@@ -768,6 +783,7 @@ bop_reduce_annihilators_commutative S T annS annT eqS eqT bS bT
 (eqv_transitive T eqT eqvT)
 (csgwa_is_ann  S eqS bS annS csgapS) (csgwa_is_ann  T eqT bT annT csgapT)
 ; csgwa_is_ann  :=  bop_is_ann_product S T eqS eqT  bS bT annS annT (eqv_reflexive S eqS eqvS) (eqv_reflexive T eqT eqvT) (csgwa_is_ann S eqS bS annS csgapS) (csgwa_is_ann T eqT bT annT csgapT)
+; csgwa_div := bop_self_divisor_product S T eqS eqT  bS bT annS annT                                        
 |}.
 
 Definition commutative_semigroup_ann_reduced : 

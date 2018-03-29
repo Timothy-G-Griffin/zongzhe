@@ -29,6 +29,8 @@ Proof. split; auto.   Qed.
   Variable refS   : brel_reflexive S eqS. 
   Variable symS   : brel_symmetric S eqS. 
   Variable transS : brel_transitive S eqS.
+  Variable eqS_cong : brel_congruence S eqS eqS.
+  
   Definition transSf1 := brel_transitive_f1 S eqS symS transS. 
   Definition transSf2 := brel_transitive_f2 S eqS symS transS. 
 
@@ -56,10 +58,15 @@ Proof. split; auto.   Qed.
   Definition red_eq : brel red_Type := λ p1 p2, eqS ((projT1 p1)) ((projT1 p2)).
 
   Lemma red_ref : brel_reflexive red_Type red_eq. 
-  Proof. intros [s p]. compute. apply refS. Qed. 
+  Proof. intros [s p]. compute. apply refS. Qed.
 
+       
   Lemma red_sym : brel_symmetric red_Type red_eq. 
-  Proof. intros [s1 p1] [s2 p2].   compute. apply symS. Qed. 
+  Proof. intros [s1 p1] [s2 p2].   compute. apply symS. Qed.
+
+  Lemma red_cong : brel_congruence red_Type red_eq red_eq. 
+  Proof. intros [s1 p1] [s2 p2] [s3 p3] [s4 p4].   compute. apply eqS_cong. Qed. 
+
 
   Lemma red_trans : brel_transitive red_Type red_eq. 
   Proof. intros [s1 p1] [s2 p2] [s3 p3]. compute. apply transS. Qed.
@@ -90,7 +97,82 @@ Proof. split; auto.   Qed.
 
   Definition inj (s : S) : red_Type := existT Pr (r s) (r_idem s).
 
-  (* 
+  (*
+     Look at IFF properties 
+  *) 
+
+  Lemma red_ref_iso : brel_reflexive red_Type red_eq <-> brel_reflexive S (brel_reduce r eqS).
+  Proof. split. intros H s. compute.
+         assert (K := H (inj s)).
+         unfold red_eq in K. simpl in K.
+         exact K. 
+         intros H [s p]. unfold Pr in p.
+         compute.
+         assert (J1 := symS _ _ p).
+         assert (J2 := transS _ _ _ J1 p).
+         exact J2.
+Qed.          
+
+Lemma red_sym_iso : brel_symmetric red_Type red_eq <-> brel_symmetric S (brel_reduce r eqS).
+  Proof. split. intros H s1 s2. compute.
+         assert (K := H (inj s1) (inj s2)).
+         unfold red_eq in K. simpl in K.
+         exact K. 
+         intros H [s1 p1] [s2 p2]. unfold Pr in p1. unfold Pr in p2.
+         compute. intro H2. 
+         assert (K := symS _ _ H2).
+         exact K.
+Qed.          
+
+  Lemma red_tran_iso : brel_transitive red_Type red_eq <-> brel_transitive S (brel_reduce r eqS).
+  Proof. split. intros H s1 s2 s3. compute. intros H1 H2. 
+         assert (K := H (inj s1) (inj s2) (inj s3)). compute in K. 
+         apply K; auto. 
+         intros H [s1 p1] [s2 p2] [s3 p3]. 
+         compute. apply transS. 
+Qed.          
+
+Lemma red_comm_iso :  bop_commutative red_Type red_eq red_bop <-> bop_commutative S (brel_reduce r eqS) (bop_full_reduce r b).
+Proof. split.
+         intros H s1 s2. compute.
+         assert (K := H (inj s1) (inj s2)). compute in K.
+         apply r_cong.
+         exact K. 
+         intros H1 [s1 p1] [s2 p2]. compute.
+         assert (K := H1 s1 s2). compute in K. 
+         unfold Pr in p1. unfold Pr in p2.
+         assert (J1 := r_idem (b (r s1) (r s2))).
+         assert (J2 := r_idem (b (r s2) (r s1))).
+         apply symS in J1.
+         assert (J3 := transS _ _ _ J1 K).
+         assert (J4 := transS _ _ _ J3 J2).
+         assert (J5 := b_cong _ _ _ _ p1 p2). apply r_cong in J5. 
+         assert (J6 := b_cong _ _ _ _ p2 p1). apply r_cong in J6. 
+         assert (J7 := transS _ _ _ J4 J6).         
+         apply symS in J5. 
+         assert (J8 := transS _ _ _ J5 J7).
+         exact J8.
+ Qed.
+
+
+
+
+Lemma red_not_comm_iso_left :  bop_not_commutative red_Type red_eq red_bop -> bop_not_commutative S (brel_reduce r eqS) (bop_full_reduce r b).
+Proof.   intros [[[s1 p1] [s2 p2]]  p3]. compute in p3.  unfold Pr in p1. unfold Pr in p2. 
+         exists (s1, s2). compute.
+         admit. 
+Admitted.
+
+
+Lemma red_not_comm_iso_right :  bop_not_commutative S (brel_reduce r eqS) (bop_full_reduce r b) -> bop_not_commutative red_Type red_eq red_bop. 
+Proof.  intros [[s1 s2]  p]. exists (inj s1, inj s2). compute.  
+        compute in p. 
+         admit. 
+Admitted.
+
+
+  
+         (* 
     Commutativity 
    *)
   (* 
@@ -133,6 +215,12 @@ Proof. split; auto.   Qed.
   
   Lemma proj1_inj_is_id_on_image_of_r : ∀ s : S,  eqS (r s) (projT1 (inj (r s))) = true.
   Proof. intro s. compute. apply symS. apply r_idem. Qed.
+
+  Lemma equality_lemma_1 : ∀ (p1 p2 : red_Type),  eqS (projT1 p1) (projT1 p2) = red_eq p1 p2.
+  Proof. intros [s1 P1] [s2 P2]. compute. reflexivity. Qed.
+
+  Lemma equality_lemma_2 : ∀ (s1 s2 : S),  eqS (r s1) (r s2) = red_eq (inj s1) (inj s2).
+  Proof. intros s1 s2. compute. reflexivity. Qed. 
 
 (* Now, let's look at preservation of basic properties 
 

@@ -21,6 +21,7 @@ Definition reduced_eqv_proofs : ∀ (S : Type) (eq : brel S) (r : unary_op S) (b
   eqv_reflexive      := red_ref S r eq (eqv_reflexive S eq eqv) 
 ; eqv_transitive     := red_trans S r eq (eqv_transitive S eq eqv) 
 ; eqv_symmetric      := red_sym S r eq (eqv_symmetric S eq eqv)
+; eqv_congruence     := red_cong S r eq (eqv_congruence S eq eqv)                                
 ; eqv_witness        := inj S r eq (rep_idem S eq r red) (eqv_witness S eq eqv)                         
 |}.
 

@@ -34,12 +34,18 @@ Proof. unfold brel_transitive, brel_eq_nat.
           discriminate. apply (IHs t u H H0).
 Qed. 
 
+Lemma brel_eq_nat_congruence : brel_congruence nat brel_eq_nat brel_eq_nat. 
+Proof. unfold brel_congruence, brel_eq_nat. 
+       induction s; induction t; induction u; induction v; simpl; intros; auto; try discriminate.         
+Qed. 
+
 Definition eqv_proofs_eq_nat : eqv_proofs nat brel_eq_nat 
 := {| 
 
      eqv_reflexive   := brel_eq_nat_reflexive 
    ; eqv_transitive  := brel_eq_nat_transitive 
    ; eqv_symmetric   := brel_eq_nat_symmetric
+   ; eqv_congruence  := brel_eq_nat_congruence
    ; eqv_witness     := 0
    |}. 
 

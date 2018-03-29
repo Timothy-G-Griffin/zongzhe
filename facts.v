@@ -8,6 +8,15 @@ Variable S : Type.
   Variable sym   : brel_symmetric S eq. 
   Variable trans : brel_transitive S eq.
 
+
+Lemma brel_symmetric_false : 
+  ∀ s t : S, (eq s t = false) → (eq t s = false).
+Proof. intros s t H. case_eq(eq t s); intro K. 
+       apply sym in K. rewrite K in H. discriminate H.
+       reflexivity.
+Qed.        
+  
+
 Lemma brel_transitive_f1 : 
   ∀ s t u: S, (eq s t = false) → (eq t u = true) → (eq s u = false).
 Proof. intros s t u H1 H2.

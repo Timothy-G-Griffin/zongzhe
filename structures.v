@@ -1,12 +1,12 @@
 Require Import CAS.basic. 
 Require Import CAS.properties. 
 
-
 Record eqv_proofs (S : Type) (eq : brel S) :=
 {
   eqv_reflexive      : brel_reflexive S eq            
 ; eqv_transitive     : brel_transitive S eq           
 ; eqv_symmetric      : brel_symmetric S eq
+; eqv_congruence     : brel_congruence S eq eq                                      
 ; eqv_witness        : S                                      
 }.
 
@@ -30,6 +30,7 @@ Record commutative_semigroup_with_ann_proofs (S: Type) (eq : brel S) (b : binary
 ; csgwa_congruence    : bop_congruence S eq b
 ; csgwa_commutative   : bop_commutative S eq b
 ; csgwa_is_ann        : bop_is_ann S eq b ann
+; csgwa_div           : bop_self_divisor S eq b ann                                         
 }.
 
 (* this captures our normal understanding of a semigroup over 

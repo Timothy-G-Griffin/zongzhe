@@ -13,7 +13,10 @@ Section ProductTheory.
   Variable eqT    : brel T.
 
   Variable wS    : S.
-  Variable wT    : T.  
+  Variable wT    : T.
+
+  Variable eqS_cong : brel_congruence S eqS eqS.
+  Variable eqT_cong : brel_congruence T eqT eqT.   
 
   Variable bS : binary_op S.
   Variable bT : binary_op T.      
@@ -56,6 +59,15 @@ Proof. intros [s1 t1] [s2 t2] [s3 t3]; simpl. intros H1 H2.
        apply (transS _ _ _ H1L H2L).
        apply (transT _ _ _ H1R H2R).
 Qed.
+
+Lemma brel_product_congruence : brel_congruence (S * T) (brel_product eqS eqT) (brel_product eqS eqT). 
+Proof. intros [s1 s2] [t1 t2] [u1 u2] [w1 w2]; simpl. intros H1 H2. 
+       destruct (andb_elim _ _ H1) as [C1 C2].
+       destruct (andb_elim _ _ H2) as [C3 C4].
+       assert (CS := eqS_cong _ _ _ _ C1 C3).
+       assert (CT := eqT_cong _ _ _ _ C2 C4).
+       rewrite CS, CT. reflexivity. 
+Qed. 
 
 Lemma bop_product_congruence : bop_congruence (S * T) (brel_product eqS eqT) (bop_product bS bT). 
 Proof. intros [s1 s2] [t1 t2] [u1 u2] [w1 w2]; simpl. intros H1 H2. 
@@ -102,10 +114,26 @@ Proof. intros [Scomm | SNcomm] [Tcomm | TNcomm].
 Qed.        
 
 
+Lemma  bop_product_is_ann : ∀ (aS : S) (aT : T) (is_annS : bop_is_ann S eqS bS aS) (is_annS : bop_is_ann T eqT bT aT),  
+       bop_is_ann (S * T) (brel_product eqS eqT) (bop_product bS bT) (aS, aT).
+Proof. intros aS aT is_annS is_annT [s t]; compute. destruct (is_annS s) as [LS RS]. destruct (is_annT t) as [LT RT].
+       rewrite LS, RS. rewrite LT, RT; auto. 
+Qed.
+
+
+Lemma  bop_product_is_id : ∀ (aS : S) (aT : T) (is_idS : bop_is_id S eqS bS aS) (is_idT : bop_is_id T eqT bT aT),  
+       bop_is_id (S * T) (brel_product eqS eqT) (bop_product bS bT) (aS, aT).
+Proof. intros aS aT is_idS is_idT [s t]; compute. destruct (is_idS s) as [LS RS]. destruct (is_idT t) as [LT RT].
+       rewrite LS, RS. rewrite LT, RT; auto. 
+Qed.
+
+
 End ProductTheory.
 
 Section Product_Semigroup.
 
+
+  
 Definition eqv_proofs_product : ∀ (S T : Type) (eqS : brel S) (eqT : brel T),  
     eqv_proofs S eqS → eqv_proofs T eqT → eqv_proofs (S * T) (brel_product eqS eqT)
 := λ S T eqS eqT eqvS eqvT,
@@ -113,6 +141,7 @@ Definition eqv_proofs_product : ∀ (S T : Type) (eqS : brel S) (eqT : brel T),
   eqv_reflexive      := brel_product_reflexive S T eqS eqT (eqv_reflexive S eqS eqvS) (eqv_reflexive T eqT eqvT)
 ; eqv_transitive     := brel_product_transitive S T eqS eqT (eqv_transitive S eqS eqvS) (eqv_transitive T eqT eqvT)
 ; eqv_symmetric      := brel_product_symmetric S T eqS eqT (eqv_symmetric S eqS eqvS) (eqv_symmetric T eqT eqvT)
+; eqv_congruence     := brel_product_congruence S T eqS eqT (eqv_congruence S eqS eqvS) (eqv_congruence T eqT eqvT)  
 ; eqv_witness        := (eqv_witness S eqS eqvS, eqv_witness T eqT eqvT)                                               
 |}.
 
