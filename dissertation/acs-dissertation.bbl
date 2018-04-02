@@ -1,0 +1,47 @@
+\begin{thebibliography}{1}
+
+\bibitem{gurney_pathfinding_2011}
+Alexander~JT Gurney and Timothy~G. Griffin.
+\newblock Pathfinding through congruences.
+\newblock In {\em International {Conference} on {Relational} and {Algebraic}
+  {Methods} in {Computer} {Science}}, pages 180--195. Springer, 2011.
+
+\bibitem{carre_algebra_1971}
+B.~A. CARRÉ.
+\newblock An {Algebra} for {Network} {Routing} {Problems}.
+\newblock {\em IMA Journal of Applied Mathematics}, 7(3):273--294, June 1971.
+
+\bibitem{gurney_lexicographic_2007}
+Alexander~JT Gurney and Timothy~G. Griffin.
+\newblock Lexicographic products in metarouting.
+\newblock In {\em Network {Protocols}, 2007. {ICNP} 2007. {IEEE}
+  {International} {Conference} on}, pages 113--122. IEEE, 2007.
+
+\bibitem{mohri_semiring_2002}
+Mehryar Mohri.
+\newblock Semiring frameworks and algorithms for shortest-distance problems.
+\newblock {\em Journal of Automata, Languages and Combinatorics},
+  7(3):321--350, 2002.
+
+\bibitem{dynerowicz_forwarding_2013}
+Seweryn Dynerowicz and Timothy~G. Griffin.
+\newblock On the forwarding paths produced by internet routing algorithms.
+\newblock In {\em Network {Protocols} ({ICNP}), 2013 21st {IEEE}
+  {International} {Conference} on}, pages 1--10. IEEE, 2013.
+
+\bibitem{WONGSEELASHOTE197955}
+Ahnont Wongseelashote.
+\newblock Semirings and path spaces.
+\newblock {\em Discrete Mathematics}, 26(1):55 -- 78, 1979.
+
+\bibitem{griffin_metarouting_2005}
+Timothy~G. Griffin and Joäo~Luís Sobrinho.
+\newblock Metarouting.
+\newblock In {\em {ACM} {SIGCOMM} {Computer} {Communication} {Review}},
+  volume~35, pages 1--12. ACM, 2005.
+
+\bibitem{Coq}
+The {Coq} proof assistant.
+\newblock {https://coq.inria.fr}.
+
+\end{thebibliography}
