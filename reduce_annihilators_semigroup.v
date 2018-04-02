@@ -194,4 +194,32 @@ let sqrT       := csgwi_squ T eqT addT iT pT in
   ; csgwi_commutative   := bop_rap_add_commutative S T eqS eqT refS symS tranS refT symT tranT iS iT addS  addT commS commT 
   ; csgwi_is_id         := bop_rap_add_is_id S T eqS eqT refS symS  tranS refT symT tranT iS iT addS  addT is_idS is_idT
   ; csgwi_squ           := bop_rap_add_no_square S T eqS eqT addS addT iS iT refS refT is_idS is_idT sqrS sqrT
-|}. 
+|}.
+
+Definition rap_add_product (S T : Type) :
+  commutative_semigroup_with_id S ->  commutative_semigroup_with_id T ->  commutative_semigroup_with_id (S * T) := 
+λ sg1 sg2,
+let eqS := ceqi S sg1 in
+let eqT := ceqi T sg2 in
+let iS := cidi S sg1 in
+let iT := cidi T sg2 in
+let addS := cbopi S sg1 in
+let addT := cbopi T sg2 in
+let eqvS := ceqvi S sg1 in
+let eqvT := ceqvi T sg2 in
+(* need better abstraction here *) 
+let refS := eqv_reflexive _ _ eqvS in
+let symS := eqv_symmetric _ _ eqvS in
+let tranS := eqv_transitive _ _ eqvS in
+let congS := eqv_congruence _ _ eqvS in
+let refT := eqv_reflexive _ _ eqvT in
+let symT := eqv_symmetric _ _ eqvT in
+let tranT := eqv_transitive _ _ eqvT in
+let congT := eqv_congruence _ _ eqvT in 
+{|
+   ceqi   := brel_reduce (uop_rap S T eqS eqT iS iT) (brel_product eqS eqT)
+;  cbopi  := bop_rap_mul S T eqS eqT iS iT addS addT 
+;  cidi  := (iS, iT)
+;  csgpi  := rap_add_product_proofs S T eqS eqT eqvS eqvT iS iT addS addT (csgpi S sg1) (csgpi T sg2)
+;  ceqvi  := reduce_rap_eqv_proofs S T eqS eqT refS symS tranS congS refT symT tranT congT iS iT 
+|}.
