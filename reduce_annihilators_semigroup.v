@@ -111,3 +111,87 @@ let congT := eqv_congruence _ _ eqvT in
 ;  ceqva  := reduce_rap_eqv_proofs S T eqS eqT refS symS tranS congS refT symT tranT congT aS aT 
 |}.
   
+
+Lemma bop_rap_add_no_square (S T : Type) (eqS : brel S) (eqT : brel T) (addS : binary_op S) (addT : binary_op T) (iS : S) (iT : T) :
+           brel_reflexive S eqS ->
+           brel_reflexive T eqT ->
+           bop_is_id S eqS addS iS ->           
+           bop_is_id T eqT addT iT ->                      
+           bop_self_square S eqS addS iS ->
+           bop_self_square T eqT addT iT -> 
+           bop_self_square (S * T)
+                          (brel_reduce (uop_rap S T eqS eqT iS iT) (brel_product eqS eqT))
+                          (bop_rap_add S T eqS eqT iS iT addS addT)
+                          (iS, iT).
+Proof. unfold  bop_self_square. intros refS refT is_idS is_idT H1 H2 [s1 t1] [s2 t2]; compute.
+       destruct (is_idS iS) as [IS _].
+       destruct (is_idT iT) as [IT _].
+       case_eq(eqS s1 iS); intro J1; case_eq(eqS s2 iS); intro J2. 
+       rewrite IS. rewrite (refS iS), (refT iT). rewrite (refS iS). auto. 
+       case_eq(eqT t2 iT); intro J3. rewrite IS. rewrite (refS iS). rewrite (refS iS), (refT iT). auto.
+       case_eq(eqS (addS iS s2) iS); intro J4.
+       assert (K := H1 iS s2 J4). destruct K as [_ K]. rewrite K in J2. discriminate J2.
+       case_eq(eqT (addT iT t2) iT); intro J5.
+       assert (K := H2 iT t2 J5). destruct K as [_ K]. rewrite K in J3. discriminate J3.
+       rewrite J4. rewrite J5. rewrite (refS iS). rewrite J4. intro F. discriminate F.
+       case_eq(eqT t1 iT); intro J3. rewrite IS. rewrite (refS iS). rewrite (refS iS), (refT iT). auto.
+       case_eq(eqS (addS s1 iS) iS); intro J4.
+       assert (K := H1 s1 iS J4). destruct K as [K _]. rewrite K in J1. discriminate J1.
+       case_eq(eqT (addT t1 iT) iT); intro J5.
+       assert (K := H2 t1 iT J5). destruct K as [K _]. rewrite K in J3. discriminate J3.
+       rewrite J4. rewrite J5. rewrite (refS iS). rewrite J4.  intro F. discriminate F. 
+       case_eq(eqT t1 iT); intro J3; case_eq(eqT t2 iT); intro J4. rewrite IS. rewrite (refS iS). rewrite (refS iS), (refT iT). auto.
+       case_eq(eqS (addS iS s2) iS); intro J5.
+       assert (K := H1 iS s2 J5). destruct K as [_ K]. rewrite K in J2. discriminate J2.
+       case_eq(eqT (addT iT t2) iT); intro J6.
+       assert (K := H2 iT t2 J6). destruct K as [_ K]. rewrite K in J4. discriminate J4.
+       rewrite J5, J6. rewrite (refS iS). rewrite (refS iS). rewrite J5. intro F. discriminate F.
+       case_eq(eqS (addS s1 iS) iS); intro J5.
+       assert (K := H1 s1 iS J5). destruct K as [K _]. rewrite K in J1. discriminate J1.
+       case_eq(eqT (addT t1 iT) iT); intro J6.
+       assert (K := H2 t1 iT J6). destruct K as [K _]. rewrite K in J3. discriminate J3.
+       rewrite J5, J6. rewrite (refS iS). rewrite (refS iS). rewrite J5. intro F. discriminate F. 
+       case_eq(eqS (addS s1 s2) iS); intro J5.
+       destruct(H1 _ _ J5) as [J6 _]. rewrite J6 in J1. discriminate J1.
+       case_eq(eqT (addT t1 t2) iT); intro J6.
+       destruct(H2 _ _ J6) as [J7 _]. rewrite J7 in J3. discriminate J3. 
+       rewrite J5, J6. rewrite (refS iS).  rewrite J5. intro F. discriminate F. 
+Qed.
+
+
+Definition rap_add_product_proofs (S T : Type)
+           (eqS : brel S) (eqT : brel T)
+           (eqvS : eqv_proofs S eqS) (eqvT : eqv_proofs T eqT)                       
+           (iS : S) (iT : T)
+           (addS : binary_op S) (addT : binary_op T) : 
+  commutative_semigroup_with_id_proofs S eqS addS iS ->
+  commutative_semigroup_with_id_proofs T eqT addT iT ->
+  commutative_semigroup_with_id_proofs (S * T)
+                                        (brel_reduce (uop_rap S T eqS eqT iS iT) (brel_product eqS eqT))
+                                        (bop_rap_mul S T eqS eqT iS iT addS addT) (iS, iT)
+:= λ pS pT,
+let refS       := eqv_reflexive S eqS eqvS in
+let symS       := eqv_symmetric S eqS eqvS in
+let tranS      := eqv_transitive S eqS eqvS in
+let eqS_cong   := eqv_congruence S eqS eqvS in   
+let refT       := eqv_reflexive T eqT eqvT in
+let symT       := eqv_symmetric T eqT eqvT in
+let tranT      := eqv_transitive T eqT eqvT in
+let eqT_cong   := eqv_congruence T eqT eqvT in
+let is_idS    := csgwi_is_id S eqS addS iS pS in
+let is_idT    := csgwi_is_id T eqT addT iT pT in
+let addS_cong  := csgwi_congruence S eqS addS iS pS in
+let addT_cong  := csgwi_congruence T eqT addT iT pT in
+let addS_assoc := csgwi_associative S eqS addS iS pS in
+let addT_assoc := csgwi_associative T eqT addT iT pT in
+let commS      := csgwi_commutative S eqS addS iS pS in
+let commT      := csgwi_commutative T eqT addT iT pT in
+let sqrS       := csgwi_squ S eqS addS iS pS in 
+let sqrT       := csgwi_squ T eqT addT iT pT in
+{|
+    csgwi_associative   := bop_rap_add_associative S T eqS eqT refS symS tranS refT symT tranT iS iT addS addT addS_cong addT_cong addS_assoc addT_assoc is_idS is_idT sqrS sqrT
+  ; csgwi_congruence    := bop_rap_add_congruence_v2 S T eqS eqT refS symS tranS refT symT tranT iS iT addS  addT addS_cong addT_cong 
+  ; csgwi_commutative   := bop_rap_add_commutative S T eqS eqT refS symS tranS refT symT tranT iS iT addS  addT commS commT 
+  ; csgwi_is_id         := bop_rap_add_is_id S T eqS eqT refS symS  tranS refT symT tranT iS iT addS  addT is_idS is_idT
+  ; csgwi_squ           := bop_rap_add_no_square S T eqS eqT addS addT iS iT refS refT is_idS is_idT sqrS sqrT
+|}. 

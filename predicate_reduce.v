@@ -682,7 +682,7 @@ Proof. intros s add mul P_true congP add_false mul_false cong_add cong_mul s_id 
        assert (addBC := add_false b c M N). rewrite addBC. rewrite addBC.
        assert (mulAB := mul_false a b L M). rewrite mulAB. rewrite mulAB.
        assert (mulAC := mul_false a c L N). rewrite mulAC. rewrite mulAC.
-       assert (mulAABC := mul_false a (add b c) L addBC). rewrite mulAABC.rewrite mulAABC.
+       assert (mulAABC := mul_false a (add b c) L addBC). rewrite mulAABC. rewrite mulAABC.
        assert (addMABMAC := add_false (mul a b) (mul a c) mulAB mulAC). rewrite addMABMAC. rewrite addMABMAC.
        assert (K := ldist a b c). exact K.
 Qed.

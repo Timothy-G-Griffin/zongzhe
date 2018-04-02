@@ -33,6 +33,15 @@ Record commutative_semigroup_with_ann_proofs (S: Type) (eq : brel S) (b : binary
 ; csgwa_div           : bop_self_divisor S eq b ann                                         
 }.
 
+Record commutative_semigroup_with_id_proofs (S: Type) (eq : brel S) (b : binary_op S) (id : S) := 
+{
+  csgwi_associative   : bop_associative S eq b
+; csgwi_congruence    : bop_congruence S eq b
+; csgwi_commutative   : bop_commutative S eq b
+; csgwi_is_id         : bop_is_id S eq b id
+; csgwi_squ           : bop_self_square S eq b id                                        
+}.
+
 (* this captures our normal understanding of a semigroup over 
    a carrier set S. 
 *) 
@@ -59,6 +68,15 @@ Record commutative_semigroup_with_ann (S : Type) :=
 ;  canna  : S
 ;  ceqva  : eqv_proofs S ceqa               
 ;  csgpa  : commutative_semigroup_with_ann_proofs S ceqa cbopa canna
+}.
+
+Record commutative_semigroup_with_id (S : Type) :=
+{
+   ceqi   : brel S      
+;  cbopi  : binary_op S
+;  cidi   : S
+;  ceqvi  : eqv_proofs S ceqi               
+;  csgpi  : commutative_semigroup_with_id_proofs S ceqi cbopi cidi
 }.
 
 
