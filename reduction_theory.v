@@ -132,6 +132,34 @@ Qed.
          compute. apply transS. 
 Qed.          
 
+
+Lemma red_cong_iso : bop_congruence red_Type red_eq red_bop <-> bop_congruence S (brel_reduce r eqS) (bop_full_reduce r b).
+Proof. split.
+       (* -> *) 
+       intros H s1 s2 s3 s4. compute. intros H1 H2. 
+       assert (K := H (inj s1) (inj s2) (inj s3) (inj s4)). compute in K.
+       apply r_cong.        
+       apply K; auto.
+       (* <- *) 
+       intros H [s1 p1] [s2 p2] [s3 p3] [s4 p4]. compute. intros H1 H2. 
+       unfold Pr in p1, p2, p3, p4. 
+       compute in H.
+       assert (J1 := r_cong _ _ H1).
+       assert (J2 := r_cong _ _ H2).
+       assert (J3 := H _ _ _ _ J1 J2).
+       assert (J4 := r_idem (b (r s1) (r s2))).
+       assert (J5 := r_idem (b (r s3) (r s4))).
+       assert (J6 := transS _ _ _ J3 J5).
+       apply symS in J4.
+       assert (J7 := transS _ _ _ J4 J6).
+       assert (J8 := b_cong _ _ _ _ p1 p2). apply r_cong in J8.
+       assert (J9 := b_cong _ _ _ _ p3 p4). apply r_cong in J9.
+       assert (J10 := transS _ _ _ J7 J9).
+       apply symS in J8.
+       assert (J11 := transS _ _ _ J8 J10).
+       exact J11.
+Qed.          
+  
 Lemma red_comm_iso :  bop_commutative red_Type red_eq red_bop <-> bop_commutative S (brel_reduce r eqS) (bop_full_reduce r b).
 Proof. split.
          intros H s1 s2. compute.
