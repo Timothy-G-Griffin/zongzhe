@@ -95,6 +95,8 @@ Proof. split; auto.   Qed.
          exact H5. 
   Qed.
 
+  
+  
   Definition inj (s : S) : red_Type := existT Pr (r s) (r_idem s).
 
   (*
@@ -158,8 +160,37 @@ Proof. split.
        apply symS in J8.
        assert (J11 := transS _ _ _ J8 J10).
        exact J11.
-Qed.          
-  
+Qed.
+
+Lemma red_bop_ass_iso : bop_associative red_Type red_eq red_bop <-> bop_pseudo_associative S eqS r b. 
+Proof. split; intro H.
+         intros s1 s2 s3. 
+         assert (H1 := H (inj s1) (inj s2) (inj s3)). compute in H1.
+         exact H1. 
+         intros [s1 p1] [s2 p2] [s3 p3]. compute.
+         assert (H1 := H s1 s2 s3). compute in H1. unfold Pr in p1, p2, p3.
+         assert (H2 := b_cong _ _ _ _ p1 p2). apply r_cong in H2. 
+         assert (H3 := b_cong _ _ _ _ p2 p3). apply r_cong in H3.
+         assert (H4 := b_cong _ _ _ _ H2 p3). apply r_cong in H4. 
+         assert (H5 := b_cong _ _ _ _ p1 H3). apply r_cong in H5.
+         assert (H6 := transS _ _ _ H1 H5).
+         apply symS in H4.
+         assert (H7 := transS _ _ _ H4 H6).         
+         exact H7.          
+Qed.
+
+(* this uses b_ass, r_left, r_right *) 
+Lemma r_left_right_imply_pseudo_associative : bop_pseudo_associative S eqS r b. 
+Proof. intros s1 s2 s3. 
+         assert (H1 := b_ass (r s1) (r s2) (r s3)). apply r_cong in H1. 
+         assert (H2 := r_left (b (r s1) (r s2)) (r s3)).  compute in H2.
+         assert (H3 := r_right (r s1) (b (r s2) (r s3))).  compute in H3.          
+         assert (H4 := transS _ _ _ H2 H1). apply symS in H3. 
+         assert (H6 := transS _ _ _ H4 H3).         
+         exact H6.          
+Qed.
+
+
 Lemma red_comm_iso :  bop_commutative red_Type red_eq red_bop <-> bop_commutative S (brel_reduce r eqS) (bop_full_reduce r b).
 Proof. split.
          intros H s1 s2. compute.

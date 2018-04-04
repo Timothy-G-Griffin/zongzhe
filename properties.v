@@ -128,3 +128,11 @@ Definition bop_self_divisor (S : Type) (eqS : brel S) (bS : binary_op S) (aS : S
 Definition bop_self_square (S : Type) (eqS : brel S) (bS : binary_op S) (aS : S) :=
   ∀ a b : S, eqS (bS a b) aS = true → (eqS a aS = true) * (eqS b aS = true).
 
+(* new property, 3/4/2018 *)
+(*
+Definition bop_pseudo_associative (S : Type) (eq : brel S) (r : unary_op S) (b : binary_op S) 
+  := ∀ s t u : S, eq (r (b (r (b s t)) u)) (r (b s (r (b t u)))) = true.
+*) 
+Definition bop_pseudo_associative (S : Type) (eq : brel S) (r : unary_op S) (b : binary_op S) 
+  := ∀ s t u : S, eq (r (b (r (b (r s) (r t))) (r u))) (r (b (r s) (r (b (r t) (r u))))) = true.
+ 
