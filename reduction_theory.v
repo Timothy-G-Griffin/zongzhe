@@ -219,17 +219,40 @@ Proof. split.
 Lemma red_not_comm_iso_left :  bop_not_commutative red_Type red_eq red_bop -> bop_not_commutative S (brel_reduce r eqS) (bop_full_reduce r b).
 Proof.   intros [[[s1 p1] [s2 p2]]  p3]. compute in p3.  unfold Pr in p1. unfold Pr in p2. 
          exists (s1, s2). compute.
-         admit. 
-Admitted.
+         case_eq(eqS (r (r (b (r s1) (r s2)))) (r (r (b (r s2) (r s1))))); intro J1.
+         assert (K : eqS (r (b s1 s2)) (r (b s2 s1)) = true).
+            assert (J2 := b_cong _ _ _ _ p1 p2). apply r_cong in J2. apply symS in J2. 
+            assert (J3 := r_idem (b (r s1) (r s2))).  apply symS in J3.
+            assert (J4 := transS _ _ _ J2 J3).            
+            assert (J5 := transS _ _ _ J4 J1).            
+            assert (J6 := r_idem (b (r s2) (r s1))). 
+            assert (J7 := transS _ _ _ J5 J6).            
+            assert (J8 := b_cong _ _ _ _ p2 p1). apply r_cong in J8.
+            assert (J9 := transS _ _ _ J7 J8).
+            exact J9.
+         rewrite K in p3.  discriminate p3. 
+         reflexivity. 
+Qed. 
 
 
 Lemma red_not_comm_iso_right :  bop_not_commutative S (brel_reduce r eqS) (bop_full_reduce r b) -> bop_not_commutative red_Type red_eq red_bop. 
 Proof.  intros [[s1 s2]  p]. exists (inj s1, inj s2). compute.  
         compute in p. 
-         admit. 
-Admitted.
+        case_eq(eqS (r (b (r s1) (r s2))) (r (b (r s2) (r s1)))); intro J1.
+           apply r_cong in J1.
+           rewrite J1 in p. discriminate p. 
+        reflexivity. 
+Qed. 
 
 
+
+(*
+Lemma red_not_exists_id_left :  bop_not_exists_id red_Type red_eq red_bop -> bop_not_exists_id S (brel_reduce r eqS) (bop_full_reduce r b).
+Proof. intros H s. compute.
+       destruct (H (inj s)) as [[s' P] Q]. compute in Q. unfold Pr in P. 
+       exists (r s'). 
+ Qed.
+*)
   
          (* 
     Commutativity 
