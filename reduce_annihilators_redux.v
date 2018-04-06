@@ -8,6 +8,7 @@ Require Import CAS.facts.
 Require Import CAS.brel_reduce.
 Require Import CAS.bop_full_reduce.
 Require Import CAS.predicate_reduce.
+Require Import CAS.reduce_annihilators.
 
 Section ReduceAnnihilators.
 
@@ -342,6 +343,17 @@ Proof. apply bop_associative_fpr_id_v2; auto.
        apply bop_product_associative; auto.
 Qed.
 
+
+Lemma bop_rap_add_associative_pseudo: bop_pseudo_associative (S * T) (brel_product eqS eqT) uop_rap (bop_product addS addT).
+Proof. apply bop_full_reduce_associative_implies_pseudo_associative.
+       apply brel_product_reflexive; auto.
+       apply brel_product_symmetric; auto.
+       apply brel_product_transitive; auto.
+       apply uop_predicate_reduce_idempoent. apply brel_product_reflexive; auto.
+       apply uop_predicate_reduce_congruence. apply brel_product_reflexive; auto.  apply P_congruence_v1.  
+       apply bop_product_congruence; auto. 
+       apply bop_rap_add_associative.
+Qed.
 
 Lemma bop_rap_add_commutative :
      bop_commutative S eqS addS -> bop_commutative T eqT addT ->
