@@ -41,6 +41,10 @@ Proof. intros s t u H1 H2.
        apply sym in J3.
        rewrite J3 in H2. exact H2.
        reflexivity. 
-Qed.          
+Qed.
+
+Definition brel_symmetric_f (S : Type) (r : brel S) := 
+    ∀ s t : S, (r s t = false) → (r t s = false). 
+
 
 End Facts. 

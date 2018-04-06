@@ -190,7 +190,7 @@ let sqrS       := csgwi_squ S eqS addS iS pS in
 let sqrT       := csgwi_squ T eqT addT iT pT in
 {|
     csgwi_associative   := bop_rap_add_associative S T eqS eqT refS symS tranS refT symT tranT iS iT addS addT addS_cong addT_cong addS_assoc addT_assoc is_idS is_idT sqrS sqrT
-  ; csgwi_congruence    := bop_rap_add_congruence_v2 S T eqS eqT refS symS tranS refT symT tranT iS iT addS  addT addS_cong addT_cong 
+  ; csgwi_congruence    := bop_rap_add_congruence S T eqS eqT refS symS tranS refT symT tranT iS iT addS  addT addS_cong addT_cong 
   ; csgwi_commutative   := bop_rap_add_commutative S T eqS eqT refS symS tranS refT symT tranT iS iT addS  addT commS commT 
   ; csgwi_is_id         := bop_rap_add_is_id S T eqS eqT refS symS  tranS refT symT tranT iS iT addS  addT is_idS is_idT
   ; csgwi_squ           := bop_rap_add_no_square S T eqS eqT addS addT iS iT refS refT is_idS is_idT sqrS sqrT

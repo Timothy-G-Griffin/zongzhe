@@ -262,7 +262,7 @@ Qed.
 
 Lemma bop_rap_mul_congruence : bop_congruence (S * T) (brel_reduce uop_rap (brel_product eqS eqT)) bop_rap_mul.
 Proof. unfold bop_rap_mul. unfold bop_fpr. 
-       apply bop_full_reduce_congruence_v2; auto.
+       apply bop_full_reduce_congruence; auto.
        apply uop_predicate_reduce_congruence; auto.
        apply brel_product_reflexive; auto.
        apply P_congruence_v1. 
@@ -311,7 +311,7 @@ Lemma bop_rap_mul_commutative_v2 :
          bop_commutative S eqS mulS -> bop_commutative T eqT mulT ->
                                     bop_commutative (S * T) (brel_reduce uop_rap (brel_product eqS eqT)) bop_rap_mul.
 Proof. intros C1 C2 [s1 t1] [s2 t2]. unfold bop_rap_mul. unfold bop_fpr.
-       apply bop_full_reduce_commutative_v2; auto. 
+       apply bop_full_reduce_commutative; auto. 
        apply uop_predicate_reduce_congruence; auto.
        apply brel_product_reflexive; auto.
        apply P_congruence_v1; auto.
@@ -322,16 +322,10 @@ Qed.
 
 Definition bop_rap_add : binary_op (S * T) := bop_fpr (aS, aT) P (bop_product addS addT).
 
-Lemma bop_rap_add_congruence_v1 : bop_congruence (S * T) (brel_product eqS eqT) bop_rap_add.
+
+Lemma bop_rap_add_congruence : bop_congruence (S * T) (brel_reduce uop_rap (brel_product eqS eqT)) bop_rap_add.
 Proof. unfold bop_rap_add. unfold bop_fpr. 
        apply bop_full_reduce_congruence; auto.
-       apply uop_rap_congruence_v1; auto.
-       apply bop_product_congruence; auto. 
-Qed.
-
-Lemma bop_rap_add_congruence_v2 : bop_congruence (S * T) (brel_reduce uop_rap (brel_product eqS eqT)) bop_rap_add.
-Proof. unfold bop_rap_add. unfold bop_fpr. 
-       apply bop_full_reduce_congruence_v2; auto.
        apply uop_rap_congruence_v1; auto.
        apply bop_product_congruence; auto. 
 Qed.
@@ -353,7 +347,7 @@ Lemma bop_rap_add_commutative :
      bop_commutative S eqS addS -> bop_commutative T eqT addT ->
             bop_commutative (S * T) (brel_reduce uop_rap (brel_product eqS eqT)) bop_rap_add.
 Proof. intros C1 C2 [s1 t1] [s2 t2]. unfold bop_rap_mul. unfold bop_fpr.
-       apply bop_full_reduce_commutative_v2; auto. 
+       apply bop_full_reduce_commutative; auto. 
        apply uop_predicate_reduce_congruence; auto.
        apply brel_product_reflexive; auto.
        apply P_congruence_v1; auto.

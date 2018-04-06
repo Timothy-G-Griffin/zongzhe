@@ -95,15 +95,61 @@ Proof. split; auto.   Qed.
          exact H5. 
   Qed.
 
-  
-  
+    
   Definition inj (s : S) : red_Type := existT Pr (r s) (r_idem s).
 
   (*
-     Look at IFF properties 
+   f is a homomorphism for b and b' if 
+    f(b(x, y)) = b'(f(x), f(y))
+
+   The following show that 
+    1) inj is a homomorphism for (bop_full_reduce r b) and red_bop. 
+    2) projT1 is a homomorphism for red_bop and (bop_full_reduce r b). 
+    3) (inj o projT1) is id on red_Type
+    4) (projT1 o inj) is id on r(S), the image of r 
+
+    so we have an isomorphism between (S, (bop_full_reduce r b) and (red_Type, bop_red) 
+
+    HOWEVER, the isomorphism only works on the image of r, r(S). 
+
+*)
+  
+  Lemma inj_homomorphism : ∀ (s1 s2 : S),  red_eq (inj (bop_full_reduce r b s1 s2)) (red_bop (inj s1) (inj s2)) = true. 
+  Proof. intros s1 s2. compute. apply r_idem. Qed.
+  
+  Lemma proj1_homomorphism : ∀ (p1 p2 : red_Type),  eqS (projT1 (red_bop p1 p2)) (bop_full_reduce r b (projT1 p1) (projT1 p2)) = true. 
+  Proof. intros [s1 P1] [s2 P2]. compute. compute in P1. compute in P2.
+         apply r_cong.
+         assert (K := b_cong _ _ _ _ P1 P2).  apply symS.
+         exact K. 
+  Qed. 
+
+  Lemma inj_proj1_is_id : ∀ p : red_Type,  red_eq p (inj (projT1 p)) = true.
+  Proof. intros [s P]. compute. compute in P. apply symS. exact P. Qed. 
+  
+  Lemma proj1_inj_is_id_on_image_of_r : ∀ s : S,  eqS (r s) (projT1 (inj (r s))) = true.
+  Proof. intro s. compute. apply symS. apply r_idem. Qed.
+
+  Lemma equality_lemma_1 : ∀ (p1 p2 : red_Type),  eqS (projT1 p1) (projT1 p2) = red_eq p1 p2.
+  Proof. intros [s1 P1] [s2 P2]. compute. reflexivity. Qed.
+
+  Lemma equality_lemma_2 : ∀ (s1 s2 : S),  eqS (r s1) (r s2) = red_eq (inj s1) (inj s2).
+  Proof. intros s1 s2. compute. reflexivity. Qed. 
+
+
+  (*****************************************************************************************
+      Now show that 
+      (red_Type, red_eq, red_bop) is "isomorphic" to 
+
+      (S, brel_reduce r eqS, bop_full_reduce r b)
+  *******************************************************************************************) 
+  
+
+  (*
+     Equality 
   *) 
 
-  Lemma red_ref_iso : brel_reflexive red_Type red_eq <-> brel_reflexive S (brel_reduce r eqS).
+Lemma red_ref_iso : brel_reflexive red_Type red_eq <-> brel_reflexive S (brel_reduce r eqS).
   Proof. split. intros H s. compute.
          assert (K := H (inj s)).
          unfold red_eq in K. simpl in K.
@@ -126,7 +172,7 @@ Lemma red_sym_iso : brel_symmetric red_Type red_eq <-> brel_symmetric S (brel_re
          exact K.
 Qed.          
 
-  Lemma red_tran_iso : brel_transitive red_Type red_eq <-> brel_transitive S (brel_reduce r eqS).
+Lemma red_tran_iso : brel_transitive red_Type red_eq <-> brel_transitive S (brel_reduce r eqS).
   Proof. split. intros H s1 s2 s3. compute. intros H1 H2. 
          assert (K := H (inj s1) (inj s2) (inj s3)). compute in K. 
          apply K; auto. 
@@ -179,7 +225,10 @@ Proof. split; intro H.
          exact H7.          
 Qed.
 
-(* this uses b_ass, r_left, r_right *) 
+(* this uses b_ass, r_left, r_right 
+
+   This shows that we have generalised reductions to those that are pseudo-associative! 
+*) 
 Lemma r_left_right_imply_pseudo_associative : bop_pseudo_associative S eqS r b. 
 Proof. intros s1 s2 s3. 
          assert (H1 := b_ass (r s1) (r s2) (r s3)). apply r_cong in H1. 
@@ -214,7 +263,9 @@ Proof. split.
  Qed.
 
 
-
+(* 
+   Can't use <-> for existentials!  So break up into -> and <- lemmas. 
+*) 
 
 Lemma red_not_comm_iso_left :  bop_not_commutative red_Type red_eq red_bop -> bop_not_commutative S (brel_reduce r eqS) (bop_full_reduce r b).
 Proof.   intros [[[s1 p1] [s2 p2]]  p3]. compute in p3.  unfold Pr in p1. unfold Pr in p2. 
@@ -246,235 +297,116 @@ Qed.
 
 
 
-(*
+Lemma red_exists_id_left :  bop_exists_id red_Type red_eq red_bop -> bop_exists_id S (brel_reduce r eqS) (bop_full_reduce r b).
+Proof. intros [[id P] Q].
+       exists id. intro s; compute. compute in Q.
+       destruct (Q (inj s)) as [L R]. compute in L, R. unfold Pr in P.
+       split.
+       assert (J1 := b_cong _ _ _ _ P (refS (r s))). apply r_cong in J1.
+       assert (J2 := transS _ _ _ J1 L). apply r_cong in J2.
+       assert (J3 := r_idem s).
+       assert (J4 := transS _ _ _ J2 J3).
+       exact J4.
+       assert (J1 := b_cong _ _ _ _ (refS (r s)) P). apply r_cong in J1.
+       assert (J2 := transS _ _ _ J1 R). apply r_cong in J2.
+       assert (J3 := r_idem s).
+       assert (J4 := transS _ _ _ J2 J3).
+       exact J4. 
+Qed. 
+
+Lemma red_exists_id_right : bop_exists_id S (brel_reduce r eqS) (bop_full_reduce r b) -> bop_exists_id red_Type red_eq red_bop.
+Proof. intros [id Q].
+       exists (inj id). intros [s P]; compute. compute in Q.
+       destruct (Q s) as [L R].  unfold Pr in P.
+       split.
+       assert (J1 := b_cong _ _ _ _(refS (r id)) P). apply r_cong in J1. apply r_cong in J1. apply symS in J1. 
+       assert (J2 := transS _ _ _ J1 L). 
+       assert (J3 := r_idem (b (r id) s)). apply symS in J3. 
+       assert (J4 := transS _ _ _ J3 J2).
+       assert (J5 := transS _ _ _ J4 P).       
+       exact J5.
+       assert (J1 := b_cong _ _ _ _ P (refS (r id))). apply r_cong in J1. apply r_cong in J1. apply symS in J1. 
+       assert (J2 := transS _ _ _ J1 R). 
+       assert (J3 := r_idem (b s (r id))). apply symS in J3. 
+       assert (J4 := transS _ _ _ J3 J2).
+       assert (J5 := transS _ _ _ J4 P).       
+       exact J5.
+Qed. 
+
+
 Lemma red_not_exists_id_left :  bop_not_exists_id red_Type red_eq red_bop -> bop_not_exists_id S (brel_reduce r eqS) (bop_full_reduce r b).
 Proof. intros H s. compute.
-       destruct (H (inj s)) as [[s' P] Q]. compute in Q. unfold Pr in P. 
-       exists (r s'). 
- Qed.
-*)
+       destruct (H (inj s)) as [[s' P] Q]. compute in Q. unfold Pr in P.
+       exists s'.
+       destruct Q as [Q | Q].
+       left.
+       case_eq(eqS (r (r (b (r s) (r s')))) (r s')); intro J1.
+       assert (K : eqS (r (b (r s) s')) s' = true).
+          assert (J2 := transS _ _ _ J1 P).
+          assert (J3 := r_idem (b (r s) (r s'))). apply symS in J3.
+          assert (J4 := transS _ _ _ J3 J2).
+          assert (J5 := b_cong _ _ _ _ (refS (r s)) P). apply r_cong in J5. apply symS in J5.
+          assert (J6 := transS _ _ _ J5 J4).
+          exact J6. 
+       rewrite K in Q.
+       discriminate Q. 
+       reflexivity.
+       right. 
+       case_eq(eqS (r (r (b (r s') (r s)))) (r s')); intro J1.
+       assert (K : eqS (r (b s' (r s))) s' = true).
+          assert (J2 := transS _ _ _ J1 P).
+          assert (J3 := r_idem (b (r s') (r s))). apply symS in J3.
+          assert (J4 := transS _ _ _ J3 J2).
+          assert (J5 := b_cong _ _ _ _ P (refS (r s))). apply r_cong in J5. apply symS in J5.
+          assert (J6 := transS _ _ _ J5 J4).
+          exact J6. 
+       rewrite K in Q.
+       discriminate Q. 
+       reflexivity.
+Qed.
+
+Lemma red_not_exists_id_right :  bop_not_exists_id S (brel_reduce r eqS) (bop_full_reduce r b) -> bop_not_exists_id red_Type red_eq red_bop.
+Proof. intros H [s P]. compute. unfold Pr in P. 
+       destruct (H s) as [s' Q]. compute in Q.
+       exists (inj s'). compute. 
+       destruct Q as [Q | Q].
+       left.
+       case_eq(eqS (r (b s (r s'))) (r s')); intro J1.
+       assert (K : eqS (r (r (b (r s) (r s')))) (r s') = true).
+          assert (J2 := b_cong _ _ _ _ P (refS (r s'))). apply r_cong in J2. 
+          assert (J3 := transS _ _ _ J2 J1). apply r_cong in J3. 
+          assert (J4 := r_idem s'). 
+          assert (J5 := transS _ _ _ J3 J4).
+          exact J5. 
+       rewrite K in Q.
+       discriminate Q. 
+       reflexivity.
+       right. 
+       case_eq(eqS (r (b (r s') s)) (r s')); intro J1.
+       assert (K : eqS (r (r (b (r s') (r s)))) (r s') = true).
+          assert (J2 := b_cong _ _ _ _ (refS (r s')) P). apply r_cong in J2. 
+          assert (J3 := transS _ _ _ J2 J1). apply r_cong in J3. 
+          assert (J4 := r_idem s'). 
+          assert (J5 := transS _ _ _ J3 J4).
+          exact J5. 
+       rewrite K in Q.
+       discriminate Q. 
+       reflexivity.
+Qed.
+
+
+  (* 
+    Some sufficient conditions ...
+  *) 
   
-         (* 
+  (* 
     Commutativity 
    *)
-  (* 
-    First, a sufficient condition ...
-  *) 
   Lemma red_bop_comm : bop_commutative S eqS b -> bop_commutative red_Type red_eq red_bop. 
   Proof. intros H1 [s1 p1] [s2 p2]. compute.
          unfold bop_commutative in H1. 
          apply r_cong. apply H1. 
   Qed.
-
-  (*
-   f is a homomorphism for b and b' if 
-    f(b(x, y)) = b'(f(x), f(y))
-
-   The following show that 
-    1) inj is a homomorphism for (bop_full_reduce r b) and red_bop. 
-    2) projT1 is a homomorphism for red_bop and (bop_full_reduce r b). 
-    3) (inj o projT1) is id on red_Type
-    4) (projT1 o inj) is id on r(S), the image of r 
-
-    so we have an isomorphism between (S, (bop_full_reduce r b) and (red_Type, bop_red) 
-
-    HOWEVER, the isomorphism only works on the image of r, r(S). 
-
-*)
-  
-  Lemma inj_homomorphism : ∀ (s1 s2 : S),  red_eq (inj (bop_full_reduce r b s1 s2)) (red_bop (inj s1) (inj s2)) = true. 
-  Proof. intros s1 s2. compute. apply r_idem. Qed.
-  
-  Lemma proj1_homomorphism : ∀ (p1 p2 : red_Type),  eqS (projT1 (red_bop p1 p2)) (bop_full_reduce r b (projT1 p1) (projT1 p2)) = true. 
-  Proof. intros [s1 P1] [s2 P2]. compute. compute in P1. compute in P2.
-         apply r_cong.
-         assert (K := b_cong _ _ _ _ P1 P2).  apply symS.
-         exact K. 
-  Qed. 
-
-  Lemma inj_proj1_is_id : ∀ p : red_Type,  red_eq p (inj (projT1 p)) = true.
-  Proof. intros [s P]. compute. compute in P. apply symS. exact P. Qed. 
-  
-  Lemma proj1_inj_is_id_on_image_of_r : ∀ s : S,  eqS (r s) (projT1 (inj (r s))) = true.
-  Proof. intro s. compute. apply symS. apply r_idem. Qed.
-
-  Lemma equality_lemma_1 : ∀ (p1 p2 : red_Type),  eqS (projT1 p1) (projT1 p2) = red_eq p1 p2.
-  Proof. intros [s1 P1] [s2 P2]. compute. reflexivity. Qed.
-
-  Lemma equality_lemma_2 : ∀ (s1 s2 : S),  eqS (r s1) (r s2) = red_eq (inj s1) (inj s2).
-  Proof. intros s1 s2. compute. reflexivity. Qed. 
-
-(* Now, let's look at preservation of basic properties 
-
-*) 
-
-  Lemma congruence_iso :
-          (∀ s : S, eqS (r s) s = true -> {z : S & eqS (r z) s = true}) -> 
-              (bop_congruence S eqS (bop_full_reduce r b) <-> 
-               bop_congruence red_Type red_eq red_bop). 
-  Proof. intro C. split.
-         (* bop_congruence S eqS (bop_full_reduce r b) → bop_congruence red_Type red_eq red_bop *) 
-         compute.
-         intros H [x1 P1] [x2 P2] [x3 P3] [x4 P4] H1 H2. 
-         destruct (C x1 P1) as [z1 R1].
-         destruct (C x2 P2) as [z2 R2].
-         destruct (C x3 P3) as [z3 R3].
-         destruct (C x4 P4) as [z4 R4].         
-         assert (J1 := b_cong _ _ _ _ R1 R2). apply r_cong in J1. 
-         assert (J2 := b_cong _ _ _ _ R3 R4). apply r_cong in J2. 
-         apply symS in J1.
-         assert (K := H (r z1) (r z2) (r z3) (r z4)).
-         assert (E1 : eqS (r z1) (r z3) = true).
-             assert (E3 := transS _ _ _ R1 H1). apply symS in R3.
-             assert (E4 := transS _ _ _ E3 R3).
-             exact E4. 
-         assert (E2 : eqS (r z2) (r z4) = true).
-             assert (E3 := transS _ _ _ R2 H2). apply symS in R4.
-             assert (E4 := transS _ _ _ E3 R4).
-             exact E4.              
-         assert (K2 := K E1 E2).
-         (* r_left_and_right : ∀ (s1 s2 : S), eqS (r (b s1 s2)) (r (b (r s1) (r s2))) = true.  *)          
-         assert (K3 := r_left_and_right (r z1) (r z2)). 
-         assert (J3 := transS _ _ _ J1 K3).
-         assert (J4 := transS _ _ _ J3 K2).
-         assert (K4 := r_left_and_right (r z3) (r z4)). apply symS in K4.
-         assert (J5 := transS _ _ _ J4 K4).
-         assert (J6 := transS _ _ _ J5 J2).                  
-         exact J6.
-         (* bop_congruence red_Type red_eq red_bop → bop_congruence S eqS (bop_full_reduce r b) *)
-         compute. 
-         intros H s1 s2 s3 s4 H1 H2.
-         apply r_cong in H1.
-         apply r_cong in H2.                   
-         assert (K := H (inj s1) (inj s2) (inj s3) (inj s4) H1 H2). 
-         exact K. 
-  Qed.
-  
-  
-
-  Lemma commutative_iso_1 :
-          (∀ s : S, eqS (r s) s = true -> {z : S & eqS (r z) s = true}) -> 
-              bop_commutative S eqS (bop_full_reduce r b) -> bop_commutative red_Type red_eq red_bop. 
-  Proof. intro C.  compute.
-         intros H [s P] [t Q].
-         destruct (C s P) as [z1 R1].
-         destruct (C t Q) as [z2 R2].         
-         assert (K := H z1 z2).
-         assert (J1 := b_cong _ _ _ _ R1 R2). apply r_cong in J1. 
-         assert (J2 := b_cong _ _ _ _ R2 R1). apply r_cong in J2. 
-         apply symS in J1.
-         assert (J3 := transS _ _ _ J1 K).
-         assert (J4 := transS _ _ _ J3 J2).
-         exact J4.
-  Qed.
-
-  Lemma commutative_iso_2 :
-            bop_commutative red_Type red_eq red_bop → bop_commutative S eqS (bop_full_reduce r b).
-  Proof. compute. 
-         intros H s t.
-         assert (K := H (inj s) (inj t)).
-         compute in K.
-         exact K. 
-  Qed.
-
-  Lemma sanity : ∀ s : S, eqS (r s) s = true → {z : S & eqS (r z) s = true}.
-  Proof. intros s H. exists (r s).
-         assert (K := r_idem s).
-         assert (J := transS _ _ _ K H). 
-         exact J.
-   Qed. 
- 
-  Lemma commutative_iso :
-            bop_commutative red_Type red_eq red_bop <-> bop_commutative S eqS (bop_full_reduce r b).
-  Proof. split.
-         apply commutative_iso_2.
-         apply commutative_iso_1.
-         apply sanity. 
-  Qed.
-
- Lemma not_commutative_implies :
-    bop_not_commutative S eqS (bop_full_reduce r b) → bop_not_commutative red_Type red_eq red_bop.
-  Proof. intros [[s1 s2] Q]. compute in Q. 
-         exists (inj s1, inj s2). compute. 
-         exact Q. 
-  Qed.
-
-Definition brel_symmetric_f (S : Type) (r : brel S) := 
-    ∀ s t : S, (r s t = false) → (r t s = false). 
-
-Lemma not_commutative_2:
-    bop_not_commutative red_Type red_eq red_bop ->
-    bop_not_commutative S eqS (bop_full_reduce r b).
-Proof. intros  [[s1 s2] Q]. compute in s1. compute in s2.
-          compute. 
-          exists (projT1 s1, projT1 s2). compute. compute in Q.
-          assert (M := r_left_and_right (let (a, _) := s2 in a) (let (a, _) := s1 in a)).
-          assert (N := r_left_and_right (let (a, _) := s1 in a) (let (a, _) := s2 in a)).
-          assert (X := brel_transitive_f1 S eqS symS transS 
-                (r (b (let (a, _) := s1 in a) (let (a, _) := s2 in a)))
-                (r (b (let (a, _) := s2 in a) (let (a, _) := s1 in a)))
-                (r (b (r (let (a, _) := s2 in a)) (r (let (a, _) := s1 in a))))
-                Q M).
-          apply symS in N.
-          assert (Y := brel_transitive_f2 S eqS symS transS 
-                  (r (b (r (let (a, _) := s1 in a)) (r (let (a, _) := s2 in a))))
-                  (r (b (let (a, _) := s1 in a) (let (a, _) := s2 in a)))
-                  (r (b (r (let (a, _) := s2 in a)) (r (let (a, _) := s1 in a))))
-                  N X).
-          exact Y.
-Qed.
-        
-
-  Lemma associative_iso :
-          (∀ s : S, eqS (r s) s = true -> {z : S & eqS (r z) s = true}) -> 
-              (bop_associative S eqS (bop_full_reduce r b) <-> bop_associative red_Type red_eq red_bop). 
-  Proof. intro C. split.
-         (*  bop_associative S eqS (bop_full_reduce r b) → bop_associative red_Type red_eq red_bop   *) 
-         compute.
-         intros H [x1 P1] [x2 P2] [x3 P3]. 
-         destruct (C x1 P1) as [z1 R1].
-         destruct (C x2 P2) as [z2 R2].
-         destruct (C x3 P3) as [z3 R3].
-         assert (K := H z1 z2 z3).
-         assert (K2 := r_left (r (b (r z1) (r z2))) (r z3)). compute in K2. apply symS in K2.
-         assert (K3 := transS _ _ _ K2 K). 
-         assert (K4 := r_right (r z1) (r (b (r z2) (r z3)))). compute in K4.
-         assert (K5 := transS _ _ _ K3 K4).
-         assert (K6 : eqS (r (b (r (b x1 x2)) x3)) (r (b (r (b (r z1) (r z2))) (r z3))) = true).
-             apply r_cong.
-             apply b_cong.
-             apply r_cong.
-             apply b_cong.
-             apply symS; auto.
-             apply symS; auto.              
-             apply symS; auto. 
-         assert (K7 : eqS (r (b (r z1) (r (b (r z2) (r z3))))) (r (b x1 (r (b x2 x3)))) = true).
-             apply r_cong.
-             apply b_cong.
-             apply symS; auto.             
-             apply r_cong.
-             apply b_cong.
-             apply symS; auto.              
-             apply symS; auto.              
-         assert (K8 := transS _ _ _ K6 K5).
-         assert (K9 := transS _ _ _ K8 K7).          
-         exact K9.  
-         (*  bop_associative red_Type red_eq red_bop → bop_associative S eqS (bop_full_reduce r b) *)
-         compute. 
-         intros H s1 s2 s3.
-         assert (K := H (inj s1) (inj s2) (inj s3)). compute in K.
-         assert (J1 := r_left (r (b (r s1) (r s2))) (r s3)). compute in J1.
-         assert (J2 := transS _ _ _ J1 K).
-         assert (J3 := r_right (r s1) (r (b (r s2) (r s3)))). compute in J3.
-         apply symS in J3.
-         assert (J4 := transS _ _ _ J2 J3).         
-         exact J4. 
-  Qed.
-  
-  
-
-
-
   (* 
       idempotence 
   *)   
@@ -486,7 +418,6 @@ Qed.
          assert (H3 := transS _ _ _ H2 p). 
          exact H3. 
   Qed.                                  
-
   (* 
       Selectivity 
   *)   
@@ -502,7 +433,9 @@ Qed.
          assert (H3 := transS _ _ _ H2 p2). 
          exact H3. 
   Qed.                                  
-
+  (* 
+      Id 
+  *)   
   Lemma red_bop_id : uop_preserves_id S eqS b r -> bop_exists_id S eqS b -> bop_exists_id red_Type red_eq red_bop. 
   Proof. intros H [id p]. exists (inj id). unfold bop_is_id in p. unfold bop_is_id.
          intros [t pt]. compute.
@@ -522,9 +455,10 @@ Qed.
           assert (H7 := transS _ _ _ H6 pt).
           exact H7.
 Qed.
-
-
-  Lemma red_bop_ann : uop_preserves_ann S eqS b r -> bop_exists_ann S eqS b -> bop_exists_ann red_Type red_eq red_bop. 
+  (* 
+      Ann 
+  *)   
+Lemma red_bop_ann : uop_preserves_ann S eqS b r -> bop_exists_ann S eqS b -> bop_exists_ann red_Type red_eq red_bop. 
   Proof. intros H [ann p]. exists (inj ann). unfold bop_is_ann in p. unfold bop_is_ann.
          intros [t pt]. compute.
          destruct (p t) as [H1  H2]. split. 
@@ -536,10 +470,9 @@ Qed.
           assert (H3 := H ann p).
           assert (H4 := r_right  t ann). compute in H4.
           assert (H5 := r_cong _ _ H2).
-assert (H6 := transS _ _ _ H4 H5).
+          assert (H6 := transS _ _ _ H4 H5).
           exact H6.
   Qed.
-
 
 
 End ReductionTheory.
