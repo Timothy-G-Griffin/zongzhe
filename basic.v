@@ -83,5 +83,30 @@ Definition bop_add_id : ∀ {S : Type}, binary_op S → cas_constant → binary_
    | (inr a), (inr b) => inr _ (bS a b)
    end.
 
+Definition brel_complement : ∀ {S : Type}, brel S -> brel S 
+   := λ {S} r x y,  if (r x y) then false else true. 
+   
+Definition brel_conjunction : ∀ {S : Type}, brel S -> brel S -> brel S 
+   := λ {S} r1 r2 x y,  (r1 x y) && (r2 x y). 
+   
+(* r' x y = true  <-> r x (b x y) *) 
+Definition brel_llte : ∀ {S : Type}, brel S → binary_op S → brel S 
+   := λ {S} eq b x y, eq x (b x y). 
+   
+Definition brel_llt : ∀ {S : Type}, brel S → binary_op S → brel S 
+   := λ {S} eq b, brel_conjunction (brel_llte eq b) (brel_complement eq). 
 
-
+(*
+(a, b) llex (c, d) = (a + c, test(=, a,  c, b + d, test(<, a, c, b, d)))
+*) 
+Definition bop_llex : ∀ {S T : Type}, brel S → binary_op S → binary_op T → binary_op (S * T) 
+:= λ {S T} eq b1 b2 x y,  
+   match x, y with
+    | (a, b), (c, d) => 
+        (b1 a c, 
+         if eq a c 
+         then (b2 b d)
+         else if brel_llt eq b1 a c 
+              then b 
+              else d)
+   end.

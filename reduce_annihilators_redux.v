@@ -322,6 +322,7 @@ Qed.
 
 
 Definition bop_rap_add : binary_op (S * T) := bop_fpr (aS, aT) P (bop_product addS addT).
+Definition bop_rap_lexicographic_add : brel S -> binary_op (S * T) := λ eqS, bop_fpr (aS, aT) P (bop_llex eqS addS addT).
 
 
 Lemma bop_rap_add_congruence : bop_congruence (S * T) (brel_reduce uop_rap (brel_product eqS eqT)) bop_rap_add.

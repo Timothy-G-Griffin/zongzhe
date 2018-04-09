@@ -4,7 +4,7 @@ Require Import CAS.basic.
 Require Import CAS.properties. 
 Require Import CAS.structures.
 Require Import CAS.reduce_annihilators_redux. 
-
+Require Import CAS.predicate_reduce.
 
 
 Lemma bop_rap_mul_no_divisor (S T : Type) (eqS : brel S) (eqT : brel T) (mulS : binary_op S) (mulT : binary_op T) (aS : S) (aT : T) :
@@ -168,7 +168,7 @@ Definition rap_add_product_proofs (S T : Type)
   commutative_semigroup_with_id_proofs T eqT addT iT ->
   commutative_semigroup_with_id_proofs (S * T)
                                         (brel_reduce (uop_rap S T eqS eqT iS iT) (brel_product eqS eqT))
-                                        (bop_rap_mul S T eqS eqT iS iT addS addT) (iS, iT)
+                                        (bop_rap_add S T eqS eqT iS iT addS addT) (iS, iT)
 := λ pS pT,
 let refS       := eqv_reflexive S eqS eqvS in
 let symS       := eqv_symmetric S eqS eqvS in
@@ -218,8 +218,8 @@ let tranT := eqv_transitive _ _ eqvT in
 let congT := eqv_congruence _ _ eqvT in 
 {|
    ceqi   := brel_reduce (uop_rap S T eqS eqT iS iT) (brel_product eqS eqT)
-;  cbopi  := bop_rap_mul S T eqS eqT iS iT addS addT 
-;  cidi  := (iS, iT)
+;  cbopi  := bop_rap_add S T eqS eqT iS iT addS addT 
+;  cidi   := (iS, iT)
 ;  csgpi  := rap_add_product_proofs S T eqS eqT eqvS eqvT iS iT addS addT (csgpi S sg1) (csgpi T sg2)
 ;  ceqvi  := reduce_rap_eqv_proofs S T eqS eqT refS symS tranS congS refT symT tranT congT iS iT 
 |}.

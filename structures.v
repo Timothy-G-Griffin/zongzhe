@@ -148,3 +148,81 @@ Definition commutative_rsemigroup_to_commutative_semigroup (S : Type): commutati
 ;  csgp  := cr_sgp S crsg
 |}.
 
+
+(* C = commutative
+   S = selective 
+   M = monoid 
+   A = with annihilator 
+ *)
+
+Record sg_MA_proofs (S: Type) (eq : brel S) (b : binary_op S) (id : S) (ann : S) := 
+{
+  sg_MA_associative   : bop_associative S eq b
+; sg_MA_congruence    : bop_congruence S eq b
+; sg_MA_is_id         : bop_is_id S eq b id
+; sg_MA_is_ann        : bop_is_ann S eq b ann                             
+}.
+
+Record sg_CMA_proofs (S: Type) (eq : brel S) (b : binary_op S) (id : S) (ann : S) := 
+{
+  sg_CMA_associative   : bop_associative S eq b
+; sg_CMA_congruence    : bop_congruence S eq b
+; sg_CMA_commutative   : bop_commutative S eq b
+; sg_CMA_is_id         : bop_is_id S eq b id
+; sg_CMA_is_ann        : bop_is_ann S eq b ann                             
+}.
+
+Record sg_CSMA_proofs (S: Type) (eq : brel S) (b : binary_op S) (id : S) (ann : S) := 
+{
+  sg_CSMA_associative   : bop_associative S eq b
+; sg_CSMA_congruence    : bop_congruence S eq b
+; sg_CSMA_commutative   : bop_commutative S eq b
+; sg_CSMA_selective     : bop_selective S eq b                                          
+; sg_CSMA_is_id         : bop_is_id S eq b id
+; sg_CSMA_is_ann        : bop_is_ann S eq b ann                             
+}.
+
+
+Record sg_CSMA (S : Type) := {
+  sg_CSMA_eq         : brel S  
+; sg_CSMA_bop        : binary_op S
+; sg_CSMA_id         : S
+; sg_CSMA_ann        : S
+; sg_CSMA_eqv        : eqv_proofs S sg_CSMA_eq
+; sg_CSMA_pfs        : sg_CSMA_proofs S sg_CSMA_eq sg_CSMA_bop sg_CSMA_id sg_CSMA_ann
+}.
+
+
+Record dioid_proofs (S: Type) (eq : brel S) (add mul : binary_op S) (zero : S) (one : S) :=
+{  
+  dioid_left_distributive  : bop_left_distributive S eq add mul
+; dioid_right_distributive : bop_right_distributive S eq add mul                             
+; dioid_zero_is_mul_ann    : bop_is_ann S eq mul zero
+; dioid_one_is_add_ann     : bop_is_ann S eq add one
+}.
+
+
+Record dioid (S : Type) := {
+    dioid_eq         : brel S  
+  ; dioid_add        : binary_op S
+  ; dioid_mul        : binary_op S                                   
+  ; dioid_zero       : S
+  ; dioid_one        : S
+  ; diode_eqv        : eqv_proofs S dioid_eq
+  ; diode_add_pfs    : sg_CMA_proofs S dioid_eq dioid_add dioid_zero dioid_one
+  ; diode_mul_pfs    : sg_MA_proofs   S dioid_eq dioid_mul dioid_one  dioid_zero                                        
+  ; dioid_pfs        : dioid_proofs S dioid_eq dioid_add dioid_mul dioid_zero dioid_one
+}.
+
+
+Record dioid_S (S : Type) := {
+    dioid_S_eq         : brel S  
+  ; dioid_S_add        : binary_op S
+  ; dioid_S_mul        : binary_op S                                   
+  ; dioid_S_zero       : S
+  ; dioid_S_one        : S
+  ; diode_S_eqv        : eqv_proofs S dioid_S_eq
+  ; diode_S_add_pfs    : sg_CSMA_proofs S dioid_S_eq dioid_S_add dioid_S_zero dioid_S_one
+  ; diode_S_mul_pfs    : sg_MA_proofs   S dioid_S_eq dioid_S_mul dioid_S_one  dioid_S_zero                                        
+  ; dioid_S_pfs        : dioid_proofs S dioid_S_eq dioid_S_add dioid_S_mul dioid_S_zero dioid_S_one
+}.
