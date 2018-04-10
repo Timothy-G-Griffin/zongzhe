@@ -39,6 +39,7 @@ Section Test.
   Variable is_idMulS : bop_is_id S eqS mulS aS.
   Variable is_annMulS : bop_is_ann S eqS mulS iS.
 
+  
   Variable no_idS_div_add : bop_self_square S eqS addS iS. (* ∀ a b : S,  eqS (addS a b) aS = true -> (eqS a aS = true) * (eqS b aS = true).  *) 
   Variable no_idS_div_mul : bop_self_square S eqS mulS aS.
 
@@ -61,6 +62,31 @@ Section Test.
         admit.
         Admitted.
 
+  Lemma idProof : bop_is_id S (brel_reduce (uop_predicate_reduce aS Padd) eqS) (bop_fpr aS Padd addS) iS.
+  Proof. compute; intro s.
+         case_eq(eqS iS aS); intro K.
+         case_eq(eqS s aS); intro L.
+         assert (J:= is_annAddS aS). destruct J as [J _]. rewrite J. rewrite (refS aS). auto.
+         assert (A:= is_annAddS s). assert (B := is_idAddS s).
+       destruct A as [A _]; destruct B as [B _]. apply symS in A.
+       assert (M := brel_transitive_f2 S eqS symS tranS (addS iS s) s aS B L).
+       assert (N := brel_transitive_f1 S eqS symS tranS (addS iS s) aS (addS aS s) M A).
+       assert (R := cong_addS iS s aS s K (refS s)). rewrite N in R. discriminate R.
+       case_eq(eqS s aS); intro L.
+       assert (J:= is_annAddS iS). destruct J as [Jl Jr]. rewrite Jl,Jr. rewrite (refS aS). auto.
+       assert (J:= is_idAddS s). destruct J as [Jl Jr].
+       assert (A := brel_transitive_f2 S eqS symS tranS (addS iS s) s aS Jl L). rewrite A. rewrite A.
+       assert (B := brel_transitive_f2 S eqS symS tranS (addS s iS) s aS Jr L). rewrite B. rewrite B. rewrite Jl,Jr. auto.
+  Qed.
+
+
+
+  Lemma annProof : bop_is_ann S (brel_reduce (uop_predicate_reduce aS Padd) eqS) (bop_fpr aS Padd addS) aS.
+  Proof. compute. intro s. rewrite (refS aS).
+        case_eq(eqS s aS); intro K.
+        assert (J:= is_annAddS aS). destruct J as [J _]. rewrite J. rewrite (refS aS). auto.
+        assert (J:= is_annAddS s). destruct J as [Jl Jr]. rewrite Jl,Jr. rewrite (refS aS). auto.
+  Qed.
 
   Record sg_CSMA_proofs (S: Type) (eq : brel S) (b : binary_op S) (id : S) (ann : S) := 
 {
@@ -87,8 +113,8 @@ sg_CSMA_associative   := bop_associative_fpr_ann_v2 S Padd eqS refS aS addS Padd
 ; sg_CSMA_congruence    := bop_full_reduce_congruence S eqS (uop_predicate_reduce aS Padd) addS (uop_predicate_reduce_congruence S Padd eqS refS aS Padd_cong) cong_addS
 ; sg_CSMA_commutative   := bop_full_reduce_commutative S eqS (uop_predicate_reduce aS Padd) addS (uop_predicate_reduce_congruence S Padd eqS refS aS Padd_cong) com_addS
 ; sg_CSMA_selective     := bop_fpr_selective S Padd eqS refS aS addS Padd_true Padd_cong Padd_false_preservation is_annAddS sel_addS                                          
-; sg_CSMA_is_id         := is_idAddS
-; sg_CSMA_is_ann        := is_annAddS  
+; sg_CSMA_is_id         := idProof
+; sg_CSMA_is_ann        := annProof 
 |}.
 
 Record sg_CSMA (S : Type) := {
@@ -143,3 +169,6 @@ sg_CSMA_eq         := eqS
 
 
 End Test.
+
+
+
