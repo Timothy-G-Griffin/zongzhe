@@ -18,8 +18,8 @@ Section Test.
   Variable symS : brel_symmetric S eqS.
   Variable tranS : brel_transitive S eqS.
   Variable eqS_cong : brel_congruence S eqS eqS.           
-  Variable iS : S.
-  Variable aS : S.
+  Variable zeroS : S.
+  Variable oneS : S.
 
   Variable addS : binary_op S.
   Variable cong_addS : bop_congruence S eqS addS.
@@ -33,59 +33,71 @@ Section Test.
   Variable com_mulS : bop_commutative S eqS mulS.
   Variable sel_mulS : bop_selective S eqS mulS.
 
-  Variable is_idAddS : bop_is_id S eqS addS iS.
-  Variable is_annAddS : bop_is_ann S eqS addS aS.
+  Variable is_idAddS : bop_is_id S eqS addS zeroS.
+  Variable is_annAddS : bop_is_ann S eqS addS oneS.
 
-  Variable is_idMulS : bop_is_id S eqS mulS aS.
-  Variable is_annMulS : bop_is_ann S eqS mulS iS.
+  Variable is_idMulS : bop_is_id S eqS mulS oneS.
+  Variable is_annMulS : bop_is_ann S eqS mulS zeroS.
 
   
-  Variable no_idS_div_add : bop_self_square S eqS addS iS. (* ∀ a b : S,  eqS (addS a b) aS = true -> (eqS a aS = true) * (eqS b aS = true).  *) 
-  Variable no_idS_div_mul : bop_self_square S eqS mulS aS.
+  Variable no_idS_div_add : bop_self_square S eqS addS zeroS. (* ∀ a b : S,  eqS (addS a b) oneS = true -> (eqS a oneS = true) * (eqS b oneS = true).  *) 
+  Variable no_idS_div_mul : bop_self_square S eqS mulS oneS.
 
-  Variable no_annS_div_add : bop_self_divisor S eqS addS aS. (* ∀ a b : S,  eqS (mulS a b) aS = true -> (eqS a aS = true) + (eqS b aS = true).  *) 
-  Variable no_annS_div_mul : bop_self_divisor S eqS mulS iS.
+  Variable no_annS_div_add : bop_self_divisor S eqS addS oneS. (* ∀ a b : S,  eqS (mulS a b) oneS = true -> (eqS a oneS = true) + (eqS b oneS = true).  *) 
+  Variable no_annS_div_mul : bop_self_divisor S eqS mulS zeroS.
 
-  Definition P : S -> bool := λ s, (eqS s iS).
-  Definition uop_red : unary_op S := uop_predicate_reduce aS P.
-  Definition bop_fpr_addS : binary_op S := bop_fpr iS P addS .
-  Definition bop_fpr_mulS : binary_op S := bop_fpr iS P mulS .
-  Lemma P_true : P iS = true. Proof. compute; auto. Qed.
-  Lemma P_cong : ∀ (p1 p2 : S), eqS p1 p2 = true -> P p1 = P p2.
+  Variable left_dis : bop_left_distributive S eqS addS mulS.
+  Variable right_dis : bop_right_distributive S eqS addS mulS.
+
+  Definition P : S -> bool := λ s, (eqS s zeroS).
+  Definition uop_red : unary_op S := uop_predicate_reduce zeroS P.
+  Definition bop_fpr_addS : binary_op S := bop_fpr zeroS P addS .
+  Definition bop_fpr_mulS : binary_op S := bop_fpr zeroS P mulS .
+
+
+
+Lemma P_true : P zeroS = true. Proof. compute; auto. Qed.
+Lemma P_cong : ∀ (p1 p2 : S), eqS p1 p2 = true -> P p1 = P p2.
   Proof. intros p1 p2 H. compute. apply eqS_cong; auto. Qed.
-  Lemma P_false_preservation : ∀ (p1 p2 : S), P p1 = false -> P p2 = false -> P (addS p1 p2) = false.
+Lemma P_false_preservation : ∀ (p1 p2 : S), P p1 = false -> P p2 = false -> P (addS p1 p2) = false.
   Proof. intros p1 p2 H1 H2. compute. compute in H1,H2. compute in no_idS_div_add.
         assert (H := no_idS_div_add p1 p2).
-        case_eq(eqS (addS p1 p2) iS); intro K.
+        case_eq(eqS (addS p1 p2) zeroS); intro K.
         assert (L := H K). destruct L.
         rewrite H1 in e. discriminate. auto.
   Qed.
 
-  Lemma idProof : bop_is_id S (brel_reduce (uop_predicate_reduce aS P) eqS) (bop_fpr aS P addS) iS.
+  Lemma idProof_add : bop_is_id S (brel_reduce uop_red eqS) bop_fpr_addS zeroS.
+  Proof. compute. intro s. rewrite (refS zeroS).
+    case_eq(eqS s zeroS); intro K.
+    assert (J:= is_idAddS zeroS). destruct J as [J _]. rewrite J. rewrite (refS zeroS). auto.
+    assert (J:= is_idAddS s). destruct J as [Jl Jr]. 
+    assert (M := brel_transitive_f2 S eqS symS tranS (addS s zeroS) s zeroS Jr K). rewrite M. rewrite M.
+    assert (N := brel_transitive_f2 S eqS symS tranS (addS zeroS s) s zeroS Jl K). rewrite N. rewrite N. auto.
+  Qed.
+
+
+
+  Lemma annProof_add : bop_is_ann S (brel_reduce (uop_predicate_reduce zeroS P) eqS) bop_fpr_addS oneS.
   Proof. compute; intro s.
-         case_eq(eqS iS aS); intro K.
-         case_eq(eqS s aS); intro L.
-         assert (J:= is_annAddS aS). destruct J as [J _]. rewrite J. rewrite (refS aS). auto.
-         assert (A:= is_annAddS s). assert (B := is_idAddS s).
-       destruct A as [A _]; destruct B as [B _]. apply symS in A.
-       assert (M := brel_transitive_f2 S eqS symS tranS (addS iS s) s aS B L).
-       assert (N := brel_transitive_f1 S eqS symS tranS (addS iS s) aS (addS aS s) M A).
-       assert (R := cong_addS iS s aS s K (refS s)). rewrite N in R. discriminate R.
-       case_eq(eqS s aS); intro L.
-       assert (J:= is_annAddS iS). destruct J as [Jl Jr]. rewrite Jl,Jr. rewrite (refS aS). auto.
-       assert (J:= is_idAddS s). destruct J as [Jl Jr].
-       assert (A := brel_transitive_f2 S eqS symS tranS (addS iS s) s aS Jl L). rewrite A. rewrite A.
-       assert (B := brel_transitive_f2 S eqS symS tranS (addS s iS) s aS Jr L). rewrite B. rewrite B. rewrite Jl,Jr. auto.
-  Qed.
-
-
-
-  Lemma annProof : bop_is_ann S (brel_reduce (uop_predicate_reduce aS P) eqS) (bop_fpr aS P addS) aS.
-  Proof. compute. intro s. rewrite (refS aS).
-        case_eq(eqS s aS); intro K.
-        assert (J:= is_annAddS aS). destruct J as [J _]. rewrite J. rewrite (refS aS). auto.
-        assert (J:= is_annAddS s). destruct J as [Jl Jr]. rewrite Jl,Jr. rewrite (refS aS). auto.
-  Qed.
+    case_eq(eqS oneS zeroS); intro K.
+    case_eq(eqS s zeroS); intro L.
+    assert (J:= is_idAddS zeroS). destruct J as [J _]. rewrite J. rewrite (refS zeroS). auto.
+    assert (J:= is_idAddS s). destruct J as [Jl Jr]. 
+    assert (A:= is_annAddS s). assert (B := is_idAddS s).
+  destruct A as [A _]; destruct B as [B _]. apply symS in A.
+  assert (M := brel_transitive_f2 S eqS symS tranS (addS zeroS s) s zeroS B L). apply symS in K.
+  assert (M' := brel_transitive_f1 S eqS symS tranS (addS zeroS s) zeroS oneS M K).
+  assert (N := brel_transitive_f1 S eqS symS tranS (addS zeroS s) oneS (addS oneS s) M' A).
+  assert (R := cong_addS zeroS s oneS s K (refS s)). rewrite N in R. discriminate R.
+  case_eq(eqS s zeroS); intro L.
+  assert (J:= is_idAddS oneS). destruct J as [Jl Jr]. 
+  assert (M := brel_transitive_f2 S eqS symS tranS (addS zeroS oneS) oneS zeroS Jl K). rewrite M. rewrite M.
+  assert (N := brel_transitive_f2 S eqS symS tranS (addS oneS zeroS) oneS zeroS Jr K). rewrite N,N. auto.
+  assert (J:= is_annAddS s). destruct J as [Jl Jr].
+  assert (A := brel_transitive_f2 S eqS symS tranS (addS oneS s) oneS zeroS Jl K). rewrite A. rewrite A.
+  assert (B := brel_transitive_f2 S eqS symS tranS (addS s oneS) oneS zeroS Jr K). rewrite B. rewrite B. rewrite Jl,Jr. auto.
+Qed.
 
   Record sg_CSMA_proofs (S: Type) (eq : brel S) (b : binary_op S) (id : S) (ann : S) := 
 {
@@ -97,14 +109,16 @@ Section Test.
 ; sg_CSMA_is_ann        : bop_is_ann S eq b ann                             
 }.
 
-Definition add_CSMA_proofs : sg_CSMA_proofs S (brel_reduce (uop_predicate_reduce aS P) eqS) bop_fpr_addS iS aS :=
+
+
+Definition add_CSMA_proofs : sg_CSMA_proofs S (brel_reduce (uop_predicate_reduce zeroS P) eqS) bop_fpr_addS zeroS oneS :=
 {|
-sg_CSMA_associative   := bop_associative_fpr_ann_v2 S P eqS refS aS addS P_true P_cong P_false_preservation cong_addS is_annAddS ass_addS
-; sg_CSMA_congruence    := bop_full_reduce_congruence S eqS (uop_predicate_reduce aS P) addS (uop_predicate_reduce_congruence S P eqS refS aS P_cong) cong_addS
-; sg_CSMA_commutative   := bop_full_reduce_commutative S eqS (uop_predicate_reduce aS P) addS (uop_predicate_reduce_congruence S P eqS refS aS P_cong) com_addS
-; sg_CSMA_selective     := bop_fpr_selective S P eqS refS aS addS P_true P_cong P_false_preservation is_annAddS sel_addS                                          
-; sg_CSMA_is_id         := idProof
-; sg_CSMA_is_ann        := annProof 
+sg_CSMA_associative   := bop_associative_fpr_id_v2 S P eqS refS symS zeroS addS P_true P_cong P_false_preservation cong_addS is_idAddS ass_addS
+; sg_CSMA_congruence    := bop_full_reduce_congruence S eqS (uop_predicate_reduce zeroS P) addS (uop_predicate_reduce_congruence S P eqS refS zeroS P_cong) cong_addS
+; sg_CSMA_commutative   := bop_full_reduce_commutative S eqS (uop_predicate_reduce zeroS P) addS (uop_predicate_reduce_congruence S P eqS refS zeroS P_cong) com_addS
+; sg_CSMA_selective     := bop_fpr_selective_v2 S P eqS refS zeroS addS P_true P_cong P_false_preservation is_idAddS sel_addS                                          
+; sg_CSMA_is_id         := idProof_add
+; sg_CSMA_is_ann        := annProof_add
 |}.
 
 Record sg_CSMA (S : Type) := {
@@ -116,48 +130,48 @@ Record sg_CSMA (S : Type) := {
 ; sg_CSMA_pfs        : sg_CSMA_proofs S sg_CSMA_eq sg_CSMA_bop sg_CSMA_id sg_CSMA_ann
 }.
 
-Lemma brel_reduce_reflexive : brel_reflexive S (brel_reduce (uop_predicate_reduce aS P) eqS). 
+Lemma brel_reduce_reflexive : brel_reflexive S (brel_reduce (uop_predicate_reduce zeroS P) eqS). 
   Proof. intros s. compute.
-         case_eq(eqS s aS); intro J1.
+         case_eq(eqS s zeroS); intro J1.
          rewrite refS. auto. 
          rewrite refS. auto.         
   Qed.
 
-  Lemma brel_reduce_symmetric : brel_symmetric S (brel_reduce (uop_predicate_reduce aS P) eqS).  
+  Lemma brel_reduce_symmetric : brel_symmetric S (brel_reduce (uop_predicate_reduce zeroS P) eqS).  
   Proof. intros s1 s2. compute.
-         case_eq(eqS s1 aS); intro J1; case_eq(eqS s2 aS); intro J2; auto.
+         case_eq(eqS s1 zeroS); intro J1; case_eq(eqS s2 zeroS); intro J2; auto.
   Qed.           
 
 
-  Lemma brel_reduce_transitive : brel_transitive S (brel_reduce (uop_predicate_reduce aS P) eqS). 
+  Lemma brel_reduce_transitive : brel_transitive S (brel_reduce (uop_predicate_reduce zeroS P) eqS). 
   Proof. intros s1 s2 s3. compute.
-         case_eq(eqS s1 aS); intro J1; case_eq(eqS s2 aS); intro J2; case_eq(eqS s3 aS); intro J3; auto; intros M N. 
+         case_eq(eqS s1 zeroS); intro J1; case_eq(eqS s2 zeroS); intro J2; case_eq(eqS s3 zeroS); intro J3; auto; intros M N. 
          assert (L := tranS _ _ _ M N); auto.      
          assert (L := tranS _ _ _ M N); auto.
          assert (L := tranS _ _ _ M N); auto.
          assert (L := tranS _ _ _ M N); auto.
   Qed.
 
-    Lemma brel_reduce_congruence_add :  brel_congruence S (brel_reduce (uop_predicate_reduce aS P) eqS) (brel_reduce (uop_predicate_reduce aS P) eqS).
+    Lemma brel_reduce_congruence_add :  brel_congruence S (brel_reduce (uop_predicate_reduce zeroS P) eqS) (brel_reduce (uop_predicate_reduce zeroS P) eqS).
     Proof. apply brel_reduce_congruence. exact eqS_cong.
     Qed.
 
 
-Definition s_eqv_proof : eqv_proofs S (brel_reduce (uop_predicate_reduce aS P) eqS) :=
+Definition s_eqv_proof : eqv_proofs S (brel_reduce (uop_predicate_reduce zeroS P) eqS) :=
 {|
 eqv_reflexive      := brel_reduce_reflexive         
 ; eqv_transitive     := brel_reduce_transitive         
 ; eqv_symmetric      := brel_reduce_symmetric
 ; eqv_congruence     := brel_reduce_congruence_add                                      
-; eqv_witness        := iS  
+; eqv_witness        := zeroS  
 |}.
 
 Definition add_CSMA : sg_CSMA S :=
 {|
-sg_CSMA_eq         := (brel_reduce (uop_predicate_reduce aS P) eqS)
+sg_CSMA_eq         := (brel_reduce (uop_predicate_reduce zeroS P) eqS)
 ; sg_CSMA_bop        := bop_fpr_addS
-; sg_CSMA_id         := iS
-; sg_CSMA_ann        := aS
+; sg_CSMA_id         := zeroS
+; sg_CSMA_ann        := oneS
 ; sg_CSMA_eqv        := s_eqv_proof
 ; sg_CSMA_pfs        := add_CSMA_proofs
 |}.
@@ -173,45 +187,43 @@ Record sg_MA_proofs (S: Type) (eq : brel S) (b : binary_op S) (id : S) (ann : S)
 
 Lemma P_false_preservation_mul : ∀ (p1 p2 : S), P p1 = false -> P p2 = false -> P (mulS p1 p2) = false.
   Proof. intros p1 p2 H1 H2. compute. compute in H1,H2. compute in no_annS_div_mul.
-        assert (H := no_idS_div_mul p1 p2).
-        case_eq(eqS (mulS p1 p2) aS); intro K.
+        assert (H := no_annS_div_mul p1 p2).
+        case_eq(eqS (mulS p1 p2) zeroS); intro K.
         assert (L := H K). destruct L.
-        rewrite H1 in e. discriminate. auto.
+        rewrite H1 in e. discriminate.
+        rewrite H2 in e. discriminate.
+         auto.
   Qed.
 
-  Lemma idProof_mul : bop_is_id S (brel_reduce (uop_predicate_reduce aS P) eqS) (bop_fpr aS P mulS) aS.
-  Proof. compute; intro s. rewrite (refS aS).
-         case_eq (eqS s aS); intro K.
-         assert (J:= is_idMulS aS). destruct J as [J _]. rewrite J. rewrite (refS aS). auto.
-         assert (A:= is_idMulS s). destruct A as [Al Ar].
-         assert (B := brel_transitive_f2 S eqS symS tranS (mulS aS s) s aS Al K). rewrite B. rewrite B. 
-         assert (C := brel_transitive_f2 S eqS symS tranS (mulS s aS) s aS Ar K). rewrite C. rewrite C. auto.
-  Qed.
+  Lemma idProof_mul : bop_is_id S (brel_reduce (uop_predicate_reduce zeroS P) eqS) (bop_fpr zeroS P mulS) oneS.
+  Proof. compute; intro s. 
+    case_eq(eqS oneS zeroS); intro K.
+    case_eq(eqS s zeroS); intro L.
+    assert (J:= is_annMulS zeroS). destruct J as [J _]. rewrite J. rewrite (refS zeroS). auto.
+    assert (A:= is_idMulS s).  assert (B := is_annMulS s).
+    destruct A as [A _]; destruct B as [B _].
+    assert (M := brel_transitive_f2 S eqS symS tranS (mulS oneS s) s zeroS A L). apply symS in B.
+    assert (N := brel_transitive_f1 S eqS symS tranS (mulS oneS s) zeroS (mulS zeroS s) M B).
+  assert (R := cong_mulS oneS s zeroS s K (refS s)). rewrite N in R. discriminate R.
+  case_eq(eqS s zeroS); intro L.
+  assert (J:= is_idMulS zeroS). destruct J as [Jl Jr]. rewrite Jl,Jr. rewrite (refS zeroS). auto.      
+  assert (J:= is_idMulS s). destruct J as [Jl Jr].
+  assert (A := brel_transitive_f2 S eqS symS tranS (mulS oneS s) s zeroS Jl L). rewrite A. rewrite A.
+  assert (B := brel_transitive_f2 S eqS symS tranS (mulS s oneS) s zeroS Jr L). rewrite B. rewrite B. rewrite Jl,Jr. auto.
+Qed.
+    
 
-  Lemma annProof_mul : bop_is_ann S (brel_reduce (uop_predicate_reduce aS P) eqS) (bop_fpr aS P mulS) iS.
-  Proof. compute. intro s.
-         case_eq(eqS iS aS); intro K.
-         case_eq(eqS s aS); intro L.
-         assert (J:= is_idMulS aS). destruct J as [J _]. rewrite J. rewrite (refS aS). auto.
-         assert (A:= is_idMulS s).  assert (B := is_annMulS s).
-       destruct A as [A _]; destruct B as [B _].
-       assert (M := brel_transitive_f2 S eqS symS tranS (mulS aS s) s aS A L). 
-       assert (N := tranS (mulS iS s) iS aS B K). apply symS in N.
-       assert (I := brel_transitive_f1 S eqS symS tranS (mulS aS s) aS (mulS iS s) M N). apply symS in K.
-       assert (R := cong_mulS aS s iS s K (refS s)). rewrite I in R. discriminate R.
-       case_eq(eqS s aS); intro L.
-       assert (J:= is_idMulS iS). destruct J as [Jl Jr].
-       assert (B := brel_transitive_f2 S eqS symS tranS (mulS aS iS) iS aS Jl K). rewrite B. rewrite B. 
-       assert (C := brel_transitive_f2 S eqS symS tranS (mulS iS aS) iS aS Jr K). rewrite C. rewrite C. auto.       
-       assert (J:= is_annMulS s). destruct J as [Jl Jr].
-       assert (A := brel_transitive_f2 S eqS symS tranS (mulS iS s) iS aS Jl K). rewrite A. rewrite A.
-       assert (B := brel_transitive_f2 S eqS symS tranS (mulS s iS) iS aS Jr K). rewrite B. rewrite B. rewrite Jl,Jr. auto.
-  Qed.
+  Lemma annProof_mul : bop_is_ann S (brel_reduce (uop_predicate_reduce zeroS P) eqS) (bop_fpr zeroS P mulS) zeroS.
+  Proof. compute. intro s. rewrite (refS zeroS).
+         case_eq (eqS s zeroS); intro K.
+         assert (J:= is_annMulS zeroS). destruct J as [J _]. rewrite J. rewrite (refS zeroS). auto.
+         assert (A:= is_annMulS s). destruct A as [Al Ar]. rewrite Al,Ar. rewrite (refS zeroS). auto.
+Qed.
 
-Definition mul_MA_proofs : sg_MA_proofs S (brel_reduce (uop_predicate_reduce aS P) eqS) bop_fpr_mulS aS iS :=
+Definition mul_MA_proofs : sg_MA_proofs S (brel_reduce (uop_predicate_reduce zeroS P) eqS) bop_fpr_mulS oneS zeroS :=
 {|
-sg_MA_associative   := bop_associative_fpr_id_v2 S P eqS refS symS aS mulS P_true P_cong P_false_preservation_mul cong_mulS is_idMulS ass_mulS
-; sg_MA_congruence    := bop_full_reduce_congruence S eqS (uop_predicate_reduce aS P) mulS (uop_predicate_reduce_congruence S P eqS refS aS P_cong) cong_mulS
+sg_MA_associative   := bop_associative_fpr_ann_v2 S P eqS refS zeroS mulS P_true P_cong P_false_preservation_mul cong_mulS is_annMulS ass_mulS
+; sg_MA_congruence    := bop_full_reduce_congruence S eqS (uop_predicate_reduce zeroS P) mulS (uop_predicate_reduce_congruence S P eqS refS zeroS P_cong) cong_mulS
 ; sg_MA_is_id         := idProof_mul 
 ; sg_MA_is_ann        := annProof_mul
 |}.
@@ -228,10 +240,10 @@ Record sg_MA (S : Type) := {
 
 Definition mul_MA : sg_MA S :=
 {|
-sg_MA_eq         := (brel_reduce (uop_predicate_reduce aS P) eqS) 
+sg_MA_eq         := (brel_reduce (uop_predicate_reduce zeroS P) eqS) 
 ; sg_MA_bop        := bop_fpr_mulS
-; sg_MA_id         := aS
-; sg_MA_ann        := iS
+; sg_MA_id         := oneS
+; sg_MA_ann        := zeroS
 ; sg_MA_eqv        := s_eqv_proof
 ; sg_MA_pfs        := mul_MA_proofs
 |}.
@@ -257,27 +269,33 @@ Record dioid_S (S : Type) := {
 }.
 
 
-Check bop_left_distributive_fpr_v2 S P eqS refS symS tranS aS addS mulS P_true P_cong P_false_preservation P_false_preservation_mul cong_addS cong_mulS.
+Check bop_left_distributive_fpr_v2 S P eqS refS symS tranS zeroS addS mulS P_true P_cong P_false_preservation P_false_preservation_mul cong_addS cong_mulS
+is_idAddS is_annMulS left_dis.
+Check bop_right_distributive_fpr_v2 S P eqS refS symS tranS zeroS addS mulS P_true P_cong P_false_preservation P_false_preservation_mul cong_addS cong_mulS
+is_idAddS is_annMulS right_dis.
 
-Definition add_mul_dioid_proofs : dioid_proofs S (brel_reduce (uop_predicate_reduce aS P) eqS) bop_fpr_addS bop_fpr_mulS iS aS :=
+
+Definition add_mul_dioid_proofs : dioid_proofs S (brel_reduce (uop_predicate_reduce zeroS P) eqS) bop_fpr_addS bop_fpr_mulS zeroS oneS :=
 {|
-dioid_left_distributive  := bop_left_distributive S eqS addS mulS
-; dioid_right_distributive := bop_right_distributive S eqS addS mulS                             
-; dioid_zero_is_mul_ann    := is_annMulS
-; dioid_one_is_add_ann     := is_annAddS
+dioid_left_distributive  := bop_left_distributive_fpr_v2 S P eqS refS symS tranS zeroS addS mulS P_true P_cong P_false_preservation P_false_preservation_mul cong_addS cong_mulS
+is_idAddS is_annMulS left_dis
+; dioid_right_distributive := bop_right_distributive_fpr_v2 S P eqS refS symS tranS zeroS addS mulS P_true P_cong P_false_preservation P_false_preservation_mul cong_addS cong_mulS
+is_idAddS is_annMulS right_dis                             
+; dioid_zero_is_mul_ann    := annProof_mul
+; dioid_one_is_add_ann     := annProof_add
 |}.
 
 Definition add_mul_dioid_S : dioid_S (S : Type) :=
 {|
-dioid_S_eq         := brel_reduce (uop_predicate_reduce aS P) eqS 
+dioid_S_eq         := brel_reduce (uop_predicate_reduce zeroS P) eqS 
 ; dioid_S_add        := bop_fpr_addS
 ; dioid_S_mul        := bop_fpr_mulS                                  
-; dioid_S_zero       := iS
-; dioid_S_one        := aS
+; dioid_S_zero       := zeroS
+; dioid_S_one        := oneS
 ; diode_S_eqv        := s_eqv_proof
 ; diode_S_add_pfs    := add_CSMA_proofs
 ; diode_S_mul_pfs    := mul_MA_proofs                                      
-; dioid_S_pfs        : dioid_proofs S dioid_S_eq dioid_S_add dioid_S_mul dioid_S_zero dioid_S_one
+; dioid_S_pfs        := add_mul_dioid_proofs
 |}.
 
 

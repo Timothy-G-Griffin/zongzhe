@@ -154,6 +154,24 @@ Proof. intros X Y B is_ann H. compute. intros a b. compute in H.
       assert (Z := B a b K L). rewrite Z. rewrite Z. auto.
 Qed.
 
+Lemma bop_fpr_selective_v2 (s : S) (bS : binary_op S) : 
+(P s = true) ->
+(∀ (a b : S), eq a b = true -> P a = P b) ->
+(∀ (a b : S), P a = false -> P b = false -> P (bS a b) = false) -> 
+bop_is_id S eq bS s ->
+bop_selective S eq bS ->  
+bop_selective S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P bS).
+Proof. intros X Y B is_id H. compute. intros a b. compute in H.
+      case_eq(P a); intro K;case_eq(P b); intro L;
+      assert (M := is_id s); destruct M as [M _].
+      assert (Z := Y (bS s s) s M). rewrite X in Z. rewrite Z. rewrite X. auto.
+      assert (Z := is_id b); destruct Z as [Z _].
+      assert (A := Y (bS s b) b Z). rewrite L in A. rewrite A,A. auto.
+      assert (Z := is_id a); destruct Z as [_ Z].
+      assert (A := Y (bS a s) a Z). rewrite K in A. rewrite A,A. auto.
+      assert (Z := B a b K L). rewrite Z. rewrite Z. auto.
+Qed.
+
 (*
 Lemma bop_associative_fpr_id :
   ∀ (s : S) (add : binary_op S),
