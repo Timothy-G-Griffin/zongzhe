@@ -269,12 +269,6 @@ Record dioid_S (S : Type) := {
 }.
 
 
-Check bop_left_distributive_fpr_v2 S P eqS refS symS tranS zeroS addS mulS P_true P_cong P_false_preservation P_false_preservation_mul cong_addS cong_mulS
-is_idAddS is_annMulS left_dis.
-Check bop_right_distributive_fpr_v2 S P eqS refS symS tranS zeroS addS mulS P_true P_cong P_false_preservation P_false_preservation_mul cong_addS cong_mulS
-is_idAddS is_annMulS right_dis.
-
-
 Definition add_mul_dioid_proofs : dioid_proofs S (brel_reduce (uop_predicate_reduce zeroS P) eqS) bop_fpr_addS bop_fpr_mulS zeroS oneS :=
 {|
 dioid_left_distributive  := bop_left_distributive_fpr_v2 S P eqS refS symS tranS zeroS addS mulS P_true P_cong P_false_preservation P_false_preservation_mul cong_addS cong_mulS
@@ -298,8 +292,12 @@ dioid_S_eq         := brel_reduce (uop_predicate_reduce zeroS P) eqS
 ; dioid_S_pfs        := add_mul_dioid_proofs
 |}.
 
-
 End Test.
 
+Section Testt.
+
+(* should define sth like red (AddZero(zero,(N,min,+) lexico* red(path(E)))   *)
+
+End Testt.
 
 
