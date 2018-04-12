@@ -30,8 +30,6 @@ Section Test.
   Variable mulS : binary_op S.
   Variable cong_mulS : bop_congruence S eqS mulS.
   Variable ass_mulS : bop_associative S eqS mulS.
-  Variable com_mulS : bop_commutative S eqS mulS.
-  Variable sel_mulS : bop_selective S eqS mulS.
 
   Variable is_idAddS : bop_is_id S eqS addS zeroS.
   Variable is_annAddS : bop_is_ann S eqS addS oneS.
@@ -296,8 +294,59 @@ End Test.
 
 Section Testt.
 
-(* should define sth like red (AddZero(zero,(N,min,+) lexico* red(path(E)))   *)
+Variable S : Type.
+  Variable T : Type.     
+  Variable eqS : brel S.
+  Variable eqT : brel T.
+  Variable refS : brel_reflexive S eqS.
+  Variable symS : brel_symmetric S eqS.
+  Variable tranS : brel_transitive S eqS.
+  Variable eqS_cong : brel_congruence S eqS eqS.      
+  Variable refT : brel_reflexive T eqT.
+  Variable symT : brel_symmetric T eqT.
+  Variable tranT : brel_transitive T eqT.
+  Variable eqT_cong : brel_congruence T eqT eqT.        
+  Variable zeroS oneS : S.
+  Variable zeroT oneT : T.
 
+  Variable addS : binary_op S.
+  Variable addT : binary_op T.
+  Variable cong_addS : bop_congruence S eqS addS.
+  Variable cong_addT : bop_congruence T eqT addT.
+  Variable ass_addS : bop_associative S eqS addS.
+  Variable ass_addT : bop_associative T eqT addT.
+  Variable com_addS : bop_commutative S eqS addS.
+  Variable sel_addS : bop_selective S eqS addS.
+
+  Variable mulS : binary_op S.
+  Variable mulT : binary_op T.
+  Variable cong_mulS : bop_congruence S eqS mulS.
+  Variable cong_mulT : bop_congruence T eqT mulT.
+  Variable ass_mulS : bop_associative S eqS mulS.
+  Variable ass_mulT : bop_associative T eqT mulT.
+
+  Variable is_idAddS : bop_is_id S eqS addS zeroS.
+  Variable is_annAddS : bop_is_ann S eqS addS oneS.
+
+  Variable is_idMulS : bop_is_id S eqS mulS oneS.
+  Variable is_annMulS : bop_is_ann S eqS mulS zeroS.
+
+  Variable is_idT : bop_is_id T eqT addT zeroT.  
+  Variable is_annT : bop_is_ann T eqT mulT zeroT. 
+
+  Variable no_idS_div : bop_self_square S eqS addS zeroS. (* ∀ a b : S,  eqS (addS a b) aS = true -> (eqS a aS = true) * (eqS b aS = true).  *) 
+  Variable no_idT_div : bop_self_square T eqT addT zeroT. (* ∀ a b : T,  eqT (addT a b) aT = true -> (eqT a aT = true) * (eqT b aT = true).  *) 
+
+  Variable no_annS_div : bop_self_divisor S eqS mulS zeroS. (* ∀ a b : S,  eqS (mulS a b) aS = true -> (eqS a aS = true) + (eqS b aS = true).  *) 
+  Variable no_annT_div : bop_self_divisor T eqT mulT zeroT. (* ∀ a b : T,  eqT (mulT a b) aT = true -> (eqT a aT = true) + (eqT b aT = true).  *) 
+
+  Variable left_dis : bop_left_distributive S eqS addS mulS.
+  Variable right_dis : bop_right_distributive S eqS addS mulS.
+
+  Definition bop_lexico_fpr_add : binary_op (T*S) := bop_llex eqT addT (bop_fpr_addS S eqS zeroS addS).
+
+  Definition sr1 := add_mul_dioid_S S eqS refS symS tranS eqS_cong zeroS oneS addS cong_addS ass_addS com_addS sel_addS
+  mulS cong_mulS ass_mulS is_idAddS is_annAddS is_idMulS is_annMulS no_idS_div no_annS_div left_dis right_dis.
 End Testt.
 
 
