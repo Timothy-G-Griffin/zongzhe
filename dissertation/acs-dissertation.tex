@@ -59,64 +59,70 @@
 \pagenumbering{arabic} 
 \setcounter{page}{1} 
 
-This is the introduction where you should introduce your work.  In
-general the thing to aim for here is to describe a little bit of the
-context for your work --- why did you do it (motivation), what was the
-hoped-for outcome (aims) --- as well as trying to give a brief
-overview of what you actually did.
-
-It's often useful to bring forward some ``highlights'' into 
-this chapter (e.g.\ some particularly compelling results, or 
-a particularly interesting finding). 
-
-It's also traditional to give an outline of the rest of the
-document, although without care this can appear formulaic 
-and tedious. Your call. 
+%This is the introduction where you should introduce your work.  In
+%general the thing to aim for here is to describe a little bit of the
+%context for your work --- why did you do it (motivation), what was the
+%hoped-for outcome (aims) --- as well as trying to give a brief
+%overview of what you actually did.
+%
+%It's often useful to bring forward some ``highlights'' into 
+%this chapter (e.g.\ some particularly compelling results, or 
+%a particularly interesting finding). 
+%
+%It's also traditional to give an outline of the rest of the
+%document, although without care this can appear formulaic 
+%and tedious. Your call. 
 
 \section{Introduction to the Path Problem and Algebraic Solution}
 
 
-The initial point of the project is the algebraic path problem. 
-At the very beginning, programmer and scientists designed algorithms to solve each of the path problem. The most famous path problem is the shortest distance problem and there are several well-known algorithm that can solve such a problem: Dijkstra's algorithm, Bellman–Ford algorithm, A* search algorithm and Floyd–Warshall algorithm. (need reference)\\
-However, this kind of approach has many limitations and disadvantages, for example, programmer must design a corresponding independent algorithm for each kind of path problem. 
-And even if the path problem has minor changes to the problem, it is difficult for us to solve the new problem by slightly modifying existing algorithms. 
-Besides, when we are solving some complex path problems, such as considering the capacity of the path problem (actually the lexical product of the two set of problems) in the case of giving priority to the distance, Dijkstra algorithm has not guarantee to find all optimal solutions (Although you can find at least one optimal solution) (here need reference, I will find later, and then delete the parentheses).
+The path problem has always fascinated mathematicians and computer scientists. 
+At the very beginning, programmer and scientists designed algorithms to solve each of the path problem. 
+The most famous path problem is the shortest distance problem and there are several well-known algorithm that can solve such a problem: Dijkstra's algorithm, Bellman–Ford algorithm, A* search algorithm and Floyd–Warshall algorithm. People use different primitive metrics and various complicated algorithms to solve different path problems.\\\\
+However, such an approach has its obvious shortcomings. Even at some point, designing a new algorithm can "steal" the ideas of the original algorithm, people must design a completely new independent algorithm in the face of each new problem (new metric), and this makes it difficult to have a generic (or framework) approach to solve this type of problem.  Even if the path problem has minor changes to the problem, it is difficult for people to solve the new problem by slightly modifying existing algorithms. \\
 Hence, lots of predecessors have found the algebraic approaches to work around this kind of problem. 
-A simple path problem can be represented by a semiring $(S,\oplus,\otimes,\bar{0},\bar{1})$\cite{carre_algebra_1971,WONGSEELASHOTE197955,dynerowicz_forwarding_2013,mohri_semiring_2002,gurney_lexicographic_2007}. The popular "shortest path problem" can be represented as $(S, min,+,\infty,0)$\cite{mohri_semiring_2002} and the "maximal capacity path problem" can be represented as $(S, max,min, 0, \infty)$. 
-There are also an approach that uses the routing matrix to compute the path problem based on the algebraic definition.
-The advantages of using the algebraic approaches (the generic algorithms) to the problems is, because of the properties of the operators (such as distributive, commutative) and the multiplication of matrix, one can ignore the detail implementation of the concrete algorithms (Dijkstra's algorithm or Bellman-Ford algorithm for shortest path)\cite{dynerowicz_forwarding_2013}. \\
+Using the knowledge of abstract algebra, people find that the routing problem (path problem) can be represent using a data structure called "semiring" $(S,\oplus,\otimes,\bar{0},\bar{1})$\cite{carre_algebra_1971,WONGSEELASHOTE197955,dynerowicz_forwarding_2013,mohri_semiring_2002,gurney_lexicographic_2007}. For example, the popular "shortest path problem" can be represented as $(S, min,+,\infty,0)$\cite{mohri_semiring_2002} and the "maximal capacity path problem" can be represented as $(S, max,min, 0, \infty)$. \\\\
+For each path problem that represented as a semiring, we can construct a corresponding matrix semiring that represent the concrete problem (the edges and the distances for the shortest path problem for example). Then using matrix multiplication and stability of the closure (the semiring), we can solve the real problem of each concrete path problem. However, the simple matrix approach can only solve the "trivial" path problem. Those complicated problem, for example the widest shortest path problem that constructed from the shortest path problem semiring and the widest path problem (maximal capacity path problem) semiring using lexicograhpic product, can't be solved by this "traditional" theory approach. Some times even the method can find an optimal solution, there is no guarantee to find all optimal solutions using the classical method.\\\\
+Therefore, people have found a non-classical theory of algebraic path finding method, so that algebras that violated the distribution law can be accepted. This non-classical theory can handle the problem the simple classical theory can't handle, such as the problem that can't be solved by Dijkstra or Bellman-Ford.
+This kind of method is dedicated to finding the local optimal solution at first, and then the local optimal solution is exactly the same as the global optimal solution by some verification or some addition restriction on the computation. For example, the famous protocol, the routing information protocol which is based on distributed Bellman-Ford algorithms is one of the non-traditional theory.\\\\
+However, even so, RIP will also have a series of problems. For example, when a node does not have edges connected to it, the RIP matrix calculation (without pre-setting the maximum number of calculation steps) will continue infinitely. Even if the maximum number of calculation steps is set in advance, RIP still has some deficiencies in efficiency. \\\\
+So while we use another protocol BGP (Border Gateway Protocol), we add an annihilator to the entire complex semiring.  At the same time, we found that when we represent the path, we may have a loop path (a node in the path has been passed more than once). So we need our problem set to change from the original path to elementary path (A path p is elementary if no node is repeated). In this process, we performed two operations $S \rightarrow S$, and here we call it reduction in general, which comes to the main problem of our project.\\\\
+
+\section{Reduction}
+Algebraic reduction, introduced by Ahnont Wongseelashote in 1977\cite{WONGSEELASHOTE197955} is an unary operator for a given set of problem, $reduce : S \longrightarrow S$. It has several properties, satisfying $reduce(\emptyset) = \emptyset$, $\forall A \in S, reduce(reduce(A)) = reduce(A)$ (which is called idempotent property) and $\oplus : S \times S \rightarrow S, \forall A,B \in S, reduce(reduce(A)\oplus B) = reduce(A\oplus B) = reduce(A\oplus reduce(B))$ (which is left and right invariant property) and this paper will discuss these properties in the later section.\\ 
+It is hard to specify the reduced problem set in the most programming language. However, in the world of logic and those programming language that can be used to prove properties, programmer can represent the reduced problem set as $\{x | x \in S, reduce(x) = x\}$ which is also a subset of the original problem set. The idea to represent the reduced set explicitly is to form a pair $<x,Pr(x)>$ where $x \in S$ is the element in the set and $Pr(x) : r(x) = x$ is the proof that the element is in the subset (the element will not change after the reduced function, otherwise it will be reduced). \\
+The first example of the reduction is $id$ which maps all the stuff to itself. Another example is the min-set where $min_\leq(x) = \{x \in S | \forall y \in S, \neg(y < x)\}$. Regarding to $\mathcal{P}(S)$ it works well with $\cup$ that the min-set contain all the elements and remove the element that is non-trivial set. And this reduction is used in the construction of elementary path. 
+
 
 \section{Motivation}
+Wongseelashote defined the reduction operator in his paper\cite{WONGSEELASHOTE197955}. However the definition there is not constructive and it is the traditional reduction.
+Gurney and L11 claimed reductions could be used for "non-traditional" reductions such as elementary paths and combining elementary paths with lexicographic product \cite{gurney_construction_2010}. 
+However, Gurney and L11 never worked out the details, and the reduction there is still not constructive. \\\\
+
 It is worth mentioning that, the algebraic approaches that using the matrix as the computation rely on the property of the operators a lot, for example, the left and right distributivity of the semiring.
 However, most of the cases mentioned above are aimed at some simple problems, or the ideal situations. 
-In reality, we need to face the problem that, in the most time for the complex path problem. 
+In reality, we need to face the problem that, in the most time for the complex path problem (especially for lexicographic product). 
 The CAS system can derive most of the properties for the new semirings from the original "simple" simirings. 
-However, sometimes the problem set is not the original problem set the provided to us, but the subset of it. For example, as the problem that consist of the lexical product of the shortest path problem semiring and the maximum capacity semiring, there exists some path that have 0 capacity which shouldn't be concerned in the solution of the problem. This kind of refinement is called reduction in our paper, which can be represent as a unary operation on the original problem set.\\
-Another example, when we are doing path problems, for the most time the path that has negative value or have infinite value is not quite interesting. However, the operation we defined there is on the whole families of object. When we are defining some data structure, like semiring, we want to know that the properties (like commutative, selective and etc..) of the proper subset (the set of objects after reduction) will hold or not, or for some cases we can't do further calculation.\\
-As the method mentioned previously, the algebraic approach to the path problem is depend on the properties of semirings. If one, or some of the properties don't hold for the semiring, the algebraic approach can't guarantee to find the optimal solution (depends on the semiring structure and the operations). Thus, after we applying those reductions on the original problem set, there is no guarantee that the original properties will still hold for the new subset of problem set, and it comes to our point. The existing CAS system doesn't have the functionality to derive and prove the properties for the reduced problem. Hence, I want to figure out the relationship between the reduction and those properties for those operators on the problem set.\\
-Furthermore, in most programming languages, it is extremely difficult to express the reduction properly, on contrast, we can represent the reduction as a proof or proposition in our proof world. The second goal to the project is to figure out the friendly-extraction to those reduction.
+However, sometimes the problem set is not the original problem set the provided to us, but the subset of it. As I mentioned before, as the problem that consist of the lexicographic product of the shortest path problem semiring and the maximum capacity semiring, there exists some path that have 0 capacity which shouldn't be concerned in the solution of the problem. This kind of reduction can be represent as a unary operation on the original problem set in our paper.\\\\
+Another example, when we are doing path problems, for the most time the path that has negative value or have infinite value is not quite interesting. However, the operation we defined there is on the whole families of object. When we are defining some data structure, like semiring, we want to know that the properties (like commutative, selective and etc..) of the proper subset (the set of objects after reduction) will hold or not, or for some cases we can't do further calculation.\\\\
+As the method mentioned previously, the algebraic approach to the path problem is depend on the properties of semirings. If one, or some of the properties don't hold for the semiring, the algebraic approach can't guarantee to find the optimal solution (depends on the semiring structure and the operations). Thus, after we applying those reductions on the original problem set, there is no guarantee that the original properties will still hold for the new subset of problem set, and it comes to our point. The existing CAS system doesn't have the functionality to derive and prove the properties for the reduced problem. Hence, I want to figure out the relationship between the reduction and those properties for those operators on the problem set.\\\\
+Furthermore, in most programming languages, it is extremely difficult to express the reduction properly, on contrast, we can represent the reduction as a proof or proposition in our proof world. The second goal to the project is to figure out the friendly-extraction to those reduction. 
 
-\section{Aim of the project}
-The project has been divided into several steps.\\
-Initially I focus on the properties of the reduction operator. Using the properties and the proofs defined and proved in Coq, I defined several combinators that can construct reduction (reduced semigroup) from the existing one.\\
-Then, by using those combinators and examples, I can find the properties between the operators and the reduction operation.\\
-Then, I should give a friendly-extraction to the outside world.
-\section{Outline of the paper}
 
 
 \chapter{Background} 
 
-A more extensive coverage of what's required to understand your 
-work. In general you should assume the reader has a good undergraduate 
-degree in computer science, but is not necessarily an expert in 
-the particular area you've been working on. Hence this chapter 
-may need to summarize some ``text book'' material. 
-
-This is not something you'd normally require in an academic paper, 
-and it may not be appropriate for your particular circumstances. 
-Indeed, in some cases it's possible to cover all of the ``background'' 
-material either in the introduction or at appropriate places in 
-the rest of the dissertation. 
+%A more extensive coverage of what's required to understand your 
+%work. In general you should assume the reader has a good undergraduate 
+%degree in computer science, but is not necessarily an expert in 
+%the particular area you've been working on. Hence this chapter 
+%may need to summarize some ``text book'' material. 
+%
+%This is not something you'd normally require in an academic paper, 
+%and it may not be appropriate for your particular circumstances. 
+%Indeed, in some cases it's possible to cover all of the ``background'' 
+%material either in the introduction or at appropriate places in 
+%the rest of the dissertation. 
 
 \section{Basic Definition}
 In the world of logic, we need to define several basic concepts before we are getting started.\\
@@ -140,10 +146,7 @@ hasId: $\exists \bar0 \in S, \forall a \in S, a \bullet \bar0 = a = \bar0 \bulle
 hasAnn: $\exists \bar1 \in S, \forall a \in S, a \bullet \bar1 = \bar1 = \bar1 \bullet a$\\
 In this paper, we will mostly concentrate on those properties that are holding or not in the reduced set of problem. 
 
-\section{Reduction}
-Algebraic reduction, introduced by Ahnont Wongseelashote in 1977\cite{WONGSEELASHOTE197955} is an unary operator for a given set of problem, $reduce : S \longrightarrow S$. It has several properties, satisfying $reduce(\emptyset) = \emptyset$, $\forall A \in S, reduce(reduce(A)) = reduce(A)$ (which is called idempotent property) and $\oplus : S \times S \rightarrow S, \forall A,B \in S, reduce(reduce(A)\oplus B) = reduce(A\oplus B) = reduce(A\oplus reduce(B))$ (which is left and right invariant property) and this paper will discuss these properties in the later section.\\ 
-It is hard to specify the reduced problem set in the most programming language. However, in the world of logic and those programming language that can be used to prove properties, programmer can represent the reduced problem set as $\{x | x \in S, reduce(x) = x\}$ which is also a subset of the original problem set. The idea to represent the reduced set explicitly is to form a pair $<x,Pr(x)>$ where $x \in S$ is the element in the set and $Pr(x) : r(x) = x$ is the proof that the element is in the subset (the element will not change after the reduced function, otherwise it will be reduced). \\
-The first example of the reduction is $id$ which maps all the stuff to itself. Another example is the min-set where $min_\leq(x) = \{x \in S | \forall y \in S, \neg(y < x)\}$. Regarding to $\mathcal{P}(S)$ it works well with $\cup$ that the min-set contain all the elements and remove the element that is non-trivial set. Wongseelashote defined the reduction operator in his paper, however the definition is not constructive. Our purpose is defining the reduction constructive in $Coq$, and proving the related properties of the reduction operation.
+
 
 \section{Algebraic approach to the Path Problem}
 As we mentioned above, there are several properties which are really significant to the path problem by using the algebraic approaches. One of them is the distributivity properties for the two operators in a given semiring. 
@@ -156,26 +159,26 @@ Combinator for Algebraic system (CAS)\cite{griffin_metarouting_2005} is introduc
 
 \chapter{Related Work} 
 
-This chapter covers relevant (and typically, recent) research 
-which you build upon (or improve upon). There are two complementary 
-goals for this chapter: 
-\begin{enumerate} 
-  \item to show that you know and understand the state of the art; and 
-  \item to put your work in context
-\end{enumerate} 
+%This chapter covers relevant (and typically, recent) research 
+%which you build upon (or improve upon). There are two complementary 
+%goals for this chapter: 
+%\begin{enumerate} 
+%  \item to show that you know and understand the state of the art; and 
+%  \item to put your work in context
+%\end{enumerate} 
+%
+%Ideally you can tackle both together by providing a critique of
+%related work, and describing what is insufficient (and how you do
+%better!)
+%
+%The related work chapter should usually come either near the front or
+%near the back of the dissertation. The advantage of the former is that
+%you get to build the argument for why your work is important before
+%presenting your solution(s) in later chapters; the advantage of the
+%latter is that don't have to forward reference to your solution too
+%much. The correct choice will depend on what you're writing up, and
+%your own personal preference.
 
-Ideally you can tackle both together by providing a critique of
-related work, and describing what is insufficient (and how you do
-better!)
-
-The related work chapter should usually come either near the front or
-near the back of the dissertation. The advantage of the former is that
-you get to build the argument for why your work is important before
-presenting your solution(s) in later chapters; the advantage of the
-latter is that don't have to forward reference to your solution too
-much. The correct choice will depend on what you're writing up, and
-your own personal preference.
-\\\\\
 Maybe I should put this part into the background part
 \section{Algebraic Apporach to the Path Problem}
 \section{CAS}
@@ -184,9 +187,9 @@ Maybe I should put this part into the background part
 
 \chapter{Design and Implementation} 
 
-This chapter may be called something else\ldots but in general 
-the idea is that you have one (or a few) ``meat'' chapters which
-describe the work you did in technical detail. 
+%This chapter may be called something else\ldots but in general 
+%the idea is that you have one (or a few) ``meat'' chapters which
+%describe the work you did in technical detail. 
 \section{Product Theory and Product Semigroup}
 \section{Reduction Properties and Reduction Theory}
 Here I define the reduction in a binary operation in three different version: reduce the result of the operation, only reduce the argument of the operation and reduce both result and argument of the operation. 
