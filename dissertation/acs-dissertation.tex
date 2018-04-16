@@ -177,28 +177,69 @@ CAS will use pair to combine two semirings (or just semigroups) to form a new da
 Therefore we must discuss the relationship between the properties of the single semirings and the properties they have been combined with. \\
 First, as with a given Type and its binary relationship, we need to define a binary relationship to describe the relationship between product type terms.\\
 $\Lambda S, T, =_s, =_t. brel\_product : S * T \rightarrow S * T \rightarrow bool$, \\
-$:= \lambda (s_1,t_1) (s_2, t_2). s_1 =_s s_2 \wedge t_1 =_t t_2$\\
-
+$:= \lambda (s_1,t_1) (s_2, t_2). s_1 =_s s_2 \wedge t_1 =_t t_2$, (we can write this binary relationship as $=_S \times =_T$).\\
+At the same time, we should give an expansion on existing unary operators and binary operators for product.\\
+For two given type $S$ and $T$, unary operators $u_S$ and $u_T$, binary operators $\oplus_S$ and $\oplus_T$:\\
+uop\_product: $S*T \rightarrow S*T := \lambda (s,t), (u_S (s),u_T(t))$,\\
+bop\_product: $S*T \rightarrow S*T \rightarrow S*T := \lambda (s_1,t_1)(s_2,t_2), (s_1 \oplus_S s_2,t_1 \oplus_T t_2)$, (we can write this new binary operator as $(\oplus_S,\oplus_T)$).
 \subsection{Properties for the Relationship}
+In fact, we also focus on whether or not some of the properties of the binary relationship previously defined apply to the product type. Although the proof of this part is not the key to our project. 
+Fortunately, the CAS system has systematically proved the product type properties, including binary relationship and binary operator. \\
+For two given type $S$ and $T$ and their corresponding binary relationship $=_S$ and $=_T$,\\
+If both $=_S$ and $=_T$ are reflexivity, then $=_S \times =_T$ is reflexivity,\\
+If both $=_S$ and $=_T$ are symmetric, then $=_S \times =_T$ is symmetric,\\
+If both $=_S$ and $=_T$ are transitivity, then $=_S \times =_T$ is transitivity,\\
+If both $=_S$ and $=_T$ are congruence, then $=_S \times =_T$ is congruence.
 \subsection{Properties for the Operator}
-
+As mentioned above, fortunately the CAS system has given us a systematic proof of the binary operator of the product type.\\
+For two given type $S$ and $T$, binary operators $\oplus_S$ and $\oplus_T$:\\
+If both $\oplus_S$ and $\oplus_T$ are congruence, then $(\oplus_S,\oplus_T)$ is congruence,\\
+If both $\oplus_S$ and $\oplus_T$ are commutativity, then $(\oplus_S,\oplus_T)$ is commutativity,\\
+If both $\oplus_S$ and $\oplus_T$ are associativity, then $(\oplus_S,\oplus_T)$ is associativity,\\
+If both $\oplus_S$ and $\oplus_T$ have Id $\bar0_S$ and $\bar0_T$, then $(\oplus_S,\oplus_T)$ has Id $(\bar0_S,\bar0_T)$,\\
+If both $\oplus_S$ and $\oplus_T$ have Ann $\bar1_S$ and $\bar1_T$, then $(\oplus_S,\oplus_T)$ has Ann $(\bar1_S,\bar1_T)$.\\
+It is worth mentioning that although both $\oplus_S$ and $\oplus_T$ may be selective, this does not lead to the conclusion that $(\oplus_S,\oplus_T)$ is a selective.
+The explanation of selective will be mentioned later in the lexicographic product section.
 
 \section{Semiring and its Properties}
-In abstract algebra, a semiring is a data structure $(S,\oplus,\otimes,\bar0,\bar1)$ where $S$ is a set and $\oplus,\otimes$ are two operators $:S\times S \rightarrow S$. $(S,\oplus)$ is a commutative semigroup (has associative property) and $(S,\otimes)$ is a semigroup: $\forall a,b,c \in S, a \oplus (b\oplus c) = (a \oplus b) \oplus c$, $a \oplus b = b \oplus a$ and $a \otimes (b\otimes c) = (a \otimes b) \otimes c$. $\oplus,\otimes$ are also left and right distributive on $S$ : $\forall a,b,c \in S: a \otimes(b \oplus c) = (a \otimes b) \oplus (a \otimes c)$ and $(a \oplus b) \otimes c  = (a \otimes c) \oplus (b \otimes c)$. $\bar0$ is the identity of $\oplus$ and  $\bar1$ is the identity of $\otimes$: $\forall a \in S, a \oplus \bar{0} = a = \bar{0} \oplus a$ and $\forall a \in S, a \otimes \bar{1} = a = \bar{1} \otimes a$. Finally, $\bar0$ is the  annihilator of $\otimes$: $\forall a \in S, a \otimes \bar{0} = \bar{0} = \bar{0} \otimes a$.
-
-\subsubsection{For Binary Relationship}
-
-\subsubsection{For Binary Operation}
+In abstract algebra, a semiring is a data structure $(S,\oplus,\otimes,\bar0,\bar1)$ where $S$ is a set (Type) and $\oplus,\otimes$ are two operators $:S\times S \rightarrow S$.\\\\
+$(S,\oplus)$ is a commutative semigroup (has associative property) and $(S,\otimes)$ is a semigroup:\\ 
+$\forall a,b,c \in S, a \oplus (b\oplus c) = (a \oplus b) \oplus c$, $a \oplus b = b \oplus a$,\\
+$\forall a,b,c \in S, a \otimes (b\otimes c) = (a \otimes b) \otimes c$.\\\\ 
+$\oplus,\otimes$ are also left and right distributive on $S$ : \\
+$\forall a,b,c \in S: a \otimes(b \oplus c) = (a \otimes b) \oplus (a \otimes c)$, \\ 
+$\forall a,b,c \in S:(a \oplus b) \otimes c  = (a \otimes c) \oplus (b \otimes c)$. \\\\
+$\bar0$ is the identity of $\oplus$ and  $\bar1$ is the identity of $\otimes$: \\
+$\forall a \in S, a \oplus \bar{0} = a = \bar{0} \oplus a$,\\
+$\forall a \in S, a \otimes \bar{1} = a = \bar{1} \otimes a$. \\\\
+Finally, $\bar0$ is the  annihilator of $\otimes$: \\
+$\forall a \in S, a \otimes \bar{0} = \bar{0} = \bar{0} \otimes a$.\\
+Some definition will include that $\bar1$ is the annihilator of $\oplus$: \\
+$\forall a \in S, a \oplus \bar{1} = \bar{1} = \bar{1} \oplus a$.
 
 
 \section{Matrix Semiring and Stability}
+For each semiring $(S,\oplus,\otimes,\bar0,\bar1)$ (that represent the rule of a path problem), we can define a matrix semiring $(M_n(S),\oplus,\otimes,\bar{J},\bar{I})$ to represent the concrete path problem.\\
+$M_n(S)$ is a $n\times n$ matrices over $S$,\\
+$(A \oplus B)(i,j) = A(i,j)\oplus B(i,j)$,\\
+$(A \otimes B)(i,j) = \bigoplus_{1\leq q \leq n}A(i,q)\otimes B(q,j)$,\\
+$\bar{J}(i,j) = \bar0$,\\
+$\bar{I}(i,j)=\left\{
+\begin{array}{rcl}
+\bar1       &      & {i = j}\\
+\bar0     &      & {otherwise}
+\end{array} \right.$\\
+So here we can easily use this matrix to encode any specific path problem and use matrix multiplication to calculate our answer. However, our calculations depend on the properties of the semiring.\\\\
+$a\in S$,we define the powers $a^k$ as, $a^0 = \bar{1}$ and $a^{k+1} = a \otimes a^k$.\\
+$a\in S$,we define the closure $a^*$ as, $a^{(k)} = a^0 \oplus a^1 \dots  a^k$ and $a^* = a^0 \oplus a^1 \dots  a^k \oplus \dots$.\\
+Here we say, if there exists a $q$ such that $a^{q} = a^{(q+1)}$, then $a$ is q-stable, which means $a^{q} = a^*$.\\
+And if we know that $S$ is 0-stable, then $M_n(S)$ is $n-1$-stable (because we can ignore paths with loops, and that is our reduction!). 
+This allows us to actually calculate at most $n-1$ steps when calculating path problems.\\\\
+Therefore we can define the power and closure on the matrix semiring,\\
+$A\in S$,we define the powers $A^k$ as, $A^0 = \bar{I}$ and $A^{k+1} = A \otimes A^k$.\\
 \section{Lexicographic Product and Distributivity}
+\section{Elementary Path}
 
-\section{Algebraic approach to the Path Problem}
-As we mentioned above, there are several properties which are really significant to the path problem by using the algebraic approaches. One of them is the distributivity properties for the two operators in a given semiring. 
-Left distributivity: $a \otimes (b \oplus c) = (a \otimes b) \oplus (a \otimes c)$ and right distributivity:  $(a \oplus b) \otimes c = (a \otimes c) \oplus (b \otimes c)$. The importance of these two properties is, when we are using matrix multiplication to compute the path problem represent as a semiring, we need there two distributivity properties to guarantee the correctness of the computation (those equation will be shown later). Distributivity is part of the properties inside the semiring, and that becomes one of the reason that semiring has been choosen to represent a path problem.\\
-As a result, we modified the original path problem algorithm and the original metric to our new modified metric and matrix equations which is called the generic algorithm.\\
-Another important crucial point in our project is "order". As the example provided above, the min-set reduction can be applied in any problem set with some "order". (carnonically order and natural order)\\
 
 \section{Combinator for Algebraic System}
 Combinator for Algebraic system (CAS)\cite{griffin_metarouting_2005} is introduced in $L11$. It is a language to design algebraic systems, in which many algebraic properties are automatically received and people can combine different operators to obtain a new semiring\cite{griffin_metarouting_2005}. We can also generalize a more complex path problem (in other words, we can abstract a more complex path problem with this new semiring, such as the lexicographic products \cite{gurney_lexicographic_2007}). CAS can easily return the properties of those combined-operation semirings and it is already defined in Coq\cite{Coq} (mentioned in $L11$ by Dr Timothy Griffin).
