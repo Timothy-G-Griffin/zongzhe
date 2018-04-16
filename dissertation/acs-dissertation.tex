@@ -124,29 +124,75 @@ Furthermore, in most programming languages, it is extremely difficult to express
 %material either in the introduction or at appropriate places in 
 %the rest of the dissertation. 
 
+This chapter will introduce several basic concept, and some related ideas that will help us to understand the main idea of the project.
+
 \section{Basic Definition}
-In the world of logic, we need to define several basic concepts before we are getting started.\\
-In mathematics, A binary relation $R$ in an arbitrary sets (or classes) $S$ (here I restrict the relationship to be inside a single set, or say the element from the same type) is a collection of ordered pairs of elements of set (type) $S$, which is a subset of the Cartesian product $S \times S$. In order to link the mathematical concept with the proposition in logic, I provides each relation a representation (hold or not) as a boolean value, which is regarded as a property in $Coq$. $\Lambda S: Type. brel(\text{Binary relation}) : S \rightarrow S \rightarrow bool$. \\
-Then, I define the basic operations for a given (but arbitrary) type: binary operation $: \Lambda S.S \rightarrow S \rightarrow S$ and unary operation $: \Lambda S.S \rightarrow S$. \\
-And I extend the relation with a product type and a reduced version. I define the composition, identity and production for a unary operation, production and reduction for binary operation. 
+In the world of logic, we need to define several basic concepts before we are really getting started.\\
+We can simply understand that a Type is a collection of terms which have the same "properties". \\
+Under a Type $S$, we can define a binary relationship  (in most cases we will define the binary relationship of equality $=_S$ at first).
+In mathematics, A binary relation $R$ in an arbitrary Type $S$ (here I restrict the relationship to be inside a single Type, or say the element from the same type) is a collection of ordered pairs of elements of set (type) $S$, which is a subset of the Cartesian product $S \times S$. \\
+In order to link the mathematical concept with the proposition in logic, I provides each relation a representation (hold or not) as a boolean value, which is regarded as a property in $Coq$. \\
+$\Lambda S. brel : S \rightarrow S \rightarrow bool$. \\
+Next we should define the operators that exist on a given Type:\\
+binary operation $: \Lambda S.binary\_op :S \rightarrow S \rightarrow S$\\
+unary operation $: \Lambda S.unary\_op:S \rightarrow S$. \\
+\subsection{Properties for the Relationship}
+For our definition of binary relationship, we need to focus on a few properties related to it.\\
+Here we have four properties for a binary relationship for type $S$. As it is mentioned in the previous section, in order to define the proposition in the logic proof, the binary relationship will return a boolean value indicating that the relationship is holding or not, here we provide a arbitrary type variable $S$.\\
+Then for a given relationship $=_S : S \rightarrow S \rightarrow bool$, we should define:\\
+reflexivity: $\forall a \in S, a =_S a \equiv true$,\\
+symmetric : $\forall a, b \in S, a =_S b \equiv b =_S a$, \\
+transitivity: $\forall a,b,c \in S, a =_S b \equiv true \wedge b =_S c \equiv true \rightarrow a =_S c \equiv true$, \\
+congruence : $\forall a,b,c,d \in S, a =_S b \equiv true \rightarrow c =_S d \equiv true \rightarrow a =_S c \equiv b = _S d$
+\subsection{Properties for the Operator}
+Next we need to discuss some of the properties of the unary operator and the binary operator that we have defined.
+\subsubsection{Properties for Unary Operator}
+For the unary operator we have defined, we want it to have the following properties, or we will analyse the unary operator we have defined from the following perspectives. \\
+In fact, our unary operator is used to represent reduction, so our discussion of the properties of the unary operator is actually a discussion of some of the properties of reduction.\\
+There are six properties that we need to be discussed. Three of them are of the same properties as the reduction mentioned in the previous section, here we give a arbitrary type variable $S$, a binary relationship in $S$ : $=_S$ and our unary operation $u_S$.\\
+congruence : $\forall a,b \in S, a =_S b \rightarrow u_S(a) =_S u_S(b)$,\\
+idempotent : $\forall a \in S, u_S(u_S(a)) =_S u_S(a)$,\\
+left\_invariant: $\Lambda \oplus _S: S \rightarrow S \rightarrow S, \forall a,b \in S, u_S (a) \oplus_S b =_S a \oplus_S b$,\\
+right\_invariant: $\Lambda \oplus _S: S \rightarrow S \rightarrow S, \forall a,b \in S, a \oplus_S u_S(b) =_S a \oplus_S b$,\\
+preserve\_id : $\forall i \in S$, if $i$ is the identity for type $S$, equality $=_S$ and a binary operator $\oplus_S$, ($\forall a \in S, a \oplus_S i =_S a =_S i \oplus_S a$) then $u_S (i) =_S i$,\\
+preserve\_annihilator : $\forall a \in S$, if $i$ is the annihilator for type $S$, equality $=_S$ and a binary operator $\oplus_S$, ($\forall b \in S, a \oplus_S b=_S a =_S b \oplus_S a$) then $u_S (b) =_S b$.
+
+
+
+\subsubsection{Properties for Binary Operator}
+Also for the binary operator we have defined, we hope that we will focus on the following six properties of it.
+For a given type variable $S$, the binary relationship $=_S$ and our pre-defined binary operator $\oplus_S: S\times S \rightarrow S$, we have:\\
+congruence: $\forall s_1,s_2,t_1,t_2 \in S, s_1 \equiv t_1 \wedge s_2 \equiv t_2 \rightarrow s_1 \oplus_S s_2 \equiv t_1 \oplus_S t_2$,\\
+associativity: $\forall a,b,c \in S, a \oplus_S (b \oplus_S c) \equiv (a \oplus_S b) \oplus_S c$,\\
+commutativity: $\forall a,b\in S, a \oplus_S b = b \oplus_S a$,\\
+selectivity: $\forall a,b\in S, a \oplus_S b \in \{a,b\}$,\\
+hasId: $\exists \bar0 \in S, \forall a \in S, a \oplus_S \bar0 = a = \bar0 \oplus_S a$,which means $\bar0$ is the identity for type $S$, equality $=_S$ and the binary operator $\oplus_S$,\\
+hasAnn: $\exists \bar1 \in S, \forall a \in S, a \oplus_S \bar1 = \bar1 = \bar1 \oplus_S a$, which means $\bar1$ is the identity for type $S$, equality $=_S$ and the binary operator $\oplus_S$,\\
+In this paper, we will mostly concentrate on those properties that are holding or not in the reduced set of problem. 
+
+
+\section{Direct Product and its Properties}
+Here we need to mention Product Type and some properties about Product Type. \\
+CAS will use pair to combine two semirings (or just semigroups) to form a new data structure. 
+Therefore we must discuss the relationship between the properties of the single semirings and the properties they have been combined with. \\
+First, as with a given Type and its binary relationship, we need to define a binary relationship to describe the relationship between product type terms.\\
+$\Lambda S, T, =_s, =_t. brel\_product : S * T \rightarrow S * T \rightarrow bool$, \\
+$:= \lambda (s_1,t_1) (s_2, t_2). s_1 =_s s_2 \wedge t_1 =_t t_2$\\
+
+\subsection{Properties for the Relationship}
+\subsection{Properties for the Operator}
+
 
 \section{Semiring and its Properties}
 In abstract algebra, a semiring is a data structure $(S,\oplus,\otimes,\bar0,\bar1)$ where $S$ is a set and $\oplus,\otimes$ are two operators $:S\times S \rightarrow S$. $(S,\oplus)$ is a commutative semigroup (has associative property) and $(S,\otimes)$ is a semigroup: $\forall a,b,c \in S, a \oplus (b\oplus c) = (a \oplus b) \oplus c$, $a \oplus b = b \oplus a$ and $a \otimes (b\otimes c) = (a \otimes b) \otimes c$. $\oplus,\otimes$ are also left and right distributive on $S$ : $\forall a,b,c \in S: a \otimes(b \oplus c) = (a \otimes b) \oplus (a \otimes c)$ and $(a \oplus b) \otimes c  = (a \otimes c) \oplus (b \otimes c)$. $\bar0$ is the identity of $\oplus$ and  $\bar1$ is the identity of $\otimes$: $\forall a \in S, a \oplus \bar{0} = a = \bar{0} \oplus a$ and $\forall a \in S, a \otimes \bar{1} = a = \bar{1} \otimes a$. Finally, $\bar0$ is the  annihilator of $\otimes$: $\forall a \in S, a \otimes \bar{0} = \bar{0} = \bar{0} \otimes a$.
 
 \subsubsection{For Binary Relationship}
-Here we have three properties for a binary relationship in set $S$. As it is mentioned in the previous section, in order to define the proposition in the logic proof, the binary relationship will return a boolean value to indicate the relationship is holding or not.\\
-Then for a given relationship $\backsim : S \rightarrow S \rightarrow bool$, we have reflexivity: $\forall a \in S, a \backsim a \equiv true$, symmetric : $\forall a, b \in S, a \backsim b \equiv b \backsim a$, and transitivity: $\forall a,b,c \in S, a \backsim b \equiv true \wedge b \backsim c \equiv true \rightarrow a \backsim c \equiv true$.
+
 \subsubsection{For Binary Operation}
-Then we have six properties for a binary operator in set $S$. For a given operator $\bullet: S\times S \rightarrow S$ and the equality (actually an arbitrary binary relationship) in $S$, we have:\\
-congruence: $\forall s_1,s_2,t_1,t_2 \in S, s_1 \equiv t_1 \wedge s_2 \equiv t_2 \rightarrow s_1 \bullet s_2 \equiv t_1 \bullet t_2$\\
-associativity: $\forall a,b,c \in S, a \bullet (b \bullet c) \equiv (a \bullet b) \bullet c$\\
-commutativity: $\forall a,b\in S, a \bullet b = b \bullet a$\\
-selectivity: $\forall a,b\in S, a \bullet b \in \{a,b\}$\\
-hasId: $\exists \bar0 \in S, \forall a \in S, a \bullet \bar0 = a = \bar0 \bullet a$\\
-hasAnn: $\exists \bar1 \in S, \forall a \in S, a \bullet \bar1 = \bar1 = \bar1 \bullet a$\\
-In this paper, we will mostly concentrate on those properties that are holding or not in the reduced set of problem. 
 
 
+\section{Matrix Semiring and Stability}
+\section{Lexicographic Product and Distributivity}
 
 \section{Algebraic approach to the Path Problem}
 As we mentioned above, there are several properties which are really significant to the path problem by using the algebraic approaches. One of them is the distributivity properties for the two operators in a given semiring. 
