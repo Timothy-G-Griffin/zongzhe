@@ -229,15 +229,46 @@ $\bar{I}(i,j)=\left\{
 \bar1       &      & {i = j}\\
 \bar0     &      & {otherwise}
 \end{array} \right.$\\
-So here we can easily use this matrix to encode any specific path problem and use matrix multiplication to calculate our answer. However, our calculations depend on the properties of the semiring.\\\\
+So here we can easily use this matrix to encode any specific path problem and use matrix multiplication to calculate our answer. \\
+For a graph $G = (V,E)$ a directed graph and a weight function $w \in E \rightarrow S$, 
+we can define the weight of a path $p = i_1,i_2, \dots i_k$ is $w(p) = w (i_1,i_2) \otimes w(i_2,i_3)\otimes \dots \otimes w(i_{k-1},i_k)$, while the empty path is given the weight of $\bar1$.
+Then we can define the adjacency matrix $A$ as 
+$A(i,j)=\left\{
+\begin{array}{rcl}
+w(i,j)      &      & {(i,j)\in E}\\
+\bar0     &      & {otherwise}
+\end{array} \right.$\\
+And our problem will be represent as $A^*(i,j) = \bigoplus_{p \in \pi (i,j)}w(p)$.\\\\
+However, our calculations depend on the properties of the semiring.\\
 $a\in S$,we define the powers $a^k$ as, $a^0 = \bar{1}$ and $a^{k+1} = a \otimes a^k$.\\
 $a\in S$,we define the closure $a^*$ as, $a^{(k)} = a^0 \oplus a^1 \dots  a^k$ and $a^* = a^0 \oplus a^1 \dots  a^k \oplus \dots$.\\
 Here we say, if there exists a $q$ such that $a^{q} = a^{(q+1)}$, then $a$ is q-stable, which means $a^{q} = a^*$.\\
 And if we know that $S$ is 0-stable, then $M_n(S)$ is $n-1$-stable (because we can ignore paths with loops, and that is our reduction!). 
-This allows us to actually calculate at most $n-1$ steps when calculating path problems.\\\\
+This allows us to actually calculate at most $n-1$ steps when calculating path problems.\\
 Therefore we can define the power and closure on the matrix semiring,\\
-$A\in S$,we define the powers $A^k$ as, $A^0 = \bar{I}$ and $A^{k+1} = A \otimes A^k$.\\
-\section{Lexicographic Product and Distributivity}
+$A\in M_n(S)$,we define the powers $A^k$ as, $A^0 = \bar{I}$ and $A^{k+1} = A \otimes A^k$.\\
+$A\in M_n(S)$,we define the closure $A^*$ as, $A^{(k)} = A^0 \oplus A^1 \dots  A^k$ and $A^* = A^0 \oplus A^1 \dots  A^k \oplus \dots$.\\\\
+Hence we have $\pi(i,j)$ which is the set of paths from $i$ to $j$, then $\pi^k(i,j)$ will be the set of paths from $i$ to $j$ with exactly $k$ arcs, then $\pi^{(k)}(i,j)$ will be the set of paths from $i$ to $j$ with at most $k$ arcs.\\
+Then we have \\
+$A^k(i,j) = \bigoplus_{p \in \pi^k (i,j)}w(p)$, \\
+$A^{(k)}(i,j) = \bigoplus_{p \in \pi^{(k)} (i,j)}w(p)$ and\\
+$A^*(i,j) = \bigoplus_{p \in \pi^* (i,j)}w(p)$.\\
+It is worth mentioning that $A^*(i,j)$ may not be well defined, but if $M_n(S)$ is $k$ stable, then for $A\in M_n(S)$, $A^*(i,j) = A^{(k)}(i,j)$.
+
+\section{Distributivity and Lexicographic Product}
+It is worth mentioning that the properties of distributivity (left and right) play an important role in the computation of routing problem.
+We've defined $M_n(S)$ the matrix and its related semiring on the given semiring $(S,\oplus,\otimes,\bar0,\bar1)$.
+However we still need to check the properties of $M_n(S)$, to make sure that it is exactly a semiring.
+Consider about the distributivity properties, $M_n(S)$ is left/right distributive if $S$ has the distributivity properties.\\
+But some times when we are defining some complex routing problem, such as the widest-shortest path problem, which is constructed by shortest path problem semiring and widest path problem semiring by lexicographic product, it is not guarantee that the new data structure still have the properties of distributivity.\\\\
+Suppose $(S,\oplus_S)$ is a commutative and selective semigroup and $(T,\oplus_t)$ is a semigroup, then the lexicographic product of two semigroups $(S,\oplus_S) \bar{\times} (T,\oplus_T) = (S\times T, \oplus_{\bar{\times}})$ where\\
+$(s_1,t_1) \oplus_{\bar{\times}} (s_2,t_2)=\left\{
+\begin{array}{rcl}
+(s_1\oplus_S s_2,t_1\oplus_T t_2)      &      & { s_1 = s_1 \oplus_S s_2 = s_2}\\
+(s_1\oplus_S s_2,t_1)       &      & {s_1 = s_1 \oplus_S s_2 \neq s_2}\\
+(s_1\oplus_S s_2,t_2)       &      & {s_1 \neq s_1 \oplus_S s_2 = s_2}
+\end{array} \right.$\\
+
 \section{Elementary Path}
 
 
