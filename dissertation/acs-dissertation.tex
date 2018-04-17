@@ -267,40 +267,22 @@ $(s_1,t_1) \oplus_{\bar{\times}} (s_2,t_2)=\left\{
 (s_1\oplus_S s_2,t_1\oplus_T t_2)      &      & { s_1 = s_1 \oplus_S s_2 = s_2}\\
 (s_1\oplus_S s_2,t_1)       &      & {s_1 = s_1 \oplus_S s_2 \neq s_2}\\
 (s_1\oplus_S s_2,t_2)       &      & {s_1 \neq s_1 \oplus_S s_2 = s_2}
-\end{array} \right.$\\
+\end{array} \right.$\\\\
 
-\section{Elementary Path}
+As mentioned above, we used the lexicographic product when constructing the widest shortest path problem, and used the elementary path reduction. We also added a distinct annihilator in order to prevent excessive useless calculations. \\
+These constructs make it difficult to speculate about the properties of our semiring (or new data structure), which is what our project is devoted to research that the relationship between reduction and semiring properties.
+
+\section{Global optimality VS Left/Right local optimality}
+On the other hand, we also need to discuss how to make our approach embrace the algebras that violate distributivity.\\
+The global optimality: $A^*(i,j) = \bigoplus_{p \in \pi (i,j)}w(p)$,\\
+The left local optimality which is the distributed Bellman-Ford algorithm: $L = (A\otimes L) \oplus \bar{I}$ which is  $L(i,j) = \bigoplus_{q \in V} A(i,q)\otimes L(q,j)$,\\
+The right local optimality which is the Dijkstra's algorithm: $R = (R\otimes A) \oplus \bar{I}$ which is  $L(i,j) = \bigoplus_{q \in V} R(i,q)\otimes A(q,j)$,\\
+note that with distributivity, $M_n(S)$ is a semiring and the three optimality problems are essentially the same, the local optimal solutions are global solutions :$A^* = L = R$,\\
+However with out distributivity, those three solutions may all exists but all distinct, and that comes to the part of our project -- discussing about the relationship between reductions and semirings.
 
 
 \section{Combinator for Algebraic System}
 Combinator for Algebraic system (CAS)\cite{griffin_metarouting_2005} is introduced in $L11$. It is a language to design algebraic systems, in which many algebraic properties are automatically received and people can combine different operators to obtain a new semiring\cite{griffin_metarouting_2005}. We can also generalize a more complex path problem (in other words, we can abstract a more complex path problem with this new semiring, such as the lexicographic products \cite{gurney_lexicographic_2007}). CAS can easily return the properties of those combined-operation semirings and it is already defined in Coq\cite{Coq} (mentioned in $L11$ by Dr Timothy Griffin).
-
-\chapter{Related Work} 
-
-%This chapter covers relevant (and typically, recent) research 
-%which you build upon (or improve upon). There are two complementary 
-%goals for this chapter: 
-%\begin{enumerate} 
-%  \item to show that you know and understand the state of the art; and 
-%  \item to put your work in context
-%\end{enumerate} 
-%
-%Ideally you can tackle both together by providing a critique of
-%related work, and describing what is insufficient (and how you do
-%better!)
-%
-%The related work chapter should usually come either near the front or
-%near the back of the dissertation. The advantage of the former is that
-%you get to build the argument for why your work is important before
-%presenting your solution(s) in later chapters; the advantage of the
-%latter is that don't have to forward reference to your solution too
-%much. The correct choice will depend on what you're writing up, and
-%your own personal preference.
-
-Maybe I should put this part into the background part
-\section{Algebraic Apporach to the Path Problem}
-\section{CAS}
-\section{Semirings and Path Spaces}
 
 
 \chapter{Design and Implementation} 
@@ -308,7 +290,7 @@ Maybe I should put this part into the background part
 %This chapter may be called something else\ldots but in general 
 %the idea is that you have one (or a few) ``meat'' chapters which
 %describe the work you did in technical detail. 
-\section{Product Theory and Product Semigroup}
+
 \section{Reduction Properties and Reduction Theory}
 Here I define the reduction in a binary operation in three different version: reduce the result of the operation, only reduce the argument of the operation and reduce both result and argument of the operation. 
 $bop-reduce : \forall S:Type. \forall r: unary-op S. \forall b: binary-op S.\lambda x,y:S. r(b x y)$, 
