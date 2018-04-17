@@ -160,9 +160,10 @@ preserve\_annihilator : $\forall a \in S$, if $i$ is the annihilator for type $S
 
 
 \subsubsection{Properties for Binary Operator}
-Also for the binary operator we have defined, we hope that we will focus on the following six properties of it.
+Also for the binary operator we have defined, we hope that we will focus on the following seven properties of it.
 For a given type variable $S$, the binary relationship $=_S$ and our pre-defined binary operator $\oplus_S: S\times S \rightarrow S$, we have:\\
 congruence: $\forall s_1,s_2,t_1,t_2 \in S, s_1 \equiv t_1 \wedge s_2 \equiv t_2 \rightarrow s_1 \oplus_S s_2 \equiv t_1 \oplus_S t_2$,\\
+idempotent : $\forall a \in S, a \oplus_S a =_S a$,\\
 associativity: $\forall a,b,c \in S, a \oplus_S (b \oplus_S c) \equiv (a \oplus_S b) \oplus_S c$,\\
 commutativity: $\forall a,b\in S, a \oplus_S b = b \oplus_S a$,\\
 selectivity: $\forall a,b\in S, a \oplus_S b \in \{a,b\}$,\\
@@ -291,34 +292,90 @@ Combinator for Algebraic system (CAS)\cite{griffin_metarouting_2005} is introduc
 %the idea is that you have one (or a few) ``meat'' chapters which
 %describe the work you did in technical detail. 
 
-\section{Reduction Properties and Reduction Theory}
-Here I define the reduction in a binary operation in three different version: reduce the result of the operation, only reduce the argument of the operation and reduce both result and argument of the operation. 
-$bop-reduce : \forall S:Type. \forall r: unary-op S. \forall b: binary-op S.\lambda x,y:S. r(b x y)$, 
-$bop-reduce-args : \forall S:Type. \forall r: unary-op S. \forall b: binary-op S.\lambda x,y:S. b (r x) (r y)$, 
-$bop-full-reduce : \forall S:Type. \forall r: unary-op S. \forall b: binary-op S.\lambda x,y:S. r(b (r x) (r y))$.
+\section{Direct (Traditional) Reduction and Reduction Theory}
+\subsection{Basic Definition}
+Initially, First of all, I first made a detailed analysis (proof) of the reduction (we call it traditional reduction) mentioned by Wongseelashote in his article \cite{WONGSEELASHOTE197955}.\\
+For a given type $S$, a binary relationship $=_S$ on S, a unary operator and a binary operator $u_S$ and $\oplus_S$, we define the traditional reduction as following:\\
+$Pr (x : S) :=   u_S (x) =_S x$ which is the proof that, for a given element $x$ of type $S$, $x$ is in the reduced set.\\
+$red\_Type := \{x : S \& Pr(x)\}$, which is a set that all the elements in the set are pairs of the element in $S$ itself together with the proof that the element is in the reduced set.\\
+$red\_eq : red\_Type \rightarrow red\_Type \rightarrow bool 
+:= \lambda p_1 p_2, projT_1 (p_1) =_S projT_1 (p_2)$. \\
+Here $projT_1/projT_2$ are two 
+auxiliary	function that map the element/the proof part from the reduced set.\\
+It is worth mentioning that since the definition follows Wongseelashote in his article \cite{WONGSEELASHOTE197955}, our unary operator(reduction) needs congruence and idempotent properties.
+And when we discuss the relation and properties of the unary operator (reduciton) and the binary operator, we need to have two properties left\_invariant and right\_invariant.
+\\
+With these definitions we can discuss the nature of the binary relationship of traditional reduction.
+\subsection{Properties for the Relationship}
+For our given type $S$ and binary relationship $=_S$, we assume that $=_S$ on $S$ has such properties:
+\begin{itemize}
+\item reflexive 
+\item symmetric 
+\item transitive 
+\item congruence 
+\end{itemize}
+It is easy to prove that $red_eq$ on $red\_Type$ has those four properties:
+\begin{itemize}
+\item Lemma red\_ref : reflexive red\_Type red\_eq.
+\item Lemma red\_sym : symmetric red\_Type red\_eq.
+\item Lemma red\_cong : congruence red\_Type red\_eq red\_eq.  
+\item Lemma red\_trans : transitive red\_Type red\_eq.  
+\end{itemize}
 
-\section{Direct representation of Reduced Semigroup}
-(Well defined, but not extraction friendly)\
-\subsection{Homomorphism}
-\section{Another Representation of Reduced Semigroup -- RSemigroup}
-(Given the properties of semigroup together with the reduction proof together.)\\\\
-(For those two sections, I am just thinking how to write it properly)
-\section{One approach based on the Annihilator}
+\subsection{Properties for the Binary Operator}
+Before starting our proof, we need to prove an auxiliary Lemma.\\
+Lemma Pr\_br : $\forall (p1 p2 : red\_Type), Pr (u_S(projT1 (p1) \oplus_S projT1 (p2))).$\\
+The significance of this Lemma is that for any two elements that exist in a reduced set, we take out its element separately and execute a binary operation, and finally do a reduction process, and the result is still in the reduced set.\\\\
+Because our binary operator $\oplus_S$ is working on type $S$, we need a new reduced binary operator for our $red_Type$.\\
+$red\_bop : binary\_op$ $red\_Type :=
+    λ p1$ $p2,  existT Pr (u_S(projT1 (p1) \oplus_S projT1 (p2))) (Pr\_br$ $p1$ $p2).$\\
+Here existT is also an auxiliary function that take the element of type $S$ and the proof of the element to form the an element in the reduced set. (which is inverse to projT$_1$ and projT$_2$)\\
+Here we assume that our binary operator $\oplus_S$ has such properties separately on $S$:
+\begin{itemize}
+\item congruence 
+\item associativity 
+\item commutativity 
+\item selective 
+\item idempontent 
+\item has id $\bar0$ 
+\item has annihilator $\bar1$ 
+\end{itemize}
+It is easy to proof that $red_bop$ has such properties on $red_Type$:
+\begin{itemize}
+\item Lemma red\_bop\_cong : $congruence \rightarrow bop\_congruence$ $red\_Type$ $red\_eq$ $red\_bop.$ 
+\item Lemma red\_bop\_ass : $associativity \rightarrow bop\_associative$ $red\_Type$ $red\_eq$ $red\_bop.$ 
+\item Lemma red\_bop\_comm : $commutativity \rightarrow bop\_commutative$ $red\_Type$ $red\_eq$ $red\_bop.$
+\item Lemma red\_bop\_sel : $selective \rightarrow bop\_selective$ $red\_Type$ $red\_eq$ $red\_bop.$ 
+\item Lemma red\_bop\_idem : $idempontent \rightarrow bop\_idempotent$ $red\_Type$ $red\_eq$ $red\_bop.$  
+\item Lemma red\_bop\_id : \\$uop\_preserves\_id$ $S$ $=_S$ $\oplus_S$ $u_S \rightarrow\\ bop\_exists\_id$ $S$ $=_S$ $\oplus_S \rightarrow\\ bop\_exists\_id$ $red\_Type$ $red\_eq$ $red\_bop.$ 
+\item Lemma red\_bop\_ann : \\$uop\_preserves\_ann$ $S$ $=_S$ $\oplus_S$ $u_S \rightarrow\\ bop\_exists\_ann$ $S$ $=_S$ $\oplus_S \rightarrow\\ bop\_exists\_ann$ $red\_Type$ $red\_eq$ $red\_bop.$ 
+\end{itemize}
+It is worth mentioning that although the proof in this direction looks very obvious, those proof are not all sufficient. For example, sometimes $red_bop$ can be commutative on $red_Type$ even if $\oplus_S$ is not commutative on $S$.\\
+Fortunately, in our project we only care about whether our reduced set has the same properties when the original problem set has certain properties. So after our construction, we will specify the properties of the original problem set.\\\\
+However, as we mentioned in the introduction, there are quite a few problems with this traditional reduction.\\
+First of all, the proof part can not be well expressed in the outside world. We must know that many programming languages do not have the ability to represent and prove proposition.\\
+Second, when we apply a lot of reduction at the same time, this traditional representation will make our reduced set winding and confusing. For example, suppose we have two reductions $r_1$ and $r_2$, then the reduced problem set that apply reduction 2 after reduction 1 on the problem set must be represent as $\{x \in \{ y \in S \& r_1 (y) = y\} \& r_2 (x) = x\}$. At the same time we need to pay attention that the type of $r_2$ must be $\{ y \in S \& r_1 (y) = y\} \rightarrow \{ y \in S \& r_1 (y) = y\}$, but it should be $S \rightarrow S$ by our definition.\\\\
+Because of the above problems, we have to consider other ways to represent our reduction (this is also the purpose and significance of our project).
+\section{Binary Reduced Relationship}
+\subsection{Isomorphic to Traditional Reduction}
+\section{Binary Full Reduced Operator}
+\subsection{Isomorphic to Traditional Reduction}
+
 \chapter{Evaluation} 
 
-For any practical projects, you should almost certainly have
-some kind of evaluation, and it's often useful to separate 
-this out into its own chapter. \\\\\\
+%For any practical projects, you should almost certainly have
+%some kind of evaluation, and it's often useful to separate 
+%this out into its own chapter. \\\\\\
 
 
 \chapter{Summary and Conclusions} 
 
-As you might imagine: summarizes the dissertation, and draws 
-any conclusions. Depending on the length of your work, and 
-how well you write, you may not need a summary here. 
-
-You will generally want to draw some conclusions, and point
-to potential future work. 
+%As you might imagine: summarizes the dissertation, and draws 
+%any conclusions. Depending on the length of your work, and 
+%how well you write, you may not need a summary here. 
+%
+%You will generally want to draw some conclusions, and point
+%to potential future work. 
 
 
 
