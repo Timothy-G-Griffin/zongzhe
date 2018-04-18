@@ -30,6 +30,7 @@
 \usepackage{nicefrac}
 \usepackage{ amssymb }
 \usepackage{mleftright}
+\usepackage{listings}
 
 %% START OF DOCUMENT
 \begin{document}
@@ -326,7 +327,7 @@ It is easy to prove that $red_eq$ on $red\_Type$ has those four properties:
 Before starting our proof, we need to prove an auxiliary Lemma.\\
 Lemma Pr\_br : $\forall (p1 p2 : red\_Type), Pr (u_S(projT1 (p1) \oplus_S projT1 (p2))).$\\
 The significance of this Lemma is that for any two elements that exist in a reduced set, we take out its element separately and execute a binary operation, and finally do a reduction process, and the result is still in the reduced set.\\\\
-Because our binary operator $\oplus_S$ is working on type $S$, we need a new reduced binary operator for our $red_Type$.\\
+Because our binary operator $\oplus_S$ is working on type $S$, we need a new reduced binary operator for our $red\_Type$.\\
 $red\_bop : binary\_op$ $red\_Type :=
     λ p1$ $p2,  existT Pr (u_S(projT1 (p1) \oplus_S projT1 (p2))) (Pr\_br$ $p1$ $p2).$\\
 Here existT is also an auxiliary function that take the element of type $S$ and the proof of the element to form the an element in the reduced set. (which is inverse to projT$_1$ and projT$_2$)\\
@@ -340,7 +341,7 @@ Here we assume that our binary operator $\oplus_S$ has such properties separatel
 \item has id $\bar0$ 
 \item has annihilator $\bar1$ 
 \end{itemize}
-It is easy to proof that $red_bop$ has such properties on $red_Type$:
+It is easy to proof that $red\_bop$ has such properties on $red\_Type$:
 \begin{itemize}
 \item Lemma red\_bop\_cong : $congruence \rightarrow bop\_congruence$ $red\_Type$ $red\_eq$ $red\_bop.$ 
 \item Lemma red\_bop\_ass : $associativity \rightarrow bop\_associative$ $red\_Type$ $red\_eq$ $red\_bop.$ 
@@ -350,17 +351,276 @@ It is easy to proof that $red_bop$ has such properties on $red_Type$:
 \item Lemma red\_bop\_id : \\$uop\_preserves\_id$ $S$ $=_S$ $\oplus_S$ $u_S \rightarrow\\ bop\_exists\_id$ $S$ $=_S$ $\oplus_S \rightarrow\\ bop\_exists\_id$ $red\_Type$ $red\_eq$ $red\_bop.$ 
 \item Lemma red\_bop\_ann : \\$uop\_preserves\_ann$ $S$ $=_S$ $\oplus_S$ $u_S \rightarrow\\ bop\_exists\_ann$ $S$ $=_S$ $\oplus_S \rightarrow\\ bop\_exists\_ann$ $red\_Type$ $red\_eq$ $red\_bop.$ 
 \end{itemize}
-It is worth mentioning that although the proof in this direction looks very obvious, those proof are not all sufficient. For example, sometimes $red_bop$ can be commutative on $red_Type$ even if $\oplus_S$ is not commutative on $S$.\\
+It is worth mentioning that although the proof in this direction looks very obvious, those proof are not all sufficient. For example, sometimes $red_bop$ can be commutative on $red\_Type$ even if $\oplus_S$ is not commutative on $S$.\\
 Fortunately, in our project we only care about whether our reduced set has the same properties when the original problem set has certain properties. So after our construction, we will specify the properties of the original problem set.\\\\
 However, as we mentioned in the introduction, there are quite a few problems with this traditional reduction.\\
 First of all, the proof part can not be well expressed in the outside world. We must know that many programming languages do not have the ability to represent and prove proposition.\\
 Second, when we apply a lot of reduction at the same time, this traditional representation will make our reduced set winding and confusing. For example, suppose we have two reductions $r_1$ and $r_2$, then the reduced problem set that apply reduction 2 after reduction 1 on the problem set must be represent as $\{x \in \{ y \in S \& r_1 (y) = y\} \& r_2 (x) = x\}$. At the same time we need to pay attention that the type of $r_2$ must be $\{ y \in S \& r_1 (y) = y\} \rightarrow \{ y \in S \& r_1 (y) = y\}$, but it should be $S \rightarrow S$ by our definition.\\\\
 Because of the above problems, we have to consider other ways to represent our reduction (this is also the purpose and significance of our project).
-\section{Binary Reduced Relationship}
-\subsection{Isomorphic to Traditional Reduction}
-\section{Binary Full Reduced Operator}
-\subsection{Isomorphic to Traditional Reduction}
 
+\section{Semigroup With Direct Reduction}
+The previous section mentioned that the purpose of our project is to clarify the relationship between reduction and semiring properties. 
+In addition to the semiring's distribution relationship between the two operators, we can first think of it as two semigroups (then consider identity and annihilator issues).
+Hence, we need to give a primitive definition on semigroup (Some more detailed definitions will be added later as needed).\\
+Initially, according to the properties of the binary relationship, we define a record that contains those properties:
+\begin{lstlisting}[]
+Record eqv_proofs (S : Type) (eq : brel S) :=
+{
+  eqv_reflexive      : brel_reflexive S eq            
+; eqv_transitive     : brel_transitive S eq           
+; eqv_symmetric      : brel_symmetric S eq
+; eqv_congruence     : brel_congruence S eq eq                                      
+; eqv_witness        : S                                      
+}.
+\end{lstlisting}
+The definition includes the four properties: reflexive, transitive, symmetric and congruence for a binary relationship on a given type that I mentioned above. 
+At the same time, in order to ensure that our definition of semigroup is not a trivial semigroup (which means there is at least one element in the semigroup), we have added a witness property.\\
+Next we need to define the properties of the binary operator in the semigroup:
+\begin{lstlisting}[]
+Record semigroup_proofs (S: Type) (eq : brel S) (b : binary_op S) := 
+{
+  sg_associative   : bop_associative S eq b
+; sg_congruence    : bop_congruence S eq b
+; sg_commutative_d : bop_commutative_decidable S eq b                                      
+}.
+\end{lstlisting}
+This includes associativity, congruence and commutativity. 
+It is worth noting that since commutativity is not a property that semigroups must possess, we hereby conclude that a semigroup can be commutative or not commutative, but this must be decidable.\\
+For a given type $S$, binary relationship $=_S$ and binary operator $\oplus_S$,\\
+not$\_$commutativity: $\exists a,b\in S, a \oplus_S b \not=_S b \oplus_S a$,\\
+commutativity$\_$decidable: $commutative$ $S$ $=_S$ $\oplus_S$ $+$ $not\_commutative$ $S$ $=_S$ $\oplus_S$.\\
+
+Finally we can define our semigroup record as:
+\begin{lstlisting}[]
+Record semigroup (S : Type) :=
+{
+   eq   : brel S      
+;  bop  : binary_op S
+;  eqv  : eqv_proofs S eq               
+;  sgp  : semigroup_proofs S eq bop
+}.
+
+\end{lstlisting}
+According to our previous definition of traditional reduction and its properties, and the semigroup record we defined, we can try to define our reduction semigroup.
+But first, because our reduction is a traditional reduction, we need to define the properties of reduction together as a record.
+\begin{lstlisting}[]
+Record reduction_eqv_proofs (S : Type) (eq : brel S) 
+(r : unary_op S) :=
+{
+  rep_cong  : uop_congruence S eq r 
+; rep_idem  : uop_idempotent S eq r 
+}.
+
+Record reduction_bop_proofs (S : Type) (eq : brel S) 
+(r : unary_op S) (b : binary_op S) :=
+{
+  rb_left  : bop_left_uop_invariant S eq b r
+; rb_right : bop_right_uop_invariant S eq b r
+}.
+\end{lstlisting}
+The definitions of the two blocks contain two properties $\forall A \in S, reduce(reduce(A)) = reduce(A)$ and $\oplus : S \times S \rightarrow S, \forall A,B \in S, reduce(reduce(A)\oplus B) = reduce(A\oplus B) = reduce(A\oplus reduce(B))$ respectively, and it is also the definition of the reduction mentioned earlier by Ahnont Wongseelashote in his article \cite{WONGSEELASHOTE197955}.\\\\
+
+For a given type $S$, binary relationship $eqS$, unary operator $r$, binary operator $b$, if we have a semigroup $sg$ : semigroup $S$ on $eqS$ and $b$, then we can extract the $eqv\_proof$ from $sg$ as $eqv$, and we should initially construct the $eqv\_proof$ on the $red\_Type$ (reduction type). 
+\begin{lstlisting}
+Definition reduced_eqv_proofs : 
+(S : Type) (eq : brel S) (r : unary_op S) (b : binary_op S)
+	(eqv : eqv_proofs S eq),  
+	reduction_eqv_proofs S eq r -> 
+	eqv_proofs (red_Type S r eq) (red_eq S r eq)
+\end{lstlisting}
+It is worth mentioning that if the unary operator $r$ is a reduction, then we assume that $r$ has the properties of reduction.\\
+
+Next, we extract the semigroup proof $csg$ from $sg$ and we construct the semigroup proof for $red\_Type$:
+\begin{lstlisting}
+Definition reduced_semigroup_proofs :
+    (S : Type)
+    (eq : brel S)
+    (r : unary_op S)
+    (b : binary_op S)
+    (eqv : eqv_proofs S eq)
+    (csg : semigroup_proofs S eq b)
+    (req : reduction_eqv_proofs S eq r)     
+    (rb  : reduction_bop_proofs S eq r (bop_reduce r b)) 
+    (dec : bop_commutative_decidable (red_Type S r eq) 
+    	(red_eq S r eq) (red_bop S b r eq (rep_idem _ _ _ req))), 
+     semigroup_proofs (red_Type S r eq) 
+     	(red_eq S r eq) (red_bop S b r eq (rep_idem _ _ _ req))
+\end{lstlisting}
+It is worth noting here that since we need to give the new semigroup we defined about the properties of commutative, we have to know whether operator $red\_bop$ after reduction is commutative on $red\_Type$, but for the most time this is not an easy task.\\\\
+
+Finally, we can define a semigroup on $red\_Type$ following the traditional reduction.
+\begin{lstlisting}
+Definition semigroup_reduced:
+     (S : Type)
+     (csg : semigroup S)
+     (r : unary_op S)
+     (req : reduction_eqv_proofs S (eq S csg) r)
+     (rb  : reduction_bop_proofs S (eq S csg) r 
+     	(bop_reduce r (bop S csg)))
+     (dec : bop_commutative_decidable (red_Type S r (eq S csg)) 
+     	(red_eq S r (eq S csg)) (red_bop S (bop S csg) r 
+     	(eq S csg) (rep_idem _ _ _ req))),      
+           semigroup (red_Type S r (eq S csg))
+\end{lstlisting}
+
+There are two obvious problems with defining the reduction semigroup in this way.\\
+1, As mentioned above, even if we know that the original semigroup is commutative or not, it is difficult to infer whether $red\_bop$ is commutative under $red\_Type$.
+According to our previous proof we know that if $b$ is commutative on $S$, then $red\_bop$ is also commutative on $red\_Type$.
+However, even if b is not commutative on S, $red\_bop$ may still be commutative on $red\_Type$. This proof will become very complicated, and it is very dependent on the functionality of reduction and $b$. It is difficult to be generalized.\\
+As mentioned in the previous section, for the most time we actually relate to our semigroup "is" commutative and not concerned with it "is whether or not" commutative.
+So we can add the properties of the commutative to our defined record:
+\begin{lstlisting}
+Record commutative_semigroup_proofs (S: Type) 
+(eq : brel S) (b : binary_op S) := 
+{
+  csg_associative   : bop_associative S eq b
+; csg_congruence    : bop_congruence S eq b
+; csg_commutative   : bop_commutative S eq b                                      
+}.
+
+Record commutative_semigroup (S : Type) :=
+{
+   ceq   : brel S      
+;  cbop  : binary_op S
+;  ceqv  : eqv_proofs S ceq               
+;  csgp  : commutative_semigroup_proofs S ceq cbop
+}.
+\end{lstlisting}
+Unlike before, here we assume that our semigroup $sg$ is commutative, so it is easy to construct a commutative semigroup on $red\_Type$.
+
+\begin{lstlisting}
+Definition reduced_commutative_semigroup_proofs :
+  ∀ (S : Type)
+    (eq : brel S)
+    (r : unary_op S)
+    (b : binary_op S)
+    (eqv : eqv_proofs S eq)
+    (csg : commutative_semigroup_proofs S eq b)
+    (req : reduction_eqv_proofs S eq r)     
+    (rb  : reduction_bop_proofs S eq r (bop_reduce r b)), 
+         commutative_semigroup_proofs (red_Type S r eq) 
+         (red_eq S r eq) (red_bop S b r eq (rep_idem _ _ _ req))
+
+Definition commutative_semigroup_direct_reduction :
+  ∀ (S : Type)
+     (csg : commutative_semigroup S)
+     (r : unary_op S)
+     (req : reduction_eqv_proofs S (ceq S csg) r)     
+     (rb  : reduction_bop_proofs S (ceq S csg) r 
+     	(bop_reduce r (cbop S csg))),
+         commutative_semigroup (red_Type S r (ceq S csg))
+\end{lstlisting}
+2. After our construction, although we successfully defined semigroup on $red\_Type$, we lose information about reduction $r$ (the function of $r$ is not defined in the semigroup's record).\\\\
+Therefore, the use of traditional reduction and direct definition of reduced semigroups is limited by the limitations of reduction itself and the limitations of semigroup definitions, which is not a good choice, and we need to find a better representation.
+
+
+\section{Binary Reduced Relationship and Binary Full Reduced Operator}
+Let have a review on the definition of the traditional reduction with its binary relationship and binary operator.\\
+$Pr (x : S) :=   u_S (x) =_S x$.\\
+$red\_Type := \{x : S \& Pr(x)\}$.\\
+$red\_eq : red\_Type \rightarrow red\_Type \rightarrow bool 
+:= \lambda p_1 p_2, projT_1 (p_1) =_S projT_1 (p_2)$.\\
+$red\_bop : binary\_op$ $red\_Type :=
+    λ p1$ $p2,  existT Pr (u_S(projT1 (p1) \oplus_S projT1 (p2))) (Pr\_br$ $p1$ $p2)$.\\
+We realised that actually when we are using the reduction, we wind it on our binary relationship and binary operator. 
+So we try to discard the proof part and define new $eq\_r$ and $b\_r$ according to $eq$, $r$ and $b$.\\
+Definition $brel\_reduce : brel$ $S := \lambda x$ $y,  eq$ $(r$ $x)$ $(r$ $y).$ \\
+Definition $bop\_reduce : binary\_op$ $S := \lambda x$ $y,  r$ $(b$ $x$ $y).$\\
+$y).$\\   
+Definition $bop\_full\_reduce : binary\_op$ $S := \lambda x$ $y,  r(b$ $(r$ $x)$ $(r$ $y)).$\\
+We enwrap reduction on equality to define a new binary relationship. 
+We use the same method and define two new binary operators based on the difference in the reduction placement.
+However, in fact, according to the properties of the left$\_$invariant and right$\_$invariant of reduction mentioned earlier, the two binary operators are the same.\\\\
+Next we need to prove that by using of this representation of reduction, whether the properties of the binary operator $bS$ we mentioned earlier is still valid on $S$.
+Here we assume that our binary operator $eqS$ has such properties separately on $S$:
+\begin{itemize}
+\item congruence 
+\item associativity 
+\item commutativity 
+\item selective 
+\item idempontent 
+\item has id $\bar0$ 
+\item has annihilator $\bar1$ 
+\end{itemize}
+And the reduction $r$ (unary operator) has the properties of congruence, idempontent, left/right invariant.\\
+It is easy to proof that $bop\_full\_reduce$ $r$ $bS$ has such properties on $brel\_reduce$ $r$ $eqS$:
+\begin{itemize}
+\item Lemma bop\_full\_reduce\_congruence : \\$congruence \rightarrow congruence$ $S$ $(brel\_reduce$ $r$ $eqS)$ $(bop\_full\_reduce$ $r$ $bS).$ 
+\item Lemma bop\_full\_reduce\_associative : \\$associative \rightarrow associative$ $S$ $(brel\_reduce$ $r$ $eqS)$ $(bop\_full\_reduce$ $r$ $bS).$ 
+\item Lemma bop\_full\_reduce\_commutative : \\$commutative \rightarrow commutative$ $S$ $(brel\_reduce$ $r$ $eqS)$ $(bop\_full\_reduce$ $r$ $bS).$ 
+\item Lemma bop\_full\_reduce\_idempotent : \\$idempotent \rightarrow idempotent$ $S$ $(brel\_reduce$ $r$ $eqS)$ $(bop\_full\_reduce$ $r$ $bS).$ 
+\item Lemma bop\_full\_reduce\_selective : \\$selective \rightarrow selective$ $S$ $(brel\_reduce$ $r$ $eqS)$ $(bop\_full\_reduce$ $r$ $bS).$  
+\item Lemma bop\_full\_reduce\_exists\_id : \\$uop\_preserves\_id$ $S$ $eqS$ $bS$ $u_S \rightarrow\\ bop\_exists\_id$ $S$ $eqS$ $bS \rightarrow\\ bop\_exists\_id$ $S$ $(brel\_reduce$ $r$ $eqS)$ $(bop\_full\_reduce$ $r$ $bS).$ 
+\item Lemma bop\_full\_reduce\_exists\_ann : \\$uop\_preserves\_ann$ $S$ $eqS$ $bS$ $u_S \rightarrow\\ bop\_exists\_ann$ $S$ $eqS$ $bS \rightarrow\\ bop\_exists\_ann$ $S$ $(brel\_reduce$ $r$ $eqS)$ $(bop\_full\_reduce$ $r$ $bS).$ 
+\end{itemize}
+We find that we only use the left/right invariant properties of reduction to prove the property of the associative.
+Thus, maybe there is more than one way to axiomatise a reduction. 
+In the following chapters we will introduce a new associative: the pseudo associative, and use it to prove the properties of reductions.
+\subsection{Isomorphic to Traditional Reduction}
+However, in fact it is not enough to justify the correctness of this new representation by establishment of these properties. We need to establish some isomorphisms to prove that this new reduction (brel\_reduce and bop\_full\_reduce) is equivalent to the $red_Type$ $red_eq$ and $red_bop$.
+\begin{itemize}
+\item Lemma red\_ref\_iso : brel\_reflexive red\_Type red\_eq $\leftrightarrow$ brel\_reflexive S (brel\_reduce r eqS).
+\item Lemma red\_sym\_iso : brel\_symmetric red\_Type red\_eq $\leftrightarrow$ brel\_symmetric S (brel\_reduce r eqS).
+\item Lemma red\_tran\_iso : brel\_transitive red\_Type red\_eq $\leftrightarrow$ brel\_transitive S (brel\_reduce r eqS).
+\item Lemma red\_cong\_iso : bop\_congruence red\_Type red\_eq red\_bop $\leftrightarrow$ bop\_congruence S (brel\_reduce r eqS) (bop\_full\_reduce r b).
+\item Lemma red\_bop\_ass\_iso : bop\_associative red\_Type red\_eq red\_bop $\leftrightarrow$ bop\_associative S eqS r b.
+\item Lemma red\_comm\_iso :  bop\_commutative red\_Type red\_eq red\_bop $\leftrightarrow$ bop\_commutative S (brel\_reduce r eqS) (bop\_full\_reduce r b).
+\item Lemma red\_exists\_id\_iso :  bop\_exists\_id red\_Type red\_eq red\_bop $\leftrightarrow$ bop\_exists\_id S (brel\_reduce r eqS) (bop\_full\_reduce r b).
+\end{itemize}
+Based on these proofs, we can conclude that binary reduced relationship and binary full reduced operator have the same properties as traditional reduction. They are both a form of reduction.\\
+This form of reduction can be well expressed in the outside world in terms of the unary operator.
+At the same time, we can also avoid (ease) the winding problem between the reduction and original problem set.
+\section{Reduced Semigroup}
+In the section of direct reduction, we defined the semigroup, and discovered that the direct reduced semigroup would lose the reduction information.
+Now we try to write reduction as a definition in the record of the semigroup.
+\begin{lstlisting}
+Record rsemigroup (S : Type) :=
+{
+   r_eq   : brel S
+;  r_rep  : unary_op S                      
+;  r_bop  : binary_op S
+;  r_eqv  : eqv_proofs S r_eq
+;  r_rpv  : reduction_eqv_proofs S r_eq r_rep                        
+;  r_sgp  : semigroup_proofs S r_eq r_bop
+}.
+
+Record commutative_rsemigroup (S : Type) :=
+{
+   cr_eq   : brel S
+;  cr_rep  : unary_op S                      
+;  cr_bop  : binary_op S
+;  cr_eqv  : eqv_proofs S cr_eq
+;  cr_rpv  : reduction_eqv_proofs S cr_eq cr_rep                        
+;  cr_sgp  : commutative_semigroup_proofs S cr_eq cr_bop
+}.
+\end{lstlisting}
+These two are rsemigroups that do not contain commutative properties and rsemigroups that contain commutative properties.
+Based on our previous experience, most of the time we will choose to directly use rsemigroups that contain commutative properties.\\
+We also define the conversion from rsemigroup to semigroup (actually omission the reduction part and its associated proof).
+\begin{lstlisting}
+Definition rsemigroup_to_semigroup (S : Type): 
+rsemigroup S -> semigroup S
+:= λ rsg,
+{|    
+   eq   := r_eq S rsg 
+;  bop  := r_bop S rsg 
+;  eqv  := r_eqv S rsg 
+;  sgp  := r_sgp S rsg
+|}.
+
+Definition commutative_rsemigroup_to_commutative_semigroup 
+(S : Type): 
+commutative_rsemigroup S -> commutative_semigroup S
+:= λ crsg,
+{|    
+   ceq   := cr_eq S crsg 
+;  cbop  := cr_bop S crsg 
+;  ceqv  := cr_eqv S crsg 
+;  csgp  := cr_sgp S crsg
+|}.
+\end{lstlisting}
+
+\subsection{Product RSemigroup}
 \chapter{Evaluation} 
 
 %For any practical projects, you should almost certainly have
