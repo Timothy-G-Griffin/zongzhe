@@ -6,6 +6,8 @@ Require Import CAS.structures.
 Require Import CAS.facts.
 Require Import CAS.reduction_theory.
 Require Import CAS.product.
+Require Import CAS.bop_full_reduce.
+Require Import CAS.rsemigroup.
 
 
 Section Reduce_Annihilators.
@@ -180,6 +182,180 @@ Definition reduce_annihilators_reduction_bop_proofs (S T : Type) (eqS : brel S) 
 ; rb_right := bop_reduce_annihilators_right_invariant S T aS aT eqS eqT bS bT refS refT aaS aaT 
 |}.
 
+
+Lemma bop_reduce_annihilators_psedo_associative 
+(S T : Type)
+      (aS : S)
+      (aT : T)
+      (eqS : brel S)
+      (eqT : brel T)
+      (bS : binary_op S)
+      (bT : binary_op T): 
+      brel_reflexive S eqS -> brel_reflexive T eqT ->
+      brel_symmetric S eqS -> brel_symmetric T eqT ->
+      brel_transitive S eqS -> brel_transitive T eqT -> 
+      bop_associative S eqS bS ->
+      bop_associative T eqT bT -> 
+      bop_congruence S eqS bS ->
+      bop_congruence T eqT bT -> 
+      bop_is_ann S eqS bS aS ->
+      bop_is_ann T eqT bT aT ->
+      bop_pseudo_associative (S * T) (brel_product eqS eqT) (bop_reduce_annihilators aS aT eqS eqT) (bop_product bS bT) .
+Proof. compute. intros refS refT symS symT tranS tranT assS assT congS congT annS annT s t u . destruct s as [s1 t1], t as [s2 t2], u as [s3 t3].
+       case_eq (eqS s1 aS); intro J;case_eq (eqS s2 aS); intro K.
+       assert (M := annS aS). destruct M as [M _]; rewrite M.
+       case_eq(eqS s3 aS); intro L. rewrite M. rewrite M. rewrite (refS aS), (refT aT). auto.
+       case_eq(eqT t3 aT); intro H. rewrite M. rewrite M. rewrite (refS aS), (refT aT). auto.
+       assert (N := annS s3). destruct N as [Nl Nr]; rewrite Nl. rewrite M. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT t2 aT);intro L. assert (M := annS aS). destruct M as [M _]; rewrite M.
+       case_eq (eqS s3 aS); intro O. rewrite M. rewrite M. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT t3 aT); intro P. rewrite M. rewrite M. rewrite (refS aS), (refT aT). auto.
+       assert (N := annS s3). destruct N as [Nl Nr]; rewrite Nl. rewrite M. rewrite (refS aS), (refT aT). auto.
+       assert (N := annS s2). destruct N as [Nl Nr]; rewrite Nl. 
+       case_eq (eqS s3 aS); intro O. assert (M := annS aS). destruct M as [M _]; rewrite M. rewrite Nr. rewrite M. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT t3 aT); intro P. assert (M := annS aS). destruct M as [M _]; rewrite M. rewrite Nr. rewrite M. rewrite (refS aS), (refT aT). auto.
+       assert (N' := annS s3). destruct N' as [Nl' Nr']; rewrite Nl'. 
+       case_eq (eqS (bS s2 s3) aS); intro Q. assert (M := annS aS). destruct M as [M _]; rewrite M.  rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT (bT t2 t3) aT); intro R. assert (M := annS aS). destruct M as [M _]; rewrite M.  rewrite (refS aS), (refT aT). auto.
+       assert (I := annS (bS s2 s3)). destruct I as [Il Ir]. rewrite Il. rewrite (refS aS), (refT aT). auto.
+       assert (M := annS aS). destruct M as [M _].
+       case_eq (eqT t1 aT); intro L. rewrite M. 
+       case_eq (eqS s3 aS); intro O. rewrite M. rewrite M. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT t3 aT); intro P. rewrite M. rewrite M. rewrite (refS aS), (refT aT). auto.
+       assert (N := annS s3). destruct N as [Nl Nr]; rewrite Nl. rewrite M. rewrite (refS aS), (refT aT). auto.
+       assert (N := annS s1). destruct N as [Nl Nr]; rewrite Nr.
+       case_eq (eqS s3 aS); intro O. rewrite M. rewrite Nr. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT t3 aT); intro P. rewrite M. rewrite Nr. rewrite (refS aS), (refT aT). auto.
+       assert (N' := annS s3). destruct N' as [Nl' Nr']; rewrite Nl'. rewrite Nr.  rewrite (refS aS), (refT aT). auto.
+       assert (M := annS aS). destruct M as [M _].
+       case_eq (eqT t1 aT); intro L.
+       case_eq (eqS s3 aS); intro O.
+       case_eq (eqT t2 aT); intro P. rewrite M. rewrite M. rewrite (refS aS), (refT aT). auto.
+       assert (N := annS s2). destruct N as [Nl Nr]; rewrite Nl. rewrite M. rewrite Nr. rewrite M. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT t2 aT ); intro P. rewrite M.
+       case_eq (eqT t3 aT); intro Q. rewrite M. rewrite M. rewrite (refS aS), (refT aT). auto.
+       assert (N := annS s3). destruct N as [Nl Nr]; rewrite Nl. rewrite M. rewrite (refS aS), (refT aT). auto.
+       assert (N := annS s2). destruct N as [Nl Nr]; rewrite Nl.
+       case_eq (eqT t3 aT); intro Q. rewrite M. rewrite Nr. rewrite M. rewrite (refS aS), (refT aT). auto.
+       assert (N' := annS s3). destruct N' as [Nl' Nr']; rewrite Nl'. 
+       case_eq (eqS (bS s2 s3) aS); intro R. rewrite M. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT (bT t2 t3) aT); intro U. rewrite M. rewrite (refS aS), (refT aT). auto.
+       assert (I := annS (bS s2 s3)). destruct I as [Il Ir]. rewrite Il. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT t2 aT); intro P.
+       assert (N := annS s1). destruct N as [Nl Nr]; rewrite Nr.
+       case_eq (eqS s3 aS); intro O. rewrite M. rewrite Nr. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT t3 aT); intro Q. rewrite M. rewrite Nr. rewrite (refS aS), (refT aT). auto.
+       assert (N' := annS s3). destruct N' as [Nl' Nr']; rewrite Nl'. rewrite Nr.  rewrite (refS aS), (refT aT). auto.
+       case_eq (eqS (bS s1 s2) aS); intro Q. case_eq (eqS s3 aS); intro R. rewrite M. 
+       assert (N := annS s2). destruct N as [Nl Nr]; rewrite Nr. 
+       assert (N' := annS s1). destruct N' as [Nl' Nr']; rewrite Nr'. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT t3 aT); intro U. rewrite M. assert (N := annS s2). destruct N as [Nl Nr]; rewrite Nr.
+       assert (N' := annS s1). destruct N' as [Nl' Nr']; rewrite Nr'. rewrite (refS aS), (refT aT). auto.
+       assert (N := annS s3). destruct N as [Nl Nr]; rewrite Nl. 
+       case_eq (eqS (bS s2 s3) aS); intro V. 
+       assert (N' := annS s1). destruct N' as [Nl' Nr']; rewrite Nr'. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT (bT t2 t3) aT); intro W. 
+       assert (N' := annS s1). destruct N' as [Nl' Nr']; rewrite Nr'. rewrite (refS aS), (refT aT). auto.
+       assert (A := assS s1 s2 s3).
+       assert (B := congS (bS s1 s2) s3 aS s3 Q (refS s3)).
+       assert (C := tranS _ _ _ B Nl). apply symS in A.
+       assert (D := tranS _ _ _ A C). rewrite D. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT (bT t1 t2) aT); intro O; case_eq (eqS s3 aS); intro R. 
+       rewrite M. assert (N' := annS s2). destruct N' as [Nl' Nr']; rewrite Nr'.  
+       assert (N := annS s1). destruct N as [Nl Nr]; rewrite Nr.  rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT t3 aT); intro U. rewrite M. assert (N' := annS s2). destruct N' as [Nl' Nr']; rewrite Nr'.  
+       assert (N := annS s1). destruct N as [Nl Nr]; rewrite Nr.  rewrite (refS aS), (refT aT). auto.
+       assert (N := annS s3). destruct N as [Nl Nr]; rewrite Nl.  
+       case_eq (eqS (bS s2 s3) aS); intro V. assert (N' := annS s1). destruct N' as [Nl' Nr']; rewrite Nr'. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT (bT t2 t3) aT); intro W. assert (N' := annS s1). destruct N' as [Nl' Nr']; rewrite Nr'. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqS (bS s1 (bS s2 s3)) aS); intro X. rewrite (refS aS), (refT aT). auto.
+       assert (A := assT t1 t2 t3).
+       assert (B := congT (bT t1 t2) t3 aT t3 O (refT t3)).
+       assert (N' := annT t3). destruct N' as [Nl' Nr'].
+       assert (C := tranT _ _ _ B Nl'). apply symT in A.
+       assert (D := tranT _ _ _ A C). rewrite D. rewrite (refS aS), (refT aT). auto.
+       assert (I := annS (bS s1 s2)). destruct I as [Il Ir]. rewrite Ir. 
+       assert (N' := annS s2). destruct N' as [Nl' Nr']; rewrite Nr'.
+       assert (N := annS s1). destruct N as [Nl Nr]; rewrite Nr.  rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT t3 aT); intro U.
+       assert (I := annS (bS s1 s2)). destruct I as [Il Ir]. rewrite Ir. 
+       assert (N' := annS s2). destruct N' as [Nl' Nr']; rewrite Nr'.
+       assert (N := annS s1). destruct N as [Nl Nr]; rewrite Nr.  rewrite (refS aS), (refT aT). auto.
+       case_eq (eqS (bS (bS s1 s2) s3) aS); intro V. 
+       case_eq (eqS (bS s2 s3) aS); intro W. assert (N := annS s1). destruct N as [Nl Nr]; rewrite Nr.  rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT (bT t2 t3) aT); intro X. assert (N := annS s1). destruct N as [Nl Nr]; rewrite Nr.  rewrite (refS aS), (refT aT). auto.
+       assert (A := assS s1 s2 s3). apply symS in A.
+       assert (B := tranS _ _ _ A V). rewrite B. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT (bT (bT t1 t2) t3) aT); intro W. 
+       case_eq (eqS (bS s2 s3) aS); intro X. assert (N := annS s1). destruct N as [Nl Nr]; rewrite Nr.  rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT (bT t2 t3) aT); intro Y. assert (N := annS s1). destruct N as [Nl Nr]; rewrite Nr.  rewrite (refS aS), (refT aT). auto.
+       assert (A := assS s1 s2 s3). apply symS in A.
+       assert (B := brel_transitive_f2 S eqS symS tranS _ _ _ A V). rewrite B.
+       assert (C := assT t1 t2 t3). apply symT in C.
+       assert (D := tranT _ _ _ C W). rewrite D. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqS (bS s2 s3) aS ); intro X. 
+       assert (A := assS s1 s2 s3).
+       assert (B := congS s1 (bS s2 s3) s1 aS (refS s1) X).
+       assert (C := tranS _ _ _ A B). assert (N := annS s1). destruct N as [Nl Nr].
+       assert (D := tranS _ _ _ C Nr). rewrite D in V. discriminate.
+       case_eq (eqT (bT t2 t3) aT); intro Y.
+       assert (A := assT t1 t2 t3).
+       assert (B := congT t1 (bT t2 t3) t1 aT (refT t1) Y).
+       assert (C := tranT _ _ _ A B). assert (N := annT t1). destruct N as [Nl Nr].
+       assert (D := tranT _ _ _ C Nr). rewrite D in W. discriminate.
+       assert (A := assS s1 s2 s3). apply symS in A.
+       assert (B := brel_transitive_f2 S eqS symS tranS _ _ _ A V). rewrite B.
+       assert (C := assT t1 t2 t3). apply symT in C.
+       assert (D := brel_transitive_f2 T eqT symT tranT _ _ _ C W). rewrite D.
+       apply symS in A. rewrite A. apply symT in C. rewrite C. auto.
+Qed.
+
+Lemma bop_reduce_annihilators_associative_v2 
+(S T : Type)
+(aS : S)
+(aT : T)
+(eqS : brel S)
+(eqT : brel T)
+(bS : binary_op S)
+(bT : binary_op T)  
+: brel_reflexive S eqS -> brel_reflexive T eqT ->
+brel_symmetric S eqS -> brel_symmetric T eqT ->
+brel_transitive S eqS -> brel_transitive T eqT -> 
+bop_associative S eqS bS ->
+bop_associative T eqT bT -> 
+bop_congruence S eqS bS ->
+bop_congruence T eqT bT -> 
+bop_is_ann S eqS bS aS ->
+bop_is_ann T eqT bT aT ->
+bop_associative (S * T) (brel_reduce (bop_reduce_annihilators aS aT eqS eqT) (brel_product eqS eqT)) (bop_full_reduce (bop_reduce_annihilators aS aT eqS eqT) (bop_product bS bT)).
+Proof. intros refS refT symS symT tranS tranT assS assT congS congT annS annT. 
+  apply bop_full_reduce_pseudo_associative_implies_associative.
+  apply brel_product_reflexive. auto. auto.
+  apply brel_product_symmetric; auto; auto.
+  apply brel_product_transitive ; auto;auto.
+  compute. intro a. destruct a as [s t]. 
+  case_eq (eqS s aS); intro A. rewrite (refS aS). rewrite (refS aS), (refT aT). auto.
+  case_eq (eqT t aT); intro B. rewrite (refS aS). rewrite (refS aS), (refT aT). auto.
+  rewrite A. rewrite B. rewrite (refS s), (refT t). auto.
+  compute. intros [s1 t1] [s2 t2] H.  
+  case_eq (eqS s1 aS); intro A.
+  case_eq (eqS s2 aS); intro B. rewrite (refS aS), (refT aT). auto.
+  case_eq (eqT t2 aT); intro C.  rewrite (refS aS), (refT aT). auto.
+  case_eq (eqS s1 s2); intro D; rewrite D in H. apply symS in A.
+  assert (E := brel_transitive_f1 S eqS symS tranS _ _ _ B A). apply symS in D. rewrite D in E. discriminate. discriminate.
+  case_eq (eqT t1 aT); intro B; case_eq(eqS s2 aS); intro C. rewrite (refS aS), (refT aT). auto.
+  case_eq (eqT t2 aT); intro D. rewrite (refS aS), (refT aT). auto.
+  case_eq (eqS s1 s2); intro E; rewrite E in H. apply symT in B.
+  assert (F := brel_transitive_f1 T eqT symT tranT _ _ _ D B). assert (L := brel_symmetric_false T eqT symT _ _ F).  rewrite L in H. discriminate. discriminate.
+  case_eq (eqS s1 s2); intro D; rewrite D in H.  apply symS in C.
+  assert (E := brel_transitive_f1 S eqS symS tranS _ _ _ A C). rewrite E in D. discriminate. discriminate.
+  case_eq (eqT t2 aT); intro D. 
+  case_eq (eqS s1 s2); intro E; rewrite E in H.  apply symT in D.
+  assert (F := brel_transitive_f1 T eqT symT tranT _ _ _ B D). rewrite F in H.  discriminate. discriminate.
+  case_eq (eqS s1 s2); intro F; rewrite F in H. auto. discriminate.
+  apply bop_product_congruence; auto;auto.
+  apply bop_reduce_annihilators_psedo_associative; auto;auto; auto;auto; auto;auto; auto;auto; auto;auto; auto;auto.
+Qed.
 
 Lemma bop_reduce_annihilators_associative
       (S T : Type)
@@ -445,6 +621,42 @@ Proof. intros refS refT symS symT transS transT AS AT congS congT assS assT [s1 
 Qed.
 
 
+Lemma bop_reduce_annihilators_commutative_v2 
+(S T : Type)
+      (aS : S)
+      (aT : T)
+      (eqS : brel S)
+      (eqT : brel T)
+      (bS : binary_op S)
+      (bT : binary_op T)      
+  :   brel_reflexive S eqS -> brel_reflexive T eqT ->
+      bop_commutative S eqS bS -> bop_commutative T eqT bT ->
+      brel_symmetric S eqS -> brel_symmetric T eqT ->
+     brel_transitive S eqS -> brel_transitive T eqT ->
+    bop_is_ann S eqS bS aS ->
+    bop_is_ann T eqT bT aT ->
+bop_commutative (S * T) (brel_reduce (bop_reduce_annihilators aS aT eqS eqT) (brel_product eqS eqT)) (bop_full_reduce (bop_reduce_annihilators aS aT eqS eqT) (bop_product bS bT)).
+Proof. intros refS refT comS comT symS symT tranS tranT AS AT [a b] [c d]. 
+       apply bop_full_reduce_commutative. 
+       compute. intros [s1 t1] [s2 t2] H.  
+       case_eq (eqS s1 aS); intro A.
+       case_eq (eqS s2 aS); intro B. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT t2 aT); intro C.  rewrite (refS aS), (refT aT). auto.
+       case_eq (eqS s1 s2); intro D; rewrite D in H. apply symS in A.
+       assert (E := brel_transitive_f1 S eqS symS tranS _ _ _ B A). apply symS in D. rewrite D in E. discriminate. discriminate.
+       case_eq (eqT t1 aT); intro B; case_eq(eqS s2 aS); intro C. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT t2 aT); intro D. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqS s1 s2); intro E; rewrite E in H. apply symT in B.
+       assert (F := brel_transitive_f1 T eqT symT tranT _ _ _ D B). assert (L := brel_symmetric_false T eqT symT _ _ F).  rewrite L in H. discriminate. discriminate.
+       case_eq (eqS s1 s2); intro D; rewrite D in H.  apply symS in C.
+       assert (E := brel_transitive_f1 S eqS symS tranS _ _ _ A C). rewrite E in D. discriminate. discriminate.
+       case_eq (eqT t2 aT); intro D. 
+       case_eq (eqS s1 s2); intro E; rewrite E in H.  apply symT in D.
+       assert (F := brel_transitive_f1 T eqT symT tranT _ _ _ B D). rewrite F in H.  discriminate. discriminate.
+       case_eq (eqS s1 s2); intro F; rewrite F in H. auto. discriminate.
+       apply bop_product_commutative; auto;auto.
+Qed.
+
 Lemma bop_reduce_annihilators_commutative
       (S T : Type)
       (aS : S)
@@ -515,6 +727,43 @@ Proof. induction b1; induction b2; simpl; intros.
        split. assumption. reflexivity. 
        split. assumption. assumption. 
 Defined. 
+
+Lemma bop_reduce_annihilators_congruence_bop_v2 
+(S T : Type)
+(aS : S)
+(aT : T)
+(eqS : brel S)
+(eqT : brel T)
+(bS : binary_op S)
+(bT : binary_op T)      
+:   brel_reflexive S eqS -> brel_reflexive T eqT ->
+bop_congruence S eqS bS ->
+bop_congruence T eqT bT -> 
+brel_transitive S eqS -> brel_transitive T eqT ->
+brel_symmetric S eqS -> brel_symmetric T eqT ->      
+bop_is_ann S eqS bS aS ->
+bop_is_ann T eqT bT aT ->
+bop_congruence (S * T) (brel_reduce (bop_reduce_annihilators aS aT eqS eqT) (brel_product eqS eqT)) (bop_full_reduce (bop_reduce_annihilators aS aT eqS eqT) (bop_product bS bT)).
+Proof. intros refS refT congS congT tranS tranT symS symT AS AT a b c d H1 H2.
+  apply bop_full_reduce_congruence. 
+  compute. intros [s1 t1] [s2 t2] H.  
+  case_eq (eqS s1 aS); intro A.
+  case_eq (eqS s2 aS); intro B. rewrite (refS aS), (refT aT). auto.
+  case_eq (eqT t2 aT); intro C.  rewrite (refS aS), (refT aT). auto.
+  case_eq (eqS s1 s2); intro D; rewrite D in H. apply symS in A.
+  assert (E := brel_transitive_f1 S eqS symS tranS _ _ _ B A). apply symS in D. rewrite D in E. discriminate. discriminate.
+  case_eq (eqT t1 aT); intro B; case_eq(eqS s2 aS); intro C. rewrite (refS aS), (refT aT). auto.
+  case_eq (eqT t2 aT); intro D. rewrite (refS aS), (refT aT). auto.
+  case_eq (eqS s1 s2); intro E; rewrite E in H. apply symT in B.
+  assert (F := brel_transitive_f1 T eqT symT tranT _ _ _ D B). assert (L := brel_symmetric_false T eqT symT _ _ F).  rewrite L in H. discriminate. discriminate.
+  case_eq (eqS s1 s2); intro D; rewrite D in H.  apply symS in C.
+  assert (E := brel_transitive_f1 S eqS symS tranS _ _ _ A C). rewrite E in D. discriminate. discriminate.
+  case_eq (eqT t2 aT); intro D. 
+  case_eq (eqS s1 s2); intro E; rewrite E in H.  apply symT in D.
+  assert (F := brel_transitive_f1 T eqT symT tranT _ _ _ B D). rewrite F in H.  discriminate. discriminate.
+  case_eq (eqS s1 s2); intro F; rewrite F in H. auto. discriminate.
+  apply bop_product_congruence. auto. auto. auto. auto.
+Qed.
 
 Lemma bop_reduce_annihilators_congruence_bop
       (S T : Type)
