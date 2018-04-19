@@ -25,7 +25,6 @@
 
 \usepackage{epsfig,graphicx,parskip,setspace,tabularx,xspace} 
 \usepackage{a4wide,parskip,times}
-\usepackage{a4wide,parskip}
 \usepackage{amsmath}
 \usepackage{nicefrac}
 \usepackage{ amssymb }
@@ -620,7 +619,55 @@ commutative_rsemigroup S -> commutative_semigroup S
 |}.
 \end{lstlisting}
 
-\subsection{Product RSemigroup}
+\subsection{Product Semigroup/RSemigroup}
+Similar as our direct reduced semigroup that defined in the previous section, it is really easy to construct an rsemigroup for a given type, binary relationship, unary operator (reduction) and binary operator. For some extent, defining an rsemigroup is even easier than we previously defined the direct reduced semigroup, because we show the reduction information obviously in the definition record. Further more we have conversion from rsemigroup to semigroup. In this process, the function omits the information of reduction and its related proof. However, those information and proofs are still be used in the definition of other properties (like commutative). Hence we can say that rsemigroup and semigroup are equivalent in most parts.\\\\
+The next step we need to focus on is how to combine two semigroups together.
+As I mentioned in the introduction, the CAS system will combine different semigroups (semirings) together (using direct product of lexicographic product) and discuss their characteristics. The example provided in the background part shows that the widest-shortest problem contains two different semirings and uses lexigraphic product to combine them together. Hence, we need to discuss on the combination of two semigroup at first.\\\\
+Initially we need to define the product of two eqv\_proof (the proof of properties of the binary relationship).\\
+Definition eqv\_proofs\_product : $  eqv\_proofs$ $S$ $eqS \rightarrow eqv\_proofs$ $T$ $eqT \rightarrow eqv\_proofs$ $(S * T)$ $(brel_product$ $eqS$ $eqT)$.\\\\
+Then we need to define the product of two semigroup\_proof (the proof of properties of the binary operator).\\
+Definition sg\_proofs\_product : $(semigroup\_proofs$ $S$ $eqS$ $bS) \rightarrow (semigroup\_proofs$ $T$ $eqT$ $bT)
+               \rightarrow semigroup\_proofs$ $(S * T)$ $(brel\_product$ $eqS$ $eqT )$ $(bop\_product$ $bS$ $bT)$.\\
+Because we also have a commutative version of semigroup proof, then we can derive a similar construction.\\
+Definition sg\_proofs\_commutative\_product : $(commutative\_semigroup\_proofs$ $S$ $eqS$ $bS) \rightarrow (commutative\_semigroup\_proofs$ $T$ $eqT$ $bT)
+               \rightarrow commutative\_semigroup\_proofs$ $(S * T)$ $(brel\_product$ $eqS$ $eqT )$ $(bop\_product$ $bS$ $bT)$.\\\\
+Next we can define a simple semigroup combinator for our direct semigroup.\\
+Definition semigroup\_product : $semigroup$ $S \rightarrow semigroup$ $T \rightarrow semigroup$ $(S * T)$.\\
+Definition commutative\_semigroup\_product : $commutative\_semigroup$ $S \rightarrow commutative\_semigroup$ $T \rightarrow commutative\_semigroup$ $(S * T)$.\\
+
+Furthermore, because our rsemigroup has the information of reduction, it need the proof of product of two reduction proofs.\\
+Definition reduction\_eqv\_proofs\_product :$ 
+  reduction\_eqv\_proofs$ $S$ $eqS$ $repS \rightarrow
+  reduction\_eqv\_proofs$ $T$ $eqT$ $repT \rightarrow
+      reduction\_eqv\_proofs$ $(S * T)$ $(brel\_product$ $eqS$ $eqT)$ $(uop\_product$ $ repS$ $repT)$\\\\
+Finally we can define our new combinator, the product of two rsemigroup.\\
+Definition rsemigroup\_product : $rsemigroup$ $S \rightarrow rsemigroup$ $T \rightarrow rsemigroup$ $S * T)$.\\\\
+The appearance of this combinator means that we can combine two different semiring constructed on different reduction together to form a new semigroup. Next we have to focus on how to construct our reduction.
+\section{Annihilator Reduction}
+Next we have to focus on how to construct our reduction and we need to give some practical examples of reduction.
+Following the idea of the widest-shortest problem, we want to eliminate the element (edge) that has 0 capacity in our calculation. 
+Recalling our widest-shortest problem, each element is represented in such a form as (capacity, length), or a similar form. Therefore we hope to eliminate such a pair of element as (0, x). Considering that 0 plays a role of annihilator of the additive operator in the widest path problem, which is the first part of the product (actually lexicographic product) semiring, we construct a reduction in the same way.\\
+Definition bop\_reduce\_annihilators $\{S$ $T : Type\}$ $(aS : S)$ $(aT : T)$ $(eqS : brel$ $S)$ $(eqT : brel$ $ T) : unary\_op$ $ (S * T)
+  := \lambda p, let (s, t) := p$ $ in $ $if$ $ orb $ $(eqS$ $ s $ $aS) $ $(eqT $ $t $ $aT)$ $ then $ $(aS, aT) $ $else p.$
+In bop\_reduce\_annihilators, suppose $aS$ is the annihilator of $S$ and $aT$ is the annihilator of $T$, then this reduction will treat all pairs $(s,aT)$ and $(aS,t)$ as $(aS,aT)$.\\
+As we mentioned in the definition of reduction, we need to prove the reduction properties of this new reduction.
+\begin{lstlisting}
+Lemma bop_reduce_annihilators_idempotent 
+(S T : Type) (aS : S) (aT : T) (eqS : brel S) (eqT : brel T) :
+  brel_reflexive S eqS -> brel_reflexive T eqT -> 
+  uop_idempotent (S * T) (brel_product eqS eqT) 
+  	(bop_reduce_annihilators aS aT eqS eqT).
+
+Lemma bop_reduce_annihilators_congruence 
+(S T : Type) (aS : S) (aT : T) (eqS : brel S) (eqT : brel T) :
+  brel_reflexive S eqS -> brel_symmetric S eqS -> 
+  brel_transitive S eqS -> 
+  brel_reflexive T eqT -> brel_symmetric T eqT -> 
+  brel_transitive T eqT -> 
+  uop_congruence (S * T) (brel_product eqS eqT) 
+  	(bop_reduce_annihilators aS aT eqS eqT).
+\end{lstlisting}
+\section{Predicate Reduction}
 \chapter{Evaluation} 
 
 %For any practical projects, you should almost certainly have
