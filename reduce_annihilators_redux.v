@@ -344,6 +344,8 @@ Proof. apply bop_associative_fpr_id_v2; auto.
        apply bop_product_associative; auto.
 Qed.
 
+(* question, I think we should directly proof the pseudo associative using compute and case analysis
+not using our previous definition, and then we can proof for associative using our pseudo associative *)
 
 Lemma bop_rap_add_associative_pseudo: bop_pseudo_associative (S * T) (brel_product eqS eqT) uop_rap (bop_product addS addT).
 Proof. apply bop_full_reduce_associative_implies_pseudo_associative.
@@ -355,6 +357,20 @@ Proof. apply bop_full_reduce_associative_implies_pseudo_associative.
        apply bop_product_congruence; auto. 
        apply bop_rap_add_associative.
 Qed.
+
+(* this one should be the real associative proof I think, and the pseudo proof should not use bop_rap_add_associative anymore *)
+
+Lemma bop_rap_add_associative_v2 :  bop_associative (S * T) (brel_reduce uop_rap (brel_product eqS eqT)) bop_rap_add.
+Proof. apply bop_full_reduce_pseudo_associative_implies_associative.
+  apply brel_product_reflexive; auto.
+  apply brel_product_symmetric; auto.
+  apply brel_product_transitive; auto.
+  apply uop_predicate_reduce_idempoent. apply brel_product_reflexive; auto.
+  apply uop_predicate_reduce_congruence. apply brel_product_reflexive; auto.  apply P_congruence_v1.  
+  apply bop_product_congruence; auto.
+  apply bop_rap_add_associative_pseudo.
+Qed.
+
 
 Lemma bop_rap_add_commutative :
      bop_commutative S eqS addS -> bop_commutative T eqT addT ->

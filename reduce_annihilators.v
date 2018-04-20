@@ -902,6 +902,56 @@ Definition reduced_ann_eqv_proofs : forall (S T: Type) (aS : S) (aT : T)(eqS : b
                                                      (eqv_proofs_product S T eqS eqT eqvS eqvT))
 |}.
 
+Check bop_reduce_annihilators_associative_v2.
+
+Definition reduced_ann_commutative_semigroup_proofs_v2 : forall (S T: Type) (eqS : brel S) (eqT : brel T) (bS : binary_op S)(bT : binary_op T)
+    (eqvS:eqv_proofs S eqS) (eqvT:eqv_proofs T eqT)
+    (sgS : commutative_semigroup_proofs S eqS bS)
+    (sgT : commutative_semigroup_proofs T eqT bT)                                        
+    (aS : S) (aaS : bop_is_ann S eqS bS aS)
+    (aT : T) (aaT : bop_is_ann T eqT bT aT), 
+    commutative_semigroup_proofs (S * T) 
+                                 (brel_reduce (bop_reduce_annihilators aS aT eqS eqT) (brel_product eqS eqT))
+                                 (bop_full_reduce (bop_reduce_annihilators aS aT eqS eqT) (bop_product bS bT))
+:=  λ S T eqS eqT bS bT eqvS eqvT sgS sgT aS aaS aT aaT,
+{|
+  csg_associative   := 
+bop_reduce_annihilators_associative_v2 S T aS aT eqS eqT bS bT 
+(eqv_reflexive S eqS eqvS)
+(eqv_reflexive T eqT eqvT)
+(eqv_symmetric S eqS eqvS)
+(eqv_symmetric T eqT eqvT)
+(eqv_transitive S eqS eqvS)
+(eqv_transitive T eqT eqvT) 
+(csg_associative S eqS bS sgS)
+(csg_associative T eqT bT sgT)
+(csg_congruence S eqS bS sgS)
+(csg_congruence T eqT bT sgT)
+aaS aaT
+; csg_congruence    := 
+ bop_reduce_annihilators_congruence_bop_v2 S T aS aT eqS eqT bS bT
+(eqv_reflexive S eqS eqvS)
+(eqv_reflexive T eqT eqvT)
+(csg_congruence S eqS bS sgS)
+(csg_congruence T eqT bT sgT)
+(eqv_transitive S eqS eqvS)
+(eqv_transitive T eqT eqvT)
+(eqv_symmetric S eqS eqvS)
+(eqv_symmetric T eqT eqvT)
+aaS aaT
+; csg_commutative   := 
+bop_reduce_annihilators_commutative_v2 S T aS aT eqS eqT bS bT 
+(eqv_reflexive S eqS eqvS)
+(eqv_reflexive T eqT eqvT)
+(csg_commutative S eqS bS sgS)
+(csg_commutative T eqT bT sgT)
+(eqv_symmetric S eqS eqvS)
+(eqv_symmetric T eqT eqvT)
+(eqv_transitive S eqS eqvS)
+(eqv_transitive T eqT eqvT) aaS aaT                                   
+|}.
+
+
 Definition reduced_ann_commutative_semigroup_proofs : forall (S T: Type) (eqS : brel S) (eqT : brel T) (bS : binary_op S)(bT : binary_op T)
     (eqvS:eqv_proofs S eqS) (eqvT:eqv_proofs T eqT)
     (sgS : commutative_semigroup_proofs S eqS bS)
@@ -970,6 +1020,39 @@ reduce_annihilators_reduction_eqv_proofs S T aS aT eqS eqT
 ;  cr_sgp  := reduced_ann_commutative_semigroup_proofs S T eqS eqT bS bT eqvS eqvT sgpS sgpT aS aaS aT aaT
 |}.
 
+Lemma bop_is_ann_product_v2 (S : Type) ( T : Type)(eqS : brel S)(eqT : brel T) (bS : binary_op S)(bT : binary_op T)  (annS : S) (annT : T)
+             (refS : brel_reflexive S eqS)(refT: brel_reflexive T eqT):
+             bop_is_ann S eqS bS annS -> bop_is_ann T eqT bT annT ->
+            bop_is_ann (S*T) (brel_reduce (bop_reduce_annihilators annS annT eqS eqT) (brel_product eqS eqT)) (bop_full_reduce (bop_reduce_annihilators annS annT eqS eqT) (bop_product bS bT)) (annS,annT).
+Proof. intros isAnnS isAnnT. compute. rewrite (refS annS). intros [s t].
+       case_eq (eqS s annS); intro K. assert (A := isAnnS annS). destruct A as [A1 A2]. rewrite A1. split; rewrite (refS annS), (refS annS), (refT annT); auto.
+       case_eq(eqT t annT); intro L. assert (A := isAnnS annS). destruct A as [A1 A2]. rewrite A1. split; rewrite (refS annS), (refS annS), (refT annT); auto.
+       assert (A := isAnnS s). destruct A as [A1 A2]. rewrite A1. rewrite A2. split; rewrite (refS annS), (refS annS), (refT annT); auto.
+Qed.
+
+Lemma bop_self_divisor_product_v2 (S : Type) ( T : Type)(eqS : brel S)(eqT : brel T) (bS : binary_op S)(bT : binary_op T)  (annS : S) (annT : T) 
+(refS : brel_reflexive S eqS)(refT: brel_reflexive T eqT): 
+bop_is_ann S eqS bS annS -> bop_is_ann T eqT bT annT ->
+bop_self_divisor S eqS bS annS -> bop_self_divisor T eqT bT annT ->
+bop_self_divisor (S * T)
+                    (brel_reduce (bop_reduce_annihilators annS annT eqS eqT) (brel_product eqS eqT))
+                    (bop_full_reduce (bop_reduce_annihilators annS annT eqS eqT)
+                                     (bop_product bS bT)) (annS, annT).
+Proof. intros isAnnS isAnnT divS divT. compute. intros [s1 t1] [s2 t2]. rewrite (refS annS).
+       case_eq (eqS s1 annS); intro M. case_eq (eqS s2 annS); intro N.
+       assert (A := isAnnS annS). destruct A as [A1 A2]. rewrite A1. rewrite (refS annS), (refS annS), (refT annT); auto.
+       case_eq(eqT t2 annT); intro L. assert (A := isAnnS annS). destruct A as [A1 A2]. rewrite A1. rewrite (refS annS), (refS annS), (refT annT); auto.
+       assert (A := isAnnS s2). destruct A as [A1 A2]. rewrite A1. rewrite (refS annS), (refS annS), (refT annT); auto.
+       case_eq(eqT t1 annT); intro L. case_eq (eqS s2 annS); intro N. assert (A := isAnnS annS). destruct A as [A1 A2]. rewrite A1. rewrite (refS annS), (refS annS), (refT annT); auto.
+       case_eq(eqT t2 annT); intro O. assert (A := isAnnS annS). destruct A as [A1 A2]. rewrite A1. rewrite (refS annS), (refS annS), (refT annT); auto.
+       assert (A := isAnnS s2). destruct A as [A1 A2]. rewrite A1.  rewrite (refS annS), (refS annS), (refT annT); auto.
+       case_eq (eqS s2 annS); intro N. assert (A := isAnnS s1). destruct A as [A1 A2]. rewrite A2.  rewrite (refS annS), (refS annS), (refT annT); auto.
+       case_eq(eqT t2 annT); intro O. assert (A := isAnnS s1). destruct A as [A1 A2]. rewrite A2.  rewrite (refS annS), (refS annS), (refT annT); auto.
+       case_eq (eqS (bS s1 s2) annS); intro P. assert (A:= divS s1 s2 P).  destruct A. rewrite e in M; discriminate. rewrite e in N; discriminate.
+       case_eq (eqT (bT t1 t2) annT); intro Q. assert (A:= divT t1 t2 Q). destruct A. rewrite e in L; discriminate. rewrite e in O; discriminate.
+       rewrite P. rewrite Q. rewrite P. intro; discriminate.
+Qed.
+
 Lemma bop_is_ann_product (S : Type) ( T : Type)(eqS : brel S)(eqT : brel T) (bS : binary_op S)(bT : binary_op T)  (annS : S) (annT : T)
              (refS : brel_reflexive S eqS)(refT: brel_reflexive T eqT):
              bop_is_ann S eqS bS annS -> bop_is_ann T eqT bT annT ->
@@ -988,6 +1071,11 @@ Lemma bop_self_divisor_product (S : Type) ( T : Type)(eqS : brel S)(eqT : brel T
                     (bop_full_reduce (bop_reduce_annihilators annS annT eqS eqT)
                                      (bop_product bS bT)) (annS, annT). 
 Admitted. 
+
+(* the binary relationship is correct or not?
+should it be 
+(brel_reduce (bop_reduce_annihilators aS aT eqS eqT) (brel_product eqS eqT))
+??*)
 
 Definition commutative_semigroup_ann_reduced_proof : 
   forall (S T : Type)(eqS : brel S)(eqT : brel T) (bS : binary_op S)(bT : binary_op T)  (annS : S) (annT : T)
@@ -1035,6 +1123,54 @@ bop_reduce_annihilators_commutative S T annS annT eqS eqT bS bT
 ; csgwa_div := bop_self_divisor_product S T eqS eqT  bS bT annS annT                                        
 |}.
 
+
+Definition commutative_semigroup_ann_reduced_proof_v2 : 
+  forall (S T : Type)(eqS : brel S)(eqT : brel T) (bS : binary_op S)(bT : binary_op T)  (annS : S) (annT : T)
+          (eqvS:eqv_proofs S eqS) (eqvT:eqv_proofs T eqT)
+           (csgapS : commutative_semigroup_with_ann_proofs S eqS bS annS) 
+           (csgapT : commutative_semigroup_with_ann_proofs T eqT bT annT),     
+               commutative_semigroup_with_ann_proofs (S * T) (brel_reduce (bop_reduce_annihilators annS annT eqS eqT) (brel_product eqS eqT)) (bop_full_reduce (bop_reduce_annihilators annS annT eqS eqT) (bop_product bS bT)) (annS,annT)
+:=  λ S T eqS eqT bS bT annS annT eqvS eqvT csgapS csgapT,
+{|
+csgwa_associative   :=
+bop_reduce_annihilators_associative_v2 S T annS annT eqS eqT bS bT 
+(eqv_reflexive S eqS eqvS)
+(eqv_reflexive T eqT eqvT)
+(eqv_symmetric S eqS eqvS)
+(eqv_symmetric T eqT eqvT)
+(eqv_transitive S eqS eqvS)
+(eqv_transitive T eqT eqvT) 
+(csgwa_associative S eqS bS annS csgapS)
+(csgwa_associative T eqT bT annT csgapT)
+(csgwa_congruence S eqS bS annS csgapS)
+(csgwa_congruence T eqT bT annT csgapT)
+(csgwa_is_ann  S eqS bS annS csgapS) (csgwa_is_ann  T eqT bT annT csgapT)
+; csgwa_congruence    := 
+ bop_reduce_annihilators_congruence_bop_v2 S T annS annT eqS eqT bS bT
+(eqv_reflexive S eqS eqvS)
+(eqv_reflexive T eqT eqvT)
+(csgwa_congruence S eqS bS annS csgapS)
+(csgwa_congruence T eqT bT annT csgapT)
+(eqv_transitive S eqS eqvS)
+(eqv_transitive T eqT eqvT)
+(eqv_symmetric S eqS eqvS)
+(eqv_symmetric T eqT eqvT)
+(csgwa_is_ann  S eqS bS annS csgapS) (csgwa_is_ann  T eqT bT annT csgapT)
+; csgwa_commutative   :=
+bop_reduce_annihilators_commutative_v2 S T annS annT eqS eqT bS bT 
+(eqv_reflexive S eqS eqvS)
+(eqv_reflexive T eqT eqvT)
+(csgwa_commutative S eqS bS annS csgapS)
+(csgwa_commutative T eqT bT annT csgapT)
+(eqv_symmetric S eqS eqvS)
+(eqv_symmetric T eqT eqvT)
+(eqv_transitive S eqS eqvS)
+(eqv_transitive T eqT eqvT)
+(csgwa_is_ann  S eqS bS annS csgapS) (csgwa_is_ann  T eqT bT annT csgapT)
+; csgwa_is_ann  :=  bop_is_ann_product_v2 S T eqS eqT  bS bT annS annT (eqv_reflexive S eqS eqvS) (eqv_reflexive T eqT eqvT) (csgwa_is_ann S eqS bS annS csgapS) (csgwa_is_ann T eqT bT annT csgapT)
+; csgwa_div := bop_self_divisor_product_v2 S T eqS eqT  bS bT annS annT  (eqv_reflexive S eqS eqvS) (eqv_reflexive T eqT eqvT)  (csgwa_is_ann S eqS bS annS csgapS) (csgwa_is_ann T eqT bT annT csgapT) (csgwa_div S eqS bS annS csgapS) (csgwa_div T eqT bT annT csgapT)                                   
+|}.
+
 Definition commutative_semigroup_ann_reduced : 
   forall (S T : Type)
            (csgaS : commutative_semigroup_with_ann S) 
@@ -1047,6 +1183,181 @@ Definition commutative_semigroup_ann_reduced :
 ;  canna  :=  (canna S csgaS, canna T csgaT)
 ;  ceqva  := eqv_proofs_product S T (ceqa S csgaS) (ceqa T csgaT) (ceqva S csgaS) (ceqva T csgaT)               
 ;  csgpa  := commutative_semigroup_ann_reduced_proof S T (ceqa S csgaS) (ceqa T csgaT)
+(cbopa S csgaS) (cbopa T csgaT)(canna S csgaS) (canna T csgaT) (ceqva S csgaS) (ceqva T csgaT) (csgpa S csgaS) (csgpa T csgaT)
+|}.
+
+Lemma brel_reduce_annihilators_reflexive (S T: Type)(aS : S) (aT : T)(eqS : brel S) (eqT : brel T) : 
+brel_reflexive S eqS -> brel_reflexive T eqT ->
+brel_reflexive (S * T) (brel_reduce (bop_reduce_annihilators aS aT eqS eqT ) (brel_product eqS eqT)).
+Proof. intros refS refT. compute. intros [s t]. 
+       case_eq(eqS s aS); intro A. rewrite (refS aS), (refT aT); auto.
+       case_eq(eqT t aT); intro B. rewrite (refS aS), (refT aT); auto.
+       rewrite (refS s), (refT t); auto.
+Qed.
+
+Lemma brel_reduce_annihilators_transitive (S T: Type)(aS : S) (aT : T)(eqS : brel S) (eqT : brel T) : 
+brel_reflexive S eqS -> brel_reflexive T eqT ->
+brel_symmetric S eqS -> brel_symmetric T eqT ->
+brel_transitive S eqS -> brel_transitive T eqT ->
+brel_transitive (S * T) (brel_reduce (bop_reduce_annihilators aS aT eqS eqT ) (brel_product eqS eqT)).
+Proof. intros refS refT symS symT tranS tranT. compute. intros [s1 t1] [s2 t2] [s3 t3].
+       case_eq (eqS s1 aS); intro A. case_eq (eqS s2 aS); intro B. rewrite (refS aS), (refT aT); auto.
+       case_eq (eqT t2 aT); intro C. rewrite (refS aS), (refT aT); auto.
+       assert (D := brel_symmetric_false S eqS symS s2 aS B). 
+       case_eq (eqS aS s2); intro E. rewrite D in E. discriminate. intro. discriminate.
+       case_eq (eqT t1 aT); intro B; case_eq (eqS s2 aS); intro C. rewrite (refS aS), (refT aT); auto.
+       case_eq (eqT t2 aT); intro D. rewrite (refS aS), (refT aT); auto.
+       assert (E := brel_symmetric_false S eqS symS s2 aS C). 
+       case_eq (eqS aS s2); intro F. rewrite E in F. discriminate. intro. discriminate.
+       rewrite A. intro. discriminate.
+       case_eq(eqT t2 aT); intro D. rewrite A. intro. discriminate.
+       case_eq(eqS s1 s2); intro E. intro F.
+       case_eq(eqS s3 aS); intro G. rewrite C. intro. discriminate. 
+       case_eq(eqT t3 aT); intro H. rewrite C. intro. discriminate.
+       case_eq(eqS s2 s3); intro I. case_eq(eqT t2 t3); intro J. intro. 
+       assert (K := tranS _ _ _ E I). rewrite K.
+       assert (L := tranT _ _ _ F J). rewrite L.
+       auto. intro. discriminate. intro. discriminate.
+       intro. discriminate.
+Qed.
+
+Lemma brel_reduce_annihilators_symmetric (S T: Type)(aS : S) (aT : T)(eqS : brel S) (eqT : brel T) : 
+brel_reflexive S eqS -> brel_reflexive T eqT ->
+brel_symmetric S eqS -> brel_symmetric T eqT ->
+brel_symmetric (S * T) (brel_reduce (bop_reduce_annihilators aS aT eqS eqT ) (brel_product eqS eqT)).
+Proof. intros refS refT symS symT. compute. intros [s1 t1] [s2 t2].
+       case_eq(eqS s1 aS); intro A.
+       case_eq(eqS s2 aS); intro B. rewrite (refS aS), (refT aT); auto.
+       case_eq(eqT t2 aT); intro C. rewrite (refS aS), (refT aT); auto. 
+       assert (E := brel_symmetric_false S eqS symS s2 aS B). rewrite E. intro. discriminate.
+       case_eq(eqT t1 aT); intro B; case_eq(eqS s2 aS); intro C. rewrite (refS aS), (refT aT); auto.
+       case_eq(eqT t2 aT); intro D. rewrite (refS aS), (refT aT); auto.
+       assert (E := brel_symmetric_false S eqS symS s2 aS C). rewrite E. intro. discriminate.
+       rewrite A. intro. discriminate.
+       case_eq(eqT t2 aT); intro D. rewrite A. intro. discriminate.
+       case_eq(eqS s1 s2); intro E. intro F. apply symS in E. rewrite E. apply symT in F. rewrite F.
+       auto.
+       intro. discriminate.
+Qed.
+
+Lemma brel_reduce_annihilators_congruence (S T: Type)(aS : S) (aT : T)(eqS : brel S) (eqT : brel T) : 
+brel_reflexive S eqS -> brel_reflexive T eqT ->
+brel_symmetric S eqS -> brel_symmetric T eqT ->
+brel_congruence S eqS eqS -> brel_congruence T eqT eqT ->
+brel_congruence (S * T) (brel_reduce (bop_reduce_annihilators aS aT eqS eqT ) (brel_product eqS eqT)) (brel_reduce (bop_reduce_annihilators aS aT eqS eqT ) (brel_product eqS eqT)).
+Proof. intros refS refT symS symT congS congT.
+       compute. intros [s1 t1] [s2 t2] [s3 t3] [s4 t4].
+       case_eq (eqS s1 aS); intro A. case_eq (eqS s3 aS); intro B. rewrite (refS aS), (refT aT). intro.
+       case_eq (eqS s2 aS); intro C. case_eq (eqS s4 aS); intro D. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT t4 aT); intro E. rewrite (refS aS), (refT aT). auto.
+       assert (F := brel_symmetric_false S eqS symS s4 aS D). rewrite F. intro. discriminate.
+       case_eq (eqT t2 aT); intro D; case_eq (eqS s4 aS); intro E. rewrite (refS aS), (refT aT). auto.
+       case_eq (eqT t4 aT); intro F. rewrite (refS aS), (refT aT). auto.
+       assert (G := brel_symmetric_false S eqS symS s4 aS E). rewrite G. intro. discriminate.
+       rewrite C. intro. discriminate.
+       case_eq (eqT t4 aT); intro F. rewrite C. intro. discriminate.
+       case_eq (eqS s2 s4); intro G.
+       intro I. 
+       assert (J := brel_symmetric_false S eqS symS s2 aS C). rewrite J.
+       assert (K := brel_symmetric_false S eqS symS s4 aS E). rewrite K. auto.
+       intro. discriminate.
+       case_eq(eqT t3 aT); intro C. rewrite (refS aS), (refT aT). intro.
+       case_eq(eqS s2 aS); intro D. case_eq(eqS s4 aS); intro E. rewrite (refS aS), (refT aT). auto.
+       case_eq(eqT t4 aT); intro F. rewrite (refS aS), (refT aT). auto.
+       assert (J := brel_symmetric_false S eqS symS s4 aS E). rewrite J. intro. discriminate.
+       case_eq(eqT t2 aT); intro E; case_eq (eqS s4 aS); intro F. rewrite (refS aS), (refT aT). auto.
+       case_eq(eqT t4 aT); intro G. rewrite (refS aS), (refT aT). auto.
+       assert (J := brel_symmetric_false S eqS symS s4 aS F). rewrite J. intro. discriminate.
+       rewrite D. intro. discriminate.
+       case_eq(eqT t4 aT); intro G. rewrite D. intro. discriminate. 
+       case_eq (eqS s2 s4); intro I.
+       intro J. assert (K := brel_symmetric_false S eqS symS s2 aS D). rewrite K.
+       assert (L := brel_symmetric_false S eqS symS s4 aS F). rewrite L. auto.
+       intro. discriminate.
+       assert (L := brel_symmetric_false S eqS symS s3 aS B). rewrite L. intro. discriminate. 
+       case_eq(eqT t1 aT); intro B; case_eq(eqS s3 aS); intro C. rewrite (refS aS), (refT aT). intro.
+       case_eq(eqS s2 aS); intro D. case_eq (eqS s4 aS); intro E. rewrite (refS aS), (refT aT). auto.
+       case_eq(eqT t4 aT); intro G. rewrite (refS aS), (refT aT). auto.
+       assert (J := brel_symmetric_false S eqS symS s4 aS E). rewrite J. intro. discriminate.
+       case_eq(eqT t2 aT); intro E; case_eq (eqS s4 aS); intro F. rewrite (refS aS), (refT aT). auto.
+       case_eq(eqT t4 aT); intro G. rewrite (refS aS), (refT aT). auto.
+       assert (J := brel_symmetric_false S eqS symS s4 aS F). rewrite J. intro. discriminate.
+       rewrite D. intro. discriminate.
+       case_eq(eqT t4 aT); intro G. rewrite D. intro. discriminate. 
+       case_eq (eqS s2 s4); intro I.
+       intro J. assert (K := brel_symmetric_false S eqS symS s2 aS D). rewrite K.
+       assert (L := brel_symmetric_false S eqS symS s4 aS F). rewrite L. auto.
+       intro. discriminate.
+       case_eq(eqT t3 aT); intro D. rewrite (refS aS), (refT aT). intro.
+       case_eq(eqS s2 aS); intro E. case_eq (eqS s4 aS); intro F. rewrite (refS aS), (refT aT). auto.
+       case_eq(eqT t4 aT); intro G. rewrite (refS aS), (refT aT). auto.
+       assert (J := brel_symmetric_false S eqS symS s4 aS F). rewrite J. intro. discriminate.
+       case_eq(eqT t2 aT); intro F; case_eq (eqS s4 aS); intro G. rewrite (refS aS), (refT aT). auto.
+       case_eq(eqT t4 aT); intro I. rewrite (refS aS), (refT aT). auto.
+       assert (J := brel_symmetric_false S eqS symS s4 aS G). rewrite J. intro. discriminate.
+       rewrite E. intro. discriminate.
+       case_eq(eqT t4 aT); intro J. rewrite E. intro. discriminate.
+       case_eq (eqS s2 s4); intro I.
+       intro K. assert (L := brel_symmetric_false S eqS symS s2 aS E). rewrite L.
+       assert (M := brel_symmetric_false S eqS symS s4 aS G). rewrite M. auto.
+       intro. discriminate.
+       assert (L := brel_symmetric_false S eqS symS s3 aS C). rewrite L. intro. discriminate. rewrite A. intro. discriminate.
+       case_eq(eqT t3 aT); intro D. rewrite A. intro. discriminate.
+       case_eq (eqS s1 s3); intro I; intro J; case_eq(eqS s2 aS); intro E.
+       case_eq (eqS s4 aS); intro F. rewrite (refS aS), (refT aT). intro. rewrite A. rewrite C. auto.
+       rewrite A. case_eq(eqT t4 aT ); intro G. rewrite C. auto.
+       assert (K := brel_symmetric_false S eqS symS s4 aS F). rewrite K. intro. discriminate.
+       case_eq(eqT t2 aT); intro F; case_eq(eqS s4 aS); intro G. rewrite A. rewrite C. auto.
+       rewrite A. case_eq(eqT t4 aT); intro K. rewrite C. auto.
+       assert (L := brel_symmetric_false S eqS symS s4 aS G). rewrite L. intro. discriminate.
+       rewrite E. intro. discriminate.
+       case_eq (eqT t4 aT); intro H. rewrite E. intro. discriminate.
+       case_eq(eqS s2 s4); intro M. intro N. 
+       assert (O := congS _ _ _ _ I M). rewrite O. 
+       assert (P := congT _ _ _ _ J N). rewrite P. auto. intro. discriminate. discriminate. discriminate.
+Qed.
+
+Definition reduced_ann_eqv_proofs_v2 : forall (S T: Type) (aS : S) (aT : T)(eqS : brel S) (eqT : brel T),
+    eqv_proofs S eqS -> eqv_proofs T eqT ->
+    eqv_proofs (S * T) (brel_reduce (bop_reduce_annihilators aS aT eqS eqT ) (brel_product eqS eqT))
+:= λ S T aS aT eqS eqT eqvS eqvT,
+let refS := eqv_reflexive _ _ eqvS in
+let symS := eqv_symmetric _ _ eqvS in
+let tranS := eqv_transitive _ _ eqvS in
+let congS := eqv_congruence _ _ eqvS in
+let refT := eqv_reflexive _ _ eqvT in
+let symT := eqv_symmetric _ _ eqvT in
+let tranT := eqv_transitive _ _ eqvT in
+let congT := eqv_congruence _ _ eqvT in 
+{|
+  eqv_reflexive := brel_reduce_annihilators_reflexive S T aS aT eqS eqT refS refT
+;  eqv_transitive := brel_reduce_annihilators_transitive S T aS aT eqS eqT refS refT symS symT tranS tranT
+;  eqv_symmetric := brel_reduce_annihilators_symmetric S T aS aT eqS eqT refS refT symS symT
+; eqv_congruence :=  brel_reduce_annihilators_congruence S T aS aT eqS eqT refS refT symS symT congS congT
+;  eqv_witness := (aS,aT)
+|}.
+
+(* Record eqv_proofs (S : Type) (eq : brel S) :=
+{
+  eqv_reflexive      : brel_reflexive S eq            
+; eqv_transitive     : brel_transitive S eq           
+; eqv_symmetric      : brel_symmetric S eq
+; eqv_congruence     : brel_congruence S eq eq                                      
+; eqv_witness        : S                                      
+}. *)
+
+Definition commutative_semigroup_ann_reduced_v2 : 
+  forall (S T : Type)
+           (csgaS : commutative_semigroup_with_ann S) 
+           (csgaT : commutative_semigroup_with_ann T),     
+               commutative_semigroup_with_ann (S * T)
+:= λ S T csgaS csgaT,
+{|
+    ceqa    := (brel_reduce (bop_reduce_annihilators (canna S csgaS) (canna T csgaT) (ceqa S csgaS) (ceqa T csgaT)) (brel_product (ceqa S csgaS) (ceqa T csgaT)))       
+;  cbopa  := bop_full_reduce (bop_reduce_annihilators (canna S csgaS) (canna T csgaT) (ceqa S csgaS) (ceqa T csgaT)) (bop_product (cbopa S csgaS) (cbopa T csgaT))
+;  canna  :=  (canna S csgaS, canna T csgaT)
+;  ceqva  := reduced_ann_eqv_proofs_v2 S T (canna S csgaS) (canna T csgaT) (ceqa S csgaS) (ceqa T csgaT) (ceqva S csgaS) (ceqva T csgaT)               
+;  csgpa  := commutative_semigroup_ann_reduced_proof_v2 S T (ceqa S csgaS) (ceqa T csgaT)
 (cbopa S csgaS) (cbopa T csgaT)(canna S csgaS) (canna T csgaT) (ceqva S csgaS) (ceqva T csgaT) (csgpa S csgaS) (csgpa T csgaT)
 |}.
 
