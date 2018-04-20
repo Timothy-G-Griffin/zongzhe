@@ -666,7 +666,87 @@ Lemma bop_reduce_annihilators_congruence
   brel_transitive T eqT -> 
   uop_congruence (S * T) (brel_product eqS eqT) 
   	(bop_reduce_annihilators aS aT eqS eqT).
+  	
+Lemma bop_reduce_annihilators_left_invariant
+      (S T : Type)(aS : S)(aT : T)
+      (eqS : brel S)eqT : brel T)
+      (bS : binary_op S)(bT : binary_op T)      
+  : brel_reflexive S eqS -> brel_reflexive T eqT -> 
+    bop_is_ann S eqS bS aS -> bop_is_ann T eqT bT aT -> 
+    bop_left_uop_invariant (S * T)
+      (brel_product eqS eqT)
+      (bop_full_reduce (bop_reduce_annihilators aS aT eqS eqT) 
+      			(bop_product bS bT))
+      (bop_reduce_annihilators aS aT eqS eqT).
+
+Lemma bop_reduce_annihilators_right_invariant
+      (S T : Type)(aS : S)(aT : T)
+      (eqS : brel S)eqT : brel T)
+      (bS : binary_op S)(bT : binary_op T)      
+  : brel_reflexive S eqS -> brel_reflexive T eqT -> 
+    bop_is_ann S eqS bS aS -> bop_is_ann T eqT bT aT ->     
+    bop_right_uop_invariant (S * T)
+      (brel_product eqS eqT)
+      (bop_full_reduce (bop_reduce_annihilators aS aT eqS eqT) 
+      			(bop_product bS bT))
+      (bop_reduce_annihilators aS aT eqS eqT).
 \end{lstlisting}
+
+\section{Pseudo Associative}
+In the previous case of annihilator reduction we found that since we had previously proved on the bop\_full\_reduce, so long as we can construct a reduction and prove its congruence, idempontent, left/right invariant properties, then we can easily prove all the properties of the reduction on the binary operator and construct a semigroup based on this reduction.\\
+Further we find that in the proof of the properties of the binary operator, we only use the properties of the left/right invariant to prove associative. This means that there is probably another kind of weaker prerequisite that could axiomatise a reduction. In fact, we did find such a precondition.\\
+For a given type $S$, binary relationship $=_S$, unary operator (reduction) $u_S$, binary operator $\oplus_S$:\\
+Definition bop\_pseudo\_associative $:= \forall s, t, u : S, u_S (b (u_S ((u_S (s)) \oplus_S (u_S (t)))) \oplus_S (u_S (u))) =_S u_S ( (u_S (s)) \oplus_S (u_S ( (u_S (t)) \oplus_S (u_S (u)))))$.\\
+At the same time, we can prove that pseudo associative is a sufficient condition for the binary operator to be associative on reduction.
+\begin{lstlisting}
+Lemma bop_full_reduce_pseudo_associative_implies_associative 
+(S : Type) (eqS : brel S) (r : unary_op S) (bS : binary_op S) :
+  brel_reflexive S eqS ->
+  brel_symmetric S eqS ->  
+  brel_transitive S eqS ->   
+  uop_idempotent S eqS r ->
+  uop_congruence S eqS r ->
+  bop_congruence S eqS bS ->
+  bop_pseudo_associative S eqS r bS -> 
+  bop_associative S (brel_reduce r eqS) (bop_full_reduce r bS). 
+         
+Lemma bop_full_reduce_associative_implies_pseudo_associative 
+(S : Type) (eqS : brel S) (r : unary_op S) (bS : binary_op S) :
+  brel_reflexive S eqS ->
+  brel_symmetric S eqS ->  
+  brel_transitive S eqS ->   
+  uop_idempotent S eqS r ->
+  uop_congruence S eqS r ->
+  bop_congruence S eqS bS ->
+  bop_associative S (brel_reduce r eqS) (bop_full_reduce r bS) ->
+      bop_pseudo_associative S eqS r bS. 
+\end{lstlisting}
+In fact, the two are almost equivalent at present.
+Therefore, when we later prove that a unary operator meets our reduction criteria, we only need to prove that its congruence, iteratorton, and pseudo associative which can also prove all the remaining properties.
+Take the previous annihilator reduction as an example, we can prove that this unary operator is pseudo associative at first.
+\begin{lstlisting}
+Lemma bop_reduce_annihilators_psedo_associative 
+(S T : Type)(aS : S)(aT : T)
+(eqS : brel S)(eqT : brel T)
+(bS : binary_op S)(bT : binary_op T): 
+brel_reflexive S eqS -> brel_reflexive T eqT ->
+brel_symmetric S eqS -> brel_symmetric T eqT ->
+brel_transitive S eqS -> brel_transitive T eqT -> 
+bop_associative S eqS bS ->
+bop_associative T eqT bT -> 
+bop_congruence S eqS bS ->
+bop_congruence T eqT bT -> 
+bop_is_ann S eqS bS aS ->
+bop_is_ann T eqT bT aT ->
+bop_pseudo_associative (S * T) 
+	(brel_product eqS eqT) 
+	(bop_reduce_annihilators aS aT eqS eqT) (bop_product bS bT) .
+\end{lstlisting}
+
+The associative property of annihilator reduction can then also be demonstrated, and the same semigroup construction as above can be performed.\\\\
+
+Here, we have reason to believe that we can make some non-traditional reduction into our study after satisfying the pseudo associative even if they do not meet the left/right invariant property.
+
 \section{Predicate Reduction}
 \chapter{Evaluation} 
 

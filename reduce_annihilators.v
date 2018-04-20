@@ -902,8 +902,6 @@ Definition reduced_ann_eqv_proofs : forall (S T: Type) (aS : S) (aT : T)(eqS : b
                                                      (eqv_proofs_product S T eqS eqT eqvS eqvT))
 |}.
 
-Check bop_reduce_annihilators_associative_v2.
-
 Definition reduced_ann_commutative_semigroup_proofs_v2 : forall (S T: Type) (eqS : brel S) (eqT : brel T) (bS : binary_op S)(bT : binary_op T)
     (eqvS:eqv_proofs S eqS) (eqvT:eqv_proofs T eqT)
     (sgS : commutative_semigroup_proofs S eqS bS)
