@@ -1,6 +1,11 @@
 Require Export Coq.Unicode.Utf8.
 Require Import Coq.Bool.Bool.   
 Require Import CAS.basic. 
+Require Import CAS.properties.
+Require Import CAS.brel_add_constant.
+Require Import CAS.bop_add_id.
+Require Import CAS.bop_add_ann. 
+Require Import CAS.bop_full_reduce. 
 Require Import CAS.properties. 
 Require Import CAS.structures.
 
@@ -12,12 +17,17 @@ Definition uop_predicate_reduce_disjoint : ∀ {S : Type}, cas_constant -> (S ->
    | inr a => if p a then inl c else x
    end.
 
-Definition bop_fprd_add_id {S : Type} (c : cas_constant) (P : S -> bool) (bS : binary_op S) := 
-  (bop_full_reduce (uop_predicate_reduce_disjoint c P) (bop_add_id bS c)).
-
-Definition bop_fprd_add_ann {S : Type} (c : cas_constant) (P : S -> bool) (bS : binary_op S) := 
-  (bop_full_reduce (uop_predicate_reduce_disjoint c P) (bop_add_ann bS c)).
-
+Lemma uop_predicate_reduce_disjoint_congruence :
+  ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S),
+       brel_reflexive S eq ->
+       pred_congruence S eq P -> 
+       uop_congruence (cas_constant + S) (brel_add_constant eq c) (uop_predicate_reduce_disjoint c P). 
+Proof. intros S c P eq refS congP [l1 | r1] [l2 | r2]; compute; intro H; compute; auto.
+       discriminate H. discriminate H. 
+       case_eq(P r1); intro H1; case_eq(P r2); intro H2; auto.
+       apply congP in H. rewrite H1 in H. rewrite H2 in H. discriminate H.
+       apply congP in H. rewrite H1 in H. rewrite H2 in H. discriminate H.        
+Qed.
 
 Lemma uop_predicate_reduce_disjoint_idempotent :
   ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S),
@@ -28,291 +38,402 @@ Proof. intros S c P eq refS [l | r]; compute; auto.
        rewrite H. apply refS. 
 Qed.
 
-Lemma bop_pseudo_associative_predicate_disjoint (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (bS : binary_op S):
-bop_pseudo_associative (cas_constant + S) (brel_add_constant eq c) (uop_predicate_reduce_disjoint c P) (bop_add_id bS c).
-Proof. compute. intros s t u. destruct s.
-Admitted.
+Definition bop_fprd_add_id {S : Type} (c : cas_constant) (P : S -> bool) (bS : binary_op S) := 
+  (bop_full_reduce (uop_predicate_reduce_disjoint c P) (bop_add_id bS c)).
+
+Definition bop_fprd_add_ann {S : Type} (c : cas_constant) (P : S -> bool) (bS : binary_op S) := 
+  (bop_full_reduce (uop_predicate_reduce_disjoint c P) (bop_add_ann bS c)).
+
+
+Lemma bop_congruence_fprd_add_id :
+  ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (bS : binary_op S),
+    brel_reflexive S eq ->
+    brel_symmetric S eq ->     
+    pred_congruence S eq P -> 
+    bop_congruence S eq bS -> 
+    bop_congruence (cas_constant + S) (brel_reduce (uop_predicate_reduce_disjoint c P) (brel_add_constant eq c)) (bop_fprd_add_id c P bS). 
+Proof. intros S c P eq bS refS symS Pcong cong.
+       apply bop_full_reduce_congruence; auto.
+       apply uop_predicate_reduce_disjoint_congruence; auto.
+       apply bop_add_id_congruence; auto.
+Qed.        
+
+Lemma bop_congruence_fprd_add_ann :
+  ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (bS : binary_op S),
+    brel_reflexive S eq ->
+    brel_symmetric S eq ->     
+    pred_congruence S eq P -> 
+    bop_congruence S eq bS -> 
+    bop_congruence (cas_constant + S) (brel_reduce (uop_predicate_reduce_disjoint c P) (brel_add_constant eq c)) (bop_fprd_add_ann c P bS). 
+Proof. intros S c P eq bS refS symS Pcong cong.
+       apply bop_full_reduce_congruence; auto.
+       apply uop_predicate_reduce_disjoint_congruence; auto.
+       apply bop_add_ann_congruence; auto.
+Qed.        
+
+
+
+Lemma bop_pseudo_associative_fprd_add_id :
+  ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (bS : binary_op S),
+    brel_reflexive S eq ->
+    bop_associative S eq bS -> 
+    pred_bop_decompose S P bS -> 
+       bop_pseudo_associative (cas_constant + S) (brel_add_constant eq c) (uop_predicate_reduce_disjoint c P) (bop_add_id bS c). 
+Proof. intros S c P eq bS refS assoc H [r1 | l1] [r2 | l2] [r3 | l3]; compute; auto.
+       case_eq(P l3); intro H1; auto. rewrite H1. rewrite H1. apply refS. 
+       case_eq(P l2); intro H1; auto. rewrite H1. rewrite H1. apply refS. 
+       case_eq(P l2); intro H1; case_eq(P l3); intro H2; auto. rewrite H2. rewrite H2. apply refS. 
+       rewrite H1. rewrite H1. apply refS. rewrite H1.
+       case_eq(P (bS l2 l3)); intro H3; auto. rewrite H3. apply refS. 
+       case_eq(P l1); intro H1; auto. rewrite H1. rewrite H1. apply refS.
+       case_eq(P l1); intro H1; case_eq(P l3); intro H2; auto. rewrite H2. rewrite H2. apply refS.        
+       rewrite H1. rewrite H1. apply refS. rewrite H1.
+       case_eq(P (bS l1 l3)); intro H3; auto. rewrite H2. rewrite H3; auto. 
+       rewrite H2. rewrite H3. apply refS. 
+       case_eq(P l1); intro H1; case_eq(P l2); intro H2; auto. rewrite H2. rewrite H2. apply refS.
+       rewrite H1. rewrite H1. apply refS. 
+       case_eq(P (bS l1 l2)); intro H3; auto. rewrite H2. rewrite H3; auto.
+       rewrite H3. rewrite H2. rewrite H3. apply refS.
+       case_eq(P l1); intro H1; case_eq(P l2); intro H2; case_eq(P l3); intro H3; auto.
+       rewrite H3. rewrite H3. apply refS.       
+       rewrite H2. rewrite H2. apply refS.       
+       rewrite H2.
+       case_eq(P (bS l2 l3)); intro H4; auto. rewrite H4. apply refS.        
+       rewrite H1. rewrite H1. apply refS.
+       rewrite H1.
+       case_eq(P (bS l1 l3)); intro H4; auto. rewrite H3. rewrite H4; auto.
+       rewrite H3. rewrite H4. apply refS.
+       case_eq(P (bS l1 l2)); intro H4; auto. rewrite H2. rewrite H4; auto.
+       rewrite H4. rewrite H2. rewrite H4. apply refS.       
+       case_eq(P (bS l1 l2)); intro H4; auto. 
+       destruct (H l1 l2 H4) as [L | R].
+       rewrite L in H1. discriminate.
+       rewrite R in H2. discriminate.
+       case_eq(P (bS (bS l1 l2) l3)); intro H5; auto.
+       destruct (H _ _ H5) as [L | R].
+       rewrite L in H4. discriminate.
+       rewrite R in H3. discriminate.
+       case_eq(P (bS l2 l3)); intro H6; auto. 
+       destruct (H _ _ H6) as [L | R].
+       rewrite L in H2. discriminate.
+       rewrite R in H3. discriminate.
+       case_eq(P (bS l1 (bS l2 l3))); intro H7. 
+       destruct (H _ _ H7) as [L | R].
+       rewrite L in H1. discriminate.
+       rewrite R in H6. discriminate.
+       apply assoc.        
+Qed.
+
+
+Lemma bop_associative_fprd_add_id :
+  ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (bS : binary_op S),
+    pred_congruence S eq P -> 
+    brel_reflexive S eq ->
+    brel_symmetric S eq ->  
+    brel_transitive S eq ->
+    bop_congruence S eq bS ->     
+    bop_associative S eq bS ->
+    pred_bop_decompose S P bS -> 
+        bop_associative (cas_constant + S) (brel_reduce (uop_predicate_reduce_disjoint c P) (brel_add_constant eq c)) (bop_fprd_add_id c P bS). 
+Proof. intros S c P eq bS P_cong refS symS tranS cong accos H. unfold bop_fprd_add_id. 
+       apply bop_full_reduce_pseudo_associative_implies_associative; auto.
+       apply brel_add_constant_reflexive; auto. 
+       apply brel_add_constant_symmetric; auto.
+       apply brel_add_constant_transitive; auto.        
+       apply uop_predicate_reduce_disjoint_idempotent; auto.
+       apply uop_predicate_reduce_disjoint_congruence; auto.
+       apply bop_add_id_congruence; auto. 
+       apply bop_pseudo_associative_fprd_add_id; auto. 
+Qed. 
+
+
 
 Lemma bop_left_uop_invariant_fprd_add_ann :
   ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (bS : binary_op S),
        brel_reflexive S eq -> 
-       (∀ (a b : S), P a = true -> P (bS a b) = true) ->  
+       pred_bop_compose S P bS -> 
        bop_left_uop_invariant (cas_constant + S) (brel_add_constant eq c) (bop_reduce (uop_predicate_reduce_disjoint c P) (bop_add_ann bS c)) (uop_predicate_reduce_disjoint c P).
 Proof. intros S c P eq bS refS H [r1 | l1] [r2 | l2]; compute; auto; case_eq(P l1); intro H1; auto. 
-       assert (K := H l1 l2 H1). rewrite K; auto. 
+       assert (K := H l1 l2 (inl H1)). rewrite K; auto. 
        case_eq(P (bS l1 l2)); intro H2; auto. 
 Qed. 
 
 Lemma bop_right_uop_invariant_fprd_add_ann :
   ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (bS : binary_op S),
-       brel_reflexive S eq -> 
-       (∀ (a b : S), P b = true -> P (bS a b) = true) ->  
+    brel_reflexive S eq ->
+    pred_bop_compose S P bS -> 
        bop_right_uop_invariant (cas_constant + S) (brel_add_constant eq c) (bop_reduce (uop_predicate_reduce_disjoint c P) (bop_add_ann bS c)) (uop_predicate_reduce_disjoint c P).
 Proof. intros S c P eq bS refS H [r1 | l1] [r2 | l2]; compute; auto; case_eq(P l2); intro H1; auto. 
-       assert (K := H l1 l2 H1). rewrite K; auto. 
+       assert (K := H l1 l2 (inr H1)). rewrite K; auto. 
        case_eq(P (bS l1 l2)); intro H2; auto. 
 Qed.
 
-
-Lemma bop_left_uop_invariant_fprd_add_id :
+Lemma bop_associative_fprd_add_ann_compositional :
   ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (bS : binary_op S),
-       brel_reflexive S eq -> 
-       (∀ (a b : S), P (bS a b) = true -> ((P a = true) + (P b = true))) ->
-       (∀ (a b : S), P a = true -> P b = true -> P (bS a b) = true) ->  
-       bop_left_uop_invariant (cas_constant + S) (brel_add_constant eq c) (bop_reduce (uop_predicate_reduce_disjoint c P) (bop_add_id bS c)) (uop_predicate_reduce_disjoint c P).
-Proof. intros S c P eq bS refS H K [r1 | l1] [r2 | l2]; compute; auto.
-       case_eq(P l2); intro H2; auto. 
-       case_eq(P l1); intro H1; auto. rewrite H1. apply refS. 
+    pred_congruence S eq P ->     
+    brel_reflexive S eq ->
+    brel_symmetric S eq ->  
+    brel_transitive S eq ->
+    pred_bop_compose S P bS ->
+    bop_congruence S eq bS ->         
+    bop_associative S eq bS ->
+        bop_associative (cas_constant + S) (brel_reduce (uop_predicate_reduce_disjoint c P) (brel_add_constant eq c)) (bop_fprd_add_ann c P bS).      
+Proof. intros S c P eq bS P_cong refS symS tranS H cong assoc.
+       apply bop_full_reduce_left_right_invariant_implies_associative; auto.
+       apply brel_add_constant_reflexive; auto. 
+       apply brel_add_constant_symmetric; auto.
+       apply brel_add_constant_transitive; auto.        
+       apply uop_predicate_reduce_disjoint_idempotent; auto.
+       apply uop_predicate_reduce_disjoint_congruence; auto.
+       apply bop_add_ann_congruence; auto. 
+       apply bop_add_ann_associative; auto. 
+       apply bop_left_uop_invariant_fprd_add_ann; auto.
+       apply bop_right_uop_invariant_fprd_add_ann; auto.
+Qed.
+
+Lemma bop_pseudo_associative_fprd_add_ann :
+  ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (bS : binary_op S),
+    brel_reflexive S eq ->
+    pred_congruence S eq P ->         
+    bop_associative S eq bS -> 
+    pred_bop_decompose S P bS -> 
+       bop_pseudo_associative (cas_constant + S) (brel_add_constant eq c) (uop_predicate_reduce_disjoint c P) (bop_add_ann bS c). 
+Proof. intros S c P eq bS refS P_cong assoc H [r1 | l1] [r2 | l2] [r3 | l3]; compute; auto.
        case_eq(P l1); intro H1; auto.
-       case_eq(P l2); intro H2; auto. 
-       case_eq(P (bS l1 l2)); intro H3; auto.
-          rewrite (K l1 l2 H1 H2) in H3. discriminate H3. 
-       case_eq(P (bS l1 l2)); intro H3; auto.
-          admit. (* HELP !! This does not work*) 
-          admit. (* HELP !! This does not work*) 
-       case_eq(P (bS l1 l2)); intro H3; auto.       
-Admitted. 
-(*
-Lemma bop_right_uop_invariant_fprd_add_ann :
+       case_eq(P l1); intro H1; case_eq(P l3); intro H3; auto. 
+       case_eq(P l1); intro H1; case_eq(P l2); intro H2; auto. 
+       case_eq(P (bS l1 l2)); intro H4; auto. 
+       case_eq(P l1); intro H1; case_eq(P l2); intro H2; case_eq(P l3); intro H3; auto.
+       case_eq(P (bS l1 l2)); intro H4; auto.
+       case_eq(P (bS l1 l2)); intro H4; auto.
+       destruct (H _ _ H4) as [L | R].
+       rewrite L in H1. discriminate.
+       rewrite R in H2. discriminate.
+       assert (K := assoc l1 l2 l3). 
+       case_eq( P (bS (bS l1 l2) l3)); intro H5; auto.
+       destruct (H _ _ H5) as [L | R].
+       rewrite L in H4. discriminate.
+       rewrite R in H3. discriminate.
+       assert (J := P_cong _ _ K). rewrite H5 in J.
+       case_eq(P (bS l2 l3)); intro H6; auto.
+       destruct (H _ _ H6) as [L | R].
+       rewrite L in H2. discriminate.
+       rewrite R in H3. discriminate.
+       rewrite <- J.
+       exact K. 
+Qed.
+
+Lemma bop_associative_fprd_add_ann_decompositional :
   ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (bS : binary_op S),
-       brel_reflexive S eq -> 
-       (∀ (a b : S), P b = true -> P (bS a b) = true) ->  
-       bop_right_uop_invariant (cas_constant + S) (brel_add_constant eq c) (bop_reduce (uop_predicate_reduce_disjoint c P) (bop_add_ann bS c)) (uop_predicate_reduce_disjoint c P).
-Proof. intros S c P eq bS refS H [r1 | l1] [r2 | l2]; compute; auto; case_eq(P l2); intro H1; auto. 
-       assert (K := H l1 l2 H1). rewrite K; auto. 
-       case_eq(P (bS l1 l2)); intro H2; auto. 
-Qed.
- *)
+    pred_congruence S eq P -> 
+    brel_reflexive S eq ->
+    brel_symmetric S eq ->  
+    brel_transitive S eq ->
+    bop_congruence S eq bS ->     
+    bop_associative S eq bS ->
+    pred_bop_decompose S P bS -> 
+        bop_associative (cas_constant + S) (brel_reduce (uop_predicate_reduce_disjoint c P) (brel_add_constant eq c)) (bop_fprd_add_ann c P bS). 
+Proof. intros S c P eq bS P_cong refS symS tranS cong accos H. unfold bop_fprd_add_ann. 
+       apply bop_full_reduce_pseudo_associative_implies_associative; auto.
+       apply brel_add_constant_reflexive; auto. 
+       apply brel_add_constant_symmetric; auto.
+       apply brel_add_constant_transitive; auto.        
+       apply uop_predicate_reduce_disjoint_idempotent; auto.
+       apply uop_predicate_reduce_disjoint_congruence; auto.
+       apply bop_add_ann_congruence; auto. 
+       apply bop_pseudo_associative_fprd_add_ann; auto. 
+Qed. 
 
+(*  =============== Note on distributivity =============================
 
-Lemma uop_predicate_reduce_disjoint_congruence :
-  ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S),
-       brel_reflexive S eq ->
-       (∀ (a b : S), eq a b = true -> P a = P b) -> 
-       uop_congruence (cas_constant + S) (brel_add_constant eq c) (uop_predicate_reduce_disjoint c P). 
-Proof. intros S c P eq refS congP [l1 | r1] [l2 | r2]; compute; intro H; compute; auto.
-       discriminate H. discriminate H. 
-       case_eq(P r1); intro H1; case_eq(P r2); intro H2; auto.
-       apply congP in H. rewrite H1 in H. rewrite H2 in H. discriminate H.
-       apply congP in H. rewrite H1 in H. rewrite H2 in H. discriminate H.        
-Qed.
+    Distributivity is lost in the following example. 
 
+    S = finite sequence with < 
+    add = lex on sequence using < 
+    mul = concat
+
+    note that this is distributive:    
+
+    p1 concat (p2 lex p3) == (p1 concat p2) lex (p1 concat p3)
+
+    Now, let P(p) iff there is a loop in p (a duplicate element). 
+    Suppose we have 
+
+           y < z 
+
+           x concat y : has loop 
+
+           x concat (y lex z) = x concat y : has loop  so r(x concat y) = infinity 
+
+           (x concat y) lex (x concat z) = infinity lex (x concat z) = x concat z. 
+  
+    Therefore, distributivity does not hold! 
+
+    Lesson?  Assumptions 
+
+     pred_bop_decompose S P add 
+     pred_bop_compose S P mul
+
+    are not enough for distributivity. 
+
+    Need 
+
+     pred_bop_decompose S P add 
+     pred_bop_decompose S P mul.
+
+*) 
+
+Lemma bop_left_distributive_full_predicate_reduce_disjoint : 
+  ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (add mul : binary_op S),
+     brel_reflexive S eq -> 
+     pred_congruence S eq P -> 
+     pred_bop_decompose S P add ->     
+     pred_bop_decompose S P mul -> 
+     bop_left_distributive S eq add mul ->    
+     bop_left_distributive (cas_constant + S)
+                           (brel_reduce (uop_predicate_reduce_disjoint c P) (brel_add_constant eq c))
+                           (bop_fprd_add_id c P add)                                 
+                           (bop_fprd_add_ann c P mul).      
+Proof. intros S c P eq add mul refS P_cong Dadd Dmul ldist [c1 | x] [c2 | y] [c3 | z]; compute; auto.
+       case_eq(P x); intro H1; auto.
+       case_eq(P x); intro H1; case_eq(P z); intro H2; auto.
+       rewrite H2. rewrite H2.
+       case_eq(P (mul x z)); intro H3; auto.
+       rewrite H3. rewrite H3. rewrite H3. apply refS. 
+       case_eq(P x); intro H1; case_eq(P y); intro H2; auto.
+       rewrite H2.  rewrite H2. 
+       case_eq(P (mul x y)); intro H3; auto.
+       rewrite H3. rewrite H3. rewrite H3. apply refS. 
+       case_eq(P x); intro H1; case_eq(P y); intro H2; case_eq(P z); intro H3; auto.
+       rewrite H3. rewrite H3.
+       case_eq(P (mul x z)); intro H4; auto.
+       rewrite H4. rewrite H4. rewrite H4. apply refS. 
+       rewrite H2. rewrite H2.
+       case_eq(P (mul x y)); intro H4; auto.
+       rewrite H4. rewrite H4. rewrite H4. apply refS. 
+       case_eq(P (add y z)); intro H4; auto.
+       destruct (Dadd _ _ H4) as [L | R].
+       rewrite L in H2. discriminate.
+       rewrite R in H3. discriminate.
+       rewrite H4.
+       assert (K := ldist x y z). 
+       case_eq(P (mul x (add y z))); intro H5; auto.
+       case_eq(P (mul x y)); intro H6; case_eq(P (mul x z)); intro H7; auto.
+       rewrite H7. rewrite H7. rewrite H7.
+       destruct (Dmul _ _ H6) as [L | R].
+       rewrite L in H1. discriminate.
+       rewrite R in H2. discriminate.
+       rewrite H6. rewrite H6. rewrite H6.
+       destruct (Dmul _ _ H7) as [L | R].
+       rewrite L in H1. discriminate.
+       rewrite R in H3. discriminate.
+       rewrite H6. rewrite H7.
+       case_eq(P (add (mul x y) (mul x z))); intro H8; auto.
+       rewrite H8.
+       destruct (Dmul _ _ H5) as [L | R].
+       rewrite L in H1. discriminate.
+       rewrite R in H4. discriminate.
+       case_eq(P (mul x (add y z))); intro H6; auto.
+       rewrite H6 in H5. discriminate. 
+       case_eq(P (mul x y)); intro H7; case_eq(P (mul x z)); intro H8; auto.
+       destruct (Dmul _ _ H7) as [L | R].
+       rewrite L in H1. discriminate.
+       rewrite R in H2. discriminate.
+       rewrite H8. rewrite H8. rewrite H8.
+       destruct (Dmul _ _ H7) as [L | R].
+       rewrite L in H1. discriminate.
+       rewrite R in H2. discriminate.
+       rewrite H7. rewrite H7. rewrite H7.
+       destruct (Dmul _ _ H8) as [L | R].
+       rewrite L in H1. discriminate.
+       rewrite R in H3. discriminate.
+       rewrite H7. rewrite H8. 
+       assert (K1 := P_cong _ _ K). rewrite H5 in K1.
+       rewrite <- K1. rewrite <- K1. 
+       exact K. 
+Qed. 
       
 
-Section Results.
-
-Variable S : Type.
-Variable c : cas_constant.
-Variable P : S -> bool.
-
-Variable eq : brel S. 
-Variable refS : brel_reflexive S eq.
-
-Variable ref_add_c : brel_reflexive (cas_constant + S) (brel_add_constant eq c).
-Variable sym_add_c : brel_symmetric (cas_constant + S) (brel_add_constant eq c). 
-Variable tran_add_c : brel_transitive (cas_constant + S) (brel_add_constant eq c).
-
-Variable congP : ∀ (a b : S), eq a b = true -> P a = P b.
-
-Variable add : binary_op S.
-Variable mul : binary_op S.
-Variable cong_add : bop_congruence S eq add.
-Variable cong_mul : bop_congruence S eq mul. 
-
-Notation "a == b"  := (eq a b = true)                     (at level 15).
-Notation "a ~~ b"  := (brel_add_constant eq c a b = true) (at level 15).
-Notation "a [+] b"  := (bop_fprd_add_id c P add a b)      (at level 15).
-Notation "a [*] b"  := (bop_fprd_add_ann c P mul a b)     (at level 15).
-
-
-Lemma bop_fprd_add_id_congruence : bop_congruence (cas_constant + S) (brel_add_constant eq c) (bop_fprd_add_id c P add).
-Proof. intros [c1 | x1] [c2 | x2] [c3 | x3] [c4 | x4] E1 E2.
-       compute. reflexivity.  
-       compute in E2. discriminate E2.
-       compute in E1. discriminate E1.
-       compute in E1. discriminate E1.
-       compute in E2. discriminate E2.       
-Admitted. 
-
-Lemma bop_fprd_add_ann_congruence : bop_congruence (cas_constant + S) (brel_add_constant eq c) (bop_fprd_add_ann c P mul).
-Admitted.
-
-Lemma bop_fprd_add_id_true_true : 
-  ∀ a b : S,  (P a = true) -> (P b = true) -> (inr a) [+] (inr b) ~~ (inl c).
-Proof. intros a b Pa Pb. compute. rewrite Pa, Pb.  reflexivity. Qed.
-
-Lemma bop_fprd_add_id_false_true :
-  ∀ a b : S,  (P a = false) -> (P b = true) -> (inr a) [+] (inr b) ~~ inr a.
-Proof. intros a b Pa Pb. compute. rewrite Pa, Pb.  rewrite Pa. apply refS. Qed. 
-
-Lemma bop_fprd_add_id_true_false :
-  ∀ a b : S,  (P a = true) -> (P b = false) -> (inr a) [+] (inr b) ~~ inr b.
-Proof. intros a b Pa Pb. compute. rewrite Pa, Pb.  rewrite Pb. apply refS. Qed. 
-
-Lemma bop_fprd_add_id_false_false :
- (∀ (a b : S), P a = false -> P b = false -> P (add a b) = false) ->
-  ∀ a b : S,  (P a = false) -> (P b = false) -> (inr a) [+] (inr b) ~~ inr (add a b).
-Proof. intros add_false a b Pa Pb. compute. rewrite Pa, Pb.  rewrite (add_false _ _ Pa Pb) . apply refS. Qed. 
-
-Lemma bop_fprd_add_id_id_true (c' : cas_constant) :
-  ∀ b : S,  (P b = true) -> (inl c') [+] (inr b) ~~ inl c.
-Proof. intros b Pb. compute. rewrite Pb. reflexivity. Qed. 
-
-Lemma bop_fprd_add_id_id_false (c' : cas_constant) :
-  ∀ b : S,  (P b = false) -> (inl c') [+] (inr b) ~~ inr b.
-Proof. intros b Pb. compute. rewrite Pb. rewrite Pb. apply refS. Qed.
-
-
-Lemma bop_fprd_add_id_true_id (c' : cas_constant) :
-  ∀ a : S,  (P a = true) -> (inr a) [+] (inl c') ~~ inl c.
-Proof. intros a Pa. compute. rewrite Pa. reflexivity. Qed. 
-
-Lemma bop_fprd_add_id_false_id (c' : cas_constant) :
-  ∀ a : S,  (P a = false) -> (inr a) [+] (inl c') ~~ inr a.
-Proof. intros a Pa. compute. rewrite Pa. rewrite Pa. apply refS. Qed. 
-
-Lemma bop_fprd_add_id_id_id (c' c'': cas_constant) : (inl c') [+] (inl c'') ~~ inl c.
-Proof. compute. reflexivity. Qed.
-
-Lemma bop_fprd_add_id_id_inr (c' : cas_constant) :
-  ∀ b : S,  (inl c') [+] (inr b) ~~ (if P(b) then inl c else inr b). 
-Proof. intros b. case_eq(P b); intro Pb; compute; rewrite Pb ;auto. rewrite Pb. apply refS. Qed. 
-
-Lemma bop_fprd_add_id_inr_id (c' : cas_constant) :
-  ∀ b : S,  (inr b) [+] (inl c') ~~ (if P(b) then inl c else inr b). 
-Proof. intros b. case_eq(P b); intro Pb; compute; rewrite Pb ;auto. rewrite Pb. apply refS. Qed. 
-
-(* fprd_ann_ann *) 
-Lemma bop_fprd_add_ann_true_left :
-  ∀ (a : S) (y : cas_constant + S), (P a = true) -> (inr a) [*] y ~~ inl c.
-Proof. intros a y Pa. compute. 
-       rewrite Pa. reflexivity.
-Qed.
-
-Lemma bop_fprd_add_ann_true_right :
-  ∀ (x : cas_constant + S) (b : S),  (P b = true) -> x [*] (inr b) ~~ inl c.
-Proof. intros [c' | a] b Pb; compute. 
-       reflexivity.
-       case_eq(P a) ; intro Pa.
-          reflexivity.
-          rewrite Pb. reflexivity.          
-Qed.
-
-Lemma bop_fprd_add_ann_false :
- (∀ (a b : S), P a = false -> P b = false -> P (mul a b) = false) ->
-  ∀ a b : S,  (P a = false) -> (P b = false) -> (inr a) [*] (inr b) ~~ inr (mul a b).
-Proof. intros mul_false a b Pa Pb. compute. rewrite Pa, Pb.  rewrite (mul_false _ _ Pa Pb) . apply refS. Qed.
-
-
-Lemma bop_fprd_add_ann_left (c' : cas_constant) :
-  ∀ y : cas_constant + S,  (inl c') [*] y ~~ inl c.
-Proof. intro y. compute. reflexivity. Qed. 
-
-Lemma bop_fprd_add_ann_right (c' : cas_constant) :
-  ∀ x : cas_constant + S,  x [*] (inl c') ~~ inl c.
-Proof. intros [c'' | a ]; compute.
-       reflexivity.
-       case_eq(P a); intro Pa; reflexivity. 
+Lemma bop_right_distributive_full_predicate_reduce_disjoint : 
+  ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (add mul : binary_op S),
+     brel_reflexive S eq -> 
+     pred_congruence S eq P -> 
+     pred_bop_decompose S P add ->     
+     pred_bop_decompose S P mul -> 
+     bop_right_distributive S eq add mul ->    
+     bop_right_distributive (cas_constant + S)
+                           (brel_reduce (uop_predicate_reduce_disjoint c P) (brel_add_constant eq c))
+                           (bop_fprd_add_id c P add)                                 
+                           (bop_fprd_add_ann c P mul).      
+Proof. intros S c P eq add mul refS P_cong Dadd Dmul rdist [c1 | x] [c2 | y] [c3 | z]; compute; auto.
+       case_eq(P z); intro H1; auto. rewrite H1. rewrite H1. reflexivity.
+       case_eq(P y); intro H1; auto. rewrite H1. rewrite H1. reflexivity.
+       case_eq(P y); intro H1; case_eq(P z); intro H2; auto.
+       rewrite H2. rewrite H2. reflexivity.
+       rewrite H1. rewrite H1. reflexivity.
+       case_eq(P (add y z)); intro H3; auto.
+       rewrite H3. reflexivity. 
+       case_eq(P x); intro H1; case_eq(P z); intro H2; auto.
+       rewrite H2. rewrite H2. reflexivity.
+       rewrite H2. rewrite H2.
+       case_eq(P (mul z x)); intro H3; auto.
+       rewrite H3. rewrite H3. rewrite H3. apply refS.
+       case_eq(P x); intro H1; case_eq(P y); intro H2; auto.
+       rewrite H2. rewrite H2. reflexivity.      
+       rewrite H2. rewrite H2.
+       case_eq(P (mul y x)); intro H3; auto.
+       rewrite H3. rewrite H3. rewrite H3. apply refS.
+       case_eq(P x); intro H1; case_eq(P y); intro H2; case_eq(P z); intro H3; auto.
+       rewrite H3. rewrite H3. reflexivity.      
+       rewrite H2. rewrite H2. reflexivity.             
+       case_eq(P (add y z)); intro H4; auto.
+       rewrite H4. reflexivity.             
+       rewrite H3. rewrite H3.
+       case_eq(P (mul z x)); intro H4; auto.
+       rewrite H4. rewrite H4. rewrite H4. apply refS. 
+       rewrite H2. rewrite H2.
+       case_eq(P (mul y x)); intro H4; auto.
+       rewrite H4. rewrite H4. rewrite H4. apply refS. 
+       case_eq(P (add y z)); intro H4; auto.
+       destruct (Dadd _ _ H4) as [L | R].
+       rewrite L in H2. discriminate.
+       rewrite R in H3. discriminate.
+       rewrite H4.
+       assert (K := rdist x y z). 
+       case_eq(P (mul (add y z) x)); intro H5; auto.
+       case_eq(P (mul y x)); intro H6; case_eq(P (mul z x)); intro H7; auto.
+       rewrite H7. rewrite H7. rewrite H7.
+       destruct (Dmul _ _ H6) as [L | R].
+       rewrite L in H2. discriminate.
+       rewrite R in H1. discriminate.
+       rewrite H6. rewrite H6. rewrite H6.
+       destruct (Dmul _ _ H7) as [L | R].
+       rewrite L in H3. discriminate.
+       rewrite R in H1. discriminate.
+       rewrite H6. rewrite H7.
+       case_eq(P (add (mul y x) (mul z x))); intro H8; auto.
+       rewrite H8.
+       destruct (Dmul _ _ H5) as [L | R].
+       rewrite L in H4. discriminate.
+       rewrite R in H1. discriminate.
+       case_eq(P (mul (add y z) x)); intro H6; auto.
+       rewrite H6 in H5. discriminate. 
+       case_eq(P (mul y x)); intro H7; case_eq(P (mul z x)); intro H8; auto.
+       destruct (Dmul _ _ H7) as [L | R].
+       rewrite L in H2. discriminate.
+       rewrite R in H1. discriminate.
+       rewrite H8. rewrite H8. rewrite H8.
+       destruct (Dmul _ _ H7) as [L | R].
+       rewrite L in H2. discriminate.
+       rewrite R in H1. discriminate.
+       rewrite H7. rewrite H7. rewrite H7.
+       destruct (Dmul _ _ H8) as [L | R].
+       rewrite L in H3. discriminate.
+       rewrite R in H1. discriminate.
+       rewrite H7. rewrite H8. 
+       assert (K1 := P_cong _ _ K). rewrite H5 in K1.
+       rewrite <- K1. rewrite <- K1. 
+       exact K. 
 Qed. 
+      
 
-Lemma bop_fprd_add_ann_both (c' c'' : cas_constant) : (inl c') [*] (inl c'') = inl c.
-Proof. compute. reflexivity. Qed. 
-
-Lemma bop_left_distributive_full_predicate_reduce_disjoint :
-    (∀ (a b : S), P a = false -> P b = false -> P (add a b) = false) ->        
-    (∀ (a b : S), P a = false -> P b = false -> P (mul a b) = false) ->
-     bop_left_distributive S eq add mul ->    
-     bop_left_distributive (cas_constant + S) (brel_add_constant eq c) (bop_fprd_add_id c P add) (bop_fprd_add_ann c P mul).
-Proof. intros add_false mul_false ldist [c1 | x] [c2 | y] [c3 | z].
-       compute. reflexivity.
-       
-       apply (bop_fprd_add_ann_left c1).
-       
-       apply (bop_fprd_add_ann_left c1).
-       
-       apply (bop_fprd_add_ann_left c1).
-       
-       assert (E1 := bop_fprd_add_id_id_id c2 c3). 
-       assert (E2 := bop_fprd_add_ann_congruence _ _ _ _ (ref_add_c (inr x)) E1).
-       assert (E3 := bop_fprd_add_ann_right c (inr x)).
-       assert (E4 := tran_add_c _ _ _ E2 E3).        
-       assert (E5 := bop_fprd_add_ann_right c2 (inr x)).
-       assert (E6 := bop_fprd_add_ann_right c3 (inr x)).               
-       assert (E7 := bop_fprd_add_id_congruence _ _ _ _ E5 E6).
-       assert (E8 := bop_fprd_add_id_id_id c c).
-       assert (E9 := tran_add_c _ _ _ E7 E8). apply sym_add_c in E9.
-       assert (E10 := tran_add_c _ _ _ E4 E9).
-       exact E10.
-
-
-       case_eq(P x); intro Px; case_eq(P z); intro Pz; compute; repeat (try rewrite Px; try rewrite Pz; auto).
-          assert (Pxz := mul_false _ _ Px Pz). rewrite Pxz. rewrite Pxz. rewrite Pxz. apply refS. 
-
-       case_eq(P x); intro Px; case_eq(P y); intro Py; compute; repeat (try rewrite Px; try rewrite Py; auto).
-          assert (Pxy := mul_false _ _ Px Py). rewrite Pxy. rewrite Pxy. rewrite Pxy. apply refS.
-
-       case_eq(P x); intro Px; case_eq(P y); intro Py; case_eq (P z); intro Pz; compute;
-           repeat (try rewrite Px; try rewrite Py; try rewrite Pz; auto).  
-           assert (Pxz := mul_false _ _ Px Pz). rewrite Pxz. rewrite Pxz. rewrite Pxz. apply refS. 
-           assert (Pxy := mul_false _ _ Px Py). rewrite Pxy. rewrite Pxy. rewrite Pxy. apply refS.
-           assert (Pyz_add := add_false _ _ Py Pz). rewrite Pyz_add. rewrite Pyz_add.
-           assert (Pxyz := mul_false _ _ Px Pyz_add). rewrite Pxyz.
-           assert (Pxy := mul_false _ _ Px Py). rewrite Pxy. rewrite Pxy.
-           assert (Pxz := mul_false _ _ Px Pz). rewrite Pxz. rewrite Pxz.
-           assert (Pxyxz := add_false _ _ Pxy Pxz). rewrite Pxyxz. 
-           apply ldist. 
-Qed. 
-
-Lemma bop_associative_fprd_add_id :
-    (∀ (a b : S), P a = false -> P b = false -> P (add a b) = false) ->        
-     bop_associative S eq add ->    
-     bop_associative (cas_constant + S) (brel_add_constant eq c) (bop_fprd_add_id c P add). 
-Proof. intros add_false assoc [c1 | x] [c2 | y] [c3 | z]. 
-       compute. reflexivity.
-       case_eq(P z); intro Pz; compute; repeat (try rewrite Pz; auto). 
-       case_eq(P y); intro Py; compute; repeat (try rewrite Py; auto).        
-       case_eq(P y); intro Py; case_eq(P z); intro Pz; compute; repeat (try rewrite Py; try rewrite Pz; auto; try apply refS).
-          assert(Pyz := add_false _ _ Py Pz). rewrite Pyz. rewrite Pyz. rewrite Pyz. apply refS. 
-       case_eq(P x); intro Px; compute; repeat (try rewrite Px; auto). 
-       case_eq(P x); intro Px; case_eq(P z); intro Pz; compute; repeat (try rewrite Px; try rewrite Pz; auto; try apply refS).
-          assert(Pxz := add_false _ _ Px Pz). rewrite Pxz. apply refS. 
-       case_eq(P x); intro Px; case_eq(P y); intro Py; compute; repeat (try rewrite Px; try rewrite Py; auto; try apply refS).
-          assert(Pxy := add_false _ _ Px Py). rewrite Pxy. rewrite Pxy. rewrite Pxy. apply refS.           
-       case_eq(P x); intro Px; case_eq(P y); intro Py; case_eq(P z); intro Pz; compute;
-            repeat (try rewrite Px; try rewrite Py; try rewrite Pz; auto; try apply refS).
-            assert(Pyz := add_false _ _ Py Pz). rewrite Pyz. rewrite Pyz. rewrite Pyz. apply refS. 
-            assert(Pxz := add_false _ _ Px Pz). rewrite Pxz. apply refS. 
-            assert(Pxy := add_false _ _ Px Py). rewrite Pxy. rewrite Pxy. rewrite Pxy. apply refS.           
-            assert(Pxy := add_false _ _ Px Py). rewrite Pxy. rewrite Pxy.
-            assert(Pyz := add_false _ _ Py Pz). rewrite Pyz. rewrite Pyz.
-            assert(Pxyz := add_false _ _ Pxy Pz). rewrite Pxyz.
-            assert(Px_yz := add_false _ _ Px Pyz). rewrite Px_yz.
-            apply assoc. 
-Qed. 
-
-
-Lemma bop_associative_fprd_add_ann :
-    (∀ (a b : S), P a = false -> P b = false -> P (mul a b) = false) ->        
-     bop_associative S eq mul ->    
-     bop_associative (cas_constant + S) (brel_add_constant eq c) (bop_fprd_add_ann c P mul). 
-Proof. intros mul_false assoc [c1 | x] [c2 | y] [c3 | z]. 
-       compute. reflexivity.
-       case_eq(P z); intro Pz; compute; repeat (try rewrite Pz; auto). 
-       case_eq(P y); intro Py; compute; repeat (try rewrite Py; auto).        
-       case_eq(P y); intro Py; case_eq(P z); intro Pz; compute; repeat (try rewrite Py; try rewrite Pz; auto; try apply refS).
-       case_eq(P x); intro Px; compute; repeat (try rewrite Px; auto). 
-       case_eq(P x); intro Px; case_eq(P z); intro Pz; compute; repeat (try rewrite Px; try rewrite Pz; auto; try apply refS).
-       case_eq(P x); intro Px; case_eq(P y); intro Py; compute; repeat (try rewrite Px; try rewrite Py; auto; try apply refS).
-          assert(Pxy := mul_false _ _ Px Py). rewrite Pxy. rewrite Pxy. auto. 
-       case_eq(P x); intro Px; case_eq(P y); intro Py; case_eq(P z); intro Pz; compute;
-            repeat (try rewrite Px; try rewrite Py; try rewrite Pz; auto; try apply refS).
-            assert(Pxy := mul_false _ _ Px Py). rewrite Pxy. rewrite Pxy. auto. 
-            assert(Pxy := mul_false _ _ Px Py). rewrite Pxy. rewrite Pxy. 
-            assert(Pxy_z := mul_false _ _ Pxy Pz). rewrite Pxy_z. 
-            assert(Pyz := mul_false _ _ Py Pz). rewrite Pyz. rewrite Pyz. 
-            assert(Px_yz := mul_false _ _ Px Pyz). rewrite Px_yz. 
-            apply assoc. 
-Qed. 
-
-
-End Results. 

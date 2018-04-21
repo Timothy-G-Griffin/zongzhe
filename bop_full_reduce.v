@@ -1,7 +1,8 @@
 Require Export Coq.Unicode.Utf8.
 Require Import Coq.Bool.Bool.   
 Require Import CAS.basic. 
-Require Import CAS.properties. 
+Require Import CAS.properties.
+Require Import CAS.reduction_theory. 
 
 
 Lemma bop_full_reduce_congruence (S : Type) (eqS : brel S) (r : unary_op S) (bS : binary_op S) :
@@ -64,6 +65,22 @@ Proof. intros refS symS tranS r_idem r_cong bS_cong assoc s1 s2 s3. compute.
        exact J10.
 Qed.
 
+Lemma bop_full_reduce_left_right_invariant_implies_associative (S : Type) (eqS : brel S) (r : unary_op S) (bS : binary_op S) :
+  brel_reflexive S eqS ->
+  brel_symmetric S eqS ->  
+  brel_transitive S eqS ->
+  uop_idempotent S eqS r ->  
+  uop_congruence S eqS r ->
+  bop_congruence S eqS bS -> 
+  bop_associative S eqS bS ->
+  bop_left_uop_invariant S eqS (bop_reduce r bS) r ->
+  bop_right_uop_invariant S eqS (bop_reduce r bS) r -> 
+         bop_associative S (brel_reduce r eqS) (bop_full_reduce r bS). 
+Proof. intros refS symS tranS r_idem r_cong b_cong assoc linv rinv.
+       apply bop_full_reduce_pseudo_associative_implies_associative; auto.
+       apply r_left_right_imply_pseudo_associative; auto. 
+Qed.
+
 
 
 (*
@@ -118,17 +135,18 @@ Proof. intros transS r_cong r_idem selS s1 s2. compute.
 Qed.                                  
 (* 
       Id 
-*)   
-Lemma bop_full_reduce_exists_id (S : Type) (eqS : brel S) (r : unary_op S) (bS : binary_op S) :
+ *)
+
+Lemma bop_full_reduce_is_id (S : Type) (eqS : brel S) (r : unary_op S) (bS : binary_op S) (id : S) :
   brel_reflexive S eqS ->  
   brel_transitive S eqS -> 
   uop_congruence S eqS r ->
   uop_idempotent S eqS r ->
   bop_congruence S eqS bS ->  
-  uop_preserves_id S eqS bS r -> bop_exists_id S eqS bS -> bop_exists_id S (brel_reduce r eqS) (bop_full_reduce r bS). 
-Proof. intros refS transS r_cong r_idem congS H [id p].
+  uop_preserves_id S eqS bS r -> bop_is_id S eqS bS id -> bop_is_id S (brel_reduce r eqS) (bop_full_reduce r bS) id. 
+Proof. intros refS transS r_cong r_idem congS H p.
        assert (K := H id p).
-       exists id. compute. 
+       compute. 
        intros t. 
        destruct (p (r t)) as [H1  H2]. split. 
        assert (H3 := congS _ _ _ _ K (refS (r t))).
@@ -144,18 +162,33 @@ Proof. intros refS transS r_cong r_idem congS H [id p].
        assert (H7 := transS _ _ _ H6 H5).
        exact H7.
 Qed.
+
+
+Lemma bop_full_reduce_exists_id (S : Type) (eqS : brel S) (r : unary_op S) (bS : binary_op S) :
+  brel_reflexive S eqS ->  
+  brel_transitive S eqS -> 
+  uop_congruence S eqS r ->
+  uop_idempotent S eqS r ->
+  bop_congruence S eqS bS ->  
+  uop_preserves_id S eqS bS r -> bop_exists_id S eqS bS -> bop_exists_id S (brel_reduce r eqS) (bop_full_reduce r bS). 
+Proof. intros refS transS r_cong r_idem congS H [id p].
+       exists id. 
+       apply bop_full_reduce_is_id; auto. 
+Qed.
 (* 
       Ann 
-*)   
-Lemma bop_full_reduce_exists_ann (S : Type) (eqS : brel S) (r : unary_op S) (bS : binary_op S) :
+
+*)
+
+Lemma bop_full_reduce_is_ann (S : Type) (eqS : brel S) (r : unary_op S) (bS : binary_op S) (ann : S):
   brel_reflexive S eqS ->  
   brel_transitive S eqS -> 
   uop_congruence S eqS r ->
   bop_congruence S eqS bS ->  
-  uop_preserves_ann S eqS bS r -> bop_exists_ann S eqS bS -> bop_exists_ann S (brel_reduce r eqS) (bop_full_reduce r bS). 
-Proof. intros refS transS r_cong congS H [ann p].
+  uop_preserves_ann S eqS bS r -> bop_is_ann S eqS bS ann -> bop_is_ann S (brel_reduce r eqS) (bop_full_reduce r bS) ann. 
+Proof. intros refS transS r_cong congS H p.
        assert (K := H ann p).
-       exists ann. compute. 
+       compute. 
        intros t. 
        destruct (p (r t)) as [H1  H2]. split. 
        assert (H3 := congS _ _ _ _ K (refS (r t))).
@@ -166,4 +199,15 @@ Proof. intros refS transS r_cong congS H [ann p].
        assert (H4 := transS _ _ _ H3 H2). apply r_cong in H4. 
        assert (H6 := transS _ _ _ H4 K). apply r_cong in H6. 
        exact H6.
+Qed.
+
+Lemma bop_full_reduce_exists_ann (S : Type) (eqS : brel S) (r : unary_op S) (bS : binary_op S) :
+  brel_reflexive S eqS ->  
+  brel_transitive S eqS -> 
+  uop_congruence S eqS r ->
+  bop_congruence S eqS bS ->  
+  uop_preserves_ann S eqS bS r -> bop_exists_ann S eqS bS -> bop_exists_ann S (brel_reduce r eqS) (bop_full_reduce r bS). 
+Proof. intros refS transS r_cong congS H [ann p].
+       exists ann.
+       apply bop_full_reduce_is_ann; auto. 
 Qed.

@@ -47,4 +47,22 @@ Definition brel_symmetric_f (S : Type) (r : brel S) :=
     ∀ s t : S, (r s t = false) → (r t s = false). 
 
 
-End Facts. 
+Lemma bop_is_ann_unique : ∀ (s1 s2 : S) (b : binary_op S),  bop_is_ann S eq b s1 -> bop_is_ann S eq b s2 -> eq s1 s2 = true.             
+Proof. intros s1 s2 b P Q. 
+       destruct (Q s1) as [_ R1].
+       destruct (P s2) as [L2 _]. 
+       apply sym in L2. apply (trans _ _ _ L2 R1). 
+Defined.                         
+
+Lemma bop_is_id_unique : ∀ (s1 s2 : S) (b : binary_op S ), bop_is_id S eq b s1 -> bop_is_id S eq b s2 -> eq s1 s2 = true.             
+Proof. intros s1 s2 b P Q. 
+       destruct (Q s1) as [_ R1].
+       destruct (P s2) as [L2 _]. 
+       apply sym in R1. apply (trans _ _ _ R1 L2). 
+Defined.                         
+
+
+
+
+
+End Facts.

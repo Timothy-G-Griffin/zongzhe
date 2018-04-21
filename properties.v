@@ -130,9 +130,22 @@ Definition bop_self_square (S : Type) (eqS : brel S) (bS : binary_op S) (aS : S)
 
 (* new property, 3/4/2018 *)
 (*
-Definition bop_pseudo_associative (S : Type) (eq : brel S) (r : unary_op S) (b : binary_op S) 
-  := ∀ s t u : S, eq (r (b (r (b s t)) u)) (r (b s (r (b t u)))) = true.
+      r(r(s) + r(t)) +  r(u)  =_r  r(s) + r(r(t) + r(u)) 
 *) 
 Definition bop_pseudo_associative (S : Type) (eq : brel S) (r : unary_op S) (b : binary_op S) 
   := ∀ s t u : S, eq (r (b (r (b (r s) (r t))) (r u))) (r (b (r s) (r (b (r t) (r u))))) = true.
- 
+
+(* predicate-related properties.  added 16/4/2018 *)
+
+Definition pred_true (S : Type) (P : pred S) (s : S) 
+  := P s = true. 
+
+Definition pred_congruence (S : Type) (eq : brel S) (P : pred S) 
+  := ∀ (a b : S), eq a b = true -> P a = P b.
+
+Definition pred_bop_decompose (S : Type) (P : pred S) (bS : binary_op S) 
+  := ∀ (a b : S), P (bS a b) = true -> (P a = true) + (P b = true).
+
+Definition pred_bop_compose (S : Type) (P : pred S) (bS : binary_op S) 
+  := ∀ (a b : S), (P a = true) + (P b = true) -> P (bS a b) = true.
+
