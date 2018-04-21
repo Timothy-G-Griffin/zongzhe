@@ -76,6 +76,20 @@ Proof. intros Scomm Tcomm [s1 t1] [s2 t2] ; compute.
        assert (D := transS _ _ _ B (Scomm s1 s2)). rewrite D. auto.
 Qed. 
 
+Lemma bop_lexicographic_product_selective : bop_selective S eqS bS -> bop_selective T eqT bT -> bop_selective (S * T) (brel_product eqS eqT) (bop_llex eqS bS bT).
+Proof. intros selS selT [s1 t1] [s2 t2]. compute.
+   destruct (selS s1 s2); rewrite e; case_eq (eqS s1 s2); intro A.
+   assert (B := transS _ _ _ e A). rewrite B. exact (selT t1 t2).
+   apply symS in e; rewrite e. apply symS in e.
+   left. auto.
+   apply symS in e.
+   assert (B := transS _ _ _ A e). apply symS in B. rewrite B. exact (selT t1 t2).
+   apply (brel_symmetric_false S eqS symS) in A.
+   assert (B := brel_transitive_f2 S eqS symS transS _ _ _ e A).
+   rewrite B.  apply (brel_symmetric_false S eqS symS) in B. rewrite B. right. auto.
+Qed.
+
+
 Lemma  bop_lexicographic_product_is_ann : ∀ (aS : S) (aT : T) (is_annS : bop_is_ann S eqS bS aS) (is_annS : bop_is_ann T eqT bT aT),  
        bop_is_ann (S * T) (brel_product eqS eqT) (bop_llex eqS bS bT) (aS, aT).
 Proof. intros aS aT is_annS is_annT [s t]; compute. destruct (is_annS s) as [LS RS]. destruct (is_annT t) as [LT RT].
@@ -89,9 +103,14 @@ Qed.
 
 Lemma  bop_product_is_id : ∀ (aS : S) (aT : T) (is_idS : bop_is_id S eqS bS aS) (is_idT : bop_is_id T eqT bT aT),  
        bop_is_id (S * T) (brel_product eqS eqT) (bop_llex eqS bS bT) (aS, aT).
-       Proof. intros aS aT is_annS is_annT [s t]; compute. destruct (is_annS s) as [LS RS]. destruct (is_annT t) as [LT RT].
+       Proof. intros aS aT is_idS is_idT [s t]; compute. destruct (is_idS s) as [LS RS]. destruct (is_idT t) as [LT RT].
         rewrite LS, RS. apply symS in LS.
-    Admitted.
+        case_eq (eqS aS s); intro A. split. auto.
+        apply symS in A. rewrite A. auto.
+        split. 
+        assert (C := brel_transitive_f1 S eqS symS transS _ _ _ A LS). rewrite C. auto.
+        apply (brel_symmetric_false S eqS symS) in A. rewrite A. apply symS in RS. rewrite RS. auto.
+       Qed.
 
 
 End LexicographicProduct.
