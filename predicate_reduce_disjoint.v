@@ -28,6 +28,11 @@ Proof. intros S c P eq refS [l | r]; compute; auto.
        rewrite H. apply refS. 
 Qed.
 
+Lemma bop_pseudo_associative_predicate_disjoint (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (bS : binary_op S):
+bop_pseudo_associative (cas_constant + S) (brel_add_constant eq c) (uop_predicate_reduce_disjoint c P) (bop_add_id bS c).
+Proof. compute. intros s t u. destruct s.
+Admitted.
+
 Lemma bop_left_uop_invariant_fprd_add_ann :
   ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (bS : binary_op S),
        brel_reflexive S eq -> 
