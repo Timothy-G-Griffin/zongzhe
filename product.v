@@ -128,6 +128,58 @@ Proof. intros aS aT is_idS is_idT [s t]; compute. destruct (is_idS s) as [LS RS]
 Qed.
 
 
+(* Elimination *)
+
+Lemma andb_is_true_left : ∀ b1 b2 : bool, b1 && b2 = true → (b1 = true) * (b2 = true). 
+Proof. induction b1; induction b2; simpl; intros.  
+       split; reflexivity. 
+       split. reflexivity. assumption. 
+       split. assumption. reflexivity. 
+       split. assumption. assumption. 
+Defined. 
+
+
+Lemma bop_product_is_id_left : 
+   ∀ (s : S ) (t : T ),  (bop_is_id (S * T) (brel_product eqS eqT) (bop_product bS bT) (s, t)) ->  bop_is_id S eqS bS s.        
+Proof. intros  s t H s1. 
+       destruct (H (s1, t)) as [L R]. simpl in L, R. 
+       apply andb_is_true_left in L. apply andb_is_true_left in R. 
+       destruct L as [LL RL]. destruct R as [LR RR]. 
+       rewrite LL, LR. auto. 
+Defined.                         
+
+Lemma bop_product_is_id_right : 
+   ∀ (s : S ) (t : T ), (bop_is_id (S * T) (brel_product eqS eqT) (bop_product bS bT) (s, t)) ->  bop_is_id T eqT bT t.  
+Proof. intros  s t H t1. 
+       destruct (H (s, t1)) as [L R]. simpl in L, R. 
+       apply andb_is_true_left in L. apply andb_is_true_left in R. 
+       destruct L as [LL RL]. destruct R as [LR RR]. 
+       rewrite RL, RR. auto. 
+Defined.                         
+
+
+Lemma bop_product_is_ann_left : 
+   ∀ (s : S ) (t : T ), (bop_is_ann (S * T) (brel_product eqS eqT) (bop_product bS bT) (s, t)) ->  bop_is_ann S eqS bS s.         
+Proof. intros  s t H s1. 
+       destruct (H (s1, t)) as [L R]. simpl in L, R. 
+       apply andb_is_true_left in L. apply andb_is_true_left in R. 
+       destruct L as [LL RL]. destruct R as [LR RR]. 
+       rewrite LL, LR. auto. 
+Defined.                         
+
+Lemma bop_product_is_ann_right : 
+   ∀ (s : S ) (t : T ), (bop_is_ann (S * T) (brel_product eqS eqT) (bop_product bS bT) (s, t)) ->  bop_is_ann T eqT bT t.  
+Proof. intros  s t H t1. 
+       destruct (H (s, t1)) as [L R]. simpl in L, R. 
+       apply andb_is_true_left in L. apply andb_is_true_left in R. 
+       destruct L as [LL RL]. destruct R as [LR RR]. 
+       rewrite RL, RR. auto. 
+Defined.       
+
+
+
+
+
 End ProductTheory.
 
 Section Product_Semigroup.

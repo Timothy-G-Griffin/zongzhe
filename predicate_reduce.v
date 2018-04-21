@@ -8,26 +8,86 @@ Require Import CAS.facts.
 Require Import CAS.brel_reduce.
 Require Import CAS.bop_full_reduce.
 
-(* I think with this we can define 
-   our annihilator combinator. 
+(* 
+   predicate reduction. 
 
-P(a, b) = (is_ann S bS a) or (is_ann T bT b) 
+   This reduction is inspired by a multiplicative 
+   operators mulS and mulT with annihilators aS and aT. 
+   Define 
 
-bop_product (a, b) (c, d) = (bS a c, bT b d) 
+   P(a, b) = (is_ann S mulS a) or (is_ann T mulT b) 
 
-C1: P(a, b) => P(bop_product (a, b) (c, d))
-C2: P(c, d) => P(bop_product (a, b) (c, d))
+   bop_product mulS mulT (a, b) (c, d) = (mulS a c, mulT b d) 
 
-*) 
+   Note that this has a very strong property, 
 
-Section PredicateReduce. 
+   C: P(a, b) + P(c, d) -> P(bop_product (a, b) (c, d)).
+
+   We then define the reduction as 
+
+      r(a, b) = if P(a, b) then (aS, aT) else (a, b). 
+
+   But what about the additive version? 
+   Here we immagine semirings with addS and addT, 
+   and aS and aT are the ids --- so 
+
+    (is_ann S mulS a) iff (is_id S addS a) 
+
+    (is_ann T mulT b) iff (is_id T addT b) 
+
+   Let us consider two additive products: 
+
+      bop_product addS addT (a, b) (c, d), and 
+      bop_llex_product addS addT (a, b) (c, d). 
+
+   However, in both cases C does not hold!  So 
+   we must find another condition (that makes at least 
+   pseudo-associativity hold). Note that 
+
+   D1 : P(bop_product addS addT (a, b) (c, d)) -> P(a, b) + P(c, d) 
+   D2 : P(bop_llex_product addS addT (a, b) (c, d)) -> P(a, b) + P(c, d) 
+
+   as long as ids cannot be produced from addition of non-ids. 
+
+   Note: IN THIS CASE 
+
+   D3 : P(bop_product mulS mulT (a, b) (c, d)) -> P(a, b) + P(c, d) 
+
+   as long as annihilators cannot be produced from addition of non-annihlators. 
+
+
+Another example: (or is this a predicate disjoint? or both?) 
+
+First approach 
+
+1) 
+   (Sigma*, lex, concat)
+            epsilon = ann(lex) = id(concat) 
+
+2) add zero (= infinity) 
+
+   (Sigma* + {infinity}, lex', concat')
+            infinity = id(lex) = ann(concat) 
+
+3) P(w) = has duplicate 
+
+   Note: 
+
+   P(w1 lex' w2) -> P(w1) + P(w2) 
+   P(w1) + P(w2) -> P(w1 concat' w2) 
+
+
+ *)
+
 
 Definition uop_predicate_reduce : ∀ {S : Type}, S -> (S -> bool) -> unary_op S 
   := λ  {S} s1 P s2,  if P s2 then s1 else s2.
 
 Definition bop_fpr {S : Type} (s : S ) (P : S -> bool) (bS : binary_op S) := 
-  (bop_full_reduce (uop_predicate_reduce s P) bS).
+  bop_full_reduce (uop_predicate_reduce s P) bS.
 
+
+Section PredicateReduce. 
 
 Variable S : Type.
 Variable P : S -> bool.
@@ -37,103 +97,293 @@ Variable refS : brel_reflexive S eq.
 Variable symS : brel_symmetric S eq.
 Variable tranS : brel_transitive S eq.
 
-Lemma uop_predicate_reduce_idempoent : ∀ (s : S), uop_idempotent S eq (uop_predicate_reduce s P). 
+
+Lemma uop_predicate_reduce_congruence (s : S) :
+  pred_congruence S eq P -> uop_congruence S eq (uop_predicate_reduce s P). 
+Proof. intros congP s1 s2; compute; intro H; compute; auto.
+       case_eq(P s1); intro H1; case_eq(P s2); intro H2; auto.
+       apply congP in H. rewrite H1 in H. rewrite H2 in H. discriminate H.
+       apply congP in H. rewrite H1 in H. rewrite H2 in H. discriminate H.        
+Qed.
+
+Lemma uop_predicate_reduce_idempotent : ∀ (s : S), uop_idempotent S eq (uop_predicate_reduce s P). 
 Proof. intros s x; compute; auto.
        case_eq(P x); intro H; auto.
        case_eq(P s); intro H1; auto.
        rewrite H. apply refS. 
 Qed.
 
-(* WE NEVER USE THESE! 
-(* TOO STRONG !!! *) 
-Lemma bop_left_uop_invariant_predicate_reduce :
-  ∀ (s : S) (bS : binary_op S), (P s = true) ->  (∀ (a b : S), P a = true -> P (bS a b) = true) ->  
-         bop_left_uop_invariant S eq (bop_reduce (uop_predicate_reduce s P) bS) (uop_predicate_reduce s P).
-Proof. intros s bS B H s1 s2; compute; auto; case_eq(P s1); intro H1; auto. 
-       assert (K := H s1 s2 H1). rewrite K; auto. 
-       case_eq(P (bS s s2)); intro H2; auto.
-       assert (J := H s s2 B). rewrite J in H2. discriminate H2. 
-Qed. 
-
-(* TOO STRONG !!! *) 
-Lemma bop_right_uop_invariant_predicate_reduce :
-  ∀ (s : S) (bS : binary_op S),  (P s = true) ->  (∀ (a b : S), P b = true -> P (bS a b) = true) ->  
-       bop_right_uop_invariant S eq (bop_reduce (uop_predicate_reduce s P) bS) (uop_predicate_reduce s P).
-Proof. intros s bS B H s1 s2; compute; auto; case_eq(P s2); intro H1; auto. 
-       assert (K := H s1 s2 H1). rewrite K; auto. 
-       case_eq(P (bS s1 s)); intro H2; auto.
-       assert (J := H s1 s B). rewrite J in H2. discriminate H2.        
-Qed.
- *)
-
-
-Lemma uop_predicate_reduce_congruence :
-  ∀ (s : S), (∀ (a b : S), eq a b = true -> P a = P b) -> uop_congruence S eq (uop_predicate_reduce s P). 
-Proof. intros s congP s1 s2; compute; intro H; compute; auto.
-       case_eq(P s1); intro H1; case_eq(P s2); intro H2; auto.
-       apply congP in H. rewrite H1 in H. rewrite H2 in H. discriminate H.
-       apply congP in H. rewrite H1 in H. rewrite H2 in H. discriminate H.        
-Qed.
-
-
-Lemma bop_commutative_predicate_reduce :
-  ∀ (s : S) (bS : binary_op S),  bop_commutative S eq bS ->    
-       (∀ (a b : S), eq a b = true -> P a  = P b) ->  
-       bop_commutative S eq (bop_reduce (uop_predicate_reduce s P) bS).
-Proof. intros s bS commS H s1 s2; compute; auto.
-       assert (K := commS s1 s2). 
-       case_eq(P (bS s1 s2)); intro H1; case_eq(P (bS s2 s1)); intro H2; auto.
-       apply H in K. rewrite H1 in K. rewrite H2 in K. discriminate K. 
-       apply H in K. rewrite H1 in K. rewrite H2 in K. discriminate K.        
-Qed.
-
-Lemma bop_not_commutative_predicate_reduce :
-  ∀ (s : S) (bS : binary_op S)
-      (ncomm : bop_not_commutative S eq bS),
-      (P(fst (projT1 ncomm)) = false) ->
-      (P(snd (projT1 ncomm)) = false) ->  
-      (∀ (a b : S), P a = false -> P b = false -> P (bS a b) = false) ->  
-      bop_not_commutative S eq (bop_reduce (uop_predicate_reduce s P) bS).
-Proof. intros s bS [[a b] Q] p1 p2 H; compute; auto. exists (a, b).
-       simpl in p1. simpl in p2.
-       assert (K1 := H _ _ p1 p2).
-       assert (K2 := H _ _ p2 p1).
-       rewrite K1. rewrite K2. 
-       exact Q. 
-Qed.
-
-(*
-Lemma bop_idempotent_predicate_reduce :
-  ∀ (s : S)  (bS : binary_op S),
-    bop_idempotent S eq bS ->    
-       (∀ (a : S), P a = true -> eq s a = true) ->  
-       bop_idempotent S eq (bop_reduce (uop_predicate_reduce s P) bS).
-Proof. intros s bS idemS H s1. compute. 
-       case_eq(P (bS s1 s1)); intro H1; auto.
-          
-Qed.
- *)
 
 (* this should use a general lemma about bop_full_reduce! *) 
 Lemma bop_fpr_congruence (s : S) (bS : binary_op S) :
-  (∀ (a b : S), eq a b = true -> P a = P b) -> bop_congruence S eq bS ->  
-        bop_congruence S eq (bop_fpr s P bS).       
-Proof. intros congP congb a b c d H1 H2.
-       assert (P1 := congP _ _ H1).
-       assert (P2 := congP _ _ H2).
-       assert (C3 := congb _ _ _ _ H1 H2).
-       assert (P3 := congP _ _ C3).
-       assert (C4 := congb _ _ _ _ (refS s) H2).
-       assert (P4 := congP _ _ C4).
-       assert (C5 := congb _ _ _ _ H1 (refS s)).
-       assert (P5 := congP _ _ C5).       
-       compute. 
-       case_eq(P a); intro Pa; case_eq(P b); intro Pb; rewrite Pa in P1; rewrite Pb in P2; try rewrite <- P1; try rewrite <- P2.
-          apply refS.
-          rewrite P4. case_eq(P (bS s d)); intro J. apply refS. exact C4.
-          rewrite P5. case_eq(P (bS c s)); intro J. apply refS. exact C5.
-          rewrite P3. case_eq(P (bS c d)); intro J. apply refS. exact C3.                     
+  pred_congruence S eq P ->
+  bop_congruence S eq bS ->  
+        bop_congruence S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P bS).       
+Proof. intros congP congb.
+       apply bop_full_reduce_congruence; auto.
+       apply uop_predicate_reduce_congruence; auto.
 Qed.
+
+
+Lemma pred_bop_decompose_contrapositive (bS : binary_op S) : 
+  pred_bop_decompose S P bS -> ∀ (a b : S), (P a = false) -> (P b = false) -> P (bS a b) = false.
+Proof. intros D a b H1 H2.   
+       case_eq(P (bS a b)); intro H3; auto. 
+       destruct (D _ _ H3) as [H4 | H4].
+       rewrite H4 in H1. discriminate.
+       rewrite H4 in H2. discriminate.
+Qed.
+
+(*
+
+  Decompositional 
+
+*) 
+
+Lemma bop_pseudo_associative_fpr_decompositional_id :
+  ∀ (c : S) (bS : binary_op S),
+    pred_true S P c ->
+    pred_congruence S eq P ->
+    bop_congruence S eq bS ->     
+    bop_associative S eq bS -> 
+    pred_bop_decompose S P bS ->
+    bop_is_id S eq bS c -> 
+       bop_pseudo_associative S eq (uop_predicate_reduce c P) bS. 
+Proof. intros c bS Pc P_cong b_cong assoc H isId l1 l2 l3; compute; auto.
+       destruct (isId c) as [Jc _].
+       destruct (isId l1) as [L1 R1].
+       destruct (isId l2) as [L2 R2].
+       destruct (isId l3) as [L3 R3].
+       assert (Pcc := P_cong _ _ Jc). rewrite Pc in Pcc.
+       assert (PL1 := P_cong _ _ L1).
+       assert (PR1 := P_cong _ _ R1).
+       assert (PL2 := P_cong _ _ L2).
+       assert (PR2 := P_cong _ _ R2).
+       assert (PL3 := P_cong _ _ L3).
+       assert (PR3 := P_cong _ _ R3).
+       case_eq(P l1); intro H1; case_eq(P l2); intro H2; case_eq(P l3); intro H3;
+         repeat (try rewrite Pcc;
+                 try rewrite Pc;
+                 try rewrite H1;
+                 try rewrite H2;
+                 try rewrite H3;                  
+                 try auto). 
+       rewrite H3 in PL3. rewrite PL3. 
+       destruct (isId (bS c l3)) as [L4 R4].
+       assert (PL4 := P_cong _ _ L4). rewrite PL3 in PL4. rewrite PL4. apply symS. exact L4.
+       rewrite H2 in PL2. rewrite PL2. 
+       destruct (isId (bS c l2)) as [L4 R4].       
+       assert (PR4 := P_cong _ _ R4). rewrite PL2 in PR4. rewrite PR4. 
+       rewrite H2 in PR2.  rewrite PR2. 
+       destruct (isId (bS l2 c)) as [L5 R5].
+       assert (PL5 := P_cong _ _ L5). rewrite PR2 in PL5. rewrite PL5. 
+       apply assoc.
+       rewrite H2 in PL2. rewrite PL2. 
+       assert (H4 : P (bS l2 l3) = false). apply pred_bop_decompose_contrapositive; auto. 
+       rewrite H4.   
+       assert (H5 : eq (bS (bS c l2) l3) (bS l2 l3) = true).
+          destruct (isId l2) as [H6 _].
+          assert (H7 := b_cong _ _ _ _ H6 (refS l3)).
+          exact H7. 
+       assert (H6 := P_cong _ _ H5).  rewrite H4 in H6. rewrite H6. 
+       assert (H7 : eq (bS c (bS l2 l3)) (bS l2 l3) = true).
+          destruct (isId (bS l2 l3)) as [H7 _].
+          exact H7. 
+       assert (H8 := P_cong _ _ H7).  rewrite H4 in H8. rewrite H8. 
+       apply assoc.
+       rewrite H1 in PR1. rewrite PR1. 
+       assert (H5 : eq (bS (bS l1 c) c) l1 = true).
+          destruct (isId l1) as [_ H4].
+          destruct (isId (bS l1 c)) as [_ H5].
+          assert (H6 := tranS _ _ _ H5 H4).
+          exact H6.
+       assert (H6 := P_cong _ _ H5). rewrite H1 in H6. rewrite H6. 
+       apply isId.
+       rewrite H1 in PR1. rewrite PR1. 
+       rewrite H3 in PL3. rewrite PL3. 
+       assert (H4 : P (bS l1 l3) = false). apply pred_bop_decompose_contrapositive; auto. 
+       assert (H5 : eq (bS (bS l1 c) l3) (bS l1 l3) = true).
+          destruct (isId l1) as [_ H5].
+          assert (H6 := b_cong _ _ _ _ H5 (refS l3)).
+          exact H6. 
+      assert (H6 : eq (bS l1 (bS c l3)) (bS l1 l3) = true).
+          destruct (isId l3) as [H6 _].
+          assert (H7 := b_cong _ _ _ _ (refS l1) H6).
+          exact H7. 
+       assert (H7 := P_cong _ _ H5). rewrite H4 in H7. 
+       assert (H8 := P_cong _ _ H6). rewrite H4 in H8.
+       rewrite H7, H8. 
+       apply assoc.
+       assert (H4 : P (bS l1 l2) = false). apply pred_bop_decompose_contrapositive; auto. 
+       rewrite H4. 
+       assert (H5 : eq (bS (bS l1 l2) c) (bS l1 l2) = true).
+          destruct (isId (bS l1 l2)) as [_ H5].
+          exact H5. 
+       assert (H6 := P_cong _ _ H5). rewrite H4 in H6.
+       rewrite H6. 
+       rewrite H2 in PR2. rewrite PR2. 
+       assert (H7 : eq (bS l1 (bS l2 c)) (bS l1 l2) = true).
+          destruct (isId l2) as [_ H7].
+          assert (H8 := b_cong _ _ _ _ (refS l1) H7).
+          exact H8. 
+       assert (H8 := P_cong _ _ H7). rewrite H4 in H8.
+       rewrite H8. 
+       apply assoc.
+       assert (H4 : P (bS l1 l2) = false). apply pred_bop_decompose_contrapositive; auto. 
+       assert (H5 : P (bS l2 l3) = false). apply pred_bop_decompose_contrapositive; auto. 
+       assert (H6 : P (bS (bS l1 l2) l3) = false). apply pred_bop_decompose_contrapositive; auto. 
+       assert (H7 : P (bS l1 (bS l2 l3)) = false). apply pred_bop_decompose_contrapositive; auto. 
+       repeat (
+               try rewrite H4;
+               try rewrite H5;
+               try rewrite H6;
+               try rewrite H7                             
+             ). 
+       apply assoc.        
+Qed.
+
+
+Lemma bop_associative_fpr_decompositional_id : 
+  ∀ (c : S) (bS : binary_op S),
+    pred_true S P c -> 
+    pred_congruence S eq P -> 
+    bop_congruence S eq bS ->     
+    bop_associative S eq bS ->
+    pred_bop_decompose S P bS ->
+    bop_is_id S eq bS c -> 
+        bop_associative S (brel_reduce (uop_predicate_reduce c P) eq) (bop_fpr c P bS). 
+Proof. intros c bS Pc P_cong cong accos H isId. unfold bop_fpr. 
+       apply bop_full_reduce_pseudo_associative_implies_associative; auto.
+       apply uop_predicate_reduce_idempotent; auto.
+       apply uop_predicate_reduce_congruence; auto.
+       apply bop_pseudo_associative_fpr_decompositional_id; auto. 
+Qed. 
+
+
+
+Lemma bop_pseudo_associative_fpr_decompositional_ann :
+  ∀ (s : S) (bS : binary_op S),
+    pred_true S P s -> 
+    pred_congruence S eq P ->
+    bop_associative S eq bS ->    
+    pred_bop_decompose S P bS ->
+    bop_is_ann S eq bS s ->     
+    bop_pseudo_associative S eq (uop_predicate_reduce s P) bS.
+Proof. intros s bS P_true congP assoc D s_ann a b c.
+       destruct (s_ann s) as [Lss Rss].
+       destruct (s_ann a) as [Lsa Rsa].
+       destruct (s_ann b) as [Lsb Rsb].
+       destruct (s_ann c) as [Lsc Rsc].                     
+       assert (Pss := congP _ _ Lss). rewrite P_true in Pss.
+       assert (PLsa := congP _ _ Lsa). rewrite P_true in PLsa.
+       assert (PLsb := congP _ _ Lsb). rewrite P_true in PLsb.
+       assert (PLsc := congP _ _ Lsc). rewrite P_true in PLsc.
+       assert (PRsa := congP _ _ Rsa). rewrite P_true in PRsa.
+       assert (PRsb := congP _ _ Rsb). rewrite P_true in PRsb.
+       assert (PRsc := congP _ _ Rsc). rewrite P_true in PRsc.       
+       compute. 
+       case_eq(P a); intro Pa; case_eq(P b); intro Pb; case_eq(P c); intro Pc;
+         repeat (try rewrite Pss;
+                 try rewrite PLsa;
+                 try rewrite PLsb;
+                 try rewrite PLsc;
+                 try rewrite PRsa;
+                 try rewrite PRsb;
+                 try rewrite PRsc;                 
+                 try rewrite P_true;
+                 try rewrite Pa;
+                 try rewrite Pb;
+                 try rewrite Pc;                                                   
+                 auto).
+       assert (H1 : P (bS b c) = false). apply pred_bop_decompose_contrapositive; auto.
+       rewrite H1.
+       destruct (s_ann (bS b c)) as [H2 H3].
+       assert (H4 := congP _ _ H2). rewrite P_true in H4. rewrite H4. apply refS.
+
+       assert (H1 : P (bS a b) = false). apply pred_bop_decompose_contrapositive; auto.
+       rewrite H1.
+       destruct (s_ann (bS a b)) as [H2 H3].
+       assert (H4 := congP _ _ H3). rewrite P_true in H4. rewrite H4. apply refS.
+
+       assert (H1 : P (bS a b) = false). apply pred_bop_decompose_contrapositive; auto.
+       assert (H2 : P (bS b c) = false). apply pred_bop_decompose_contrapositive; auto.
+       rewrite H1. rewrite H2.
+       assert (H3 : P (bS (bS a b) c) = false). apply pred_bop_decompose_contrapositive; auto.
+       assert (H4 : P (bS a (bS b c)) = false). apply pred_bop_decompose_contrapositive; auto.              
+       rewrite H3. rewrite H4.
+       apply assoc. 
+Qed. 
+
+
+Lemma bop_associative_fpr_decompositional_ann : 
+  ∀ (c : S) (bS : binary_op S),
+    pred_true S P c -> 
+    pred_congruence S eq P -> 
+    bop_congruence S eq bS ->     
+    bop_associative S eq bS ->
+    pred_bop_decompose S P bS ->
+    bop_is_ann S eq bS c -> 
+        bop_associative S (brel_reduce (uop_predicate_reduce c P) eq) (bop_fpr c P bS). 
+Proof. intros c bS Pc P_cong cong accos H isAnn. unfold bop_fpr. 
+       apply bop_full_reduce_pseudo_associative_implies_associative; auto.
+       apply uop_predicate_reduce_idempotent; auto.
+       apply uop_predicate_reduce_congruence; auto.
+       apply bop_pseudo_associative_fpr_decompositional_ann; auto. 
+Qed. 
+
+
+(*
+
+  Compositional 
+
+*) 
+
+Lemma bop_left_uop_invariant_predicate_reduce :
+  ∀ (s : S) (bS : binary_op S),
+    pred_true S P s -> 
+    pred_bop_compose S P bS ->
+         bop_left_uop_invariant S eq (bop_reduce (uop_predicate_reduce s P) bS) (uop_predicate_reduce s P).
+Proof. intros s bS B H s1 s2; compute; auto; case_eq(P s1); intro H1; auto. 
+       assert (K := H s1 s2 (inl H1)). rewrite K; auto. 
+       case_eq(P (bS s s2)); intro H2; auto.
+       assert (J := H s s2 (inl B)). rewrite J in H2. discriminate H2. 
+Qed. 
+
+Lemma bop_right_uop_invariant_predicate_reduce :
+  ∀ (s : S) (bS : binary_op S),
+    pred_true S P s -> 
+    pred_bop_compose S P bS ->    
+       bop_right_uop_invariant S eq (bop_reduce (uop_predicate_reduce s P) bS) (uop_predicate_reduce s P).
+Proof. intros s bS B H s1 s2; compute; auto; case_eq(P s2); intro H1; auto. 
+       assert (K := H s1 s2 (inr H1)). rewrite K; auto. 
+       case_eq(P (bS s1 s)); intro H2; auto.
+       assert (J := H s1 s (inr B)). rewrite J in H2. discriminate H2.        
+Qed.
+
+
+Lemma bop_associative_fpr_compositional :
+  ∀ (s : S) (bS : binary_op S),
+    pred_true S P s    -> 
+    pred_congruence S eq P ->     
+    pred_bop_compose S P bS ->
+    bop_congruence S eq bS ->         
+    bop_associative S eq bS ->
+        bop_associative S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P bS).      
+Proof. intros s bS Ps P_cong H cong assoc.
+       apply bop_full_reduce_left_right_invariant_implies_associative; auto.
+       apply uop_predicate_reduce_idempotent; auto.
+       apply uop_predicate_reduce_congruence; auto.
+       apply bop_left_uop_invariant_predicate_reduce; auto. 
+       apply bop_right_uop_invariant_predicate_reduce; auto.
+Qed.
+
+
+
+
+
+(*  
+    some sufficient conditions 
+*) 
 
 
 Lemma bop_fpr_selective (s : S) (bS : binary_op S) : 
@@ -172,324 +422,9 @@ Proof. intros X Y B is_id H. compute. intros a b. compute in H.
       assert (Z := B a b K L). rewrite Z. rewrite Z. auto.
 Qed.
 
-(*
-Lemma bop_associative_fpr_id :
-  ∀ (s : S) (add : binary_op S),
-     P(s) = true -> 
-    (∀ (a b : S), eq a b = true -> P a = P b) ->
-    (∀ (a b : S), P a = false -> P b = false -> P (add a b) = false) ->        
-    bop_congruence S eq add ->     
-    bop_is_id S eq add s ->     
-    bop_associative S eq add ->
-         bop_associative S eq (bop_fpr s P add).
-Proof. intros s add P_true congP add_false cong_add s_id assoc a b c.
-       destruct (s_id s) as [Lss Rss].
-       destruct (s_id a) as [Lsa Rsa].
-       destruct (s_id b) as [Lsb Rsb].
-       destruct (s_id c) as [Lsc Rsc].                     
-       assert (Pss := congP _ _ Lss). rewrite P_true in Pss.
-       assert (PLsa := congP _ _ Lsa).
-       assert (PLsb := congP _ _ Lsb).
-       assert (PLsc := congP _ _ Lsc).
-       assert (PRsa := congP _ _ Rsa).
-       assert (PRsb := congP _ _ Rsb).
-       assert (PRsc := congP _ _ Rsc).        
-       compute. 
-       case_eq(P a); intro Pa; case_eq(P b); intro Pb; case_eq(P c); intro Pc;
-         repeat (try rewrite Pss;
-                 try rewrite PLsa;
-                 try rewrite PLsb;
-                 try rewrite PLsc;
-                 try rewrite PRsa;
-                 try rewrite PRsb;
-                 try rewrite PRsc;                 
-                 try rewrite P_true;
-                 try rewrite Pa;
-                 try rewrite Pb;
-                 try rewrite Pc;                                                   
-                 auto).
-       assert (K1 : P (add s (add s c) ) = false).
-          assert (E1 := cong_add _ _ _ _ (refS s) Lsc).
-          assert (P1 := congP _ _ E1). rewrite PLsc in P1. rewrite Pc in P1. exact P1. 
-       rewrite K1.
-       apply cong_add. apply refS. apply symS. exact Lsc. 
-
-       assert (K1 : P (add (add s b) s) = false).
-          assert (E1 := cong_add _ _ _ _ Lsb (refS s)).
-          assert (P1 := congP _ _ E1). rewrite PRsb in P1. rewrite Pb in P1. exact P1. 
-       rewrite K1.
-       assert (K3 : P (add s (add b s)) = false).
-          assert (E1 := cong_add _ _ _ _ (refS s) Rsb ).
-          assert (P1 := congP _ _ E1). rewrite PLsb in P1. rewrite Pb in P1. exact P1. 
-       rewrite K3. 
-       assert (K4 := assoc s b s). exact K4. 
-
-       assert (J1 := add_false _ _ Pb Pc). rewrite J1. rewrite J1.        
-       assert (K1 : P (add (add s b) c) = false).
-          assert (E1 := cong_add _ _ _ _ Lsb (refS c)).
-          assert (P1 := congP _ _ E1). rewrite J1 in P1. exact P1. 
-       rewrite K1. 
-       assert (K2 : P (add s (add b c)) = false).
-          destruct (s_id (add b c)) as [E1 _]. 
-          assert (P1 := congP _ _ E1). rewrite J1 in P1. exact P1. 
-       rewrite K2.
-       assert (K3 := assoc s b c). exact K3.        
-
-       assert (K1 : P (add (add a s) s) = false).
-          destruct (s_id (add a s)) as [_ E1]. 
-          assert (P1 := congP _ _ E1). rewrite PRsa in P1. rewrite Pa in P1. exact P1. 
-       rewrite K1.        
-       destruct (s_id (add a s)) as [_ E2].        
-       exact E2.
-       
-       assert (J1 := add_false _ _ Pa Pc). 
-       assert (K1 : P (add (add a s) c) = false).
-          assert (E1 := cong_add _ _ _ _ Rsa (refS c)).
-          assert (P1 := congP _ _ E1). rewrite J1 in P1. exact P1. 
-       rewrite K1.        
-       assert (K2 : P (add a (add s c)) = false).
-          assert (E1 := cong_add _ _ _ _ (refS a) Lsc). 
-          assert (P1 := congP _ _ E1). rewrite J1 in P1. exact P1. 
-       rewrite K2.
-       assert (K3 := assoc a s c). exact K3.               
-
-       assert (J1 := add_false _ _ Pa Pb).        
-       assert (K1 : P (add a (add b s)) = false).
-          assert (E1 := cong_add _ _ _ _ (refS a) Rsb). 
-          assert (P1 := congP _ _ E1). rewrite J1 in P1. exact P1. 
-       rewrite K1. rewrite J1. rewrite J1.                             
-       assert (K2 : P (add (add a b) s) = false).
-          destruct (s_id (add a b)) as [_ E1]. 
-          assert (P1 := congP _ _ E1). rewrite J1 in P1. exact P1.        
-       rewrite K2.        
-       assert (K3 := assoc a b s). exact K3.                      
 
 
-       assert (J1 := add_false _ _ Pa Pb). rewrite J1. rewrite J1. 
-       assert (J2 := add_false _ _ Pb Pc). rewrite J2. rewrite J2. 
-       assert (J3 := add_false _ _ J1 Pc). rewrite J3.
-       assert (J4 := add_false _ _ Pa J2). rewrite J4.
-       apply assoc. 
-Qed. 
-
-*) 
-
-Lemma bop_associative_fpr_id_v2 :
-  ∀ (s : S) (add : binary_op S),
-     P(s) = true -> 
-    (∀ (a b : S), eq a b = true -> P a = P b) ->
-    (∀ (a b : S), P a = false -> P b = false -> P (add a b) = false) ->        
-    bop_congruence S eq add ->     
-    bop_is_id S eq add s ->     
-    bop_associative S eq add ->
-         bop_associative S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P add).
-Proof. intros s add P_true congP add_false cong_add s_id assoc a b c.
-       destruct (s_id s) as [Lss Rss].
-       destruct (s_id a) as [Lsa Rsa].
-       destruct (s_id b) as [Lsb Rsb].
-       destruct (s_id c) as [Lsc Rsc].                     
-       assert (Pss := congP _ _ Lss). rewrite P_true in Pss.
-       assert (PLsa := congP _ _ Lsa).
-       assert (PLsb := congP _ _ Lsb).
-       assert (PLsc := congP _ _ Lsc).
-       assert (PRsa := congP _ _ Rsa).
-       assert (PRsb := congP _ _ Rsb).
-       assert (PRsc := congP _ _ Rsc).        
-       compute. 
-       case_eq(P a); intro Pa; case_eq(P b); intro Pb; case_eq(P c); intro Pc;
-         repeat (try rewrite Pss;
-                 try rewrite PLsa;
-                 try rewrite PLsb;
-                 try rewrite PLsc;
-                 try rewrite PRsa;
-                 try rewrite PRsb;
-                 try rewrite PRsc;                 
-                 try rewrite P_true;
-                 try rewrite Pa;
-                 try rewrite Pb;
-                 try rewrite Pc;                                                   
-                 auto).
-       assert (K1 : P (add s (add s c) ) = false).
-          assert (E1 := cong_add _ _ _ _ (refS s) Lsc).
-          assert (P1 := congP _ _ E1). rewrite PLsc in P1. rewrite Pc in P1. exact P1. 
-       rewrite K1. rewrite K1. 
-          apply cong_add. apply refS. apply symS. exact Lsc. 
-
-       assert (K1 : P (add (add s b) s) = false).
-          assert (E1 := cong_add _ _ _ _ Lsb (refS s)).
-          assert (P1 := congP _ _ E1). rewrite PRsb in P1. rewrite Pb in P1. exact P1. 
-       rewrite K1.
-       assert (K3 : P (add s (add b s)) = false).
-          assert (E1 := cong_add _ _ _ _ (refS s) Rsb ).
-          assert (P1 := congP _ _ E1). rewrite PLsb in P1. rewrite Pb in P1. exact P1. 
-       rewrite K3. 
-       assert (K4 := assoc s b s). rewrite K1. rewrite K3. exact K4. 
-
-       assert (J1 := add_false _ _ Pb Pc). rewrite J1. rewrite J1.        
-       assert (K1 : P (add (add s b) c) = false).
-          assert (E1 := cong_add _ _ _ _ Lsb (refS c)).
-          assert (P1 := congP _ _ E1). rewrite J1 in P1. exact P1. 
-       rewrite K1. 
-       assert (K2 : P (add s (add b c)) = false).
-          destruct (s_id (add b c)) as [E1 _]. 
-          assert (P1 := congP _ _ E1). rewrite J1 in P1. exact P1. 
-       rewrite K2.
-       assert (K3 := assoc s b c). rewrite K1. rewrite K2. exact K3.        
-
-       assert (K1 : P (add (add a s) s) = false).
-          destruct (s_id (add a s)) as [_ E1]. 
-          assert (P1 := congP _ _ E1). rewrite PRsa in P1. rewrite Pa in P1. exact P1. 
-       rewrite K1.        
-       destruct (s_id (add a s)) as [_ E2].        
-       rewrite K1. exact E2.
-       
-       assert (J1 := add_false _ _ Pa Pc). 
-       assert (K1 : P (add (add a s) c) = false).
-          assert (E1 := cong_add _ _ _ _ Rsa (refS c)).
-          assert (P1 := congP _ _ E1). rewrite J1 in P1. exact P1. 
-       rewrite K1.        
-       assert (K2 : P (add a (add s c)) = false).
-          assert (E1 := cong_add _ _ _ _ (refS a) Lsc). 
-          assert (P1 := congP _ _ E1). rewrite J1 in P1. exact P1. 
-       rewrite K2.
-       assert (K3 := assoc a s c). rewrite K1. rewrite K2. exact K3.               
-
-       assert (J1 := add_false _ _ Pa Pb).        
-       assert (K1 : P (add a (add b s)) = false).
-          assert (E1 := cong_add _ _ _ _ (refS a) Rsb). 
-          assert (P1 := congP _ _ E1). rewrite J1 in P1. exact P1. 
-       rewrite K1. rewrite J1. rewrite J1.                             
-       assert (K2 : P (add (add a b) s) = false).
-          destruct (s_id (add a b)) as [_ E1]. 
-          assert (P1 := congP _ _ E1). rewrite J1 in P1. exact P1.        
-       rewrite K2.        
-       assert (K3 := assoc a b s). rewrite K2. rewrite K1. exact K3.                      
-
-
-       assert (J1 := add_false _ _ Pa Pb). rewrite J1. rewrite J1. 
-       assert (J2 := add_false _ _ Pb Pc). rewrite J2. rewrite J2. 
-       assert (J3 := add_false _ _ J1 Pc). rewrite J3.
-       assert (J4 := add_false _ _ Pa J2). rewrite J4.
-       rewrite J3. rewrite J4. 
-       apply assoc. 
-Qed. 
-
-
-(*
-Lemma bop_associative_fpr_ann :
-  ∀ (s : S) (mul : binary_op S),
-     P(s) = true -> 
-    (∀ (a b : S), eq a b = true -> P a = P b) ->
-    (∀ (a b : S), P a = false -> P b = false -> P (mul a b) = false) ->        
-    bop_congruence S eq mul ->     
-    bop_is_ann S eq mul s ->     
-    bop_associative S eq mul ->
-         bop_associative S eq (bop_fpr s P mul).
-Proof. intros s mul P_true congP mul_false cong_mul s_ann assoc a b c.
-       destruct (s_ann s) as [Lss Rss].
-       destruct (s_ann a) as [Lsa Rsa].
-       destruct (s_ann b) as [Lsb Rsb].
-       destruct (s_ann c) as [Lsc Rsc].                     
-       assert (Pss := congP _ _ Lss). rewrite P_true in Pss.
-       assert (PLsa := congP _ _ Lsa). rewrite P_true in PLsa.
-       assert (PLsb := congP _ _ Lsb). rewrite P_true in PLsb.
-       assert (PLsc := congP _ _ Lsc). rewrite P_true in PLsc.
-       assert (PRsa := congP _ _ Rsa). rewrite P_true in PRsa.
-       assert (PRsb := congP _ _ Rsb). rewrite P_true in PRsb.
-       assert (PRsc := congP _ _ Rsc). rewrite P_true in PRsc.       
-       compute. 
-       case_eq(P a); intro Pa; case_eq(P b); intro Pb; case_eq(P c); intro Pc;
-         repeat (try rewrite Pss;
-                 try rewrite PLsa;
-                 try rewrite PLsb;
-                 try rewrite PLsc;
-                 try rewrite PRsa;
-                 try rewrite PRsb;
-                 try rewrite PRsc;                 
-                 try rewrite P_true;
-                 try rewrite Pa;
-                 try rewrite Pb;
-                 try rewrite Pc;                                                   
-                 auto).
-
-       assert (J1 := mul_false _ _ Pb Pc). rewrite J1. rewrite J1.        
-       assert (K1 : P (mul s (mul b c)) = true).
-          destruct (s_ann (mul b c)) as [E1 _].
-          assert (P1 := congP _ _ E1). rewrite P_true in P1. exact P1. 
-       rewrite K1. 
-       apply refS. 
-
-       assert (J1 := mul_false _ _ Pa Pb). rewrite J1. rewrite J1. 
-       assert (K1 : P (mul (mul a b) s) = true).
-          destruct (s_ann (mul a b)) as [_ E1].
-          assert (P1 := congP _ _ E1). rewrite P_true in P1. exact P1. 
-       rewrite K1. apply refS. 
-
-       assert (J1 := mul_false _ _ Pa Pb). rewrite J1. rewrite J1. 
-       assert (J2 := mul_false _ _ Pb Pc). rewrite J2. rewrite J2. 
-       assert (J3 := mul_false _ _ J1 Pc). rewrite J3.
-       assert (J4 := mul_false _ _ Pa J2). rewrite J4.
-       apply assoc. 
-Qed. 
-*) 
-
-Lemma bop_associative_fpr_ann_v2 :
-  ∀ (s : S) (mul : binary_op S),
-     P(s) = true -> 
-    (∀ (a b : S), eq a b = true -> P a = P b) ->
-    (∀ (a b : S), P a = false -> P b = false -> P (mul a b) = false) ->        
-    bop_congruence S eq mul ->     
-    bop_is_ann S eq mul s ->     
-    bop_associative S eq mul ->
-         bop_associative S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P mul).
-Proof. intros s mul P_true congP mul_false cong_mul s_ann assoc a b c.
-       destruct (s_ann s) as [Lss Rss].
-       destruct (s_ann a) as [Lsa Rsa].
-       destruct (s_ann b) as [Lsb Rsb].
-       destruct (s_ann c) as [Lsc Rsc].                     
-       assert (Pss := congP _ _ Lss). rewrite P_true in Pss.
-       assert (PLsa := congP _ _ Lsa). rewrite P_true in PLsa.
-       assert (PLsb := congP _ _ Lsb). rewrite P_true in PLsb.
-       assert (PLsc := congP _ _ Lsc). rewrite P_true in PLsc.
-       assert (PRsa := congP _ _ Rsa). rewrite P_true in PRsa.
-       assert (PRsb := congP _ _ Rsb). rewrite P_true in PRsb.
-       assert (PRsc := congP _ _ Rsc). rewrite P_true in PRsc.       
-       compute. 
-       case_eq(P a); intro Pa; case_eq(P b); intro Pb; case_eq(P c); intro Pc;
-         repeat (try rewrite Pss;
-                 try rewrite PLsa;
-                 try rewrite PLsb;
-                 try rewrite PLsc;
-                 try rewrite PRsa;
-                 try rewrite PRsb;
-                 try rewrite PRsc;                 
-                 try rewrite P_true;
-                 try rewrite Pa;
-                 try rewrite Pb;
-                 try rewrite Pc;                                                   
-                 auto).
-
-       assert (J1 := mul_false _ _ Pb Pc). rewrite J1. rewrite J1.        
-       assert (K1 : P (mul s (mul b c)) = true).
-          destruct (s_ann (mul b c)) as [E1 _].
-          assert (P1 := congP _ _ E1). rewrite P_true in P1. exact P1. 
-       rewrite K1. 
-       rewrite P_true. apply refS. 
-
-       assert (J1 := mul_false _ _ Pa Pb). rewrite J1. rewrite J1. 
-       assert (K1 : P (mul (mul a b) s) = true).
-          destruct (s_ann (mul a b)) as [_ E1].
-          assert (P1 := congP _ _ E1). rewrite P_true in P1. exact P1. 
-       rewrite K1. rewrite P_true. apply refS. 
-
-       assert (J1 := mul_false _ _ Pa Pb). rewrite J1. rewrite J1. 
-       assert (J2 := mul_false _ _ Pb Pc). rewrite J2. rewrite J2. 
-       assert (J3 := mul_false _ _ J1 Pc). rewrite J3.
-       assert (J4 := mul_false _ _ Pa J2). rewrite J4.
-       rewrite J3. rewrite J4. apply assoc. 
-Qed. 
-
-(* what about distributivity ? *) 
+ (* what about distributivity ? *) 
 
 Lemma bop_fpr_id_true_true (s : S) (bS : binary_op S) :
   P(s) = true -> 
@@ -546,105 +481,6 @@ Proof. intros P_true congP s_ann a b [Pa | Pb]; compute.
        apply refS.       
 Qed.
 
-(*
-Lemma bop_left_distributive_fpr :
-  ∀ (s : S) (add mul : binary_op S),
-     P(s) = true -> 
-    (∀ (a b : S), eq a b = true -> P a = P b) ->
-    (∀ (a b : S), P a = false -> P b = false -> P (add a b) = false) ->        
-    (∀ (a b : S), P a = false -> P b = false -> P (mul a b) = false) ->
-    bop_congruence S eq add ->     
-    bop_congruence S eq mul -> 
-    bop_is_id S eq add s ->     
-    bop_is_ann S eq mul s ->
-    bop_left_distributive S eq add mul ->
-         bop_left_distributive S eq (bop_fpr s P add) (bop_fpr s P mul).
-Proof. intros s add mul P_true congP add_false mul_false cong_add cong_mul s_id s_ann ldist a b c.
-       assert (fpr_cong_mul := bop_fpr_congruence s mul congP cong_mul).
-       assert (fpr_cong_add := bop_fpr_congruence s add congP cong_add).        
-       case_eq (P a); intro Pa.
-          assert(K1 := bop_fpr_ann_true s mul P_true congP s_ann a c (inl Pa)).
-          assert(P1 := congP _ _ K1). rewrite P_true in P1. 
-          assert(K2 := bop_fpr_ann_true s mul P_true congP s_ann a b (inl Pa)).
-          assert(P2 := congP _ _ K2). rewrite P_true in P2.           
-          assert(K3 := bop_fpr_id_true_true s add P_true congP s_id _ _ P2 P1).
-          assert(K6 := bop_fpr_ann_true s mul P_true congP s_ann a ((bop_fpr s P add b c)) (inl Pa)).
-          apply symS in K3.
-          assert (K7 := tranS _ _ _ K6 K3).
-          exact K7.
-          case_eq (P b); intro Pb.
-             assert(K1 := bop_fpr_ann_true s mul P_true congP s_ann a b (inr Pb)).
-             case_eq (P c); intro Pc.
-                assert(K2 := bop_fpr_ann_true s mul P_true congP s_ann a c (inr Pc)).
-                assert (K3 := fpr_cong_add _ _ _ _ K1 K2).
-                assert (K4 := bop_fpr_id_true_true s add P_true congP s_id _ _ Pb Pc).             
-                assert (P4 := congP _ _ K4). rewrite P_true in P4.
-                assert (K5 := bop_fpr_ann_true s mul P_true congP s_ann a _ (inr P4)).
-                assert (K6 := bop_fpr_id_true_true s add P_true congP s_id _ _ P_true P_true).
-                assert (K7 := tranS _ _ _ K3 K6). apply symS in K7.
-                assert (K8 := tranS _ _ _ K5 K7).
-                exact K8.
-                assert (K2 : eq (bop_fpr s P mul a (bop_fpr s P add b c)) (mul a c) = true).
-                   assert (K3 := bop_fpr_id_true_false s add congP s_id _ _ Pb Pc).
-                   assert (K4 := fpr_cong_mul _ _ _ _ (refS a) K3).
-                   assert (K5 := bop_fpr_false_false s mul mul_false _ _ Pa Pc).
-                   assert (K6 := tranS _ _ _ K4 K5).
-                   exact K6.
-                assert (K3 : eq (mul a c) (bop_fpr s P add (bop_fpr s P mul a b) (bop_fpr s P mul a c)) = true).
-                   assert (K4 := bop_fpr_ann_true s mul P_true congP s_ann a b (inr Pb)).
-                   assert (K5 := bop_fpr_false_false s mul mul_false _ _ Pa Pc).
-                   assert (P4 := congP _ _ K4). rewrite P_true in P4.
-                   assert (P5 := mul_false _ _ Pa Pc). 
-                   assert (P6 := congP _ _ K5). rewrite P5 in P6.
-                   assert (K6 := bop_fpr_id_true_false s add congP s_id _ _ P4 P6).
-                   assert (K7 := tranS _ _ _ K6 K5).
-                   apply symS.
-                   exact K7.
-                assert (K4 := tranS _ _ _ K2 K3). 
-                exact K4.
-                case_eq (P c); intro Pc.
-                assert (K2 : eq (bop_fpr s P mul a (bop_fpr s P add b c)) (mul a b) = true).
-                   assert (K3 := bop_fpr_id_false_true s add congP s_id _ _ Pb Pc).
-                   assert (P3 := congP _ _ K3). rewrite Pb in P3.
-                   assert (K4 := bop_fpr_false_false s mul mul_false _ _ Pa P3).
-                   assert (K5 := cong_mul _ _ _ _ (refS a) K3).
-                   assert (K6 := tranS _ _ _ K4 K5).
-                   exact K6.
-                assert (K3 : eq (mul a b)  (bop_fpr s P add (bop_fpr s P mul a b) (bop_fpr s P mul a c)) = true).
-                   assert (K4 := bop_fpr_false_false s mul mul_false _ _ Pa Pb).
-                   assert (K5 := bop_fpr_ann_true s mul P_true congP s_ann a c (inr Pc)).
-                   assert (Pab := mul_false _ _ Pa Pb).
-                   assert (K6 := fpr_cong_add _ _ _ _ K4 K5).
-                   assert (K7 := bop_fpr_id_false_true s add congP s_id _ _ Pab P_true).
-                   assert (K8 := tranS _ _ _ K6 K7).
-                   apply symS.
-                   exact K8.
-                assert (K4 := tranS _ _ _ K2 K3).
-                exact K4. 
-                assert (K2 : eq (bop_fpr s P mul a (bop_fpr s P add b c)) (mul a (add b c)) = true).
-                   assert (K3 := bop_fpr_false_false s add add_false _ _ Pb Pc).
-                   assert (Pbc := add_false _ _ Pb Pc).
-                   assert (P3 := congP _ _ K3). rewrite Pbc in P3.
-                   assert (K4 := bop_fpr_false_false s mul mul_false _ _ Pa P3).
-                   assert (K5 := cong_mul _ _ _ _ (refS a) K3).
-                   assert (K6 := tranS _ _ _ K4 K5).
-                   exact K6.
-                assert (K3 : eq (add (mul a b) (mul a c)) (bop_fpr s P add (bop_fpr s P mul a b) (bop_fpr s P mul a c)) = true).
-                   assert (K4 := bop_fpr_false_false s mul mul_false _ _ Pa Pb).
-                   assert (K5 := bop_fpr_false_false s mul mul_false _ _ Pa Pc).
-                   assert (Pac := mul_false _ _ Pa Pc).
-                   assert (Pab := mul_false _ _ Pa Pb).
-                   assert (K6 := fpr_cong_add _ _ _ _ K4 K5).
-                   assert (K7 := bop_fpr_false_false s add add_false _ _ Pab Pac).
-                   assert (K8 := tranS _ _ _ K6 K7).
-                   apply symS.
-                   exact K8.
-                assert (K4 := ldist a b c). 
-                assert (K5 := tranS _ _ _ K2 K4).
-                assert (K6 := tranS _ _ _ K5 K3).
-                exact K6.
-Qed.
- *)
 
 Lemma bop_left_distributive_fpr_v2 :
   ∀ (s : S) (add mul : binary_op S),
@@ -659,7 +495,8 @@ Lemma bop_left_distributive_fpr_v2 :
     bop_left_distributive S eq add mul ->
     bop_left_distributive S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P add) (bop_fpr s P mul).
 Proof. intros s add mul P_true congP add_false mul_false cong_add cong_mul s_id s_ann ldist a b c.
-       compute;case_eq (P a); intro L; case_eq (P b); intro M; case_eq (P c); intro N;
+       compute.
+       case_eq (P a); intro L; case_eq (P b); intro M; case_eq (P c); intro N;
        assert (addSS := s_id s); destruct addSS as [addSSL addSSR];
        assert (PaddSS := congP (add s s) s addSSL);rewrite P_true in PaddSS. rewrite PaddSS. rewrite P_true.
        assert (mulSS := s_ann s). destruct mulSS as [mulSSL mulSSR].
@@ -723,105 +560,6 @@ Proof. intros s add mul P_true congP add_false mul_false cong_add cong_mul s_id 
        assert (K := ldist a b c). exact K.
 Qed.
 
-(*
-Lemma bop_right_distributive_fpr :
-  ∀ (s : S) (add mul : binary_op S),
-     P(s) = true -> 
-    (∀ (a b : S), eq a b = true -> P a = P b) ->
-    (∀ (a b : S), P a = false -> P b = false -> P (add a b) = false) ->        
-    (∀ (a b : S), P a = false -> P b = false -> P (mul a b) = false) ->
-    bop_congruence S eq add ->     
-    bop_congruence S eq mul -> 
-    bop_is_id S eq add s ->     
-    bop_is_ann S eq mul s ->
-    bop_right_distributive S eq add mul ->
-         bop_right_distributive S eq (bop_fpr s P add) (bop_fpr s P mul).
-Proof. intros s add mul P_true congP add_false mul_false cong_add cong_mul s_id s_ann ldist a b c.
-       assert (fpr_cong_mul := bop_fpr_congruence s mul congP cong_mul).
-       assert (fpr_cong_add := bop_fpr_congruence s add congP cong_add).        
-       case_eq (P a); intro Pa.
-          assert(K1 := bop_fpr_ann_true s mul P_true congP s_ann c a (inr Pa)).
-          assert(P1 := congP _ _ K1). rewrite P_true in P1. 
-          assert(K2 := bop_fpr_ann_true s mul P_true congP s_ann b a (inr Pa)).
-          assert(P2 := congP _ _ K2). rewrite P_true in P2.           
-          assert(K3 := bop_fpr_id_true_true s add P_true congP s_id _ _ P2 P1).
-          assert(K6 := bop_fpr_ann_true s mul P_true congP s_ann (bop_fpr s P add b c) a (inr Pa)).
-          apply symS in K3.
-          assert (K7 := tranS _ _ _ K6 K3).
-          exact K7.
-          case_eq (P b); intro Pb.
-             assert(K1 := bop_fpr_ann_true s mul P_true congP s_ann b a (inl Pb)).
-             case_eq (P c); intro Pc.
-                assert(K2 := bop_fpr_ann_true s mul P_true congP s_ann c a (inl Pc)).
-                assert (K3 := fpr_cong_add _ _ _ _ K1 K2).
-                assert (K4 := bop_fpr_id_true_true s add P_true congP s_id _ _ Pb Pc).             
-                assert (P4 := congP _ _ K4). rewrite P_true in P4.
-                assert (K5 := bop_fpr_ann_true s mul P_true congP s_ann _ a (inl P4)).
-                assert (K6 := bop_fpr_id_true_true s add P_true congP s_id _ _ P_true P_true).
-                assert (K7 := tranS _ _ _ K3 K6). apply symS in K7.
-                assert (K8 := tranS _ _ _ K5 K7).
-                exact K8.
-                assert (K2 : eq (bop_fpr s P mul (bop_fpr s P add b c) a) (mul c a) = true).
-                   assert (K3 := bop_fpr_id_true_false s add congP s_id _ _ Pb Pc).
-                   assert (K4 := fpr_cong_mul _ _ _ _ K3 (refS a)).
-                   assert (K5 := bop_fpr_false_false s mul mul_false _ _ Pc Pa).
-                   assert (K6 := tranS _ _ _ K4 K5).
-                   exact K6.
-                assert (K3 : eq (mul c a) (bop_fpr s P add (bop_fpr s P mul b a) (bop_fpr s P mul c a)) = true).
-                   assert (K4 := bop_fpr_ann_true s mul P_true congP s_ann b a (inl Pb)).
-                   assert (K5 := bop_fpr_false_false s mul mul_false _ _ Pc Pa).
-                   assert (P4 := congP _ _ K4). rewrite P_true in P4.
-                   assert (P5 := mul_false _ _ Pc Pa). 
-                   assert (P6 := congP _ _ K5). rewrite P5 in P6.
-                   assert (K6 := bop_fpr_id_true_false s add congP s_id _ _ P4 P6).
-                   assert (K7 := tranS _ _ _ K6 K5).
-                   apply symS.
-                   exact K7.
-                assert (K4 := tranS _ _ _ K2 K3). 
-                exact K4.
-                case_eq (P c); intro Pc.
-                assert (K2 : eq (bop_fpr s P mul (bop_fpr s P add b c) a) (mul b a) = true).
-                   assert (K3 := bop_fpr_id_false_true s add congP s_id _ _ Pb Pc).
-                   assert (P3 := congP _ _ K3). rewrite Pb in P3.
-                   assert (K4 := bop_fpr_false_false s mul mul_false _ _ P3 Pa).
-                   assert (K5 := cong_mul _ _ _ _ K3 (refS a)).
-                   assert (K6 := tranS _ _ _ K4 K5).
-                   exact K6.
-                assert (K3 : eq (mul b a)  (bop_fpr s P add (bop_fpr s P mul b a) (bop_fpr s P mul c a)) = true).
-                   assert (K4 := bop_fpr_false_false s mul mul_false _ _ Pb Pa).
-                   assert (K5 := bop_fpr_ann_true s mul P_true congP s_ann c a (inl Pc)).
-                   assert (Pab := mul_false _ _ Pb Pa).
-                   assert (K6 := fpr_cong_add _ _ _ _ K4 K5).
-                   assert (K7 := bop_fpr_id_false_true s add congP s_id _ _ Pab P_true).
-                   assert (K8 := tranS _ _ _ K6 K7).
-                   apply symS.
-                   exact K8.
-                assert (K4 := tranS _ _ _ K2 K3).
-                exact K4. 
-                assert (K2 : eq (bop_fpr s P mul (bop_fpr s P add b c) a) (mul (add b c) a) = true).
-                   assert (K3 := bop_fpr_false_false s add add_false _ _ Pb Pc).
-                   assert (Pbc := add_false _ _ Pb Pc).
-                   assert (P3 := congP _ _ K3). rewrite Pbc in P3.
-                   assert (K4 := bop_fpr_false_false s mul mul_false _ _ P3 Pa).
-                   assert (K5 := cong_mul _ _ _ _ K3 (refS a)).
-                   assert (K6 := tranS _ _ _ K4 K5).
-                   exact K6.
-                assert (K3 : eq (add (mul b a) (mul c a)) (bop_fpr s P add (bop_fpr s P mul b a) (bop_fpr s P mul c a)) = true).
-                   assert (K4 := bop_fpr_false_false s mul mul_false _ _ Pb Pa).
-                   assert (K5 := bop_fpr_false_false s mul mul_false _ _ Pc Pa).
-                   assert (Pac := mul_false _ _ Pc Pa).
-                   assert (Pab := mul_false _ _ Pb Pa).
-                   assert (K6 := fpr_cong_add _ _ _ _ K4 K5).
-                   assert (K7 := bop_fpr_false_false s add add_false _ _ Pab Pac).
-                   assert (K8 := tranS _ _ _ K6 K7).
-                   apply symS.
-                   exact K8.
-                assert (K4 := ldist a b c). 
-                assert (K5 := tranS _ _ _ K2 K4).
-                assert (K6 := tranS _ _ _ K5 K3).
-                exact K6.
-Qed.
- *)
 
 Lemma bop_right_distributive_fpr_v2 :
   ∀ (s : S) (add mul : binary_op S),

@@ -77,8 +77,8 @@ let divT       := csgwa_div T eqT mulT aT pT in
 {|
     csgwa_associative   := bop_rap_mul_associative S T eqS eqT refS symS tranS refT symT tranT aS aT mulS mulT mulS_cong mulT_cong mulS_assoc mulT_assoc is_annS is_annT divS divT
   ; csgwa_congruence    := bop_rap_mul_congruence S T eqS eqT refS symS tranS refT symT tranT aS aT mulS mulT mulS_cong mulT_cong 
-  ; csgwa_commutative   := bop_rap_mul_commutative_v2 S T eqS eqT refS symS tranS refT symT tranT aS aT mulS mulT commS commT 
-  ; csgwa_is_ann        := bop_rap_mul_is_ann_v2 S T eqS eqT refS refT aS aT mulS mulT is_annS is_annT
+  ; csgwa_commutative   := bop_rap_mul_commutative S T eqS eqT refS symS tranS refT symT tranT aS aT mulS mulT commS commT 
+  ; csgwa_is_ann        := bop_rap_mul_is_ann S T eqS eqT refS symS tranS refT symT tranT aS aT mulS mulT mulS_cong mulT_cong is_annS is_annT 
   ; csgwa_div           := bop_rap_mul_no_divisor S T eqS eqT mulS mulT aS aT refS refT is_annS is_annT divS divT
 |}. 
 
@@ -192,7 +192,7 @@ let sqrT       := csgwi_squ T eqT addT iT pT in
     csgwi_associative   := bop_rap_add_associative S T eqS eqT refS symS tranS refT symT tranT iS iT addS addT addS_cong addT_cong addS_assoc addT_assoc is_idS is_idT sqrS sqrT
   ; csgwi_congruence    := bop_rap_add_congruence S T eqS eqT refS symS tranS refT symT tranT iS iT addS  addT addS_cong addT_cong 
   ; csgwi_commutative   := bop_rap_add_commutative S T eqS eqT refS symS tranS refT symT tranT iS iT addS  addT commS commT 
-  ; csgwi_is_id         := bop_rap_add_is_id S T eqS eqT refS symS  tranS refT symT tranT iS iT addS  addT is_idS is_idT
+  ; csgwi_is_id         := bop_rap_add_is_id S T eqS eqT refS symS  tranS refT symT tranT iS iT addS  addT addS_cong addT_cong is_idS is_idT
   ; csgwi_squ           := bop_rap_add_no_square S T eqS eqT addS addT iS iT refS refT is_idS is_idT sqrS sqrT
 |}.
 

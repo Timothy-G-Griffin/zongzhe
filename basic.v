@@ -3,6 +3,7 @@ Require Import Coq.Bool.Bool.
 Close Scope nat.
 
 Definition brel (S : Type)              := S → S → bool.
+Definition pred (S : Type)              := S → bool.
 Definition unary_op (S : Type)          := S → S. 
 Definition binary_op (S : Type)         := S → S → S.
 
