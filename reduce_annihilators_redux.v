@@ -180,6 +180,7 @@ Proof. apply bop_associative_fpr_decompositional_id; auto.
        apply bop_product_is_id; auto. 
 Qed.
 
+
 Lemma bop_rap_mul_associative :  bop_associative (S * T) (brel_reduce uop_rap (brel_product eqS eqT)) bop_rap_mul.
 Proof. apply bop_associative_fpr_decompositional_ann; auto. 
        apply brel_product_reflexive; auto.
@@ -192,7 +193,6 @@ Proof. apply bop_associative_fpr_decompositional_ann; auto.
        apply P_mul_decompose.
        apply bop_product_is_ann; auto. 
 Qed.
-
 
 
 Lemma bop_rap_add_commutative :

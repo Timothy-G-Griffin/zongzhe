@@ -25,11 +25,11 @@
 
 \usepackage{epsfig,graphicx,parskip,setspace,tabularx,xspace} 
 \usepackage{a4wide,parskip,times}
-\usepackage{a4wide,parskip}
 \usepackage{amsmath}
 \usepackage{nicefrac}
 \usepackage{ amssymb }
 \usepackage{mleftright}
+\usepackage{listings}
 
 %% START OF DOCUMENT
 \begin{document}
@@ -124,65 +124,166 @@ Furthermore, in most programming languages, it is extremely difficult to express
 %material either in the introduction or at appropriate places in 
 %the rest of the dissertation. 
 
+This chapter will introduce several basic concept, and some related ideas that will help us to understand the main idea of the project.
+
 \section{Basic Definition}
-In the world of logic, we need to define several basic concepts before we are getting started.\\
-In mathematics, A binary relation $R$ in an arbitrary sets (or classes) $S$ (here I restrict the relationship to be inside a single set, or say the element from the same type) is a collection of ordered pairs of elements of set (type) $S$, which is a subset of the Cartesian product $S \times S$. In order to link the mathematical concept with the proposition in logic, I provides each relation a representation (hold or not) as a boolean value, which is regarded as a property in $Coq$. $\Lambda S: Type. brel(\text{Binary relation}) : S \rightarrow S \rightarrow bool$. \\
-Then, I define the basic operations for a given (but arbitrary) type: binary operation $: \Lambda S.S \rightarrow S \rightarrow S$ and unary operation $: \Lambda S.S \rightarrow S$. \\
-And I extend the relation with a product type and a reduced version. I define the composition, identity and production for a unary operation, production and reduction for binary operation. 
+In the world of logic, we need to define several basic concepts before we are really getting started.\\
+We can simply understand that a Type is a collection of terms which have the same "properties". \\
+Under a Type $S$, we can define a binary relationship  (in most cases we will define the binary relationship of equality $=_S$ at first).
+In mathematics, A binary relation $R$ in an arbitrary Type $S$ (here I restrict the relationship to be inside a single Type, or say the element from the same type) is a collection of ordered pairs of elements of set (type) $S$, which is a subset of the Cartesian product $S \times S$. \\
+In order to link the mathematical concept with the proposition in logic, I provides each relation a representation (hold or not) as a boolean value, which is regarded as a property in $Coq$. \\
+$\Lambda S. brel : S \rightarrow S \rightarrow bool$. \\
+Next we should define the operators that exist on a given Type:\\
+binary operation $: \Lambda S.binary\_op :S \rightarrow S \rightarrow S$\\
+unary operation $: \Lambda S.unary\_op:S \rightarrow S$. \\
+\subsection{Properties for the Relationship}
+For our definition of binary relationship, we need to focus on a few properties related to it.\\
+Here we have four properties for a binary relationship for type $S$. As it is mentioned in the previous section, in order to define the proposition in the logic proof, the binary relationship will return a boolean value indicating that the relationship is holding or not, here we provide a arbitrary type variable $S$.\\
+Then for a given relationship $=_S : S \rightarrow S \rightarrow bool$, we should define:\\
+reflexivity: $\forall a \in S, a =_S a \equiv true$,\\
+symmetric : $\forall a, b \in S, a =_S b \equiv b =_S a$, \\
+transitivity: $\forall a,b,c \in S, a =_S b \equiv true \wedge b =_S c \equiv true \rightarrow a =_S c \equiv true$, \\
+congruence : $\forall a,b,c,d \in S, a =_S b \equiv true \rightarrow c =_S d \equiv true \rightarrow a =_S c \equiv b = _S d$
+\subsection{Properties for the Operator}
+Next we need to discuss some of the properties of the unary operator and the binary operator that we have defined.
+\subsubsection{Properties for Unary Operator}
+For the unary operator we have defined, we want it to have the following properties, or we will analyse the unary operator we have defined from the following perspectives. \\
+In fact, our unary operator is used to represent reduction, so our discussion of the properties of the unary operator is actually a discussion of some of the properties of reduction.\\
+There are six properties that we need to be discussed. Three of them are of the same properties as the reduction mentioned in the previous section, here we give a arbitrary type variable $S$, a binary relationship in $S$ : $=_S$ and our unary operation $u_S$.\\
+congruence : $\forall a,b \in S, a =_S b \rightarrow u_S(a) =_S u_S(b)$,\\
+idempotent : $\forall a \in S, u_S(u_S(a)) =_S u_S(a)$,\\
+left\_invariant: $\Lambda \oplus _S: S \rightarrow S \rightarrow S, \forall a,b \in S, u_S (a) \oplus_S b =_S a \oplus_S b$,\\
+right\_invariant: $\Lambda \oplus _S: S \rightarrow S \rightarrow S, \forall a,b \in S, a \oplus_S u_S(b) =_S a \oplus_S b$,\\
+preserve\_id : $\forall i \in S$, if $i$ is the identity for type $S$, equality $=_S$ and a binary operator $\oplus_S$, ($\forall a \in S, a \oplus_S i =_S a =_S i \oplus_S a$) then $u_S (i) =_S i$,\\
+preserve\_annihilator : $\forall a \in S$, if $i$ is the annihilator for type $S$, equality $=_S$ and a binary operator $\oplus_S$, ($\forall b \in S, a \oplus_S b=_S a =_S b \oplus_S a$) then $u_S (b) =_S b$.
 
-\section{Semiring and its Properties}
-In abstract algebra, a semiring is a data structure $(S,\oplus,\otimes,\bar0,\bar1)$ where $S$ is a set and $\oplus,\otimes$ are two operators $:S\times S \rightarrow S$. $(S,\oplus)$ is a commutative semigroup (has associative property) and $(S,\otimes)$ is a semigroup: $\forall a,b,c \in S, a \oplus (b\oplus c) = (a \oplus b) \oplus c$, $a \oplus b = b \oplus a$ and $a \otimes (b\otimes c) = (a \otimes b) \otimes c$. $\oplus,\otimes$ are also left and right distributive on $S$ : $\forall a,b,c \in S: a \otimes(b \oplus c) = (a \otimes b) \oplus (a \otimes c)$ and $(a \oplus b) \otimes c  = (a \otimes c) \oplus (b \otimes c)$. $\bar0$ is the identity of $\oplus$ and  $\bar1$ is the identity of $\otimes$: $\forall a \in S, a \oplus \bar{0} = a = \bar{0} \oplus a$ and $\forall a \in S, a \otimes \bar{1} = a = \bar{1} \otimes a$. Finally, $\bar0$ is the  annihilator of $\otimes$: $\forall a \in S, a \otimes \bar{0} = \bar{0} = \bar{0} \otimes a$.
 
-\subsubsection{For Binary Relationship}
-Here we have three properties for a binary relationship in set $S$. As it is mentioned in the previous section, in order to define the proposition in the logic proof, the binary relationship will return a boolean value to indicate the relationship is holding or not.\\
-Then for a given relationship $\backsim : S \rightarrow S \rightarrow bool$, we have reflexivity: $\forall a \in S, a \backsim a \equiv true$, symmetric : $\forall a, b \in S, a \backsim b \equiv b \backsim a$, and transitivity: $\forall a,b,c \in S, a \backsim b \equiv true \wedge b \backsim c \equiv true \rightarrow a \backsim c \equiv true$.
-\subsubsection{For Binary Operation}
-Then we have six properties for a binary operator in set $S$. For a given operator $\bullet: S\times S \rightarrow S$ and the equality (actually an arbitrary binary relationship) in $S$, we have:\\
-congruence: $\forall s_1,s_2,t_1,t_2 \in S, s_1 \equiv t_1 \wedge s_2 \equiv t_2 \rightarrow s_1 \bullet s_2 \equiv t_1 \bullet t_2$\\
-associativity: $\forall a,b,c \in S, a \bullet (b \bullet c) \equiv (a \bullet b) \bullet c$\\
-commutativity: $\forall a,b\in S, a \bullet b = b \bullet a$\\
-selectivity: $\forall a,b\in S, a \bullet b \in \{a,b\}$\\
-hasId: $\exists \bar0 \in S, \forall a \in S, a \bullet \bar0 = a = \bar0 \bullet a$\\
-hasAnn: $\exists \bar1 \in S, \forall a \in S, a \bullet \bar1 = \bar1 = \bar1 \bullet a$\\
+
+\subsubsection{Properties for Binary Operator}
+Also for the binary operator we have defined, we hope that we will focus on the following seven properties of it.
+For a given type variable $S$, the binary relationship $=_S$ and our pre-defined binary operator $\oplus_S: S\times S \rightarrow S$, we have:\\
+congruence: $\forall s_1,s_2,t_1,t_2 \in S, s_1 \equiv t_1 \wedge s_2 \equiv t_2 \rightarrow s_1 \oplus_S s_2 \equiv t_1 \oplus_S t_2$,\\
+idempotent : $\forall a \in S, a \oplus_S a =_S a$,\\
+associativity: $\forall a,b,c \in S, a \oplus_S (b \oplus_S c) \equiv (a \oplus_S b) \oplus_S c$,\\
+commutativity: $\forall a,b\in S, a \oplus_S b = b \oplus_S a$,\\
+selectivity: $\forall a,b\in S, a \oplus_S b \in \{a,b\}$,\\
+hasId: $\exists \bar0 \in S, \forall a \in S, a \oplus_S \bar0 = a = \bar0 \oplus_S a$,which means $\bar0$ is the identity for type $S$, equality $=_S$ and the binary operator $\oplus_S$,\\
+hasAnn: $\exists \bar1 \in S, \forall a \in S, a \oplus_S \bar1 = \bar1 = \bar1 \oplus_S a$, which means $\bar1$ is the identity for type $S$, equality $=_S$ and the binary operator $\oplus_S$,\\
 In this paper, we will mostly concentrate on those properties that are holding or not in the reduced set of problem. 
 
 
+\section{Direct Product and its Properties}
+Here we need to mention Product Type and some properties about Product Type. \\
+CAS will use pair to combine two semirings (or just semigroups) to form a new data structure. 
+Therefore we must discuss the relationship between the properties of the single semirings and the properties they have been combined with. \\
+First, as with a given Type and its binary relationship, we need to define a binary relationship to describe the relationship between product type terms.\\
+$\Lambda S, T, =_s, =_t. brel\_product : S * T \rightarrow S * T \rightarrow bool$, \\
+$:= \lambda (s_1,t_1) (s_2, t_2). s_1 =_s s_2 \wedge t_1 =_t t_2$, (we can write this binary relationship as $=_S \times =_T$).\\
+At the same time, we should give an expansion on existing unary operators and binary operators for product.\\
+For two given type $S$ and $T$, unary operators $u_S$ and $u_T$, binary operators $\oplus_S$ and $\oplus_T$:\\
+uop\_product: $S*T \rightarrow S*T := \lambda (s,t), (u_S (s),u_T(t))$,\\
+bop\_product: $S*T \rightarrow S*T \rightarrow S*T := \lambda (s_1,t_1)(s_2,t_2), (s_1 \oplus_S s_2,t_1 \oplus_T t_2)$, (we can write this new binary operator as $(\oplus_S,\oplus_T)$).
+\subsection{Properties for the Relationship}
+In fact, we also focus on whether or not some of the properties of the binary relationship previously defined apply to the product type. Although the proof of this part is not the key to our project. 
+Fortunately, the CAS system has systematically proved the product type properties, including binary relationship and binary operator. \\
+For two given type $S$ and $T$ and their corresponding binary relationship $=_S$ and $=_T$,\\
+If both $=_S$ and $=_T$ are reflexivity, then $=_S \times =_T$ is reflexivity,\\
+If both $=_S$ and $=_T$ are symmetric, then $=_S \times =_T$ is symmetric,\\
+If both $=_S$ and $=_T$ are transitivity, then $=_S \times =_T$ is transitivity,\\
+If both $=_S$ and $=_T$ are congruence, then $=_S \times =_T$ is congruence.
+\subsection{Properties for the Operator}
+As mentioned above, fortunately the CAS system has given us a systematic proof of the binary operator of the product type.\\
+For two given type $S$ and $T$, binary operators $\oplus_S$ and $\oplus_T$:\\
+If both $\oplus_S$ and $\oplus_T$ are congruence, then $(\oplus_S,\oplus_T)$ is congruence,\\
+If both $\oplus_S$ and $\oplus_T$ are commutativity, then $(\oplus_S,\oplus_T)$ is commutativity,\\
+If both $\oplus_S$ and $\oplus_T$ are associativity, then $(\oplus_S,\oplus_T)$ is associativity,\\
+If both $\oplus_S$ and $\oplus_T$ have Id $\bar0_S$ and $\bar0_T$, then $(\oplus_S,\oplus_T)$ has Id $(\bar0_S,\bar0_T)$,\\
+If both $\oplus_S$ and $\oplus_T$ have Ann $\bar1_S$ and $\bar1_T$, then $(\oplus_S,\oplus_T)$ has Ann $(\bar1_S,\bar1_T)$.\\
+It is worth mentioning that although both $\oplus_S$ and $\oplus_T$ may be selective, this does not lead to the conclusion that $(\oplus_S,\oplus_T)$ is a selective.
+The explanation of selective will be mentioned later in the lexicographic product section.
 
-\section{Algebraic approach to the Path Problem}
-As we mentioned above, there are several properties which are really significant to the path problem by using the algebraic approaches. One of them is the distributivity properties for the two operators in a given semiring. 
-Left distributivity: $a \otimes (b \oplus c) = (a \otimes b) \oplus (a \otimes c)$ and right distributivity:  $(a \oplus b) \otimes c = (a \otimes c) \oplus (b \otimes c)$. The importance of these two properties is, when we are using matrix multiplication to compute the path problem represent as a semiring, we need there two distributivity properties to guarantee the correctness of the computation (those equation will be shown later). Distributivity is part of the properties inside the semiring, and that becomes one of the reason that semiring has been choosen to represent a path problem.\\
-As a result, we modified the original path problem algorithm and the original metric to our new modified metric and matrix equations which is called the generic algorithm.\\
-Another important crucial point in our project is "order". As the example provided above, the min-set reduction can be applied in any problem set with some "order". (carnonically order and natural order)\\
+\section{Semiring and its Properties}
+In abstract algebra, a semiring is a data structure $(S,\oplus,\otimes,\bar0,\bar1)$ where $S$ is a set (Type) and $\oplus,\otimes$ are two operators $:S\times S \rightarrow S$.\\\\
+$(S,\oplus)$ is a commutative semigroup (has associative property) and $(S,\otimes)$ is a semigroup:\\ 
+$\forall a,b,c \in S, a \oplus (b\oplus c) = (a \oplus b) \oplus c$, $a \oplus b = b \oplus a$,\\
+$\forall a,b,c \in S, a \otimes (b\otimes c) = (a \otimes b) \otimes c$.\\\\ 
+$\oplus,\otimes$ are also left and right distributive on $S$ : \\
+$\forall a,b,c \in S: a \otimes(b \oplus c) = (a \otimes b) \oplus (a \otimes c)$, \\ 
+$\forall a,b,c \in S:(a \oplus b) \otimes c  = (a \otimes c) \oplus (b \otimes c)$. \\\\
+$\bar0$ is the identity of $\oplus$ and  $\bar1$ is the identity of $\otimes$: \\
+$\forall a \in S, a \oplus \bar{0} = a = \bar{0} \oplus a$,\\
+$\forall a \in S, a \otimes \bar{1} = a = \bar{1} \otimes a$. \\\\
+Finally, $\bar0$ is the  annihilator of $\otimes$: \\
+$\forall a \in S, a \otimes \bar{0} = \bar{0} = \bar{0} \otimes a$.\\
+Some definition will include that $\bar1$ is the annihilator of $\oplus$: \\
+$\forall a \in S, a \oplus \bar{1} = \bar{1} = \bar{1} \oplus a$.
+
+
+\section{Matrix Semiring and Stability}
+For each semiring $(S,\oplus,\otimes,\bar0,\bar1)$ (that represent the rule of a path problem), we can define a matrix semiring $(M_n(S),\oplus,\otimes,\bar{J},\bar{I})$ to represent the concrete path problem.\\
+$M_n(S)$ is a $n\times n$ matrices over $S$,\\
+$(A \oplus B)(i,j) = A(i,j)\oplus B(i,j)$,\\
+$(A \otimes B)(i,j) = \bigoplus_{1\leq q \leq n}A(i,q)\otimes B(q,j)$,\\
+$\bar{J}(i,j) = \bar0$,\\
+$\bar{I}(i,j)=\left\{
+\begin{array}{rcl}
+\bar1       &      & {i = j}\\
+\bar0     &      & {otherwise}
+\end{array} \right.$\\
+So here we can easily use this matrix to encode any specific path problem and use matrix multiplication to calculate our answer. \\
+For a graph $G = (V,E)$ a directed graph and a weight function $w \in E \rightarrow S$, 
+we can define the weight of a path $p = i_1,i_2, \dots i_k$ is $w(p) = w (i_1,i_2) \otimes w(i_2,i_3)\otimes \dots \otimes w(i_{k-1},i_k)$, while the empty path is given the weight of $\bar1$.
+Then we can define the adjacency matrix $A$ as 
+$A(i,j)=\left\{
+\begin{array}{rcl}
+w(i,j)      &      & {(i,j)\in E}\\
+\bar0     &      & {otherwise}
+\end{array} \right.$\\
+And our problem will be represent as $A^*(i,j) = \bigoplus_{p \in \pi (i,j)}w(p)$.\\\\
+However, our calculations depend on the properties of the semiring.\\
+$a\in S$,we define the powers $a^k$ as, $a^0 = \bar{1}$ and $a^{k+1} = a \otimes a^k$.\\
+$a\in S$,we define the closure $a^*$ as, $a^{(k)} = a^0 \oplus a^1 \dots  a^k$ and $a^* = a^0 \oplus a^1 \dots  a^k \oplus \dots$.\\
+Here we say, if there exists a $q$ such that $a^{q} = a^{(q+1)}$, then $a$ is q-stable, which means $a^{q} = a^*$.\\
+And if we know that $S$ is 0-stable, then $M_n(S)$ is $n-1$-stable (because we can ignore paths with loops, and that is our reduction!). 
+This allows us to actually calculate at most $n-1$ steps when calculating path problems.\\
+Therefore we can define the power and closure on the matrix semiring,\\
+$A\in M_n(S)$,we define the powers $A^k$ as, $A^0 = \bar{I}$ and $A^{k+1} = A \otimes A^k$.\\
+$A\in M_n(S)$,we define the closure $A^*$ as, $A^{(k)} = A^0 \oplus A^1 \dots  A^k$ and $A^* = A^0 \oplus A^1 \dots  A^k \oplus \dots$.\\\\
+Hence we have $\pi(i,j)$ which is the set of paths from $i$ to $j$, then $\pi^k(i,j)$ will be the set of paths from $i$ to $j$ with exactly $k$ arcs, then $\pi^{(k)}(i,j)$ will be the set of paths from $i$ to $j$ with at most $k$ arcs.\\
+Then we have \\
+$A^k(i,j) = \bigoplus_{p \in \pi^k (i,j)}w(p)$, \\
+$A^{(k)}(i,j) = \bigoplus_{p \in \pi^{(k)} (i,j)}w(p)$ and\\
+$A^*(i,j) = \bigoplus_{p \in \pi^* (i,j)}w(p)$.\\
+It is worth mentioning that $A^*(i,j)$ may not be well defined, but if $M_n(S)$ is $k$ stable, then for $A\in M_n(S)$, $A^*(i,j) = A^{(k)}(i,j)$.
+
+\section{Distributivity and Lexicographic Product}
+It is worth mentioning that the properties of distributivity (left and right) play an important role in the computation of routing problem.
+We've defined $M_n(S)$ the matrix and its related semiring on the given semiring $(S,\oplus,\otimes,\bar0,\bar1)$.
+However we still need to check the properties of $M_n(S)$, to make sure that it is exactly a semiring.
+Consider about the distributivity properties, $M_n(S)$ is left/right distributive if $S$ has the distributivity properties.\\
+But some times when we are defining some complex routing problem, such as the widest-shortest path problem, which is constructed by shortest path problem semiring and widest path problem semiring by lexicographic product, it is not guarantee that the new data structure still have the properties of distributivity.\\\\
+Suppose $(S,\oplus_S)$ is a commutative and selective semigroup and $(T,\oplus_t)$ is a semigroup, then the lexicographic product of two semigroups $(S,\oplus_S) \bar{\times} (T,\oplus_T) = (S\times T, \oplus_{\bar{\times}})$ where\\
+$(s_1,t_1) \oplus_{\bar{\times}} (s_2,t_2)=\left\{
+\begin{array}{rcl}
+(s_1\oplus_S s_2,t_1\oplus_T t_2)      &      & { s_1 = s_1 \oplus_S s_2 = s_2}\\
+(s_1\oplus_S s_2,t_1)       &      & {s_1 = s_1 \oplus_S s_2 \neq s_2}\\
+(s_1\oplus_S s_2,t_2)       &      & {s_1 \neq s_1 \oplus_S s_2 = s_2}
+\end{array} \right.$\\\\
+
+As mentioned above, we used the lexicographic product when constructing the widest shortest path problem, and used the elementary path reduction. We also added a distinct annihilator in order to prevent excessive useless calculations. \\
+These constructs make it difficult to speculate about the properties of our semiring (or new data structure), which is what our project is devoted to research that the relationship between reduction and semiring properties.
+
+\section{Global optimality VS Left/Right local optimality}
+On the other hand, we also need to discuss how to make our approach embrace the algebras that violate distributivity.\\
+The global optimality: $A^*(i,j) = \bigoplus_{p \in \pi (i,j)}w(p)$,\\
+The left local optimality which is the distributed Bellman-Ford algorithm: $L = (A\otimes L) \oplus \bar{I}$ which is  $L(i,j) = \bigoplus_{q \in V} A(i,q)\otimes L(q,j)$,\\
+The right local optimality which is the Dijkstra's algorithm: $R = (R\otimes A) \oplus \bar{I}$ which is  $L(i,j) = \bigoplus_{q \in V} R(i,q)\otimes A(q,j)$,\\
+note that with distributivity, $M_n(S)$ is a semiring and the three optimality problems are essentially the same, the local optimal solutions are global solutions :$A^* = L = R$,\\
+However with out distributivity, those three solutions may all exists but all distinct, and that comes to the part of our project -- discussing about the relationship between reductions and semirings.
+
 
 \section{Combinator for Algebraic System}
 Combinator for Algebraic system (CAS)\cite{griffin_metarouting_2005} is introduced in $L11$. It is a language to design algebraic systems, in which many algebraic properties are automatically received and people can combine different operators to obtain a new semiring\cite{griffin_metarouting_2005}. We can also generalize a more complex path problem (in other words, we can abstract a more complex path problem with this new semiring, such as the lexicographic products \cite{gurney_lexicographic_2007}). CAS can easily return the properties of those combined-operation semirings and it is already defined in Coq\cite{Coq} (mentioned in $L11$ by Dr Timothy Griffin).
-
-\chapter{Related Work} 
-
-%This chapter covers relevant (and typically, recent) research 
-%which you build upon (or improve upon). There are two complementary 
-%goals for this chapter: 
-%\begin{enumerate} 
-%  \item to show that you know and understand the state of the art; and 
-%  \item to put your work in context
-%\end{enumerate} 
-%
-%Ideally you can tackle both together by providing a critique of
-%related work, and describing what is insufficient (and how you do
-%better!)
-%
-%The related work chapter should usually come either near the front or
-%near the back of the dissertation. The advantage of the former is that
-%you get to build the argument for why your work is important before
-%presenting your solution(s) in later chapters; the advantage of the
-%latter is that don't have to forward reference to your solution too
-%much. The correct choice will depend on what you're writing up, and
-%your own personal preference.
-
-Maybe I should put this part into the background part
-\section{Algebraic Apporach to the Path Problem}
-\section{CAS}
-\section{Semirings and Path Spaces}
 
 
 \chapter{Design and Implementation} 
@@ -190,35 +291,478 @@ Maybe I should put this part into the background part
 %This chapter may be called something else\ldots but in general 
 %the idea is that you have one (or a few) ``meat'' chapters which
 %describe the work you did in technical detail. 
-\section{Product Theory and Product Semigroup}
-\section{Reduction Properties and Reduction Theory}
-Here I define the reduction in a binary operation in three different version: reduce the result of the operation, only reduce the argument of the operation and reduce both result and argument of the operation. 
-$bop-reduce : \forall S:Type. \forall r: unary-op S. \forall b: binary-op S.\lambda x,y:S. r(b x y)$, 
-$bop-reduce-args : \forall S:Type. \forall r: unary-op S. \forall b: binary-op S.\lambda x,y:S. b (r x) (r y)$, 
-$bop-full-reduce : \forall S:Type. \forall r: unary-op S. \forall b: binary-op S.\lambda x,y:S. r(b (r x) (r y))$.
 
-\section{Direct representation of Reduced Semigroup}
-(Well defined, but not extraction friendly)\
-\subsection{Homomorphism}
-\section{Another Representation of Reduced Semigroup -- RSemigroup}
-(Given the properties of semigroup together with the reduction proof together.)\\\\
-(For those two sections, I am just thinking how to write it properly)
-\section{One approach based on the Annihilator}
+\section{Direct (Traditional) Reduction and Reduction Theory}
+\subsection{Basic Definition}
+Initially, First of all, I first made a detailed analysis (proof) of the reduction (we call it traditional reduction) mentioned by Wongseelashote in his article \cite{WONGSEELASHOTE197955}.\\
+For a given type $S$, a binary relationship $=_S$ on S, a unary operator and a binary operator $u_S$ and $\oplus_S$, we define the traditional reduction as following:\\
+$Pr (x : S) :=   u_S (x) =_S x$ which is the proof that, for a given element $x$ of type $S$, $x$ is in the reduced set.\\
+$red\_Type := \{x : S \& Pr(x)\}$, which is a set that all the elements in the set are pairs of the element in $S$ itself together with the proof that the element is in the reduced set.\\
+$red\_eq : red\_Type \rightarrow red\_Type \rightarrow bool 
+:= \lambda p_1 p_2, projT_1 (p_1) =_S projT_1 (p_2)$. \\
+Here $projT_1/projT_2$ are two 
+auxiliary	function that map the element/the proof part from the reduced set.\\
+It is worth mentioning that since the definition follows Wongseelashote in his article \cite{WONGSEELASHOTE197955}, our unary operator(reduction) needs congruence and idempotent properties.
+And when we discuss the relation and properties of the unary operator (reduciton) and the binary operator, we need to have two properties left\_invariant and right\_invariant.
+\\
+With these definitions we can discuss the nature of the binary relationship of traditional reduction.
+\subsection{Properties for the Relationship}
+For our given type $S$ and binary relationship $=_S$, we assume that $=_S$ on $S$ has such properties:
+\begin{itemize}
+\item reflexive 
+\item symmetric 
+\item transitive 
+\item congruence 
+\end{itemize}
+It is easy to prove that $red_eq$ on $red\_Type$ has those four properties:
+\begin{itemize}
+\item Lemma red\_ref : reflexive red\_Type red\_eq.
+\item Lemma red\_sym : symmetric red\_Type red\_eq.
+\item Lemma red\_cong : congruence red\_Type red\_eq red\_eq.  
+\item Lemma red\_trans : transitive red\_Type red\_eq.  
+\end{itemize}
+
+\subsection{Properties for the Binary Operator}
+Before starting our proof, we need to prove an auxiliary Lemma.\\
+Lemma Pr\_br : $\forall (p1 p2 : red\_Type), Pr (u_S(projT1 (p1) \oplus_S projT1 (p2))).$\\
+The significance of this Lemma is that for any two elements that exist in a reduced set, we take out its element separately and execute a binary operation, and finally do a reduction process, and the result is still in the reduced set.\\\\
+Because our binary operator $\oplus_S$ is working on type $S$, we need a new reduced binary operator for our $red\_Type$.\\
+$red\_bop : binary\_op$ $red\_Type :=
+    λ p1$ $p2,  existT Pr (u_S(projT1 (p1) \oplus_S projT1 (p2))) (Pr\_br$ $p1$ $p2).$\\
+Here existT is also an auxiliary function that take the element of type $S$ and the proof of the element to form the an element in the reduced set. (which is inverse to projT$_1$ and projT$_2$)\\
+Here we assume that our binary operator $\oplus_S$ has such properties separately on $S$:
+\begin{itemize}
+\item congruence 
+\item associativity 
+\item commutativity 
+\item selective 
+\item idempontent 
+\item has id $\bar0$ 
+\item has annihilator $\bar1$ 
+\end{itemize}
+It is easy to proof that $red\_bop$ has such properties on $red\_Type$:
+\begin{itemize}
+\item Lemma red\_bop\_cong : $congruence \rightarrow bop\_congruence$ $red\_Type$ $red\_eq$ $red\_bop.$ 
+\item Lemma red\_bop\_ass : $associativity \rightarrow bop\_associative$ $red\_Type$ $red\_eq$ $red\_bop.$ 
+\item Lemma red\_bop\_comm : $commutativity \rightarrow bop\_commutative$ $red\_Type$ $red\_eq$ $red\_bop.$
+\item Lemma red\_bop\_sel : $selective \rightarrow bop\_selective$ $red\_Type$ $red\_eq$ $red\_bop.$ 
+\item Lemma red\_bop\_idem : $idempontent \rightarrow bop\_idempotent$ $red\_Type$ $red\_eq$ $red\_bop.$  
+\item Lemma red\_bop\_id : \\$uop\_preserves\_id$ $S$ $=_S$ $\oplus_S$ $u_S \rightarrow\\ bop\_exists\_id$ $S$ $=_S$ $\oplus_S \rightarrow\\ bop\_exists\_id$ $red\_Type$ $red\_eq$ $red\_bop.$ 
+\item Lemma red\_bop\_ann : \\$uop\_preserves\_ann$ $S$ $=_S$ $\oplus_S$ $u_S \rightarrow\\ bop\_exists\_ann$ $S$ $=_S$ $\oplus_S \rightarrow\\ bop\_exists\_ann$ $red\_Type$ $red\_eq$ $red\_bop.$ 
+\end{itemize}
+It is worth mentioning that although the proof in this direction looks very obvious, those proof are not all sufficient. For example, sometimes $red_bop$ can be commutative on $red\_Type$ even if $\oplus_S$ is not commutative on $S$.\\
+Fortunately, in our project we only care about whether our reduced set has the same properties when the original problem set has certain properties. So after our construction, we will specify the properties of the original problem set.\\\\
+However, as we mentioned in the introduction, there are quite a few problems with this traditional reduction.\\
+First of all, the proof part can not be well expressed in the outside world. We must know that many programming languages do not have the ability to represent and prove proposition.\\
+Second, when we apply a lot of reduction at the same time, this traditional representation will make our reduced set winding and confusing. For example, suppose we have two reductions $r_1$ and $r_2$, then the reduced problem set that apply reduction 2 after reduction 1 on the problem set must be represent as $\{x \in \{ y \in S \& r_1 (y) = y\} \& r_2 (x) = x\}$. At the same time we need to pay attention that the type of $r_2$ must be $\{ y \in S \& r_1 (y) = y\} \rightarrow \{ y \in S \& r_1 (y) = y\}$, but it should be $S \rightarrow S$ by our definition.\\\\
+Because of the above problems, we have to consider other ways to represent our reduction (this is also the purpose and significance of our project).
+
+\section{Semigroup With Direct Reduction}
+The previous section mentioned that the purpose of our project is to clarify the relationship between reduction and semiring properties. 
+In addition to the semiring's distribution relationship between the two operators, we can first think of it as two semigroups (then consider identity and annihilator issues).
+Hence, we need to give a primitive definition on semigroup (Some more detailed definitions will be added later as needed).\\
+Initially, according to the properties of the binary relationship, we define a record that contains those properties:
+\begin{lstlisting}[]
+Record eqv_proofs (S : Type) (eq : brel S) :=
+{
+  eqv_reflexive      : brel_reflexive S eq            
+; eqv_transitive     : brel_transitive S eq           
+; eqv_symmetric      : brel_symmetric S eq
+; eqv_congruence     : brel_congruence S eq eq                                      
+; eqv_witness        : S                                      
+}.
+\end{lstlisting}
+The definition includes the four properties: reflexive, transitive, symmetric and congruence for a binary relationship on a given type that I mentioned above. 
+At the same time, in order to ensure that our definition of semigroup is not a trivial semigroup (which means there is at least one element in the semigroup), we have added a witness property.\\
+Next we need to define the properties of the binary operator in the semigroup:
+\begin{lstlisting}[]
+Record semigroup_proofs (S: Type) (eq : brel S) (b : binary_op S) := 
+{
+  sg_associative   : bop_associative S eq b
+; sg_congruence    : bop_congruence S eq b
+; sg_commutative_d : bop_commutative_decidable S eq b                                      
+}.
+\end{lstlisting}
+This includes associativity, congruence and commutativity. 
+It is worth noting that since commutativity is not a property that semigroups must possess, we hereby conclude that a semigroup can be commutative or not commutative, but this must be decidable.\\
+For a given type $S$, binary relationship $=_S$ and binary operator $\oplus_S$,\\
+not$\_$commutativity: $\exists a,b\in S, a \oplus_S b \not=_S b \oplus_S a$,\\
+commutativity$\_$decidable: $commutative$ $S$ $=_S$ $\oplus_S$ $+$ $not\_commutative$ $S$ $=_S$ $\oplus_S$.\\
+
+Finally we can define our semigroup record as:
+\begin{lstlisting}[]
+Record semigroup (S : Type) :=
+{
+   eq   : brel S      
+;  bop  : binary_op S
+;  eqv  : eqv_proofs S eq               
+;  sgp  : semigroup_proofs S eq bop
+}.
+
+\end{lstlisting}
+According to our previous definition of traditional reduction and its properties, and the semigroup record we defined, we can try to define our reduction semigroup.
+But first, because our reduction is a traditional reduction, we need to define the properties of reduction together as a record.
+\begin{lstlisting}[]
+Record reduction_eqv_proofs (S : Type) (eq : brel S) 
+(r : unary_op S) :=
+{
+  rep_cong  : uop_congruence S eq r 
+; rep_idem  : uop_idempotent S eq r 
+}.
+
+Record reduction_bop_proofs (S : Type) (eq : brel S) 
+(r : unary_op S) (b : binary_op S) :=
+{
+  rb_left  : bop_left_uop_invariant S eq b r
+; rb_right : bop_right_uop_invariant S eq b r
+}.
+\end{lstlisting}
+The definitions of the two blocks contain two properties $\forall A \in S, reduce(reduce(A)) = reduce(A)$ and $\oplus : S \times S \rightarrow S, \forall A,B \in S, reduce(reduce(A)\oplus B) = reduce(A\oplus B) = reduce(A\oplus reduce(B))$ respectively, and it is also the definition of the reduction mentioned earlier by Ahnont Wongseelashote in his article \cite{WONGSEELASHOTE197955}.\\\\
+
+For a given type $S$, binary relationship $eqS$, unary operator $r$, binary operator $b$, if we have a semigroup $sg$ : semigroup $S$ on $eqS$ and $b$, then we can extract the $eqv\_proof$ from $sg$ as $eqv$, and we should initially construct the $eqv\_proof$ on the $red\_Type$ (reduction type). 
+\begin{lstlisting}
+Definition reduced_eqv_proofs : 
+(S : Type) (eq : brel S) (r : unary_op S) (b : binary_op S)
+	(eqv : eqv_proofs S eq),  
+	reduction_eqv_proofs S eq r -> 
+	eqv_proofs (red_Type S r eq) (red_eq S r eq)
+\end{lstlisting}
+It is worth mentioning that if the unary operator $r$ is a reduction, then we assume that $r$ has the properties of reduction.\\
+
+Next, we extract the semigroup proof $csg$ from $sg$ and we construct the semigroup proof for $red\_Type$:
+\begin{lstlisting}
+Definition reduced_semigroup_proofs :
+    (S : Type)
+    (eq : brel S)
+    (r : unary_op S)
+    (b : binary_op S)
+    (eqv : eqv_proofs S eq)
+    (csg : semigroup_proofs S eq b)
+    (req : reduction_eqv_proofs S eq r)     
+    (rb  : reduction_bop_proofs S eq r (bop_reduce r b)) 
+    (dec : bop_commutative_decidable (red_Type S r eq) 
+    	(red_eq S r eq) (red_bop S b r eq (rep_idem _ _ _ req))), 
+     semigroup_proofs (red_Type S r eq) 
+     	(red_eq S r eq) (red_bop S b r eq (rep_idem _ _ _ req))
+\end{lstlisting}
+It is worth noting here that since we need to give the new semigroup we defined about the properties of commutative, we have to know whether operator $red\_bop$ after reduction is commutative on $red\_Type$, but for the most time this is not an easy task.\\\\
+
+Finally, we can define a semigroup on $red\_Type$ following the traditional reduction.
+\begin{lstlisting}
+Definition semigroup_reduced:
+     (S : Type)
+     (csg : semigroup S)
+     (r : unary_op S)
+     (req : reduction_eqv_proofs S (eq S csg) r)
+     (rb  : reduction_bop_proofs S (eq S csg) r 
+     	(bop_reduce r (bop S csg)))
+     (dec : bop_commutative_decidable (red_Type S r (eq S csg)) 
+     	(red_eq S r (eq S csg)) (red_bop S (bop S csg) r 
+     	(eq S csg) (rep_idem _ _ _ req))),      
+           semigroup (red_Type S r (eq S csg))
+\end{lstlisting}
+
+There are two obvious problems with defining the reduction semigroup in this way.\\
+1, As mentioned above, even if we know that the original semigroup is commutative or not, it is difficult to infer whether $red\_bop$ is commutative under $red\_Type$.
+According to our previous proof we know that if $b$ is commutative on $S$, then $red\_bop$ is also commutative on $red\_Type$.
+However, even if b is not commutative on S, $red\_bop$ may still be commutative on $red\_Type$. This proof will become very complicated, and it is very dependent on the functionality of reduction and $b$. It is difficult to be generalized.\\
+As mentioned in the previous section, for the most time we actually relate to our semigroup "is" commutative and not concerned with it "is whether or not" commutative.
+So we can add the properties of the commutative to our defined record:
+\begin{lstlisting}
+Record commutative_semigroup_proofs (S: Type) 
+(eq : brel S) (b : binary_op S) := 
+{
+  csg_associative   : bop_associative S eq b
+; csg_congruence    : bop_congruence S eq b
+; csg_commutative   : bop_commutative S eq b                                      
+}.
+
+Record commutative_semigroup (S : Type) :=
+{
+   ceq   : brel S      
+;  cbop  : binary_op S
+;  ceqv  : eqv_proofs S ceq               
+;  csgp  : commutative_semigroup_proofs S ceq cbop
+}.
+\end{lstlisting}
+Unlike before, here we assume that our semigroup $sg$ is commutative, so it is easy to construct a commutative semigroup on $red\_Type$.
+
+\begin{lstlisting}
+Definition reduced_commutative_semigroup_proofs :
+  ∀ (S : Type)
+    (eq : brel S)
+    (r : unary_op S)
+    (b : binary_op S)
+    (eqv : eqv_proofs S eq)
+    (csg : commutative_semigroup_proofs S eq b)
+    (req : reduction_eqv_proofs S eq r)     
+    (rb  : reduction_bop_proofs S eq r (bop_reduce r b)), 
+         commutative_semigroup_proofs (red_Type S r eq) 
+         (red_eq S r eq) (red_bop S b r eq (rep_idem _ _ _ req))
+
+Definition commutative_semigroup_direct_reduction :
+  ∀ (S : Type)
+     (csg : commutative_semigroup S)
+     (r : unary_op S)
+     (req : reduction_eqv_proofs S (ceq S csg) r)     
+     (rb  : reduction_bop_proofs S (ceq S csg) r 
+     	(bop_reduce r (cbop S csg))),
+         commutative_semigroup (red_Type S r (ceq S csg))
+\end{lstlisting}
+2. After our construction, although we successfully defined semigroup on $red\_Type$, we lose information about reduction $r$ (the function of $r$ is not defined in the semigroup's record).\\\\
+Therefore, the use of traditional reduction and direct definition of reduced semigroups is limited by the limitations of reduction itself and the limitations of semigroup definitions, which is not a good choice, and we need to find a better representation.
+
+
+\section{Binary Reduced Relationship and Binary Full Reduced Operator}
+Let have a review on the definition of the traditional reduction with its binary relationship and binary operator.\\
+$Pr (x : S) :=   u_S (x) =_S x$.\\
+$red\_Type := \{x : S \& Pr(x)\}$.\\
+$red\_eq : red\_Type \rightarrow red\_Type \rightarrow bool 
+:= \lambda p_1 p_2, projT_1 (p_1) =_S projT_1 (p_2)$.\\
+$red\_bop : binary\_op$ $red\_Type :=
+    λ p1$ $p2,  existT Pr (u_S(projT1 (p1) \oplus_S projT1 (p2))) (Pr\_br$ $p1$ $p2)$.\\
+We realised that actually when we are using the reduction, we wind it on our binary relationship and binary operator. 
+So we try to discard the proof part and define new $eq\_r$ and $b\_r$ according to $eq$, $r$ and $b$.\\
+Definition $brel\_reduce : brel$ $S := \lambda x$ $y,  eq$ $(r$ $x)$ $(r$ $y).$ \\
+Definition $bop\_reduce : binary\_op$ $S := \lambda x$ $y,  r$ $(b$ $x$ $y).$\\
+$y).$\\   
+Definition $bop\_full\_reduce : binary\_op$ $S := \lambda x$ $y,  r(b$ $(r$ $x)$ $(r$ $y)).$\\
+We enwrap reduction on equality to define a new binary relationship. 
+We use the same method and define two new binary operators based on the difference in the reduction placement.
+However, in fact, according to the properties of the left$\_$invariant and right$\_$invariant of reduction mentioned earlier, the two binary operators are the same.\\\\
+Next we need to prove that by using of this representation of reduction, whether the properties of the binary operator $bS$ we mentioned earlier is still valid on $S$.
+Here we assume that our binary operator $eqS$ has such properties separately on $S$:
+\begin{itemize}
+\item congruence 
+\item associativity 
+\item commutativity 
+\item selective 
+\item idempontent 
+\item has id $\bar0$ 
+\item has annihilator $\bar1$ 
+\end{itemize}
+And the reduction $r$ (unary operator) has the properties of congruence, idempontent, left/right invariant.\\
+It is easy to proof that $bop\_full\_reduce$ $r$ $bS$ has such properties on $brel\_reduce$ $r$ $eqS$:
+\begin{itemize}
+\item Lemma bop\_full\_reduce\_congruence : \\$congruence \rightarrow congruence$ $S$ $(brel\_reduce$ $r$ $eqS)$ $(bop\_full\_reduce$ $r$ $bS).$ 
+\item Lemma bop\_full\_reduce\_associative : \\$associative \rightarrow associative$ $S$ $(brel\_reduce$ $r$ $eqS)$ $(bop\_full\_reduce$ $r$ $bS).$ 
+\item Lemma bop\_full\_reduce\_commutative : \\$commutative \rightarrow commutative$ $S$ $(brel\_reduce$ $r$ $eqS)$ $(bop\_full\_reduce$ $r$ $bS).$ 
+\item Lemma bop\_full\_reduce\_idempotent : \\$idempotent \rightarrow idempotent$ $S$ $(brel\_reduce$ $r$ $eqS)$ $(bop\_full\_reduce$ $r$ $bS).$ 
+\item Lemma bop\_full\_reduce\_selective : \\$selective \rightarrow selective$ $S$ $(brel\_reduce$ $r$ $eqS)$ $(bop\_full\_reduce$ $r$ $bS).$  
+\item Lemma bop\_full\_reduce\_exists\_id : \\$uop\_preserves\_id$ $S$ $eqS$ $bS$ $u_S \rightarrow\\ bop\_exists\_id$ $S$ $eqS$ $bS \rightarrow\\ bop\_exists\_id$ $S$ $(brel\_reduce$ $r$ $eqS)$ $(bop\_full\_reduce$ $r$ $bS).$ 
+\item Lemma bop\_full\_reduce\_exists\_ann : \\$uop\_preserves\_ann$ $S$ $eqS$ $bS$ $u_S \rightarrow\\ bop\_exists\_ann$ $S$ $eqS$ $bS \rightarrow\\ bop\_exists\_ann$ $S$ $(brel\_reduce$ $r$ $eqS)$ $(bop\_full\_reduce$ $r$ $bS).$ 
+\end{itemize}
+We find that we only use the left/right invariant properties of reduction to prove the property of the associative.
+Thus, maybe there is more than one way to axiomatise a reduction. 
+In the following chapters we will introduce a new associative: the pseudo associative, and use it to prove the properties of reductions.
+\subsection{Isomorphic to Traditional Reduction}
+However, in fact it is not enough to justify the correctness of this new representation by establishment of these properties. We need to establish some isomorphisms to prove that this new reduction (brel\_reduce and bop\_full\_reduce) is equivalent to the $red_Type$ $red_eq$ and $red_bop$.
+\begin{itemize}
+\item Lemma red\_ref\_iso : brel\_reflexive red\_Type red\_eq $\leftrightarrow$ brel\_reflexive S (brel\_reduce r eqS).
+\item Lemma red\_sym\_iso : brel\_symmetric red\_Type red\_eq $\leftrightarrow$ brel\_symmetric S (brel\_reduce r eqS).
+\item Lemma red\_tran\_iso : brel\_transitive red\_Type red\_eq $\leftrightarrow$ brel\_transitive S (brel\_reduce r eqS).
+\item Lemma red\_cong\_iso : bop\_congruence red\_Type red\_eq red\_bop $\leftrightarrow$ bop\_congruence S (brel\_reduce r eqS) (bop\_full\_reduce r b).
+\item Lemma red\_bop\_ass\_iso : bop\_associative red\_Type red\_eq red\_bop $\leftrightarrow$ bop\_associative S eqS r b.
+\item Lemma red\_comm\_iso :  bop\_commutative red\_Type red\_eq red\_bop $\leftrightarrow$ bop\_commutative S (brel\_reduce r eqS) (bop\_full\_reduce r b).
+\item Lemma red\_exists\_id\_iso :  bop\_exists\_id red\_Type red\_eq red\_bop $\leftrightarrow$ bop\_exists\_id S (brel\_reduce r eqS) (bop\_full\_reduce r b).
+\end{itemize}
+Based on these proofs, we can conclude that binary reduced relationship and binary full reduced operator have the same properties as traditional reduction. They are both a form of reduction.\\
+This form of reduction can be well expressed in the outside world in terms of the unary operator.
+At the same time, we can also avoid (ease) the winding problem between the reduction and original problem set.
+\section{Reduced Semigroup}
+In the section of direct reduction, we defined the semigroup, and discovered that the direct reduced semigroup would lose the reduction information.
+Now we try to write reduction as a definition in the record of the semigroup.
+\begin{lstlisting}
+Record rsemigroup (S : Type) :=
+{
+   r_eq   : brel S
+;  r_rep  : unary_op S                      
+;  r_bop  : binary_op S
+;  r_eqv  : eqv_proofs S r_eq
+;  r_rpv  : reduction_eqv_proofs S r_eq r_rep                        
+;  r_sgp  : semigroup_proofs S r_eq r_bop
+}.
+
+Record commutative_rsemigroup (S : Type) :=
+{
+   cr_eq   : brel S
+;  cr_rep  : unary_op S                      
+;  cr_bop  : binary_op S
+;  cr_eqv  : eqv_proofs S cr_eq
+;  cr_rpv  : reduction_eqv_proofs S cr_eq cr_rep                        
+;  cr_sgp  : commutative_semigroup_proofs S cr_eq cr_bop
+}.
+\end{lstlisting}
+These two are rsemigroups that do not contain commutative properties and rsemigroups that contain commutative properties.
+Based on our previous experience, most of the time we will choose to directly use rsemigroups that contain commutative properties.\\
+We also define the conversion from rsemigroup to semigroup (actually omission the reduction part and its associated proof).
+\begin{lstlisting}
+Definition rsemigroup_to_semigroup (S : Type): 
+rsemigroup S -> semigroup S
+:= λ rsg,
+{|    
+   eq   := r_eq S rsg 
+;  bop  := r_bop S rsg 
+;  eqv  := r_eqv S rsg 
+;  sgp  := r_sgp S rsg
+|}.
+
+Definition commutative_rsemigroup_to_commutative_semigroup 
+(S : Type): 
+commutative_rsemigroup S -> commutative_semigroup S
+:= λ crsg,
+{|    
+   ceq   := cr_eq S crsg 
+;  cbop  := cr_bop S crsg 
+;  ceqv  := cr_eqv S crsg 
+;  csgp  := cr_sgp S crsg
+|}.
+\end{lstlisting}
+
+\subsection{Product Semigroup/RSemigroup}
+Similar as our direct reduced semigroup that defined in the previous section, it is really easy to construct an rsemigroup for a given type, binary relationship, unary operator (reduction) and binary operator. For some extent, defining an rsemigroup is even easier than we previously defined the direct reduced semigroup, because we show the reduction information obviously in the definition record. Further more we have conversion from rsemigroup to semigroup. In this process, the function omits the information of reduction and its related proof. However, those information and proofs are still be used in the definition of other properties (like commutative). Hence we can say that rsemigroup and semigroup are equivalent in most parts.\\\\
+The next step we need to focus on is how to combine two semigroups together.
+As I mentioned in the introduction, the CAS system will combine different semigroups (semirings) together (using direct product of lexicographic product) and discuss their characteristics. The example provided in the background part shows that the widest-shortest problem contains two different semirings and uses lexigraphic product to combine them together. Hence, we need to discuss on the combination of two semigroup at first.\\\\
+Initially we need to define the product of two eqv\_proof (the proof of properties of the binary relationship).\\
+Definition eqv\_proofs\_product : $  eqv\_proofs$ $S$ $eqS \rightarrow eqv\_proofs$ $T$ $eqT \rightarrow eqv\_proofs$ $(S * T)$ $(brel_product$ $eqS$ $eqT)$.\\\\
+Then we need to define the product of two semigroup\_proof (the proof of properties of the binary operator).\\
+Definition sg\_proofs\_product : $(semigroup\_proofs$ $S$ $eqS$ $bS) \rightarrow (semigroup\_proofs$ $T$ $eqT$ $bT)
+               \rightarrow semigroup\_proofs$ $(S * T)$ $(brel\_product$ $eqS$ $eqT )$ $(bop\_product$ $bS$ $bT)$.\\
+Because we also have a commutative version of semigroup proof, then we can derive a similar construction.\\
+Definition sg\_proofs\_commutative\_product : $(commutative\_semigroup\_proofs$ $S$ $eqS$ $bS) \rightarrow (commutative\_semigroup\_proofs$ $T$ $eqT$ $bT)
+               \rightarrow commutative\_semigroup\_proofs$ $(S * T)$ $(brel\_product$ $eqS$ $eqT )$ $(bop\_product$ $bS$ $bT)$.\\\\
+Next we can define a simple semigroup combinator for our direct semigroup.\\
+Definition semigroup\_product : $semigroup$ $S \rightarrow semigroup$ $T \rightarrow semigroup$ $(S * T)$.\\
+Definition commutative\_semigroup\_product : $commutative\_semigroup$ $S \rightarrow commutative\_semigroup$ $T \rightarrow commutative\_semigroup$ $(S * T)$.\\
+
+Furthermore, because our rsemigroup has the information of reduction, it need the proof of product of two reduction proofs.\\
+Definition reduction\_eqv\_proofs\_product :$ 
+  reduction\_eqv\_proofs$ $S$ $eqS$ $repS \rightarrow
+  reduction\_eqv\_proofs$ $T$ $eqT$ $repT \rightarrow
+      reduction\_eqv\_proofs$ $(S * T)$ $(brel\_product$ $eqS$ $eqT)$ $(uop\_product$ $ repS$ $repT)$\\\\
+Finally we can define our new combinator, the product of two rsemigroup.\\
+Definition rsemigroup\_product : $rsemigroup$ $S \rightarrow rsemigroup$ $T \rightarrow rsemigroup$ $S * T)$.\\\\
+The appearance of this combinator means that we can combine two different semiring constructed on different reduction together to form a new semigroup. Next we have to focus on how to construct our reduction.
+\section{Annihilator Reduction}
+Next we have to focus on how to construct our reduction and we need to give some practical examples of reduction.
+Following the idea of the widest-shortest problem, we want to eliminate the element (edge) that has 0 capacity in our calculation. 
+Recalling our widest-shortest problem, each element is represented in such a form as (capacity, length), or a similar form. Therefore we hope to eliminate such a pair of element as (0, x). Considering that 0 plays a role of annihilator of the additive operator in the widest path problem, which is the first part of the product (actually lexicographic product) semiring, we construct a reduction in the same way.\\
+Definition bop\_reduce\_annihilators $\{S$ $T : Type\}$ $(aS : S)$ $(aT : T)$ $(eqS : brel$ $S)$ $(eqT : brel$ $ T) : unary\_op$ $ (S * T)
+  := \lambda p, let (s, t) := p$ $ in $ $if$ $ orb $ $(eqS$ $ s $ $aS) $ $(eqT $ $t $ $aT)$ $ then $ $(aS, aT) $ $else p.$
+In bop\_reduce\_annihilators, suppose $aS$ is the annihilator of $S$ and $aT$ is the annihilator of $T$, then this reduction will treat all pairs $(s,aT)$ and $(aS,t)$ as $(aS,aT)$.\\
+As we mentioned in the definition of reduction, we need to prove the reduction properties of this new reduction.
+\begin{lstlisting}
+Lemma bop_reduce_annihilators_idempotent 
+(S T : Type) (aS : S) (aT : T) (eqS : brel S) (eqT : brel T) :
+  brel_reflexive S eqS -> brel_reflexive T eqT -> 
+  uop_idempotent (S * T) (brel_product eqS eqT) 
+  	(bop_reduce_annihilators aS aT eqS eqT).
+
+Lemma bop_reduce_annihilators_congruence 
+(S T : Type) (aS : S) (aT : T) (eqS : brel S) (eqT : brel T) :
+  brel_reflexive S eqS -> brel_symmetric S eqS -> 
+  brel_transitive S eqS -> 
+  brel_reflexive T eqT -> brel_symmetric T eqT -> 
+  brel_transitive T eqT -> 
+  uop_congruence (S * T) (brel_product eqS eqT) 
+  	(bop_reduce_annihilators aS aT eqS eqT).
+  	
+Lemma bop_reduce_annihilators_left_invariant
+      (S T : Type)(aS : S)(aT : T)
+      (eqS : brel S)eqT : brel T)
+      (bS : binary_op S)(bT : binary_op T)      
+  : brel_reflexive S eqS -> brel_reflexive T eqT -> 
+    bop_is_ann S eqS bS aS -> bop_is_ann T eqT bT aT -> 
+    bop_left_uop_invariant (S * T)
+      (brel_product eqS eqT)
+      (bop_full_reduce (bop_reduce_annihilators aS aT eqS eqT) 
+      			(bop_product bS bT))
+      (bop_reduce_annihilators aS aT eqS eqT).
+
+Lemma bop_reduce_annihilators_right_invariant
+      (S T : Type)(aS : S)(aT : T)
+      (eqS : brel S)eqT : brel T)
+      (bS : binary_op S)(bT : binary_op T)      
+  : brel_reflexive S eqS -> brel_reflexive T eqT -> 
+    bop_is_ann S eqS bS aS -> bop_is_ann T eqT bT aT ->     
+    bop_right_uop_invariant (S * T)
+      (brel_product eqS eqT)
+      (bop_full_reduce (bop_reduce_annihilators aS aT eqS eqT) 
+      			(bop_product bS bT))
+      (bop_reduce_annihilators aS aT eqS eqT).
+\end{lstlisting}
+
+\section{Pseudo Associative}
+In the previous case of annihilator reduction we found that since we had previously proved on the bop\_full\_reduce, so long as we can construct a reduction and prove its congruence, idempontent, left/right invariant properties, then we can easily prove all the properties of the reduction on the binary operator and construct a semigroup based on this reduction.\\
+Further we find that in the proof of the properties of the binary operator, we only use the properties of the left/right invariant to prove associative. This means that there is probably another kind of weaker prerequisite that could axiomatise a reduction. In fact, we did find such a precondition.\\
+For a given type $S$, binary relationship $=_S$, unary operator (reduction) $u_S$, binary operator $\oplus_S$:\\
+Definition bop\_pseudo\_associative $:= \forall s, t, u : S, u_S (b (u_S ((u_S (s)) \oplus_S (u_S (t)))) \oplus_S (u_S (u))) =_S u_S ( (u_S (s)) \oplus_S (u_S ( (u_S (t)) \oplus_S (u_S (u)))))$.\\
+At the same time, we can prove that pseudo associative is a sufficient condition for the binary operator to be associative on reduction.
+\begin{lstlisting}
+Lemma bop_full_reduce_pseudo_associative_implies_associative 
+(S : Type) (eqS : brel S) (r : unary_op S) (bS : binary_op S) :
+  brel_reflexive S eqS ->
+  brel_symmetric S eqS ->  
+  brel_transitive S eqS ->   
+  uop_idempotent S eqS r ->
+  uop_congruence S eqS r ->
+  bop_congruence S eqS bS ->
+  bop_pseudo_associative S eqS r bS -> 
+  bop_associative S (brel_reduce r eqS) (bop_full_reduce r bS). 
+         
+Lemma bop_full_reduce_associative_implies_pseudo_associative 
+(S : Type) (eqS : brel S) (r : unary_op S) (bS : binary_op S) :
+  brel_reflexive S eqS ->
+  brel_symmetric S eqS ->  
+  brel_transitive S eqS ->   
+  uop_idempotent S eqS r ->
+  uop_congruence S eqS r ->
+  bop_congruence S eqS bS ->
+  bop_associative S (brel_reduce r eqS) (bop_full_reduce r bS) ->
+      bop_pseudo_associative S eqS r bS. 
+\end{lstlisting}
+In fact, the two are almost equivalent at present.
+Therefore, when we later prove that a unary operator meets our reduction criteria, we only need to prove that its congruence, iteratorton, and pseudo associative which can also prove all the remaining properties.
+Take the previous annihilator reduction as an example, we can prove that this unary operator is pseudo associative at first.
+\begin{lstlisting}
+Lemma bop_reduce_annihilators_psedo_associative 
+(S T : Type)(aS : S)(aT : T)
+(eqS : brel S)(eqT : brel T)
+(bS : binary_op S)(bT : binary_op T): 
+brel_reflexive S eqS -> brel_reflexive T eqT ->
+brel_symmetric S eqS -> brel_symmetric T eqT ->
+brel_transitive S eqS -> brel_transitive T eqT -> 
+bop_associative S eqS bS ->
+bop_associative T eqT bT -> 
+bop_congruence S eqS bS ->
+bop_congruence T eqT bT -> 
+bop_is_ann S eqS bS aS ->
+bop_is_ann T eqT bT aT ->
+bop_pseudo_associative (S * T) 
+	(brel_product eqS eqT) 
+	(bop_reduce_annihilators aS aT eqS eqT) (bop_product bS bT) .
+\end{lstlisting}
+
+The associative property of annihilator reduction can then also be demonstrated, and the same semigroup construction as above can be performed.\\\\
+
+Here, we have reason to believe that we can make some non-traditional reduction into our study after satisfying the pseudo associative even if they do not meet the left/right invariant property.
+
+\section{Predicate Reduction}
 \chapter{Evaluation} 
 
-For any practical projects, you should almost certainly have
-some kind of evaluation, and it's often useful to separate 
-this out into its own chapter. \\\\\\
+%For any practical projects, you should almost certainly have
+%some kind of evaluation, and it's often useful to separate 
+%this out into its own chapter. \\\\\\
 
 
 \chapter{Summary and Conclusions} 
 
-As you might imagine: summarizes the dissertation, and draws 
-any conclusions. Depending on the length of your work, and 
-how well you write, you may not need a summary here. 
-
-You will generally want to draw some conclusions, and point
-to potential future work. 
+%As you might imagine: summarizes the dissertation, and draws 
+%any conclusions. Depending on the length of your work, and 
+%how well you write, you may not need a summary here. 
+%
+%You will generally want to draw some conclusions, and point
+%to potential future work. 
 
 
 
