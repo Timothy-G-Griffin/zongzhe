@@ -248,3 +248,42 @@ Definition commutative_semigroup_product : ∀ {S T : Type},  commutative_semigr
   
 End Product_Semigroup.
 
+Section ProductProduct. 
+
+Variable S  : Type. 
+Variable T  : Type. 
+Variable rS : brel S. 
+Variable rT : brel T.
+Variable wS : S.
+Variable wT : T.
+Variable addS  mulS : binary_op S. 
+Variable addT mulT : binary_op T. 
+
+Notation "a =S b"  := (rS a b = true) (at level 15).
+Notation "a =T b"  := (rT a b = true) (at level 15).
+Notation "a +S b"  := (addS a b) (at level 15).
+Notation "a +T b"  := (addT a b) (at level 15).
+Notation "a *S b"  := (mulS a b) (at level 15).
+Notation "a *T b"  := (mulT a b) (at level 15).
+
+Notation "a <*> b" := (brel_product a b) (at level 15).
+Notation "a [*] b" := (bop_product a b) (at level 15).
+
+
+
+(* note : should be able to abstract away and universally quantfied predicate .... *) 
+
+Lemma bop_product_left_distributive : 
+      bop_left_distributive S rS addS mulS → 
+      bop_left_distributive T rT addT mulT → 
+         bop_left_distributive (S * T) (rS <*> rT) (addS [*] addT) (mulS [*] mulT). 
+Proof. intros ldS ldT [s1 t1] [s2 t2] [s3 t3]. simpl. rewrite ldS, ldT.  simpl. reflexivity. Defined. 
+
+
+Lemma bop_product_right_distributive : 
+      bop_right_distributive S rS addS mulS → 
+      bop_right_distributive T rT addT mulT → 
+         bop_right_distributive (S * T) (rS <*> rT) (addS [*] addT) (mulS [*] mulT). 
+Proof. intros lrS lrT [s1 t1] [s2 t2] [s3 t3]. simpl. rewrite lrS, lrT.  simpl. reflexivity. Defined. 
+
+End ProductProduct. 

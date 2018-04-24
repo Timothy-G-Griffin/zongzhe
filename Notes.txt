@@ -1,0 +1,150 @@
+
+Variable zeroS_is_add_id  : bop_is_id S eqS addS zeroS.
+Variable oneS_is_add_ann  : bop_is_ann S eqS addS oneS.
+Variable zeroS_squ        : bop_self_square S eqS addS zeroS. (* ∀ a b : S,  eqS (addS a b) zeroS = true -> (eqS a zeroS = true) * (eqS b zeroS = true). *) 
+
+Variable oneS_is_mul_id   : bop_is_id S eqS mulS oneS.
+Variable zeroS_is_mul_ann : bop_is_ann S eqS mulS zeroS.
+Variable zeroS_div        : bop_self_divisor S eqS mulS zeroS. (* ∀ a b : S,  eqS (mulS a b) zeroS = true -> (eqS a zeroS = true) + (eqS b zeroS = true). *) 
+
+  Variable oneS_not_zeroS : eqS oneS zeroS = false.
+
+
+
+
+
+
+================ the story ==================================================
+1) reductions introduced by Wongseelashote (call this "traditional reductions") 
+2) Gurney and L11 claimed reductions could be used for "non-traditional" reductions 
+    such as elementary paths and combining elementary paths with lex product. 
+3) However, Gurney and L11 never worked out the details. 
+4) Dissertation works out the details and discovers that traditional theory works for 
+    multiplicative operations, but not for additive ones. 
+5) This leads to a generalisation of reductions! Pseudo-associativity .... 
+6) Now show that we can build semirings using this non-traditional theory.
+==============================================================================
+
+About "predicate reductions" :
+
+   predicate reduction is inspired by a multiplicative 
+   operators mulS and mulT with annihilators aS and aT. 
+   Define 
+
+   P(a, b) = (is_ann S mulS a) or (is_ann T mulT b) 
+
+   bop_product mulS mulT (a, b) (c, d) = (mulS a c, mulT b d) 
+
+   Note that this has a very strong property, 
+
+   C: P(a, b) + P(c, d) -> P(bop_product (a, b) (c, d)).
+
+   We then define the reduction as 
+
+      r(a, b) = if P(a, b) then (aS, aT) else (a, b). 
+
+   But what about the additive version? 
+   Here we immagine semirings with addS and addT, 
+   and aS and aT are the ids --- so 
+
+    (is_ann S mulS a) iff (is_id S addS a) 
+
+    (is_ann T mulT b) iff (is_id T addT b) 
+
+   Let us consider two additive products: 
+
+      bop_product addS addT (a, b) (c, d), and 
+      bop_llex_product addS addT (a, b) (c, d). 
+
+   However, in both cases C does not hold!  So 
+   we must find another condition (that makes at least 
+   pseudo-associativity hold). Note that 
+
+   D1 : P(bop_product addS addT (a, b) (c, d)) -> P(a, b) + P(c, d) 
+   D2 : P(bop_llex_product addS addT (a, b) (c, d)) -> P(a, b) + P(c, d) 
+
+   as long as ids cannot be produced from addition of non-ids. 
+
+   Note: IN THIS CASE 
+
+   D3 : P(bop_product mulS mulT (a, b) (c, d)) -> P(a, b) + P(c, d) 
+
+   as long as annihilators cannot be produced from addition of non-annihlators. 
+
+
+Another example: (or is this a predicate disjoint? or both?) 
+
+
+1) 
+   (Sigma*, lex, concat)
+            epsilon = ann(lex) = id(concat) 
+
+2) add zero (= infinity) 
+
+   (Sigma* + {infinity}, lex', concat')
+            infinity = id(lex) = ann(concat) 
+
+3) P(w) = has duplicate 
+
+   Note: 
+
+   P(w1 lex' w2) -> P(w1) + P(w2) 
+   P(w1) + P(w2) -> P(w1 concat' w2) 
+
+
+
+=============== Note on distributivity =============================
+
+    Distributivity is lost in the following example. 
+
+    S = finite sequence with < + infinty 
+    add = lex on sequence using < + id 
+    mul = concat + inf as ann 
+
+    note that this is distributive:    
+
+    p1 concat (p2 lex p3) == (p1 concat p2) lex (p1 concat p3)
+
+    Now, let P(p) iff there is a loop in p (a duplicate element). 
+    Suppose we have 
+
+           y < z 
+
+           x concat y : has loop 
+
+           x concat (y lex z) = x concat y : has loop  so r(x concat y) = infinity 
+
+           (x concat y) lex (x concat z) = infinity lex (x concat z) = x concat z.
+
+want
+
+      y + z = y and and P(x * y) -> P(x * z)  [POSSIBLE PROP FOR  (min, +) with ceiling]
+
+
+      a <= b -> forall c c*a <= c*b and a*c <= b*
+
+      a <= b -> r(a) <= r(b)            [POSSIBLE PROPERTY??? seems to work for ann-elim on pairs] 
+
+what does this mean in terms of pred_reduce?
+
+      a <= b -> if P(a) then s else a <= if P(b) then s else b
+      assume x <= s (s is max)
+
+      a <= b -> P(a) -> P(b)  [PERHAPS THIS IS ALL YOU NEED for (min,+) with ceiling?]
+
+  
+    Therefore, distributivity does not hold! 
+
+    Lesson?  Assumptions 
+
+     pred_bop_decompose S P add 
+     pred_bop_decompose S P mul 
+
+    are not enough for distributivity. 
+
+    Need 
+
+     pred_bop_decompose S P add 
+     pred_bop_decompose S P mul.
+
+

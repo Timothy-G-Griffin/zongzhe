@@ -9,73 +9,6 @@ Require Import CAS.brel_reduce.
 Require Import CAS.bop_full_reduce.
 
 (* 
-   predicate reduction. 
-
-   This reduction is inspired by a multiplicative 
-   operators mulS and mulT with annihilators aS and aT. 
-   Define 
-
-   P(a, b) = (is_ann S mulS a) or (is_ann T mulT b) 
-
-   bop_product mulS mulT (a, b) (c, d) = (mulS a c, mulT b d) 
-
-   Note that this has a very strong property, 
-
-   C: P(a, b) + P(c, d) -> P(bop_product (a, b) (c, d)).
-
-   We then define the reduction as 
-
-      r(a, b) = if P(a, b) then (aS, aT) else (a, b). 
-
-   But what about the additive version? 
-   Here we immagine semirings with addS and addT, 
-   and aS and aT are the ids --- so 
-
-    (is_ann S mulS a) iff (is_id S addS a) 
-
-    (is_ann T mulT b) iff (is_id T addT b) 
-
-   Let us consider two additive products: 
-
-      bop_product addS addT (a, b) (c, d), and 
-      bop_llex_product addS addT (a, b) (c, d). 
-
-   However, in both cases C does not hold!  So 
-   we must find another condition (that makes at least 
-   pseudo-associativity hold). Note that 
-
-   D1 : P(bop_product addS addT (a, b) (c, d)) -> P(a, b) + P(c, d) 
-   D2 : P(bop_llex_product addS addT (a, b) (c, d)) -> P(a, b) + P(c, d) 
-
-   as long as ids cannot be produced from addition of non-ids. 
-
-   Note: IN THIS CASE 
-
-   D3 : P(bop_product mulS mulT (a, b) (c, d)) -> P(a, b) + P(c, d) 
-
-   as long as annihilators cannot be produced from addition of non-annihlators. 
-
-
-Another example: (or is this a predicate disjoint? or both?) 
-
-First approach 
-
-1) 
-   (Sigma*, lex, concat)
-            epsilon = ann(lex) = id(concat) 
-
-2) add zero (= infinity) 
-
-   (Sigma* + {infinity}, lex', concat')
-            infinity = id(lex) = ann(concat) 
-
-3) P(w) = has duplicate 
-
-   Note: 
-
-   P(w1 lex' w2) -> P(w1) + P(w2) 
-   P(w1) + P(w2) -> P(w1 concat' w2) 
-
 
  *)
 
@@ -114,7 +47,6 @@ Proof. intros s x; compute; auto.
 Qed.
 
 
-(* this should use a general lemma about bop_full_reduce! *) 
 Lemma bop_fpr_congruence (s : S) (bS : binary_op S) :
   pred_congruence S eq P ->
   bop_congruence S eq bS ->  
@@ -482,19 +414,23 @@ Proof. intros P_true congP s_ann a b [Pa | Pb]; compute.
 Qed.
 
 
-Lemma bop_left_distributive_fpr_v2 :
+Lemma bop_fpr_left_distributive :
   ∀ (s : S) (add mul : binary_op S),
-     P(s) = true -> 
-    (∀ (a b : S), eq a b = true -> P a = P b) ->
-    (∀ (a b : S), P a = false -> P b = false -> P (add a b) = false) ->        
-    (∀ (a b : S), P a = false -> P b = false -> P (mul a b) = false) ->
-    bop_congruence S eq add ->     
-    bop_congruence S eq mul -> 
-    bop_is_id S eq add s ->     
-    bop_is_ann S eq mul s ->
-    bop_left_distributive S eq add mul ->
-    bop_left_distributive S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P add) (bop_fpr s P mul).
-Proof. intros s add mul P_true congP add_false mul_false cong_add cong_mul s_id s_ann ldist a b c.
+     pred_true S P s -> 
+     pred_congruence S eq P ->
+     pred_bop_decompose S P add ->
+     pred_bop_decompose S P mul ->          
+     bop_congruence S eq add ->     
+     bop_congruence S eq mul -> 
+     bop_is_id S eq add s ->     
+     bop_is_ann S eq mul s ->
+     bop_left_distributive S eq add mul ->
+       bop_left_distributive S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P add) (bop_fpr s P mul).
+Proof. intros s add mul P_true congP dadd dmul cong_add cong_mul s_id s_ann ldist a b c.
+       assert (add_false : ∀ (a b : S), P a = false -> P b = false -> P (add a b) = false).
+          apply pred_bop_decompose_contrapositive; auto. 
+       assert (mul_false : ∀ (a b : S), P a = false -> P b = false -> P (mul a b) = false).
+          apply pred_bop_decompose_contrapositive; auto.           
        compute.
        case_eq (P a); intro L; case_eq (P b); intro M; case_eq (P c); intro N;
        assert (addSS := s_id s); destruct addSS as [addSSL addSSR];
@@ -538,19 +474,19 @@ Proof. intros s add mul P_true congP add_false mul_false cong_add cong_mul s_id 
        assert (PmulAS := congP (mul a s) s mulASR). rewrite P_true in PmulAS. rewrite PmulAS. rewrite P_true.
        assert (mulAC := mul_false a c L N). rewrite mulAC. rewrite mulAC.
        assert (addSAC := s_id (mul a c)). destruct addSAC as [addSACL addSACR].
-       assert (PaddSAC := congP (add s (mul a c)) (mul a c) addSACL). rewrite mulAC in PaddSAC. rewrite PaddSAC. rewrite PaddSAC.
+       assert (PaddSAC := congP (add s (mul a c)) (mul a c) addSACL). rewrite mulAC in PaddSAC. rewrite PaddSAC. (* rewrite PaddSAC *) 
        assert (PmulASC := mul_false a (add s c) L PaddSC). rewrite PmulASC. rewrite PmulASC.
-       assert (mulASC := cong_mul a (add s c) a c (refS a) addSCL).
-       assert (K := tranS _ _ _ mulASC (symS _ _ addSACL)). exact K.
+       assert (mulASC := cong_mul a (add s c) a c (refS a) addSCL). rewrite P_true. rewrite PaddSAC. rewrite P_true. rewrite PaddSAC. rewrite P_true. 
+       assert (K := tranS _ _ _ mulASC (symS _ _ addSACL)). exact K. 
        assert (addBS := s_id b). destruct addBS as [addBSL addBSR].
        assert (PaddBS := congP (add b s) b addBSR). rewrite M in PaddBS. rewrite PaddBS. rewrite PaddBS.
        assert (PmulAB := mul_false a b L M). rewrite PmulAB. rewrite PmulAB.
        assert (mulAS := s_ann a). destruct mulAS as [mulASL mulASR].
        assert (PmulAS := congP (mul a s) s mulASR). rewrite P_true in PmulAS. rewrite PmulAS. rewrite P_true.
        assert (addSAB := s_id (mul a b)). destruct addSAB as [addSABL addSABR].
-       assert (PaddSAB := congP (add (mul a b) s) (mul a b) addSABR). rewrite PmulAB in PaddSAB. rewrite PaddSAB. rewrite PaddSAB.
+       assert (PaddSAB := congP (add (mul a b) s) (mul a b) addSABR). rewrite PmulAB in PaddSAB. rewrite PaddSAB. 
        assert (PmulSABC := mul_false a (add b s) L PaddBS). rewrite PmulSABC. rewrite PmulSABC.
-       assert (mulASB := cong_mul a (add b s) a b (refS a) addBSR).
+       assert (mulASB := cong_mul a (add b s) a b (refS a) addBSR). rewrite P_true. rewrite PaddSAB. rewrite P_true. rewrite PaddSAB. rewrite P_true. 
        assert (K := tranS _ _ _ mulASB (symS _ _ addSABR)). exact K.
        assert (addBC := add_false b c M N). rewrite addBC. rewrite addBC.
        assert (mulAB := mul_false a b L M). rewrite mulAB. rewrite mulAB.
@@ -561,19 +497,24 @@ Proof. intros s add mul P_true congP add_false mul_false cong_add cong_mul s_id 
 Qed.
 
 
-Lemma bop_right_distributive_fpr_v2 :
+Lemma bop_fpr_right_distributive :
   ∀ (s : S) (add mul : binary_op S),
-     P(s) = true -> 
-    (∀ (a b : S), eq a b = true -> P a = P b) ->
-    (∀ (a b : S), P a = false -> P b = false -> P (add a b) = false) ->        
-    (∀ (a b : S), P a = false -> P b = false -> P (mul a b) = false) ->
+     pred_true S P s -> 
+     pred_congruence S eq P ->
+     pred_bop_decompose S P add ->
+     pred_bop_decompose S P mul ->          
     bop_congruence S eq add ->     
     bop_congruence S eq mul -> 
     bop_is_id S eq add s ->     
     bop_is_ann S eq mul s ->
     bop_right_distributive S eq add mul ->
          bop_right_distributive S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P add) (bop_fpr s P mul).
-Proof. intros s add mul P_true congP add_false mul_false cong_add cong_mul s_id s_ann rdist a b c.
+Proof. intros s add mul P_true congP dadd dmul cong_add cong_mul s_id s_ann rdist a b c.
+       assert (add_false : ∀ (a b : S), P a = false -> P b = false -> P (add a b) = false).
+          apply pred_bop_decompose_contrapositive; auto. 
+       assert (mul_false : ∀ (a b : S), P a = false -> P b = false -> P (mul a b) = false).
+       apply pred_bop_decompose_contrapositive; auto.
+       compute in P_true.
        compute;case_eq (P a); intro L; case_eq (P b); intro M; case_eq (P c); intro N;
        assert (addSS := s_id s); destruct addSS as [addSSL addSSR];
        assert (PaddSS := congP (add s s) s addSSL);rewrite P_true in PaddSS. rewrite PaddSS. rewrite P_true.

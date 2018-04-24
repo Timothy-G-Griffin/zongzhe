@@ -160,8 +160,9 @@ Record sg_MA_proofs (S: Type) (eq : brel S) (b : binary_op S) (id : S) (ann : S)
   sg_MA_associative   : bop_associative S eq b
 ; sg_MA_congruence    : bop_congruence S eq b
 ; sg_MA_is_id         : bop_is_id S eq b id
-; sg_MA_is_ann        : bop_is_ann S eq b ann                             
-}.
+; sg_MA_squ           : bop_self_square S eq b id                                                                           
+; sg_MA_is_ann        : bop_is_ann S eq b ann
+; sg_MA_div           : bop_self_divisor S eq b ann                                                                                                           }.
 
 Record sg_CMA_proofs (S: Type) (eq : brel S) (b : binary_op S) (id : S) (ann : S) := 
 {
@@ -169,7 +170,10 @@ Record sg_CMA_proofs (S: Type) (eq : brel S) (b : binary_op S) (id : S) (ann : S
 ; sg_CMA_congruence    : bop_congruence S eq b
 ; sg_CMA_commutative   : bop_commutative S eq b
 ; sg_CMA_is_id         : bop_is_id S eq b id
-; sg_CMA_is_ann        : bop_is_ann S eq b ann                             
+; sg_CMA_squ           : bop_self_square S eq b id                                                                           
+; sg_CMA_is_ann        : bop_is_ann S eq b ann
+; sg_CMA_div           : bop_self_divisor S eq b ann
+; sg_CMA_one_not_zero  : eq ann id = false 
 }.
 
 Record sg_CSMA_proofs (S: Type) (eq : brel S) (b : binary_op S) (id : S) (ann : S) := 

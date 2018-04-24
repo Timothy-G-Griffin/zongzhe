@@ -242,43 +242,7 @@ Proof. intros S c P eq bS P_cong refS symS tranS cong accos H. unfold bop_fprd_a
        apply bop_pseudo_associative_fprd_add_ann; auto. 
 Qed. 
 
-(*  =============== Note on distributivity =============================
-
-    Distributivity is lost in the following example. 
-
-    S = finite sequence with < 
-    add = lex on sequence using < 
-    mul = concat
-
-    note that this is distributive:    
-
-    p1 concat (p2 lex p3) == (p1 concat p2) lex (p1 concat p3)
-
-    Now, let P(p) iff there is a loop in p (a duplicate element). 
-    Suppose we have 
-
-           y < z 
-
-           x concat y : has loop 
-
-           x concat (y lex z) = x concat y : has loop  so r(x concat y) = infinity 
-
-           (x concat y) lex (x concat z) = infinity lex (x concat z) = x concat z. 
-  
-    Therefore, distributivity does not hold! 
-
-    Lesson?  Assumptions 
-
-     pred_bop_decompose S P add 
-     pred_bop_compose S P mul
-
-    are not enough for distributivity. 
-
-    Need 
-
-     pred_bop_decompose S P add 
-     pred_bop_decompose S P mul.
-
+(* 
 *) 
 
 Lemma bop_left_distributive_full_predicate_reduce_disjoint : 
