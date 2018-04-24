@@ -476,3 +476,64 @@ Lemma red_bop_ann : uop_preserves_ann S eqS b r -> bop_exists_ann S eqS b -> bop
 
 
 End ReductionTheory.
+
+
+Section Distributivity.
+
+  
+  Variable S : Type.
+  Variable r : unary_op S.
+  Variable eq : brel S.
+  Variable refS : brel_reflexive S eq.  
+  Variable symS : brel_symmetric S eq.
+  Variable tranS : brel_transitive S eq.   
+  Variable r_cong : uop_congruence S eq r.  
+  Variable r_idem : uop_idempotent S eq r.  
+  Definition T : Type := red_Type S r eq.
+  Definition eqT : brel T := red_eq S r eq.
+  Variable add mul : binary_op S.
+  Variable add_cong : bop_congruence S eq add.
+  Variable mul_cong : bop_congruence S eq mul.   
+  Definition addT : binary_op T := red_bop S add r eq r_idem. 
+  Definition mulT : binary_op T := red_bop S mul r eq r_idem.
+
+  Lemma addT_mulT_left_distributive :
+    bop_left_uop_invariant S eq (bop_reduce r add) r ->
+    bop_right_uop_invariant S eq (bop_reduce r add) r ->
+    bop_right_uop_invariant S eq (bop_reduce r mul) r ->    
+    bop_left_distributive S eq add mul -> 
+    bop_left_distributive T eqT addT mulT.
+  Proof. intros ali ari mri ldist [a Pa] [b Pb] [c Pc]. unfold Pr in Pa, Pb, Pc.
+         compute. 
+         assert (H1 := mri a (add b c)). compute in H1. 
+         assert (H2 := r_left_and_right S add r eq symS tranS ali ari (mul a b) (mul a c)).
+         assert (H3 := ldist a b c). apply r_cong in H3. 
+         assert (H4 := tranS _ _ _ H1 H3).  
+         assert (H5 := tranS _ _ _ H4 H2).
+         exact H5.
+  Qed.
+
+Definition bop_pseudo_left_distributive (S : Type) (eq : brel S) (r : unary_op S) (add mul : binary_op S) 
+  := ∀ a b c : S, 
+  eq (r (mul (r a) (r (add (r b) (r c))))) (r (add (r (mul (r a) (r b))) (r (mul (r a) (r c))))) = true. 
+                                                                         
+  Lemma red_bop_left_dist_iso : bop_left_distributive T eqT addT mulT <-> bop_pseudo_left_distributive S eq r add mul. 
+Proof. split; intro H.
+         intros s1 s2 s3.  
+         assert (H1 := H (inj S r eq r_idem s1) (inj S r eq r_idem s2) (inj S r eq r_idem s3)). compute in H1.
+         exact H1. 
+         intros [s1 p1] [s2 p2] [s3 p3]. compute.
+         assert (H1 := H s1 s2 s3). compute in H1. unfold Pr in p1, p2, p3.
+         assert (H2 := add_cong _ _ _ _ p2 p3). apply r_cong in H2. 
+         assert (H3 := mul_cong _ _ _ _ p1 H2). apply r_cong in H3. 
+         assert (H4 := mul_cong _ _ _ _ p1 p2). apply r_cong in H4.
+         assert (H5 := mul_cong _ _ _ _ p1 p3). apply r_cong in H5.                   
+         assert (H6 := add_cong _ _ _ _ H4 H5). apply r_cong in H6. 
+         apply symS in H3.
+         assert (H7 := tranS _ _ _ H3 H1).         
+         assert (H8 := tranS _ _ _ H7 H6).         
+         exact H8.          
+Qed.
+
+  
+End Distributivity.   

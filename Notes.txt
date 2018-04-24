@@ -110,8 +110,7 @@ Another example: (or is this a predicate disjoint? or both?)
 
            y < z 
 
-           x concat y : has loop 
-
+           x concat y : has loop
            x concat (y lex z) = x concat y : has loop  so r(x concat y) = infinity 
 
            (x concat y) lex (x concat z) = infinity lex (x concat z) = x concat z.
@@ -131,6 +130,7 @@ what does this mean in terms of pred_reduce?
       assume x <= s (s is max)
 
       a <= b -> P(a) -> P(b)  [PERHAPS THIS IS ALL YOU NEED for (min,+) with ceiling?]
+      a = a + b -> P(a) -> P(b)  [PERHAPS THIS IS ALL YOU NEED for (min,+) with ceiling?]      
 
   
     Therefore, distributivity does not hold! 
