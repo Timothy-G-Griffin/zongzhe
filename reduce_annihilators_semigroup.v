@@ -273,7 +273,7 @@ let eqvT := ceqvi T sg2 in
 ;  ceqvi  := reduce_rap_eqv_proofs S T eqS eqT eqvS eqvT iS iT
 |}.
 
-
+(*
 Definition rap_add_product_sg_CMA_proofs (S T : Type)
            (eqS : brel S) (eqT : brel T)
            (eqvS : eqv_proofs S eqS) (eqvT : eqv_proofs T eqT)                       
@@ -323,3 +323,4 @@ let divT       := sg_CMA_div T eqT addT iT aT pT in
   ; sg_CMA_is_ann        := bop_rap_add_is_ann S T eqS eqT refS symS  tranS refT symT tranT iS aS iT aT addS  addT addS_cong addT_cong is_annS is_annT oneS_not_zeroS oneT_not_zeroT 
                                                      
 |}.
+*) 
