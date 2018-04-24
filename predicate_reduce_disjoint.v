@@ -6,6 +6,8 @@ Require Import CAS.brel_add_constant.
 Require Import CAS.bop_add_id.
 Require Import CAS.bop_add_ann. 
 Require Import CAS.bop_full_reduce. 
+Require Import CAS.properties. 
+Require Import CAS.structures.
 
 
 Definition uop_predicate_reduce_disjoint : ∀ {S : Type}, cas_constant -> (S -> bool) -> unary_op (cas_constant + S)
