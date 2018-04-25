@@ -120,7 +120,7 @@ want
       y + z = y and and P(x * y) -> P(x * z)  [POSSIBLE PROP FOR  (min, +) with ceiling]
 
 
-      a <= b -> forall c c*a <= c*b and a*c <= b*
+      a <= b -> forall c c*a <= c*b and a*c <= b*c
 
       a <= b -> r(a) <= r(b)            [POSSIBLE PROPERTY??? seems to work for ann-elim on pairs] 
 

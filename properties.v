@@ -149,3 +149,5 @@ Definition pred_bop_decompose (S : Type) (P : pred S) (bS : binary_op S)
 Definition pred_bop_compose (S : Type) (P : pred S) (bS : binary_op S) 
   := ∀ (a b : S), (P a = true) + (P b = true) -> P (bS a b) = true.
 
+Definition pred_preserve_order (S : Type) (P : pred S) (eqS : brel S) (bS : binary_op S)
+  := ∀ (a b : S), eqS (bS a b) a = true -> P a = true -> P b = true.
