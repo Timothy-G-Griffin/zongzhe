@@ -580,16 +580,32 @@ Proof. intros s add mul P_true congP dadd padd cmul cong_add cong_mul s_id s_ann
      assert (PaddSC := congP (add s c) c addSCL). rewrite N in PaddSC. rewrite PaddSC. rewrite PaddSC.
      assert (mulAS := s_ann a). destruct mulAS as [mulASL mulASR].
      assert (PmulAS := congP (mul a s) s mulASR). rewrite P_true in PmulAS. rewrite PmulAS. rewrite P_true.
-     case_eq (P (mul a c)); intros K. 
-     compute in padd. compute in dadd. compute in cmul. compute in congP.
-     assert (mulAC := mul_false a c L N). rewrite mulAC. rewrite mulAC.
+     case_eq (P (mul a c)); intros K;
+     assert (PA := congP (add s s) s addSSL); rewrite PaddSS in PA; rewrite <- PA;
+     apply symS in addSCL;
+     assert (mulASC := cong_mul a c a (add s c) (refS a) addSCL);
+     assert (PASC := congP (mul a c) (mul a (add s c)) mulASC); rewrite K in PASC; rewrite <- PASC.
+     rewrite <- PA. rewrite PaddSS. rewrite <- PA. auto.
+     rewrite <- PASC. rewrite K.
+     assert (addSAC := s_id (mul a c)). destruct addSAC as [addSACL addSACR].
+     assert (PaddSAC := congP (add s (mul a c)) (mul a c) addSACL). rewrite K in PaddSAC. rewrite PaddSAC. rewrite PaddSAC.
+     assert (J := tranS _ _ _ addSACL mulASC). apply symS in J. exact J.
+     (* assert (mulAC := mul_false a c L N). rewrite mulAC. rewrite mulAC.
      assert (addSAC := s_id (mul a c)). destruct addSAC as [addSACL addSACR].
      assert (PaddSAC := congP (add s (mul a c)) (mul a c) addSACL). rewrite mulAC in PaddSAC. rewrite PaddSAC. (* rewrite PaddSAC *) 
      assert (PmulASC := mul_false a (add s c) L PaddSC). rewrite PmulASC. rewrite PmulASC.
      assert (mulASC := cong_mul a (add s c) a c (refS a) addSCL). rewrite P_true. rewrite PaddSAC. rewrite P_true. rewrite PaddSAC. rewrite P_true. 
-     assert (K := tranS _ _ _ mulASC (symS _ _ addSACL)). exact K. 
+     assert (K := tranS _ _ _ mulASC (symS _ _ addSACL)). exact K.  *)
      assert (addBS := s_id b). destruct addBS as [addBSL addBSR].
      assert (PaddBS := congP (add b s) b addBSR). rewrite M in PaddBS. rewrite PaddBS. rewrite PaddBS.
+     case_eq (P (mul a b)); intros K.
+
+
+
+
+
+
+     
      assert (PmulAB := mul_false a b L M). rewrite PmulAB. rewrite PmulAB.
      assert (mulAS := s_ann a). destruct mulAS as [mulASL mulASR].
      assert (PmulAS := congP (mul a s) s mulASR). rewrite P_true in PmulAS. rewrite PmulAS. rewrite P_true.
