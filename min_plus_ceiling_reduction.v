@@ -172,6 +172,15 @@ Lemma bop_right_distributive_min_plus : bop_right_distributive nat brel_eq_nat m
 Proof. intros n1 n2 n3. compute.
    Admitted.  
 
+Lemma bop_is_ann_min_zero : bop_is_ann nat brel_eq_nat min 0.
+Proof. compute. intro s. split. auto.
+       induction s; auto.
+Qed.
+
+Lemma bop_is_id_plus_zero : bop_is_id nat brel_eq_nat plus 0.
+Proof. compute. intro s. induction s; auto. 
+Qed.
+
 
 
 End MinPlusCeiling.

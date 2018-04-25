@@ -30,7 +30,6 @@ Variable refS : brel_reflexive S eq.
 Variable symS : brel_symmetric S eq.
 Variable tranS : brel_transitive S eq.
 
-
 Lemma uop_predicate_reduce_congruence (s : S) :
   pred_congruence S eq P -> uop_congruence S eq (uop_predicate_reduce s P). 
 Proof. intros congP s1 s2; compute; intro H; compute; auto.
@@ -87,6 +86,17 @@ pred_preserve_order S P eq bS -> ∀ a b : S, eq (bS a b) a = true → P b = fal
 Proof. intros H a b M N.
      case_eq (P a); intro K.
      assert (A := H a b M K). rewrite N in A. discriminate. auto.
+Qed.
+
+Lemma pred_bop_preserve_order_congrapositive_v2 (bS : binary_op S) : 
+bop_selective S eq bS ->
+bop_commutative S eq bS ->
+pred_preserve_order S P eq bS -> ∀ a b : S, P b = true → P a = false -> eq (bS a b) a = true.
+Proof. intros sel com H a b M N.
+     assert (J:= sel a b). destruct J. auto.
+     assert (cab := com a b). apply symS in cab.
+     assert (cba := tranS _ _ _ cab e).
+     assert (A := H _ _ cba M). rewrite A in N. discriminate. 
 Qed.
 
 (*
@@ -519,26 +529,31 @@ Proof. intros s add mul P_true congP dadd dmul cong_add cong_mul s_id s_ann ldis
        assert (K := ldist a b c). exact K.
 Qed.
 
+Definition bop_preserve_pred (S : Type) (P : pred S) (bS : binary_op S)
+  := ∀ (a b : S), P a = true -> P b = true -> P (bS a b) = true.
+
 Lemma bop_fpr_left_distributive_v2 :
   ∀ (s : S) (add mul : binary_op S),
      pred_true S P s -> 
      pred_congruence S eq P ->
      pred_bop_decompose S P add ->
-     pred_preserve_order S P eq add ->
-     pred_bop_compose S P mul ->        
+     (* pred_preserve_order S P eq add ->
+     pred_bop_compose S P mul ->         *)
+     bop_preserve_pred S P add ->
      bop_congruence S eq add ->     
      bop_congruence S eq mul -> 
      bop_is_id S eq add s ->     
      bop_is_ann S eq mul s ->
      bop_left_distributive S eq add mul ->
        bop_left_distributive S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P add) (bop_fpr s P mul).
-Proof. intros s add mul P_true congP dadd padd cmul cong_add cong_mul s_id s_ann ldist a b c.
+(* Proof. intros s add mul P_true congP dadd padd cmul cong_add cong_mul s_id s_ann ldist a b c. *)
+Proof. intros s add mul P_true congP dadd app cong_add cong_mul s_id s_ann ldist a b c.
   assert (add_false : ∀ (a b : S), P a = false -> P b = false -> P (add a b) = false).
      apply pred_bop_decompose_contrapositive; auto.
-     assert (add_preseve : ∀ a b : S, eq (add a b) a = true → P b = false → P a = false).
+     (* assert (add_preseve : ∀ a b : S, eq (add a b) a = true → P b = false → P a = false).
      apply pred_bop_preserve_order_congrapositive; auto.
      assert (mul_false : ∀ (a b : S), P (mul a b) = false -> (P a = false) /\ (P b = false)).
-     apply pred_bop_compose_contrapositive; auto.
+     apply pred_bop_compose_contrapositive; auto. *)
      compute.
      case_eq (P a); intro L; case_eq (P b); intro M; case_eq (P c); intro N;
      assert (addSS := s_id s); destruct addSS as [addSSL addSSR];
@@ -581,45 +596,52 @@ Proof. intros s add mul P_true congP dadd padd cmul cong_add cong_mul s_id s_ann
      assert (mulAS := s_ann a). destruct mulAS as [mulASL mulASR].
      assert (PmulAS := congP (mul a s) s mulASR). rewrite P_true in PmulAS. rewrite PmulAS. rewrite P_true.
      case_eq (P (mul a c)); intros K;
-     assert (PA := congP (add s s) s addSSL); rewrite PaddSS in PA; rewrite <- PA;
+     rewrite P_true;
      apply symS in addSCL;
      assert (mulASC := cong_mul a c a (add s c) (refS a) addSCL);
      assert (PASC := congP (mul a c) (mul a (add s c)) mulASC); rewrite K in PASC; rewrite <- PASC.
-     rewrite <- PA. rewrite PaddSS. rewrite <- PA. auto.
+     rewrite P_true. rewrite PaddSS. rewrite P_true. auto.
      rewrite <- PASC. rewrite K.
      assert (addSAC := s_id (mul a c)). destruct addSAC as [addSACL addSACR].
      assert (PaddSAC := congP (add s (mul a c)) (mul a c) addSACL). rewrite K in PaddSAC. rewrite PaddSAC. rewrite PaddSAC.
-     assert (J := tranS _ _ _ addSACL mulASC). apply symS in J. exact J.
-     (* assert (mulAC := mul_false a c L N). rewrite mulAC. rewrite mulAC.
-     assert (addSAC := s_id (mul a c)). destruct addSAC as [addSACL addSACR].
-     assert (PaddSAC := congP (add s (mul a c)) (mul a c) addSACL). rewrite mulAC in PaddSAC. rewrite PaddSAC. (* rewrite PaddSAC *) 
-     assert (PmulASC := mul_false a (add s c) L PaddSC). rewrite PmulASC. rewrite PmulASC.
-     assert (mulASC := cong_mul a (add s c) a c (refS a) addSCL). rewrite P_true. rewrite PaddSAC. rewrite P_true. rewrite PaddSAC. rewrite P_true. 
-     assert (K := tranS _ _ _ mulASC (symS _ _ addSACL)). exact K.  *)
+     assert (J := tranS _ _ _ addSACL mulASC). apply symS in J. rewrite P_true. rewrite P_true. rewrite PaddSAC. exact J.
      assert (addBS := s_id b). destruct addBS as [addBSL addBSR].
      assert (PaddBS := congP (add b s) b addBSR). rewrite M in PaddBS. rewrite PaddBS. rewrite PaddBS.
-     case_eq (P (mul a b)); intros K.
-
-
-
-
-
-
-     
-     assert (PmulAB := mul_false a b L M). rewrite PmulAB. rewrite PmulAB.
-     assert (mulAS := s_ann a). destruct mulAS as [mulASL mulASR].
-     assert (PmulAS := congP (mul a s) s mulASR). rewrite P_true in PmulAS. rewrite PmulAS. rewrite P_true.
-     assert (addSAB := s_id (mul a b)). destruct addSAB as [addSABL addSABR].
-     assert (PaddSAB := congP (add (mul a b) s) (mul a b) addSABR). rewrite PmulAB in PaddSAB. rewrite PaddSAB. 
-     assert (PmulSABC := mul_false a (add b s) L PaddBS). rewrite PmulSABC. rewrite PmulSABC.
-     assert (mulASB := cong_mul a (add b s) a b (refS a) addBSR). rewrite P_true. rewrite PaddSAB. rewrite P_true. rewrite PaddSAB. rewrite P_true. 
-     assert (K := tranS _ _ _ mulASB (symS _ _ addSABR)). exact K.
+     case_eq (P (mul a b)); intros K;
+     apply symS in addBSR;
+     assert (mulABS := cong_mul a b a (add b s) (refS a) addBSR);
+     assert (PABS := congP (mul a b) (mul a (add b s)) mulABS); rewrite K in PABS; rewrite <- PABS;
+     assert (mulAS := s_ann a); destruct mulAS as [mulASL mulASR];
+     assert (PAS := congP (mul a s) s mulASR); rewrite P_true in PAS; rewrite PAS. 
+     rewrite P_true. rewrite PaddSS. rewrite P_true. auto.
+     rewrite <- PABS. rewrite K. rewrite P_true.
+     assert (addABS := s_id (mul a b)). destruct addABS as [addABSL addABSR].
+     assert (PaddABS := congP (add (mul a b) s) (mul a b) addABSR). rewrite K in PaddABS. rewrite PaddABS. rewrite P_true. rewrite P_true. rewrite PaddABS.
+     rewrite P_true.
+     assert (J := tranS _ _ _ addABSR mulABS). apply symS in J. exact J.
      assert (addBC := add_false b c M N). rewrite addBC. rewrite addBC.
-     assert (mulAB := mul_false a b L M). rewrite mulAB. rewrite mulAB.
-     assert (mulAC := mul_false a c L N). rewrite mulAC. rewrite mulAC.
-     assert (mulAABC := mul_false a (add b c) L addBC). rewrite mulAABC. rewrite mulAABC.
-     assert (addMABMAC := add_false (mul a b) (mul a c) mulAB mulAC). rewrite addMABMAC. rewrite addMABMAC.
-     assert (K := ldist a b c). exact K.
+     assert (addABAC := ldist a b c).
+     case_eq (P (mul a b)); intro J; case_eq (P (mul a c)); intro K.
+     assert (PABAC := app _ _ J K).
+     assert (PABC := congP _ _ addABAC). rewrite PABAC in PABC. rewrite PABC.
+     rewrite P_true. rewrite P_true. rewrite P_true. rewrite P_true. rewrite PaddSS. rewrite P_true. auto.
+     rewrite P_true. rewrite P_true. rewrite K. rewrite P_true. rewrite P_true.
+     assert (addACS := s_id (mul a c)). destruct addACS as [addACSL addACSR].
+     assert (PSAC := congP _ _ addACSL). rewrite K in PSAC. rewrite PSAC. rewrite PSAC.
+
+
+(* maybe I should use pred_bop_preserve_order_congrapositive_v2
+but, is that too strong? or too particular *)
+
+     admit.
+     rewrite J. rewrite P_true. rewrite P_true. rewrite P_true. rewrite P_true.
+     assert (addABS := s_id (mul a b)). destruct addABS as [addABSL addABSR].
+     assert (PSAB := congP _ _ addABSR). rewrite J in PSAB. rewrite PSAB. rewrite PSAB.
+     admit.
+     assert (PABAC := add_false _ _ J K).
+     assert (PABC := congP _ _ addABAC). rewrite PABAC in PABC. rewrite PABC. rewrite PABC.
+     rewrite J. rewrite K. rewrite PABAC. rewrite PABAC. exact addABAC.
+Admitted.
 
 Lemma bop_fpr_right_distributive :
   ∀ (s : S) (add mul : binary_op S),
