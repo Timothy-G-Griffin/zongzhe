@@ -83,6 +83,9 @@ Proof. intros n1 n2; intro H. compute.
        rewrite A. auto.
 Qed.
 
+Lemma uop_nat_idempontent (ceiling : nat): uop_idempotent nat brel_eq_nat (uop_predicate_reduce ceiling (P ceiling)).
+Proof. Admitted.
+
 Lemma uop_nat_congruence (ceiling : nat) : 
   uop_congruence nat brel_eq_nat (uop_predicate_reduce ceiling (P ceiling)).
 Proof. apply uop_predicate_reduce_congruence; auto.
@@ -137,6 +140,10 @@ Proof. unfold bop_commutative, min. intros s t.
        rewrite Min.min_comm at 1. apply brel_eq_nat_reflexive. 
       Qed.
 
+Lemma bop_min_selective : bop_selective nat brel_eq_nat min.
+Proof. unfold bop_selective, min. intros s t. 
+Admitted.
+
 
 Lemma beq_nat_plus_congruence : 
 ∀ s1 s2 t1 t2 : nat,
@@ -164,6 +171,7 @@ Proof. unfold bop_commutative, plus. intros s t.
        rewrite Nat.add_comm at 1. apply brel_eq_nat_reflexive. 
       Qed.
 
+
 Lemma bop_left_distributive_min_plus : bop_left_distributive nat brel_eq_nat min plus.
 Proof. intros n1 n2 n3. compute.
    Admitted.
@@ -181,6 +189,78 @@ Lemma bop_is_id_plus_zero : bop_is_id nat brel_eq_nat plus 0.
 Proof. compute. intro s. induction s; auto. 
 Qed.
 
+Lemma uop_ceiling_min_preserves_ann (ceiling : nat) :
+ uop_preserves_ann nat brel_eq_nat min (uop_nat ceiling).
+Proof. intros n H.
+Admitted.
 
+Lemma uop_ceiling_plus_preserves_id (ceiling : nat) :
+uop_preserves_id nat brel_eq_nat plus (uop_nat ceiling).
+Proof. intros n H. compute. induction n.
+Admitted.
+
+Definition bop_nat_min (ceiling : nat) : binary_op nat := bop_fpr ceiling (P ceiling) min.
+Definition bop_nat_plus (ceiling : nat) : binary_op nat := bop_fpr ceiling (P ceiling) plus.
+
+Lemma bop_nat_min_congruence (ceiling : nat) : bop_congruence nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling).
+Proof. apply bop_full_reduce_congruence; auto.
+  apply uop_predicate_reduce_congruence; auto.
+  apply brel_eq_nat_reflexive; auto.
+  unfold pred_congruence. apply P_congruence. 
+  apply bop_min_congruence; auto. 
+Qed.
+
+Lemma bop_nat_plus_congruence (ceiling : nat) : bop_congruence nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_plus ceiling).
+Proof. apply bop_full_reduce_congruence; auto.
+  apply uop_predicate_reduce_congruence; auto.
+  apply brel_eq_nat_reflexive; auto.
+  unfold pred_congruence. apply P_congruence. 
+  apply bop_plus_congruence; auto. 
+Qed.
+
+Lemma bop_nat_min_pseudo_associative (ceiling : nat) : bop_pseudo_associative nat brel_eq_nat (uop_nat ceiling)  min.
+Proof. Admitted.
+
+(* Lemma bop_nat_plus_pseudo_associative (ceiling : nat) : bop_pseudo_associative nat brel_eq_nat (uop_nat ceiling)  plus.
+Proof. Admitted. *)
+
+Lemma bop_nat_min_associative (ceiling : nat) : bop_associative nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling).
+Proof. apply bop_full_reduce_pseudo_associative_implies_associative; auto.
+  apply brel_eq_nat_reflexive; auto.
+  apply brel_eq_nat_symmetric; auto.
+  apply brel_eq_nat_transitive; auto. 
+  apply uop_nat_idempontent; auto.
+  apply uop_nat_congruence; auto.
+  apply bop_min_congruence; auto.
+  apply (bop_nat_min_pseudo_associative ceiling).
+Qed.
+
+Lemma bop_nat_plus_associative (ceiling : nat) : bop_associative nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_plus ceiling).
+Proof. apply bop_associative_fpr_compositional.
+  apply brel_eq_nat_reflexive; auto.
+  apply brel_eq_nat_symmetric; auto.
+  apply brel_eq_nat_transitive; auto.
+  apply P_true; auto.
+  apply P_congruence; auto.
+  apply P_plus_compose; auto.
+  apply bop_plus_congruence; auto.
+  apply bop_plus_associative; auto.
+Qed.  
+
+Lemma bop_nat_min_commutative (ceiling : nat) : bop_commutative nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling).
+Proof. apply bop_full_reduce_commutative; auto.
+  apply uop_predicate_reduce_congruence; auto.       
+  apply brel_eq_nat_reflexive; auto.
+  unfold pred_congruence. apply P_congruence.
+  apply bop_min_commutative; auto.
+Qed.
+
+Lemma bop_nat_plus_commutative (ceiling : nat) : bop_commutative nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_plus ceiling).
+Proof. apply bop_full_reduce_commutative; auto.
+  apply uop_predicate_reduce_congruence; auto.       
+  apply brel_eq_nat_reflexive; auto.
+  unfold pred_congruence. apply P_congruence.
+  apply bop_plus_commutative; auto.
+Qed.
 
 End MinPlusCeiling.
