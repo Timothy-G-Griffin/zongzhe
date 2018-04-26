@@ -191,7 +191,7 @@ Qed.
 
 Lemma uop_ceiling_min_preserves_ann (ceiling : nat) :
  uop_preserves_ann nat brel_eq_nat min (uop_nat ceiling).
-Proof. intros n H.
+Proof. unfold uop_preserves_ann. intros s H.
 Admitted.
 
 Lemma uop_ceiling_plus_preserves_id (ceiling : nat) :
@@ -235,6 +235,14 @@ Proof. apply bop_full_reduce_pseudo_associative_implies_associative; auto.
   apply (bop_nat_min_pseudo_associative ceiling).
 Qed.
 
+Lemma bop_nat_min_selective (ceiling : nat) : bop_selective nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling).
+Proof. apply bop_full_reduce_selective; auto.
+  apply brel_eq_nat_transitive; auto.
+  apply uop_nat_congruence; auto.
+  apply uop_nat_idempontent; auto.
+  apply bop_min_selective; auto.
+Qed.
+
 Lemma bop_nat_plus_associative (ceiling : nat) : bop_associative nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_plus ceiling).
 Proof. apply bop_associative_fpr_compositional.
   apply brel_eq_nat_reflexive; auto.
@@ -262,5 +270,115 @@ Proof. apply bop_full_reduce_commutative; auto.
   unfold pred_congruence. apply P_congruence.
   apply bop_plus_commutative; auto.
 Qed.
+
+Lemma bop_is_ann_ceiling_min_zero (ceiling : nat): bop_is_ann nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling) 0.
+Proof. apply bop_full_reduce_is_ann; auto. 
+  apply brel_eq_nat_reflexive; auto.
+  apply brel_eq_nat_transitive; auto.
+  apply uop_nat_congruence; auto.
+  apply bop_min_congruence; auto.
+  apply uop_ceiling_min_preserves_ann; auto.
+  apply bop_is_ann_min_zero; auto.
+Qed.
+
+Lemma bop_is_id_ceiling_plus_zero (ceiling : nat): bop_is_id nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_plus ceiling) 0.
+Proof. apply bop_full_reduce_is_id; auto. 
+  apply brel_eq_nat_reflexive; auto.
+  apply brel_eq_nat_transitive; auto.
+  apply uop_nat_congruence; auto.
+  apply uop_nat_idempontent; auto.
+  apply bop_plus_congruence; auto.
+  apply uop_ceiling_plus_preserves_id; auto.
+  apply bop_is_id_plus_zero; auto.
+Qed.
+
+
+Lemma bop_left_distributive_ceiling_min_plus (ceiling : nat): bop_left_distributive nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling) (bop_nat_plus ceiling).
+Proof. apply bop_fpr_left_distributive_v2; auto.
+  apply brel_eq_nat_reflexive; auto.
+  apply brel_eq_nat_symmetric; auto.
+  apply brel_eq_nat_transitive; auto.
+  apply P_true; auto.
+  apply P_congruence; auto.
+  apply P_min_decompose; auto.
+  apply P_min_preserve_order; auto.
+  apply bop_min_congruence; auto.
+  apply bop_plus_congruence; auto.
+  apply bop_min_selective; auto.
+  apply bop_min_commutative; auto.
+admit.
+admit.
+  apply bop_left_distributive_min_plus; auto.
+Admitted.
+
+Lemma bop_right_distributive_ceiling_min_plus (ceiling : nat): bop_right_distributive nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling) (bop_nat_plus ceiling).
+Proof. apply bop_fpr_right_distributive_v2; auto.
+  apply brel_eq_nat_reflexive; auto.
+  apply brel_eq_nat_symmetric; auto.
+  apply brel_eq_nat_transitive; auto.
+  apply P_true; auto.
+  apply P_congruence; auto.
+  apply P_min_decompose; auto.
+  apply P_min_preserve_order; auto.
+  apply bop_min_congruence; auto.
+  apply bop_plus_congruence; auto.
+  apply bop_min_selective; auto.
+  apply bop_min_commutative; auto.
+admit.
+admit.
+  apply bop_right_distributive_min_plus; auto.
+Admitted.
+
+Definition eqv_proofs_eq_nat : eqv_proofs nat brel_eq_nat 
+:= {| 
+     eqv_reflexive   := brel_eq_nat_reflexive 
+   ; eqv_transitive  := brel_eq_nat_transitive 
+   ; eqv_symmetric   := brel_eq_nat_symmetric
+   ; eqv_congruence  := brel_eq_nat_congruence
+   ; eqv_witness     := 0
+|}. 
+
+
+Definition min_sg_CSMA_proofs (ceiling : nat) : 
+sg_CSMA_proofs nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling) ? 0 
+:= {|
+  sg_CSMA_associative   := bop_nat_min_associative ceiling
+; sg_CSMA_congruence    := bop_nat_min_congruence ceiling
+; sg_CSMA_commutative   := bop_nat_min_commutative ceiling
+; sg_CSMA_selective     := bop_nat_min_selective ceiling                                         
+; sg_CSMA_is_id         := ?
+; sg_CSMA_is_ann        := bop_is_ann_ceiling_min_zero ceiling                           
+|}.
+
+Definition plus_sg_MA_proofs (ceiling : nat) : 
+sg_MA_proofs nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_plus ceiling) 0 ? 
+:={
+  sg_MA_associative   := bop_nat_plus_associative ceiling
+; sg_MA_congruence    := bop_nat_plus_congruence ceiling
+; sg_MA_is_id         := bop_is_id_ceiling_plus_zero ceiling                                                                           
+; sg_MA_is_ann        := ?                                                                                                         }.
+}.
+
+Definition min_plus_dioid_proofs (ceiling : nat) : 
+dioid_proofs nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling) (bop_nat_plus ceiling) ? 0 
+:= {  
+  dioid_left_distributive  := bop_left_distributive_ceiling_min_plus ceiling
+; dioid_right_distributive := bop_left_distributive_ceiling_min_plus ceiling                             
+; dioid_zero_is_mul_ann    := ?
+; dioid_one_is_add_ann     := bop_is_ann_ceiling_min_zero ceiling 
+}.
+
+Definition min_plus_dioid_S (ceiling : nat) : dioid_S nat 
+:= {|
+    dioid_S_eq         := brel_reduce (uop_nat ceiling) brel_eq_nat
+  ; dioid_S_add        := bop_nat_min ceiling
+  ; dioid_S_mul        := bop_nat_plusceiling                                  
+  ; dioid_S_zero       := ?
+  ; dioid_S_one        := 0
+  ; diode_S_eqv        := eqv_proofs_eq_nat
+  ; diode_S_add_pfs    := min_sg_CSMA_proofs
+  ; diode_S_mul_pfs    := plus_sg_MA_proofs                                      
+  ; dioid_S_pfs        := min_plus_dioid_proofs
+|}.
 
 End MinPlusCeiling.

@@ -163,6 +163,7 @@ Record sg_MA_proofs (S: Type) (eq : brel S) (b : binary_op S) (id : S) (ann : S)
 ; sg_MA_squ           : bop_self_square S eq b id                                                                           
 ; sg_MA_is_ann        : bop_is_ann S eq b ann
 ; sg_MA_div           : bop_self_divisor S eq b ann                                                                                                           }.
+}.
 
 Record sg_CMA_proofs (S: Type) (eq : brel S) (b : binary_op S) (id : S) (ann : S) := 
 {
