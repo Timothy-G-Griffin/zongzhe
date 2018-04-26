@@ -22,7 +22,7 @@ Section MinPlusCeiling.
 
 Definition brel_eq_nat  : brel nat  := Arith.EqNat.beq_nat.
 
-Definition P (ceiling : nat): nat -> bool := λ n, n <=? ceiling.
+Definition P (ceiling : nat): nat -> bool := λ n, ceiling <=? n.
 
 Definition uop_nat (ceiling : nat) : unary_op nat := uop_predicate_reduce ceiling (P ceiling).
 
@@ -83,8 +83,16 @@ Proof. intros n1 n2; intro H. compute.
        rewrite A. auto.
 Qed.
 
+Lemma P_true (ceiling : nat): pred_true nat (P ceiling) ceiling.
+Proof. compute. induction ceiling. auto. auto.
+Qed.
+
 Lemma uop_nat_idempontent (ceiling : nat): uop_idempotent nat brel_eq_nat (uop_predicate_reduce ceiling (P ceiling)).
-Proof. Admitted.
+Proof. intro n. unfold uop_predicate_reduce.
+       assert (A := P_true ceiling). 
+       case_eq (P ceiling n); intro K. rewrite A.  rewrite (brel_eq_nat_reflexive ceiling). auto.
+       rewrite K. rewrite (brel_eq_nat_reflexive n). auto.
+Qed.
 
 Lemma uop_nat_congruence (ceiling : nat) : 
   uop_congruence nat brel_eq_nat (uop_predicate_reduce ceiling (P ceiling)).
@@ -92,23 +100,6 @@ Proof. apply uop_predicate_reduce_congruence; auto.
       apply brel_eq_nat_reflexive; auto.
       unfold pred_congruence. apply P_congruence.
 Qed.
-
-Lemma P_true (ceiling : nat): pred_true nat (P ceiling) ceiling.
-Proof. compute. induction ceiling. auto. auto.
-Qed.
-
-Lemma P_min_decompose (ceiling : nat): pred_bop_decompose nat (P ceiling) min.
-Proof. intros n1 n2. 
-     Admitted.       
-
-
-Lemma P_plus_compose (ceiling : nat): pred_bop_compose nat (P ceiling) plus.
-Proof. intros n1 n2 H. destruct H as [H | H].
-     Admitted.
-
-Lemma P_min_preserve_order (ceiling : nat): pred_preserve_order nat (P ceiling) brel_eq_nat min.
-Proof. intros n1 n2 H1 H2.
-     Admitted.
 
 Lemma beq_nat_to_prop  : ∀ s t: nat, beq_nat s t = true -> s = t. 
 Proof.  induction s;  induction t; simpl; intro H; auto; discriminate. Defined. 
@@ -140,10 +131,17 @@ Proof. unfold bop_commutative, min. intros s t.
        rewrite Min.min_comm at 1. apply brel_eq_nat_reflexive. 
       Qed.
 
-Lemma bop_min_selective : bop_selective nat brel_eq_nat min.
-Proof. unfold bop_selective, min. intros s t. 
-Admitted.
+Lemma min_sel : ∀ s t : nat, (brel_eq_nat (Nat.min s t) s = true) + (brel_eq_nat (Nat.min s t) t = true).
+Proof. intros s t.
+       assert (A := min_dec s t). destruct A. 
+       left. rewrite e. apply brel_eq_nat_reflexive.
+       right. rewrite e. apply brel_eq_nat_reflexive.
+Qed.
 
+Lemma bop_min_selective : bop_selective nat brel_eq_nat min.
+Proof. unfold bop_selective, min. intros s t.
+       assert (A := min_sel s t). destruct A; auto.
+Qed.
 
 Lemma beq_nat_plus_congruence : 
 ∀ s1 s2 t1 t2 : nat,
@@ -171,14 +169,43 @@ Proof. unfold bop_commutative, plus. intros s t.
        rewrite Nat.add_comm at 1. apply brel_eq_nat_reflexive. 
       Qed.
 
+Lemma P_min_decompose (ceiling : nat): pred_bop_decompose nat (P ceiling) min.
+Proof. intros n1 n2 H.
+       assert (A := bop_min_selective n1 n2). destruct A.
+       left. assert (B := P_congruence ceiling _ _ e).
+       rewrite H in B. auto.
+       right. assert (B := P_congruence ceiling _ _ e).
+       rewrite H in B. auto.
+Qed.       
+
+
+Lemma P_plus_compose (ceiling : nat): pred_bop_compose nat (P ceiling) plus.
+Proof. intros n1 n2 H. destruct H as [H | H]; unfold P. unfold P in H.
+       apply leb_correct. unfold plus.
+       apply le_plus_trans.
+       apply leb_complete in H. auto.
+       apply leb_correct. unfold plus.
+       rewrite (Nat.add_comm n1 n2).
+       apply le_plus_trans.
+       apply leb_complete in H. auto.
+Qed.
+
+Lemma P_min_preserve_order (ceiling : nat): pred_preserve_order nat (P ceiling) brel_eq_nat min.
+Proof. intros n1 n2 H1 H2. unfold brel_eq_nat in H1. apply beq_nat_true in H1. 
+      unfold P in H2. apply leb_complete in H2.
+      unfold P.  apply leb_correct. rewrite <- H1 in H2. 
+      apply min_glb_r in H2. auto.
+Qed.
 
 Lemma bop_left_distributive_min_plus : bop_left_distributive nat brel_eq_nat min plus.
-Proof. intros n1 n2 n3. compute.
-   Admitted.
+Proof. intros n1 n2 n3.
+  rewrite Nat.add_min_distr_l. unfold plus. unfold min. apply brel_eq_nat_reflexive.
+Qed.
 
 Lemma bop_right_distributive_min_plus : bop_right_distributive nat brel_eq_nat min plus.
-Proof. intros n1 n2 n3. compute.
-   Admitted.  
+Proof. intros n1 n2 n3. 
+  rewrite Nat.add_min_distr_r. unfold plus. unfold min. apply brel_eq_nat_reflexive.
+Qed.
 
 Lemma bop_is_ann_min_zero : bop_is_ann nat brel_eq_nat min 0.
 Proof. compute. intro s. split. auto.
@@ -191,12 +218,27 @@ Qed.
 
 Lemma uop_ceiling_min_preserves_ann (ceiling : nat) :
  uop_preserves_ann nat brel_eq_nat min (uop_nat ceiling).
-Proof. unfold uop_preserves_ann. intros s H.
-Admitted.
+Proof. unfold uop_preserves_ann. intros s H. unfold brel_eq_nat.
+       unfold uop_nat. unfold uop_predicate_reduce.
+       assert (A := H ceiling). destruct A as [Al Ar].
+       unfold brel_eq_nat in Ar. apply beq_nat_true in Ar.
+       unfold P. rewrite Nat.eqb_eq.
+       case_eq (ceiling <=? s); intro K.
+       apply leb_complete in K. apply Nat.min_l in K. unfold min in Ar; rewrite Ar in K. auto. auto.      
+Qed.
 
 Lemma uop_ceiling_plus_preserves_id (ceiling : nat) :
 uop_preserves_id nat brel_eq_nat plus (uop_nat ceiling).
-Proof. intros n H. compute. induction n.
+Proof. intros s H.  unfold brel_eq_nat.
+  unfold uop_nat. unfold uop_predicate_reduce.
+  assert (A := H ceiling). destruct A as [Al Ar].
+  unfold brel_eq_nat in Ar. apply beq_nat_true in Ar.
+  unfold P. rewrite Nat.eqb_eq.
+  case_eq (ceiling <=? s); intro K.
+  apply leb_complete in K.
+  unfold plus in Ar.
+  admit. 
+  auto.      
 Admitted.
 
 Definition bop_nat_min (ceiling : nat) : binary_op nat := bop_fpr ceiling (P ceiling) min.
@@ -219,7 +261,7 @@ Proof. apply bop_full_reduce_congruence; auto.
 Qed.
 
 Lemma bop_nat_min_pseudo_associative (ceiling : nat) : bop_pseudo_associative nat brel_eq_nat (uop_nat ceiling)  min.
-Proof. Admitted.
+Proof. intros n1 n2 n3. unfold brel_eq_nat.  Admitted.
 
 (* Lemma bop_nat_plus_pseudo_associative (ceiling : nat) : bop_pseudo_associative nat brel_eq_nat (uop_nat ceiling)  plus.
 Proof. Admitted. *)
@@ -292,6 +334,15 @@ Proof. apply bop_full_reduce_is_id; auto.
   apply bop_is_id_plus_zero; auto.
 Qed.
 
+Lemma bop_is_id_ceiling_min_ceiling (ceiling : nat): bop_is_id nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling) ceiling.
+Proof. intros s. split; unfold uop_nat; unfold uop_predicate_reduce; unfold brel_reduce;
+       assert (A := bop_nat_min_selective ceiling ceiling s); destruct A; unfold  brel_eq_nat; 
+       unfold bop_nat_min; unfold P; unfold bop_fpr.
+     Admitted.
+
+Lemma bop_is_ann_ceiling_plus_ceiling (ceiling : nat): bop_is_ann nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_plus ceiling) ceiling.
+Proof. Admitted.
+
 
 Lemma bop_left_distributive_ceiling_min_plus (ceiling : nat): bop_left_distributive nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling) (bop_nat_plus ceiling).
 Proof. apply bop_fpr_left_distributive_v2; auto.
@@ -340,40 +391,40 @@ Definition eqv_proofs_eq_nat : eqv_proofs nat brel_eq_nat
 
 
 Definition min_sg_CSMA_proofs (ceiling : nat) : 
-sg_CSMA_proofs nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling) ? 0 
+sg_CSMA_proofs nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling) ceiling 0 
 := {|
   sg_CSMA_associative   := bop_nat_min_associative ceiling
 ; sg_CSMA_congruence    := bop_nat_min_congruence ceiling
 ; sg_CSMA_commutative   := bop_nat_min_commutative ceiling
 ; sg_CSMA_selective     := bop_nat_min_selective ceiling                                         
-; sg_CSMA_is_id         := ?
+; sg_CSMA_is_id         := bop_is_id_ceiling_min_ceiling ceiling
 ; sg_CSMA_is_ann        := bop_is_ann_ceiling_min_zero ceiling                           
 |}.
 
 Definition plus_sg_MA_proofs (ceiling : nat) : 
-sg_MA_proofs nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_plus ceiling) 0 ? 
-:={
+sg_MA_proofs nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_plus ceiling) 0 ceiling
+:= {|
   sg_MA_associative   := bop_nat_plus_associative ceiling
 ; sg_MA_congruence    := bop_nat_plus_congruence ceiling
 ; sg_MA_is_id         := bop_is_id_ceiling_plus_zero ceiling                                                                           
-; sg_MA_is_ann        := ?                                                                                                         }.
-}.
+; sg_MA_is_ann        := bop_is_ann_ceiling_plus_ceiling ceiling                                                                                                         }.
+|}.
 
 Definition min_plus_dioid_proofs (ceiling : nat) : 
 dioid_proofs nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling) (bop_nat_plus ceiling) ? 0 
-:= {  
+:= {|  
   dioid_left_distributive  := bop_left_distributive_ceiling_min_plus ceiling
 ; dioid_right_distributive := bop_left_distributive_ceiling_min_plus ceiling                             
 ; dioid_zero_is_mul_ann    := ?
 ; dioid_one_is_add_ann     := bop_is_ann_ceiling_min_zero ceiling 
-}.
+|}.
 
 Definition min_plus_dioid_S (ceiling : nat) : dioid_S nat 
 := {|
     dioid_S_eq         := brel_reduce (uop_nat ceiling) brel_eq_nat
   ; dioid_S_add        := bop_nat_min ceiling
   ; dioid_S_mul        := bop_nat_plusceiling                                  
-  ; dioid_S_zero       := ?
+  ; dioid_S_zero       := ceiling
   ; dioid_S_one        := 0
   ; diode_S_eqv        := eqv_proofs_eq_nat
   ; diode_S_add_pfs    := min_sg_CSMA_proofs
