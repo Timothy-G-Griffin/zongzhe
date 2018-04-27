@@ -24,6 +24,15 @@ Record commutative_semigroup_proofs (S: Type) (eq : brel S) (b : binary_op S) :=
 ; csg_commutative   : bop_commutative S eq b                                      
 }.
 
+
+Record commutative_selective_semigroup_proofs (S: Type) (eq : brel S) (b : binary_op S) := 
+{
+  cssg_associative   : bop_associative S eq b
+; cssg_congruence    : bop_congruence S eq b
+; cssg_commutative   : bop_commutative S eq b
+; cssg_selective     : bop_selective S eq b                                                                            
+}.
+
 Record commutative_semigroup_with_ann_proofs (S: Type) (eq : brel S) (b : binary_op S) (ann : S) := 
 {
   csgwa_associative   : bop_associative S eq b
@@ -163,7 +172,6 @@ Record sg_MA_proofs (S: Type) (eq : brel S) (b : binary_op S) (id : S) (ann : S)
 ; sg_MA_squ           : bop_self_square S eq b id                                                                           
 ; sg_MA_is_ann        : bop_is_ann S eq b ann
 ; sg_MA_div           : bop_self_divisor S eq b ann                                                                                                           }.
-}.
 
 Record sg_CMA_proofs (S: Type) (eq : brel S) (b : binary_op S) (id : S) (ann : S) := 
 {
@@ -201,7 +209,9 @@ Record sg_CSMA (S : Type) := {
 Record dioid_proofs (S: Type) (eq : brel S) (add mul : binary_op S) (zero : S) (one : S) :=
 {  
   dioid_left_distributive  : bop_left_distributive S eq add mul
-; dioid_right_distributive : bop_right_distributive S eq add mul                             
+; dioid_right_distributive : bop_right_distributive S eq add mul
+; dioid_zero_is_add_id     : bop_is_id S eq add zero
+; dioid_one_is_mul_id      : bop_is_id S eq mul one                                                      
 ; dioid_zero_is_mul_ann    : bop_is_ann S eq mul zero
 ; dioid_one_is_add_ann     : bop_is_ann S eq add one
 }.
@@ -214,20 +224,34 @@ Record dioid (S : Type) := {
   ; dioid_zero       : S
   ; dioid_one        : S
   ; diode_eqv        : eqv_proofs S dioid_eq
-  ; diode_add_pfs    : sg_CMA_proofs S dioid_eq dioid_add dioid_zero dioid_one
-  ; diode_mul_pfs    : sg_MA_proofs   S dioid_eq dioid_mul dioid_one  dioid_zero                                        
+  ; diode_add_pfs    : commutative_semigroup_proofs S dioid_eq dioid_add 
+  ; diode_mul_pfs    : semigroup_proofs S dioid_eq dioid_mul 
   ; dioid_pfs        : dioid_proofs S dioid_eq dioid_add dioid_mul dioid_zero dioid_one
 }.
 
-
-Record dioid_S (S : Type) := {
-    dioid_S_eq         : brel S  
-  ; dioid_S_add        : binary_op S
-  ; dioid_S_mul        : binary_op S                                   
-  ; dioid_S_zero       : S
-  ; dioid_S_one        : S
-  ; diode_S_eqv        : eqv_proofs S dioid_S_eq
-  ; diode_S_add_pfs    : sg_CSMA_proofs S dioid_S_eq dioid_S_add dioid_S_zero dioid_S_one
-  ; diode_S_mul_pfs    : sg_MA_proofs   S dioid_S_eq dioid_S_mul dioid_S_one  dioid_S_zero                                        
-  ; dioid_S_pfs        : dioid_proofs S dioid_S_eq dioid_S_add dioid_S_mul dioid_S_zero dioid_S_one
+Record commutative_dioid (S : Type) := {
+    cdioid_eq         : brel S  
+  ; cdioid_add        : binary_op S
+  ; cdioid_mul        : binary_op S                                   
+  ; cdioid_zero       : S
+  ; cdioid_one        : S
+  ; cdiode_eqv        : eqv_proofs S cdioid_eq
+  ; cdiode_add_pfs    : commutative_semigroup_proofs S cdioid_eq cdioid_add 
+  ; cdiode_mul_pfs    : commutative_semigroup_proofs S cdioid_eq cdioid_mul 
+  ; cdioid_pfs        : dioid_proofs S cdioid_eq cdioid_add cdioid_mul cdioid_zero cdioid_one
 }.
+
+
+Record commutative_selective_dioid (S : Type) := {
+    csdioid_eq         : brel S  
+  ; csdioid_add        : binary_op S
+  ; csdioid_mul        : binary_op S                                   
+  ; csdioid_zero       : S
+  ; csdioid_one        : S
+  ; csdiode_eqv        : eqv_proofs S csdioid_eq
+  ; csdiode_add_pfs    : commutative_selective_semigroup_proofs S csdioid_eq csdioid_add 
+  ; csdiode_mul_pfs    : commutative_semigroup_proofs S csdioid_eq csdioid_mul 
+  ; csdioid_pfs        : dioid_proofs S csdioid_eq csdioid_add csdioid_mul csdioid_zero csdioid_one
+}.
+
+
