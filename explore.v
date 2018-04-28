@@ -240,11 +240,36 @@ Section Experiments.
                      bop_left_distributive S (brel_reduce r eq) (bop_full_reduce r add) (bop_full_reduce r mul).
   Proof. split. intros H s1 s2 s3. 
          assert (K := H s1 s2 s3). compute in K. compute. apply r_cong in K. 
-         admit. 
+         assert (L := r_idem (add (r s2) (r s3))).
+         assert (J := mul_cong (r s1) (r (r (add (r s2) (r s3)))) (r s1) (r (add (r s2) (r s3))) (refS (r s1)) L).
+         apply r_cong in J. apply r_cong in J.
+         assert (M := tranS _ _ _ J K).
+         assert (N := r_idem (mul (r s1) (r s2))).
+         assert (O := r_idem (mul (r s1) (r s3))). apply symS in N. apply symS in O.
+         assert (P := add_cong    (r (mul (r s1) (r s2))) 
+                                  (r (mul (r s1) (r s3)))
+                               (r (r (mul (r s1) (r s2)))) 
+                               (r (r (mul (r s1) (r s3)))) N O).
+         apply r_cong in P. apply r_cong in P. assert (Q := tranS _ _ _ M P).
+         exact Q.
          intros H s1 s2 s3. compute.
          assert (K := H s1 s2 s3). compute in K. 
-         admit. 
-Admitted. 
+       assert (A := r_idem (mul (r s1) (r (r (add (r s2) (r s3)))))). apply symS in A.
+       assert (B := r_idem (add (r (r (mul (r s1) (r s2)))) (r (r (mul (r s1) (r s3)))))).
+       assert (C := tranS _ _ _ A K). assert (D := tranS _ _ _ C B).
+       assert (L := r_idem (add (r s2) (r s3))). 
+       assert (J := mul_cong (r s1) (r (r (add (r s2) (r s3)))) (r s1) (r (add (r s2) (r s3))) (refS (r s1)) L).
+       apply r_cong in J. apply symS in J.
+       assert (M := tranS _ _ _ J D).
+       assert (N := r_idem (mul (r s1) (r s2))).
+         assert (O := r_idem (mul (r s1) (r s3))). apply symS in N. apply symS in O.
+         assert (P := add_cong    (r (mul (r s1) (r s2))) 
+                                  (r (mul (r s1) (r s3)))
+                               (r (r (mul (r s1) (r s2)))) 
+                               (r (r (mul (r s1) (r s3)))) N O).
+                               apply r_cong in P. apply symS in P. assert (Q := tranS _ _ _ M P).
+    exact Q.
+Qed.
 
   
   Lemma testing: bop_associative S (brel_reduce r eq) (bop_full_reduce r add).
