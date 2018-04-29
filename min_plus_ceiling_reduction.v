@@ -336,6 +336,21 @@ Proof. intros m n. unfold bop_reduce. unfold uop_predicate_reduce.
   rewrite brel_eq_nat_reflexive; auto.
 Qed.
 
+Lemma bop_left_uop_invariant_plus (ceiling : nat) : bop_left_uop_invariant nat brel_eq_nat
+(bop_reduce
+   (uop_predicate_reduce ceiling (P ceiling)) plus)
+(uop_predicate_reduce ceiling (P ceiling)).
+Proof. intros m n. unfold bop_reduce. unfold uop_predicate_reduce.
+  case_eq (P ceiling m); intro K; assert (K' := K); unfold P in K.
+  apply leb_complete in K. unfold plus. unfold P. 
+  assert (A := le_plus_r n ceiling). rewrite plus_comm in A. apply leb_correct in A. rewrite A.
+  assert (B := le_plus_trans ceiling m n K).  apply leb_correct in B. rewrite B.
+  rewrite brel_eq_nat_reflexive; auto.
+  case_eq(P ceiling (plus m n)); intro L.
+  rewrite brel_eq_nat_reflexive; auto. 
+  rewrite brel_eq_nat_reflexive; auto.
+Qed. 
+
 Lemma bop_right_uop_invariant_plus (ceiling : nat) : bop_right_uop_invariant nat brel_eq_nat
 (bop_reduce
    (uop_predicate_reduce ceiling (P ceiling)) plus)
@@ -505,18 +520,12 @@ Lemma test_ldist (S : Type)(r :unary_op S)(eq : brel S)(add mul : binary_op S): 
   Lemma test_ldist2 (S : Type)(r :unary_op S)(eq : brel S)(add mul : binary_op S): bop_left_distributive S (brel_reduce r eq) (bop_reduce_args r add) (bop_reduce_args r mul)
                      <->
                      bop_left_distributive S (brel_reduce r eq) (bop_full_reduce r add) (bop_full_reduce r mul).
-  Proof. split. intros H s1 s2 s3. 
-         assert (K := H s1 s2 s3). compute in K. compute. 
-         (* apply r_cong in K. 
-         admit. 
-         intros H s1 s2 s3. compute.
-         assert (K := H s1 s2 s3). compute in K. 
-         admit.  *)
+  Proof. 
 Admitted. 
 
 Lemma bop_left_distributive_ceiling_min_plus (ceiling : nat): bop_left_distributive nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling) (bop_nat_plus ceiling).
-Proof. assert (A := test_ldist2 nat (uop_nat ceiling) brel_eq_nat min plus). rewrite <- A.
-       assert (B := test_ldist nat (uop_nat ceiling) brel_eq_nat min plus). rewrite B.
+Proof. assert (A := test_ldist2 nat (uop_nat ceiling) brel_eq_nat min plus); rewrite <- A; auto.
+       assert (B := test_ldist nat (uop_nat ceiling) brel_eq_nat min plus); rewrite B; auto.
        rewrite <- red_bop_left_dist_iso.
        apply addT_mulT_left_distributive.
        apply brel_eq_nat_symmetric; auto.
@@ -531,10 +540,44 @@ Proof. assert (A := test_ldist2 nat (uop_nat ceiling) brel_eq_nat min plus). rew
        apply  uop_nat_congruence; auto.
        apply bop_min_congruence; auto.
        apply bop_plus_congruence; auto.
-Qed.
+Admitted.
 
+Lemma test_rdist (S : Type)(r :unary_op S)(eq : brel S)(add mul : binary_op S): bop_right_distributive S (brel_reduce r eq) (bop_reduce_args r add) (bop_reduce_args r mul)
+                     <->
+                     bop_pseudo_right_distributive S eq r add mul.
+  Proof. split. intros H s1 s2 s3. 
+         assert (K := H s1 s2 s3). compute in K. 
+         exact K. 
+         intros H s1 s2 s3. compute.
+         assert (K := H s1 s2 s3). 
+         exact K.
+  Qed.
+Lemma test_rdist2 (S : Type)(r :unary_op S)(eq : brel S)(add mul : binary_op S): bop_right_distributive S (brel_reduce r eq) (bop_reduce_args r add) (bop_reduce_args r mul)
+                     <->
+                     bop_right_distributive S (brel_reduce r eq) (bop_full_reduce r add) (bop_full_reduce r mul).
+  Proof. 
+Admitted. 
 
 Lemma bop_right_distributive_ceiling_min_plus (ceiling : nat): bop_right_distributive nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling) (bop_nat_plus ceiling).
+Proof. assert (A := test_rdist2 nat (uop_nat ceiling) brel_eq_nat min plus); rewrite <- A; auto.
+  assert (B := test_rdist nat (uop_nat ceiling) brel_eq_nat min plus); rewrite B; auto.
+  rewrite <- red_bop_right_dist_iso.
+  apply addT_mulT_right_distributive.
+  apply brel_eq_nat_symmetric; auto.
+  apply brel_eq_nat_transitive; auto.
+  apply  uop_nat_congruence; auto.
+  apply bop_left_uop_invariant_min; auto.
+  apply bop_right_uop_invariant_min; auto. 
+  apply bop_left_uop_invariant_plus; auto.
+  apply bop_right_distributive_min_plus; auto.
+  apply brel_eq_nat_symmetric; auto.
+  apply brel_eq_nat_transitive; auto.
+  apply  uop_nat_congruence; auto.
+  apply bop_min_congruence; auto.
+  apply bop_plus_congruence; auto.
+Admitted.
+
+Lemma bop_right_distributive_ceiling_min_plus_v2 (ceiling : nat): bop_right_distributive nat (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_min ceiling) (bop_nat_plus ceiling).
 Proof. apply bop_fpr_right_distributive_v2; auto.
   apply brel_eq_nat_reflexive; auto.
   apply brel_eq_nat_symmetric; auto.
