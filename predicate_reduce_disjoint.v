@@ -72,6 +72,63 @@ Proof. intros S c P eq bS refS symS Pcong cong.
 Qed.        
 
 
+Lemma bop_left_uop_invariant_fprd_add_id :
+  ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (bS : binary_op S),
+    brel_reflexive S eq ->
+    brel_symmetric S eq ->    
+    bop_selective S eq bS ->
+    pred_congruence S eq P -> 
+    pred_preserve_order S P eq bS -> 
+       bop_left_uop_invariant (cas_constant + S) (brel_add_constant eq c) (bop_reduce (uop_predicate_reduce_disjoint c P) (bop_add_id bS c)) (uop_predicate_reduce_disjoint c P).
+Proof. intros S c P eq bS refS symS selS P_cong pres [r1 | l1] [r2 | l2]; compute;auto.
+       case_eq(P l2); intro H2; auto.
+       case_eq(P l1); intro H1; auto.  rewrite H1. apply refS. 
+       case_eq(P l1); intro H1; auto.
+       case_eq(P l2); intro H2; auto. 
+       case_eq(P (bS l1 l2)); intro H3; auto.
+       destruct (selS l1 l2) as [L | R].
+       apply P_cong in L. rewrite H1 in L. rewrite L in H3. discriminate H3.
+       apply P_cong in R. rewrite H2 in R. rewrite R in H3. discriminate H3.        
+       case_eq(P (bS l1 l2)); intro H3; auto. compute in pres.
+       destruct (selS l1 l2) as [L | R].       
+       assert (K := pres l1 l2 L H1).  rewrite K in H2. discriminate H2.        
+       apply P_cong in R. rewrite H2 in R. rewrite R in H3. discriminate H3.
+       destruct (selS l1 l2) as [L | R].       
+       apply P_cong in L. rewrite H1 in L. rewrite L in H3. discriminate H3.
+       apply symS. exact R. 
+       case_eq(P (bS l1 l2)); intro H3; auto.       
+Qed. 
+
+
+Lemma bop_right_uop_invariant_fprd_add_id :
+  ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (bS : binary_op S),
+    brel_reflexive S eq ->
+    brel_symmetric S eq ->
+    brel_transitive S eq ->        
+    bop_selective S eq bS ->
+    bop_commutative S eq bS ->    
+    pred_congruence S eq P -> 
+    pred_preserve_order S P eq bS -> 
+       bop_right_uop_invariant (cas_constant + S) (brel_add_constant eq c) (bop_reduce (uop_predicate_reduce_disjoint c P) (bop_add_id bS c)) (uop_predicate_reduce_disjoint c P).
+Proof. intros S c P eq bS refS symS tranS selS comS P_cong pres [r1 | l1] [r2 | l2]; compute;auto.
+       case_eq(P l2); intro H2; auto. rewrite H2. apply refS. 
+       case_eq(P l1); intro H1; auto.
+       case_eq(P l2); intro H2; auto. 
+       case_eq(P l1); intro H1; auto.
+       destruct (selS l1 l2) as [H4 | H4]; apply P_cong in H4; rewrite H4. rewrite H1; auto. 
+       rewrite H2; auto. 
+       case_eq(P (bS l1 l2)); intro H3; auto.
+       destruct (selS l1 l2) as [L | R].
+       apply P_cong in L. rewrite H1 in L. rewrite L in H3. discriminate H3. compute in pres.
+       assert (C := comS l2 l1).
+       assert (T := tranS _ _ _ C R). 
+       assert (K := pres l2 l1 T H2).  rewrite K in H1. discriminate H1.               
+       destruct (selS l1 l2) as [L | R].
+       apply symS. exact L. 
+       apply P_cong in R. rewrite H2 in R. rewrite R in H3. discriminate H3.
+       case_eq(P (bS l1 l2)); intro H3; auto.              
+Qed. 
+
 
 Lemma bop_pseudo_associative_fprd_add_id :
   ∀ (S : Type)(c : cas_constant) (P : S -> bool) (eq : brel S) (bS : binary_op S),

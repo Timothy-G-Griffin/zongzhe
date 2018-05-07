@@ -297,7 +297,88 @@ Proof. intros c bS Pc P_cong cong accos H isAnn. unfold bop_fpr.
 Qed. 
 
 
-(*
+Lemma bop_left_uop_invariant_predicate_reduce_v2 :
+  ∀ (s : S) (bS : binary_op S),
+    pred_true S P s ->
+    pred_congruence S eq P -> 
+    bop_selective S eq bS ->
+    bop_is_id S eq bS s ->        
+    pred_preserve_order S P eq bS ->
+         bop_left_uop_invariant S eq (bop_reduce (uop_predicate_reduce s P) bS) (uop_predicate_reduce s P).
+Proof. intros s bS P_true P_cong selS is_id pres s1 s2; compute; auto.
+       destruct (is_id s1) as [J1 J2].
+       destruct (is_id s2) as [M1 K2].              
+       case_eq(P s1); intro H1; auto. compute in pres.
+       assert(K1 := P_cong _ _ M1). rewrite K1. 
+       case_eq(P s2); intro H2; auto.
+       destruct (selS s1 s2) as [H3 | H3]; apply P_cong in H3.
+       rewrite H3. rewrite H1. apply refS. 
+       rewrite H3. rewrite H2. apply refS.
+       destruct (selS s1 s2) as [H3 | H3].
+       assert (K := pres s1 s2 H3 H1). rewrite K in H2. discriminate H2.
+       assert (K3 := P_cong _ _ H3). rewrite K3. rewrite H2.
+       apply symS in H3.
+       assert (K4 := tranS _ _ _ M1 H3). 
+       exact K4. 
+Qed. 
+
+Lemma bop_right_uop_invariant_predicate_reduce_v2 :
+  ∀ (s : S) (bS : binary_op S),
+    pred_true S P s ->
+    pred_congruence S eq P -> 
+    bop_selective S eq bS ->
+    bop_is_id S eq bS s ->        
+    pred_preserve_order S P eq bS ->
+    bop_right_uop_invariant S eq (bop_reduce (uop_predicate_reduce s P) bS) (uop_predicate_reduce s P).
+Admitted.
+
+
+
+Lemma conj1 :
+  ∀ (s : S) (bS : binary_op S),
+    pred_true S P s -> 
+    pred_congruence S eq P ->
+    bop_is_id S eq bS s -> 
+  bop_left_uop_invariant S eq (bop_reduce (uop_predicate_reduce s P) bS) (uop_predicate_reduce s P)
+  ->     pred_preserve_order S P eq bS.
+Proof. intros s bS P_true P_cong is_id H s1 s2 H1 H2.
+       assert (K := H s1 s2). compute in K. rewrite H2 in K.
+       apply P_cong in H1. rewrite H1 in K. rewrite H2 in K.
+       destruct (is_id s2) as [L R].
+       assert (J := P_cong _ _ L). rewrite J in K. 
+       case_eq(P s2); intro H3; auto.
+       rewrite H3 in K.
+       apply symS in K.
+       assert (H4 := tranS _ _ _ K L).
+       apply P_cong in H4.  rewrite P_true in H4.
+       rewrite H3 in H4.
+       discriminate H4.
+Qed.        
+
+Lemma conj2 :
+  ∀ (s : S) (bS : binary_op S),
+    pred_true S P s ->
+    pred_congruence S eq P -> 
+    bop_selective S eq bS ->
+    bop_is_id S eq bS s ->
+    
+    pred_preserve_order S P eq bS <-> 
+    bop_left_uop_invariant S eq (bop_reduce (uop_predicate_reduce s P) bS) (uop_predicate_reduce s P).
+Admitted.
+
+Lemma conj3 :
+  ∀ (s : S) (bS : binary_op S),
+    pred_true S P s ->
+    pred_congruence S eq P -> 
+    bop_selective S eq bS ->
+    bop_commutative S eq bS ->    
+    bop_is_id S eq bS s ->
+    
+    pred_preserve_order S P eq bS <-> 
+    bop_right_uop_invariant S eq (bop_reduce (uop_predicate_reduce s P) bS) (uop_predicate_reduce s P).
+Admitted.
+
+(*p
 
   Compositional 
 

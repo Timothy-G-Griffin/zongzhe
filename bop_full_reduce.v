@@ -211,3 +211,92 @@ Proof. intros refS transS r_cong congS H [ann p].
        exists ann.
        apply bop_full_reduce_is_ann; auto. 
 Qed.
+
+Section Distributivity.
+
+  Variable S : Type.
+  Variable eq : brel S.
+  Variable refS : brel_reflexive S eq.  
+  Variable symS : brel_symmetric S eq.
+  Variable tranS : brel_transitive S eq.   
+
+  Variable r : unary_op S.
+  Variable r_cong : uop_congruence S eq r.
+  Variable r_idem : uop_idempotent S eq r.
+  
+  Variable b : binary_op S.
+  Variable b_cong : bop_congruence S eq b.  
+
+  Definition T : Type := red_Type S r eq.
+  Definition eqT : brel T := red_eq S r eq.
+  Definition bT : binary_op T := red_bop S b r eq r_idem.   
+
+  Variable add mul : binary_op S.
+  Variable add_cong : bop_congruence S eq add.
+  Variable mul_cong : bop_congruence S eq mul.   
+  Definition addT : binary_op T := red_bop S add r eq r_idem. 
+  Definition mulT : binary_op T := red_bop S mul r eq r_idem.
+
+
+  Lemma bop_reduce_pseudo_left_distributivity_iso :
+                    bop_left_distributive S (brel_reduce r eq) (bop_reduce_args r add) (bop_reduce_args r mul)
+                     <->
+                     bop_pseudo_left_distributive S eq r add mul.
+  Proof. split. intros H s1 s2 s3. 
+         assert (K := H s1 s2 s3). compute in K. 
+         exact K. 
+         intros H s1 s2 s3. compute.
+         assert (K := H s1 s2 s3). 
+         exact K.
+  Qed.
+
+  Lemma bop_reduce_pseudo_right_distributivity_iso :
+                    bop_right_distributive S (brel_reduce r eq) (bop_reduce_args r add) (bop_reduce_args r mul)
+                     <->
+                     bop_pseudo_right_distributive S eq r add mul.
+  Admitted. 
+
+  Lemma bop_reduce_left_distributivity_iso :
+                     bop_left_distributive S (brel_reduce r eq) (bop_reduce_args r add) (bop_reduce_args r mul)
+                     <->
+                     bop_left_distributive S (brel_reduce r eq) (bop_full_reduce r add) (bop_full_reduce r mul).
+  Proof. split. intros H s1 s2 s3. 
+         assert (K := H s1 s2 s3). compute in K. compute. apply r_cong in K. 
+         assert (L := r_idem (add (r s2) (r s3))).
+         assert (J := mul_cong (r s1) (r (r (add (r s2) (r s3)))) (r s1) (r (add (r s2) (r s3))) (refS (r s1)) L).
+         apply r_cong in J. apply r_cong in J.
+         assert (M := tranS _ _ _ J K).
+         assert (N := r_idem (mul (r s1) (r s2))).
+         assert (O := r_idem (mul (r s1) (r s3))). apply symS in N. apply symS in O.
+         assert (P := add_cong    (r (mul (r s1) (r s2))) 
+                                  (r (mul (r s1) (r s3)))
+                               (r (r (mul (r s1) (r s2)))) 
+                               (r (r (mul (r s1) (r s3)))) N O).
+         apply r_cong in P. apply r_cong in P. assert (Q := tranS _ _ _ M P).
+         exact Q.
+         intros H s1 s2 s3. compute.
+         assert (K := H s1 s2 s3). compute in K. 
+       assert (A := r_idem (mul (r s1) (r (r (add (r s2) (r s3)))))). apply symS in A.
+       assert (B := r_idem (add (r (r (mul (r s1) (r s2)))) (r (r (mul (r s1) (r s3)))))).
+       assert (C := tranS _ _ _ A K). assert (D := tranS _ _ _ C B).
+       assert (L := r_idem (add (r s2) (r s3))). 
+       assert (J := mul_cong (r s1) (r (r (add (r s2) (r s3)))) (r s1) (r (add (r s2) (r s3))) (refS (r s1)) L).
+       apply r_cong in J. apply symS in J.
+       assert (M := tranS _ _ _ J D).
+       assert (N := r_idem (mul (r s1) (r s2))).
+         assert (O := r_idem (mul (r s1) (r s3))). apply symS in N. apply symS in O.
+         assert (P := add_cong    (r (mul (r s1) (r s2))) 
+                                  (r (mul (r s1) (r s3)))
+                               (r (r (mul (r s1) (r s2)))) 
+                               (r (r (mul (r s1) (r s3)))) N O).
+                               apply r_cong in P. apply symS in P. assert (Q := tranS _ _ _ M P).
+    exact Q.
+Qed.
+
+  Lemma bop_reduce_right_distributivity_iso :
+                     bop_right_distributive S (brel_reduce r eq) (bop_reduce_args r add) (bop_reduce_args r mul)
+                     <->
+                     bop_right_distributive S (brel_reduce r eq) (bop_full_reduce r add) (bop_full_reduce r mul).
+    Admitted. 
+
+End Distributivity.
