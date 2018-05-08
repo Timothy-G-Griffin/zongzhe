@@ -327,10 +327,28 @@ Lemma bop_right_uop_invariant_predicate_reduce_v2 :
     pred_true S P s ->
     pred_congruence S eq P -> 
     bop_selective S eq bS ->
+    bop_commutative S eq bS ->
     bop_is_id S eq bS s ->        
     pred_preserve_order S P eq bS ->
     bop_right_uop_invariant S eq (bop_reduce (uop_predicate_reduce s P) bS) (uop_predicate_reduce s P).
-Admitted.
+Proof. intros s bS P_true P_cong selS comS is_id pres s1 s2; compute; auto.
+       destruct (is_id s1) as [J1 J2].
+       destruct (is_id s2) as [M1 K2].              
+       case_eq(P s2); intro H1; auto. compute in pres.
+       assert(K1 := P_cong _ _ J2). rewrite K1. 
+       case_eq(P s1); intro H2; auto.
+       destruct (selS s1 s2) as [H3 | H3]; apply P_cong in H3.
+       rewrite H3. rewrite H2. apply refS. 
+       rewrite H3. rewrite H1. apply refS.
+       destruct (selS s1 s2) as [H3 | H3].
+       assert (K3 := P_cong _ _ H3). rewrite K3. rewrite H2.
+       apply symS in H3.
+       assert (K4 := tranS _ _ _ J2 H3). 
+       exact K4. 
+       assert (A := comS s2 s1).
+       assert (B := tranS _ _ _  A H3).
+       assert (C := pres s2 s1 B H1). rewrite C in H2. discriminate H2. 
+Qed. 
 
 
 
@@ -364,6 +382,12 @@ Lemma conj2 :
     
     pred_preserve_order S P eq bS <-> 
     bop_left_uop_invariant S eq (bop_reduce (uop_predicate_reduce s P) bS) (uop_predicate_reduce s P).
+Proof. intros s bs P_true P_cong selS idS.
+       split; intros H s1 s2.
+     compute. case_eq (P s1); intro K. compute in H. admit.
+     case_eq (P (bs s1 s2)); intro J; apply refS.
+     intros H1 H2. assert (A := H s1 s2). compute in A. rewrite H2 in A.
+
 Admitted.
 
 Lemma conj3 :

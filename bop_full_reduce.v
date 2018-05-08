@@ -254,7 +254,13 @@ Section Distributivity.
                     bop_right_distributive S (brel_reduce r eq) (bop_reduce_args r add) (bop_reduce_args r mul)
                      <->
                      bop_pseudo_right_distributive S eq r add mul.
-  Admitted. 
+Proof. split. intros H s1 s2 s3. 
+  assert (K := H s1 s2 s3). compute in K. 
+  exact K. 
+  intros H s1 s2 s3. compute.
+  assert (K := H s1 s2 s3). 
+  exact K.
+Qed.
 
   Lemma bop_reduce_left_distributivity_iso :
                      bop_left_distributive S (brel_reduce r eq) (bop_reduce_args r add) (bop_reduce_args r mul)
@@ -297,6 +303,37 @@ Qed.
                      bop_right_distributive S (brel_reduce r eq) (bop_reduce_args r add) (bop_reduce_args r mul)
                      <->
                      bop_right_distributive S (brel_reduce r eq) (bop_full_reduce r add) (bop_full_reduce r mul).
-    Admitted. 
+Proof. split. intros H s1 s2 s3. 
+         assert (K := H s1 s2 s3). compute in K. compute. apply r_cong in K. 
+         assert (L := r_idem (add (r s2) (r s3))).
+         assert (J := mul_cong (r (r (add (r s2) (r s3)))) (r s1) (r (add (r s2) (r s3))) (r s1)  L (refS (r s1))).
+         apply r_cong in J. apply r_cong in J.
+         assert (M := tranS _ _ _ J K).
+         assert (N := r_idem (mul (r s2) (r s1))).
+         assert (O := r_idem (mul (r s3) (r s1))). apply symS in N. apply symS in O.
+         assert (P := add_cong    (r (mul (r s2) (r s1))) 
+                                  (r (mul (r s3) (r s1)))
+                               (r (r (mul (r s2) (r s1)))) 
+                               (r (r (mul (r s3) (r s1)))) N O).
+         apply r_cong in P. apply r_cong in P. assert (Q := tranS _ _ _ M P).
+         exact Q.
+         intros H s1 s2 s3. compute.
+         assert (K := H s1 s2 s3). compute in K. 
+       assert (A := r_idem (mul (r (r (add (r s2) (r s3))))(r s1) )). apply symS in A.
+       assert (B := r_idem (add (r (r (mul (r s2) (r s1)))) (r (r (mul (r s3) (r s1)))))).
+       assert (C := tranS _ _ _ A K). assert (D := tranS _ _ _ C B).
+       assert (L := r_idem (add (r s2) (r s3))). 
+       assert (J := mul_cong (r (r (add (r s2) (r s3)))) (r s1) (r (add (r s2) (r s3))) (r s1)  L (refS (r s1))).
+       apply r_cong in J. apply symS in J.
+       assert (M := tranS _ _ _ J D).
+       assert (N := r_idem (mul (r s2) (r s1))).
+         assert (O := r_idem (mul (r s3) (r s1))). apply symS in N. apply symS in O.
+         assert (P := add_cong    (r (mul (r s2) (r s1))) 
+                                  (r (mul (r s3) (r s1)))
+                               (r (r (mul (r s2) (r s1)))) 
+                               (r (r (mul (r s3) (r s1)))) N O).
+                               apply r_cong in P. apply symS in P. assert (Q := tranS _ _ _ M P).
+    exact Q.
+Qed.
 
 End Distributivity.
