@@ -12,16 +12,18 @@ Require Import CAS.reduce_annihilators.
 Require Import CAS.reduction_theory.
 Require Import Coq.Lists.List.
 Require Import Coq.Bool.Bool. 
-(* Open Scope nat. *)
+Require Import Coq.Arith.Arith.
+Open Scope nat.
 Open Scope list_scope.
+
 
 
 Section ElementaryPath.
 
 Definition brel_list (S : Type)(eq : brel S)  := λ x y, brel_list eq x y.
 
-Variable S : Type.
-Variable eqS : brel S.
+Definition S := nat.
+Definition eqS := Arith.EqNat.beq_nat.
 Variable refS : brel_reflexive S eqS.
 Variable symS : brel_symmetric S eqS.
 Variable tranS : brel_transitive S eqS.
@@ -30,11 +32,11 @@ Variable c : cas_constant.
 Definition brel_list_S  : brel (list S) := brel_list S eqS.
 
 
+Lemma beq_nat_to_prop  : ∀ s t: nat, beq_nat s t = true -> s = t. 
+Proof.  induction s;  induction t; simpl; intro H; auto; discriminate. Defined. 
+
 Lemma brel_list_to_prop  : ∀ s t: list S, brel_list_S s t = true -> s = t.
 Proof. intros s t H.
-    induction s.  induction t; simpl.
-       auto. discriminate.
-       induction t. discriminate.
        Admitted.
 
 
@@ -111,46 +113,6 @@ Proof. intros x y m n.
     apply brel_list_congruence.
 Qed.
 
-(* Fixpoint ltl (S : Type)(m n :list S) :bool:=
-match m,n with
-|nil,nil => false
-|nil,_ => true
-|_,nil => false
-|_::ml,_::nl => ltl S ml nl
-end.
-
-Fixpoint eql (S : Type)(m n :list S) :bool:=
-match m,n with
-|nil,nil => true
-|nil,_ => false
-|_,nil => false
-|_::ml,_::nl => eql S ml nl
-end.
-
-Fixpoint gtl (S : Type)(m n :list S) :bool:=
-match m,n with
-|nil,nil => false
-|nil,_ => false
-|_,nil => true
-|_::ml,_::nl => gtl S ml nl
-end.
-
-Lemma order_list (l1 l2:list S) : ltl S l1 l2 || eql S l1 l2 || gtl S l1 l2 = true.
-Proof. case_eq (ltl S l1 l2); intro K. auto.
-       case_eq (eql S l1 l2); intro J. auto.
-       case_eq (gtl S l1 l2); intro L. auto.
-       compute in J,K,L. induction l1,l2. discriminate. discriminate. discriminate.
-       Admitted.
-
-Definition min : binary_op (list S) := λ x y,
-match x, y with
-| nil, _ => x
-| _ , nil => y
-| a::al, b::bl => if ltl S x y then x 
-                  else if gtl S x y then y
-                  else x
-end. *)
-
 Definition app := List.app.
 Definition appS := app S.
 Definition appT := bop_add_ann appS c.
@@ -175,6 +137,7 @@ Proof. intros H.
        case_eq(dup_in_list S eqS l2); intro L; auto.
 Qed. 
 
+Close Scope nat.
 Definition T := cas_constant + list S.
 
 Definition P : T -> bool :=  λ x,
@@ -332,7 +295,7 @@ Qed.
 Lemma neq_list_cons (a : S): forall l : list S, brel_list_S (a :: l) l = false.
 Proof. intros l. induction l. compute. auto.
        unfold brel_list_S,brel_list,basic.brel_list.
-       case_eq (eqS a a0); intros K; simpl. fold (basic.brel_list eqS).       
+       case_eq (eqS a a0); intros K; simpl. fold (basic.brel_list eqS).
        admit. 
        auto.
 Admitted.
@@ -417,5 +380,166 @@ Proof. intros s1 s2.
     case_eq(dup_in_list S eqS (appS l l0)); intro L; simpl; auto.
     apply brel_list_ref.
 Qed.
+
+
+Open Scope nat.
+
+Fixpoint dic_order (l1 l2 : list S) : bool :=
+match l1,l2 with
+| nil,nil => true
+| nil,_ => true
+| _,nil => false
+| x::xl, y :: yl => if eqS x y then true else dic_order xl yl
+end.
+
+Lemma dic_order_eq (l1 l2: list S) : length l1 =? length l2 = true -> dic_order l1 l2 = true -> l1 = l2.
+Proof. intros H1 H2. unfold dic_order in H2. apply beq_nat_true in H1. unfold length in H1.
+Admitted.
+
+Lemma dic_order_refl (l: list S) :  dic_order l l = true.
+Proof. induction l. auto. unfold dic_order. rewrite (refS a); auto.
+Qed.
+
+Lemma dic_order_cov (l1 l2 : list S) :  dic_order l1 l2 = false ->  dic_order l2 l1 = true.
+Proof. intro H. Admitted.
+
+
+Definition minS : binary_op (list S) :=
+λ l1 l2, if length l1 <? length l2 then l1
+         else if length l1 =? length l2 then 
+              if dic_order l1 l2 then l1 else l2
+         else l2.
+Definition minT := bop_add_id minS c.
+
+Lemma beq_list_minS_congruence : 
+   ∀ s1 s2 t1 t2 : list S,
+   brel_list_S s1 t1 = true
+   → brel_list_S s2 t2 = true → brel_list_S (minS s1 s2) (minS t1 t2) = true.
+Proof. intros s1 s2 t1 t2 H1 H2.
+       assert (A := brel_list_to_prop s1 t1 H1).
+       assert (B := brel_list_to_prop s2 t2 H2).
+       rewrite A,B. apply brel_list_ref.
+Qed.
+
+Lemma bop_list_minS_congruence : bop_congruence (list S) brel_list_S minS.
+Proof. unfold bop_congruence. unfold brel_list_S, minS.
+    intros s1 s2 t1 t2 H1 H2.
+    assert (A := brel_list_to_prop s1 t1 H1).
+    assert (B := brel_list_to_prop s2 t2 H2).
+    rewrite A,B. apply brel_list_ref.
+Qed.
+
+
+Lemma bop_list_minS_associative : bop_associative (list S) brel_list_S minS.
+Proof.  unfold bop_associative. intros s t u. unfold minS.
+        case_eq(length s <? length t);intro K.
+        case_eq(length t <? length u); intro L. rewrite K. 
+        apply Nat.ltb_lt in K. apply Nat.ltb_lt in L.
+        assert (A := lt_trans _ _ _ K L).
+        apply Nat.ltb_lt in A. rewrite A. apply brel_list_ref.
+        case_eq(length s <? length u);intro J.
+        case_eq(length t =? length u); intro M. 
+        apply beq_nat_true in M.
+        case_eq (dic_order t u); intro N.
+        rewrite M. rewrite J. apply brel_list_ref.
+        rewrite J. apply brel_list_ref.
+        rewrite J. apply brel_list_ref.
+        case_eq (length s =? length u); intro M.
+    assert (A : length t =? length u = false). 
+    apply beq_nat_true in M.
+    rewrite <- M.
+    apply Nat.ltb_lt in K.
+    admit.
+        rewrite A. rewrite M; simpl. rewrite J. apply brel_list_ref.
+        assert (A : length t =? length u = false).
+        apply Nat.ltb_lt in K. 
+        admit.
+        rewrite A. rewrite J,M. apply brel_list_ref.
+        case_eq(length s =? length t); intro J.
+        case_eq(dic_order s t); intro M.
+Admitted.
+
+
+Lemma bop_list_minS_selective : bop_selective (list S) brel_list_S minS.
+Proof.  unfold bop_selective. intros s t. unfold minS.
+        case_eq(length s <? length t); intro K. rewrite brel_list_ref; auto.
+        case_eq(length s =? length t); intro L.
+        case_eq(dic_order s t); intro M; rewrite brel_list_ref; auto.
+        rewrite brel_list_ref; auto.
+Qed.
+
+Lemma bop_list_minS_commutative : bop_commutative(list S) brel_list_S minS.
+Proof.  unfold bop_commutative. intros s t. unfold minS.
+    case_eq(length s <? length t); intro K. 
+    assert (A : length t <? length s = false). admit.
+    rewrite A.
+    assert (B : length t =? length s = false). admit.
+    rewrite B. rewrite brel_list_ref; auto.
+        case_eq(length s =? length t); intro L. assert (L' := L).
+        apply beq_nat_true in L. rewrite L. rewrite <- beq_nat_refl.
+        rewrite <- L at 1. rewrite K. 
+        case_eq (dic_order s t); intro M.
+        assert (A := dic_order_eq s t L' M). rewrite A. auto. rewrite dic_order_refl. rewrite brel_list_ref; auto.
+        assert (B := dic_order_cov s t M). rewrite B.  rewrite brel_list_ref; auto.
+        assert (A:length t <? length s = true). admit.    
+        rewrite A.
+        rewrite brel_list_ref; auto.
+Admitted.
+
+Lemma bop_list_minT_congruence : bop_congruence T brel_list_const minT.
+Proof. unfold bop_congruence.  unfold brel_list_const,brel_add_constant,minT, bop_add_id.
+    intros s1 s2 t1 t2 H1 H2.
+    destruct s1,t1,s2,t2;auto.
+    discriminate.
+    discriminate.
+    discriminate.
+    discriminate.
+    discriminate.
+    discriminate.
+    apply bop_list_minS_congruence; auto.
+Qed.
+
+Lemma bop_list_minT_associative : bop_associative T brel_list_const minT.
+Proof.  unfold bop_congruence.  unfold brel_list_const,brel_add_constant,minT,bop_add_id.
+    intros x y z.
+    destruct x, y, z; auto.
+    rewrite brel_list_ref; auto.
+    rewrite brel_list_ref; auto.
+    rewrite brel_list_ref; auto.
+    rewrite brel_list_ref; auto.
+    rewrite brel_list_ref; auto.
+    rewrite brel_list_ref; auto.
+    apply bop_list_minS_associative.
+Qed.
+
+Lemma bop_list_minT_selective : bop_selective T brel_list_const minT.
+Proof. unfold bop_selective.  unfold brel_list_const,brel_add_constant,minT, bop_add_id.
+    intros s t.
+    destruct s, t;auto.
+    rewrite brel_list_ref; auto.
+    rewrite brel_list_ref; auto.
+    apply bop_list_minS_selective; auto.
+Qed.
+
+Lemma bop_list_minT_commutative : bop_commutative T brel_list_const minT.
+Proof. unfold bop_commutative.  unfold brel_list_const,brel_add_constant,minT, bop_add_id.
+    intros s t.
+    destruct s, t;auto.
+    rewrite brel_list_ref; auto.
+    rewrite brel_list_ref; auto.
+    apply bop_list_minS_commutative; auto.
+Qed.
+
+Lemma P_min_decompose : pred_bop_decompose T P minT.
+Proof. intros n1 n2 H.
+        unfold P,minT,bop_add_id. 
+        destruct n1. auto.
+        destruct n2. auto.
+        unfold P in H.
+        assert (A := bop_list_minT_selective (inr l) (inr l0)).
+        destruct A. unfold minT,bop_add_id in H. apply brel_list_to_prop in e. rewrite e in H. left; auto.
+        unfold minT,bop_add_id in H. apply brel_list_to_prop in e. rewrite e in H. right; auto.
+Qed.
+
 
 End ElementaryPath.
