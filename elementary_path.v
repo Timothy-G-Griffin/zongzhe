@@ -323,12 +323,60 @@ Proof. compute. intro s. split. auto.
        induction s; auto.
 Qed.
 
+Lemma bop_is_id_app_const : bop_is_id T brel_list_const appT (inr nil).
+Proof. intro s. destruct s; unfold appT, appS,bop_add_ann,brel_list_const,brel_add_constant; auto.
+       unfold app. rewrite app_nil_r. rewrite app_nil_l.
+       rewrite (brel_list_ref l). auto.
+Qed.
+
+Lemma neq_list_cons (a : S): forall l : list S, brel_list_S (a :: l) l = false.
+Proof. intros l. induction l. compute. auto.
+       unfold brel_list_S,brel_list,basic.brel_list.
+       case_eq (eqS a a0); intros K; simpl. fold (basic.brel_list eqS).       
+       admit. 
+       auto.
+Admitted.
+
+Lemma neq_list_app (l : list S): forall a: S, forall l0 : list S, brel_list_S (a::l0 ++ l) l = false.
+Proof. intros a l0. 
+Admitted.
+
 Lemma uop_app_preserves_ann  :
  uop_preserves_ann T brel_list_const appT  uop_list.
 Proof. unfold uop_preserves_ann. intros s H. unfold brel_list_const.
        unfold uop_list. unfold uop_predicate_reduce.
        assert (A := H s). destruct A as [Al Ar].
-Admitted.
+       destruct s. simpl. auto.
+       simpl. simpl in Ar.
+       induction l. simpl. apply brel_list_ref.
+       simpl in Ar. unfold appS,app in Ar. 
+       unfold brel_list_S,brel_list,basic.brel_list in Ar. rewrite refS in Ar. simpl in Ar.
+       fold (basic.brel_list eqS) in Ar.
+       assert (A := H (inr l)). destruct A as [_ A].
+       unfold brel_list_const, appT,bop_add_ann,brel_add_constant in A.
+   apply brel_list_sym in A.
+   assert (B := brel_list_tran _ _ _ A Ar).
+   assert (C := neq_list_cons a l).
+   rewrite C in B. discriminate.
+Qed.
+
+Lemma uop_app_preserves_id  :
+ uop_preserves_id T brel_list_const appT  uop_list.
+Proof. unfold uop_preserves_id. intros s H. unfold brel_list_const.
+    unfold uop_list. unfold uop_predicate_reduce.
+    assert (A := H s). destruct A as [Al Ar].
+    destruct s. simpl. auto.
+    simpl. simpl in Ar.
+    induction l. simpl. apply brel_list_ref.
+    simpl in Ar. unfold appS,app in Ar. 
+    unfold brel_list_S,brel_list,basic.brel_list in Ar. rewrite refS in Ar. simpl in Ar.
+    fold (basic.brel_list eqS) in Ar.
+    assert (A := H (inr l)). destruct A as [A _].
+    unfold brel_list_const, appT,bop_add_ann,brel_add_constant in A.
+assert (C := neq_list_app l a l). unfold appS, app in A.
+rewrite app_comm_cons in C.
+rewrite C in A. discriminate.
+Qed.
 
 Definition bop_list_app : binary_op T := bop_fpr (inl c) P appT.
 
@@ -340,7 +388,34 @@ Proof. apply bop_full_reduce_congruence; auto.
   apply bop_list_appT_congruence; auto. 
 Qed.
 
-Lemma bop_left_uop_invariant_app : bop_left_uop_invariant T brel_list_const appT uop_list.
-Proof. 
+Lemma bop_left_uop_invariant_app : bop_left_uop_invariant T brel_list_const
+(bop_reduce
+   (uop_predicate_reduce (inl c) P) appT)
+(uop_predicate_reduce (inl c) P).
+Proof. intros s1 s2.
+    unfold bop_reduce,uop_predicate_reduce.
+    destruct s1;simpl. auto.
+    destruct s2;simpl.
+    case_eq (dup_in_list S eqS l); intros K; simpl; auto. 
+    case_eq(dup_in_list S eqS l); intro K; simpl.
+    assert (A:= dup_first_elem l l0 K). unfold appS,app. rewrite A. auto.
+    case_eq(dup_in_list S eqS (appS l l0)); intro L; simpl; auto.
+    apply brel_list_ref.
+Qed.
+
+Lemma bop_right_uop_invariant_app : bop_right_uop_invariant T brel_list_const
+(bop_reduce
+   (uop_predicate_reduce (inl c) P) appT)
+(uop_predicate_reduce (inl c) P).
+Proof. intros s1 s2.
+    unfold bop_reduce,uop_predicate_reduce.
+    destruct s1;simpl. auto.
+    destruct s2;simpl.
+    case_eq (dup_in_list S eqS l); intros K; simpl; auto. 
+    case_eq(dup_in_list S eqS l0); intro K; simpl.
+    assert (A:= dup_second_elem l l0 K). unfold appS,app. rewrite A. auto.
+    case_eq(dup_in_list S eqS (appS l l0)); intro L; simpl; auto.
+    apply brel_list_ref.
+Qed.
 
 End ElementaryPath.
