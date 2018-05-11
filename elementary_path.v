@@ -37,6 +37,9 @@ Proof.  induction s;  induction t; simpl; intro H; auto; discriminate. Defined.
 
 Lemma brel_list_to_prop  : ∀ s t: list S, brel_list_S s t = true -> s = t.
 Proof. intros s t H.
+       induction s,t. auto.
+       compute in H. discriminate.
+       compute in H. discriminate.
        Admitted.
 
 
@@ -301,7 +304,8 @@ Proof. intros l. induction l. compute. auto.
 Admitted.
 
 Lemma neq_list_app (l : list S): forall a: S, forall l0 : list S, brel_list_S (a::l0 ++ l) l = false.
-Proof. intros a l0. 
+Proof. intros a l0. induction l0. rewrite app_nil_l. apply neq_list_cons.
+       rewrite app_comm_cons.
 Admitted.
 
 Lemma uop_app_preserves_ann  :
@@ -393,7 +397,7 @@ match l1,l2 with
 end.
 
 Lemma dic_order_eq (l1 l2: list S) : length l1 =? length l2 = true -> dic_order l1 l2 = true -> l1 = l2.
-Proof. intros H1 H2. unfold dic_order in H2. apply beq_nat_true in H1. unfold length in H1.
+Proof. intros H1 H2. apply beq_nat_true in H1. unfold dic_order in H2.  unfold length in H1.
 Admitted.
 
 Lemma dic_order_refl (l: list S) :  dic_order l l = true.
@@ -401,7 +405,8 @@ Proof. induction l. auto. unfold dic_order. rewrite (refS a); auto.
 Qed.
 
 Lemma dic_order_cov (l1 l2 : list S) :  dic_order l1 l2 = false ->  dic_order l2 l1 = true.
-Proof. intro H. Admitted.
+Proof. intro H. induction l1,l2. auto.
+   compute in H. discriminate. Admitted.
 
 
 Definition minS : binary_op (list S) :=
