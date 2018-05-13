@@ -547,4 +547,16 @@ Proof. intros n1 n2 H.
 Qed.
 
 
+Definition eqv_proofs_eq_T : eqv_proofs T (brel_reduce uop_list brel_list_const)
+:= {| 
+     eqv_reflexive   := brel_reduce_list_const_reflexive
+   ; eqv_transitive  := brel_reduce_list_const_transitive
+   ; eqv_symmetric   := brel_reduce_list_const_symmetric
+   ; eqv_congruence  := brel_reduce_list_const_congruence
+   ; eqv_witness     := (inl c)
+|}. 
+
+
+
+
 End ElementaryPath.

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.12.12)  27 FEB 2018 19:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=latex 2017.12.12)  8 APR 2018 15:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -143,32 +143,18 @@ e 21.
 
 [1
 
-{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-[2] [3] (./temp.aux)
+] [2] [3] (./temp.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 1169 strings out of 492995
- 14939 string characters out of 6132703
- 71573 words of memory out of 5000000
+ 1160 strings out of 492996
+ 14879 string characters out of 6132729
+ 71570 words of memory out of 5000000
  4738 multiletter control sequences out of 15000+600000
- 21068 words of font info for 44 fonts, out of 8000000 for 9000
+ 12241 words of font info for 36 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  27i,6n,21p,978b,111s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
-exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/te
-xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texl
-ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texli
-ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive
-/2017/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2017/texm
-f-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2017/texmf-dist/fon
-ts/type1/urw/times/utmri8a.pfb>
-Output written on temp.pdf (3 pages, 85325 bytes).
-PDF statistics:
- 43 PDF objects out of 1000 (max. 8388607)
- 30 compressed objects within 1 object stream
- 0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
+Output written on temp.dvi (3 pages, 7108 bytes).

@@ -742,12 +742,292 @@ bop_pseudo_associative (S * T)
 	(brel_product eqS eqT) 
 	(bop_reduce_annihilators aS aT eqS eqT) (bop_product bS bT) .
 \end{lstlisting}
-
 The associative property of annihilator reduction can then also be demonstrated, and the same semigroup construction as above can be performed.\\\\
-
 Here, we have reason to believe that we can make some non-traditional reduction into our study after satisfying the pseudo associative even if they do not meet the left/right invariant property.
 
 \section{Predicate Reduction}
+We introduced the annihilator reduction based on the pair of annihilators in the previous section. Here we hope to further define a more flexible reduction. 
+We predefine a predicate for our problem set $Variable$ $P : S \rightarrow bool$.
+Then we can define our reduction as. if the element satisfies the predicate, then we reduce it to a particular element, otherwise keep the element unchanged.\\
+$Definition$ $uop\_predicate\_reduce : \forall \{S : Type\}, 
+S \rightarrow (S \rightarrow bool) \rightarrow unary\_op$ $S\\ 
+  := \lambda  \{S\}$ $s1$ $P$ $s2,$ $if$ $P$ $s2$ $then$ $s1$ $else$ $s2.$\\
+Therefore, we can regard the previous annihilator reduction as a kind of special predicate reduction.\\
+$Definition$ $P : (S *T) \rightarrow bool := \lambda p, match$ $p$ $with (s, t) => orb (eqS$ $s$ $aS) (eqT$ $t$ $aT) end.$\\
+$Definition$ $uop\_rap : unary\_op (S * T) := uop\_predicate\_reduce (aS, aT)$ $P.$\\
+Therefore, we will not discuss the properties of annihilator separately any more but will mainly discuss the properties of predicate reduction in this section.\\\\
+Here we add a basic definition $Definition$ $pred (S : Type):= S \rightarrow bool.$\\
+We add two new properties for the predicate:\\
+$Definition$ $pred\_true (S : Type) (P : pred$ $S) (s : S) 
+  := P$ $s = true. $\\
+$Definition$ $pred\_congruence (S : Type) (eq : brel$ $S) (P : pred$ $S) 
+  := \forall (a$ $b : S), eq$ $a$ $b = true \rightarrow P$ $a = P$ $b.$\\
+The above two properties are of great significance in our later proof.
+In fact, we will add more properties for predicates according to requirements in the later section, which will be introduced in detail later.\\\\
+
+As mentioned earlier, as we want to prove (or build a) reduction, we need to prove its congruence and idempotent properties.
+\begin{lstlisting}
+Lemma uop_predicate_reduce_congruence (s : S) :
+  pred_congruence S eq P -> 
+  uop_congruence S eq (uop_predicate_reduce s P). 
+  
+Lemma uop_predicate_reduce_idempotent : 
+forall (s : S), uop_idempotent S eq (uop_predicate_reduce s P). 
+\end{lstlisting}
+At the same time if we want to prove that it is a traditional reduction on some binary operator, we need to prove its left/right invariant properties.
+However, according to our different definition of predicate and different binary operators, we can construct different traditional/non-traditional reduction using our uop\_predicate\_reduce. 
+For example, our later case "min plus with ceiling" has both traditional reduction on 'min' and 'plus' operator. And in the case of "elementary path problem", we have traditional reduction on our 'concatenation' operator, however, the reduction on 'min' operator is not traditional.\\
+So we need to follow another way to represent our predicate (given our predicates certain restrictions/properties), and here we define the following three properties based on our predicate.\\
+$Definition$ $pred\_bop\_decompose (S : Type) (P : pred$ $S) (bS : binary\_op$ $S) 
+  := \forall (a$ $b : S), P$ $(bS$ $a$ $b) = true \rightarrow (P$ $a = true) + (P$ $b = true).$\\
+$Definition$ $pred\_bop\_compose (S : Type) (P : pred$ $S) (bS : binary\_op$ $S) 
+  := \forall (a$ $b : S), (P$ $a = true) + (P$ $b = true) \rightarrow P (bS$ $a$ $b) = true.$\\
+$Definition$ $pred\_preserve\_order (S : Type) (P : pred$ $S) (eqS : brel$ $S) (bS : binary\_op$ $S)
+  := \forall (a$ $b : S), eqS (bS$ $a$ $b) a = true \rightarrow P$ $a = true \rightarrow P$ $b = true.$
+Next we will use "min plus with ceiling" as an example to explain these three properties of predicate, of course, in the following section we will also systematically define "min plus with ceiling" problem.\\
+In the ceiling problem, we will set a ceiling in advance, and then reduce all elements larger than ceiling (here we define the problem set as the natural number) to reduce to ceiling. \\
+Hence our min operator has the property of decompose, which means if the minimum of two number satisfies the predicate (larger than the ceiling), then there will be at least one of them satisfies the predicate (actually both of them should satisfied the predicate).\\
+And our plus operator has the property of composes, which means if one of the element is larger than the ceiling, then the sum of the two number will larger the the ceiling.\\
+Further more, our min operator will satisfies the property of preserve order, which means if we have orders between elements, then $ a \leq b$ (represents as $a \oplus b = a$) $\rightarrow P$ $a \rightarrow P$ $b$, which means if the minimum value of the two elements satisfies the predicated, then another one must satisfy the predicate.\\\\
+After defining those properties, we can talk about the properties of our predicate reduction.\\
+We find that, if the operator has properties of either "compose" or "preserve order", then the reduction on it will be a traditional reduction. And this also directly explains why predicates reduce in "min plus with ceiling" problem is traditional on both two operator and it is also traditional on the concatenation in "elementary path" problem, but not tradition on the "min/select" operator in "elementary path" problem.\\
+
+\begin{lstlisting}
+Lemma bop_left_uop_invariant_predicate_reduce :
+  forall (s : S) (bS : binary_op S),
+    pred_true S P s -> 
+    pred_bop_compose S P bS ->
+    bop_left_uop_invariant S eq 
+    		(bop_reduce (uop_predicate_reduce s P) bS) 
+    		(uop_predicate_reduce s P).
+         
+Lemma bop_left_uop_invariant_predicate_reduce_v2 :
+  forall (s : S) (bS : binary_op S),
+    pred_true S P s ->
+    pred_congruence S eq P -> 
+    bop_selective S eq bS ->
+    bop_is_id S eq bS s ->        
+    pred_preserve_order S P eq bS ->
+    bop_left_uop_invariant S eq 
+    		(bop_reduce (uop_predicate_reduce s P) bS) 
+    		(uop_predicate_reduce s P).
+
+Lemma bop_right_uop_invariant_predicate_reduce :
+  ∀ (s : S) (bS : binary_op S),
+    pred_true S P s -> 
+    pred_bop_compose S P bS ->    
+    bop_right_uop_invariant S eq 
+    		(bop_reduce (uop_predicate_reduce s P) bS) 
+    		(uop_predicate_reduce s P).
+        
+Lemma bop_right_uop_invariant_predicate_reduce_v2 :
+  forall (s : S) (bS : binary_op S),
+    pred_true S P s ->
+    pred_congruence S eq P -> 
+    bop_selective S eq bS ->
+    bop_commutative S eq bS ->
+    bop_is_id S eq bS s ->        
+    pred_preserve_order S P eq bS ->
+    bop_right_uop_invariant S eq 
+    		(bop_reduce (uop_predicate_reduce s P) bS) 
+    		(uop_predicate_reduce s P).
+\end{lstlisting}
+The next thing we need to care about is the properties of associative.
+As we mentioned earlier, there are two ways to prove that the operator under reduction is still associative. One is to prove that this reduction is traditional in this operator. The second is to prove that this operator and reduction have the pseudo-associative properties.
+So we can first prove that our operator is compose, or preserve order, then our operator is associative under predicate reduction.
+\begin{lstlisting}
+Lemma bop_associative_fpr_compositional :
+  forall (s : S) (bS : binary_op S),
+    pred_true S P s    -> 
+    pred_congruence S eq P ->     
+    pred_bop_compose S P bS ->
+    bop_congruence S eq bS ->         
+    bop_associative S eq bS ->
+    bop_associative S 
+        (brel_reduce (uop_predicate_reduce s P) eq) 
+        (bop_fpr s P bS).
+\end{lstlisting}
+At the same time, we find that if our operator is decompose and the element (s) in reduction is the identity/annihilator of operator, we can prove the nature of pseudo associative.
+\begin{lstlisting}
+Lemma bop_pseudo_associative_fpr_decompositional_id :
+  forall (c : S) (bS : binary_op S),
+    pred_true S P c ->
+    pred_congruence S eq P ->
+    bop_congruence S eq bS ->     
+    bop_associative S eq bS -> 
+    pred_bop_decompose S P bS ->
+    bop_is_id S eq bS c -> 
+    bop_pseudo_associative S eq (uop_predicate_reduce c P) bS. 
+    
+Lemma bop_associative_fpr_decompositional_id : 
+  forall (c : S) (bS : binary_op S),
+    pred_true S P c -> 
+    pred_congruence S eq P -> 
+    bop_congruence S eq bS ->     
+    bop_associative S eq bS ->
+    pred_bop_decompose S P bS ->
+    bop_is_id S eq bS c -> 
+    bop_associative S 
+    		brel_reduce (uop_predicate_reduce c P) eq) 
+    		(bop_fpr c P bS). 
+    		
+Lemma bop_pseudo_associative_fpr_decompositional_ann :
+  forall (s : S) (bS : binary_op S),
+    pred_true S P s -> 
+    pred_congruence S eq P ->
+    bop_associative S eq bS ->    
+    pred_bop_decompose S P bS ->
+    bop_is_ann S eq bS s ->     
+    bop_pseudo_associative S eq (uop_predicate_reduce s P) bS.
+    
+Lemma bop_associative_fpr_decompositional_ann : 
+  forall (c : S) (bS : binary_op S),
+    pred_true S P c -> 
+    pred_congruence S eq P -> 
+    bop_congruence S eq bS ->     
+    bop_associative S eq bS ->
+    pred_bop_decompose S P bS ->
+    bop_is_ann S eq bS c -> 
+    bop_associative S 
+    		(brel_reduce (uop_predicate_reduce c P) eq) 
+    		(bop_fpr c P bS). 
+\end{lstlisting}
+
+In fact, during the process of our proof, we found that for a semiring in general, its additive component is decompose, and its multiplicative component is  compose. 
+And because the element (s) in our reduction always be the identity of the additive component, we can conclude that our predicate reduction is associative in most cases.\\
+
+The rest of the properties we can prove them by using lemmas in the bop \_full \_reduce use.
+
+\section{Discussion on Distributivity}
+However, as mentioned in the previous chapter, our project is not only discussing the relationship between reduction and semigroup, but it will be a further focus on some of the properties of semiring. 
+Therefore, we need to pay attention to the respective properties of the additive and multiplicative components of the semiring, and the properties associated with them.
+For example, in the predicate reduce of our previous chapter, the element of the reduction (s) is usually the identity/annihilator of operator. However, in semiring, the identity of additive component is also an annihilator of multiplicative component, and the annihilator of additive component is also an identity of the multiplicative component.
+What's more important is the distributivity between the two operators.
+Here we first prove the distribution law of our predicate reduce.
+\begin{lstlisting}
+Lemma bop_fpr_left_distributive :
+  forall (s : S) (add mul : binary_op S),
+     pred_true S P s -> 
+     pred_congruence S eq P ->
+     pred_bop_decompose S P add ->
+     pred_bop_decompose S P mul ->          
+     bop_congruence S eq add ->     
+     bop_congruence S eq mul -> 
+     bop_is_id S eq add s ->     
+     bop_is_ann S eq mul s ->
+     bop_left_distributive S eq add mul ->
+     bop_left_distributive S 
+     	(brel_reduce (uop_predicate_reduce s P) eq) 
+     	(bop_fpr s P add) (bop_fpr s P mul).
+       
+Lemma bop_fpr_right_distributive :
+  forall (s : S) (add mul : binary_op S),
+     pred_true S P s -> 
+     pred_congruence S eq P ->
+     pred_bop_decompose S P add ->
+     pred_bop_decompose S P mul ->          
+    bop_congruence S eq add ->     
+    bop_congruence S eq mul -> 
+    bop_is_id S eq add s ->     
+    bop_is_ann S eq mul s ->
+    bop_right_distributive S eq add mul ->
+    bop_right_distributive S 
+    		(brel_reduce (uop_predicate_reduce s P) eq) 
+    		(bop_fpr s P add) (bop_fpr s P mul).
+\end{lstlisting}
+However, as we mentioned before, our multiplicative components are generally compose rather than decompose, so we need to prove the distributive law in another way.
+\begin{lstlisting}
+Lemma bop_fpr_left_distributive_v2 :
+  forall (s : S) (add mul : binary_op S),
+     pred_true S P s -> 
+     pred_congruence S eq P ->
+     pred_bop_decompose S P add ->
+     pred_preserve_order S P eq add ->
+     bop_congruence S eq add ->     
+     bop_congruence S eq mul -> 
+     bop_selective S eq add ->
+     bop_commutative S eq add ->
+     bop_is_id S eq add s ->     
+     bop_is_ann S eq mul s ->
+     bop_left_distributive S eq add mul ->
+     bop_left_distributive S 
+     	(brel_reduce (uop_predicate_reduce s P) eq) 
+     	(bop_fpr s P add) (bop_fpr s P mul).
+     	
+Lemma bop_fpr_right_distributive_v2 :
+  forall (s : S) (add mul : binary_op S),
+     pred_true S P s -> 
+     pred_congruence S eq P ->
+     pred_bop_decompose S P add ->
+     pred_preserve_order S P eq add ->
+     bop_congruence S eq add ->     
+     bop_congruence S eq mul -> 
+     bop_selective S eq add ->
+     bop_commutative S eq add ->
+     bop_is_id S eq add s ->     
+     bop_is_ann S eq mul s ->
+     bop_right_distributive S eq add mul ->
+     bop_right_distributive S 
+     	(brel_reduce (uop_predicate_reduce s P) eq) 
+     	(bop_fpr s P add) (bop_fpr s P mul).
+\end{lstlisting}
+Therefore, we find that our additive component is decompose and preserve order, then our semiring is distributive.\\
+However, this kind of proof is ultimately too specific. We hope to find out whether there is a correlation between reduction itself and distributive property.\\\\
+Initially, similar to the property of pseudo-associative, we define two new properties called pseudo-left/right-distributivitt.\\
+$Definition$ $bop\_pseudo\_left\_distributive (S : Type) (eq : brel$ $S) (r : unary\_op$ $S) (add$ $mul : binary\_op$ $S) \\
+  := \forall a$ $b$ $c : S, 
+  eq (r (mul (r$ $a) (r (add (r$ $b) (r$ $c))))) (r (add (r (mul (r$ $a) (r$ $b))) (r (mul (r$ $a) (r$ $c))))) = true. $
+         
+$Definition$ $bop\_pseudo\_right\_distributive (S : Type) (eq : brel$ $S) (r : unary\_op$ $S) (add$ $mul : binary\_op S) \\
+  := \forall a$ $b$ $c : S, 
+  eq (r (mul (r (add (r$ $b) (r$ $c))) (r$ $a))) (r (add (r (mul (r$ $b) (r$ $a))) (r (mul (r$ $c) (r$ $a))))) = true.$
+Then we were surprised to find that pseudo-distributive is equivalent to that the reduction is traditional on the two operators.
+\begin{lstlisting}
+Lemma red_bop_left_dist_iso : 
+bop_left_distributive T eqT addT mulT <-> 
+bop_pseudo_left_distributive S eq r add mul. 
+
+Lemma red_bop_right_dist_iso : 
+bop_right_distributive T eqT addT mulT <-> 
+bop_pseudo_right_distributive S eq r add mul.
+\end{lstlisting}
+Going further, we are even more surprised to find that the property of the pseudo-distributive we have just defined is equivalent to the real distributive on reduction.
+\begin{lstlisting}
+Lemma bop_reduce_pseudo_left_distributivity_iso :
+bop_left_distributive S (brel_reduce r eq) 
+	(bop_reduce_args r add) (bop_reduce_args r mul) <->
+bop_pseudo_left_distributive S eq r add mul.
+
+Lemma bop_reduce_left_distributivity_iso :
+bop_left_distributive S (brel_reduce r eq) 
+	(bop_reduce_args r add) (bop_reduce_args r mul)
+                     <->
+bop_left_distributive S (brel_reduce r eq) 
+	(bop_full_reduce r add) (bop_full_reduce r mul).
+
+Lemma bop_reduce_pseudo_right_distributivity_iso :
+bop_right_distributive S (brel_reduce r eq) 
+	(bop_reduce_args r add) (bop_reduce_args r mul) <->
+bop_pseudo_right_distributive S eq r add mul.
+
+Lemma bop_reduce_right_distributivity_iso :
+bop_right_distributive S (brel_reduce r eq) 
+	(bop_reduce_args r add) (bop_reduce_args r mul)
+                     <->
+bop_right_distributive S (brel_reduce r eq) 
+	(bop_full_reduce r add) (bop_full_reduce r mul).
+\end{lstlisting}
+
+Therefore, we can conclude that as of now, the properties of the distributivity and the reduction that is traditional on the two operators in the semiring are equivalent.
+\section{Simple example: Min Plus with Ceiling Semiring}
+
+\section{Add Constant by Disjoint Union}
+
+\section{Predicate Reduction with Disjoint Annihilator}
+
+\section{Another example: Elementary Path Problem}
+
+
 \chapter{Evaluation} 
 
 %For any practical projects, you should almost certainly have
