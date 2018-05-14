@@ -1,0 +1,65 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{Definition} \PYG{n}{eqv\PYGZus{}proofs\PYGZus{}eq\PYGZus{}nat} \PYG{p}{(}\PYG{n}{ceiling} \PYG{p}{:} \PYG{n}{nat}\PYG{p}{)} \PYG{p}{:}
+\PYG{n}{eqv\PYGZus{}proofs} \PYG{n}{nat} \PYG{p}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{p}{(}\PYG{n}{uop\PYGZus{}nat} \PYG{n}{ceiling}\PYG{p}{)} \PYG{n}{brel\PYGZus{}eq\PYGZus{}nat}\PYG{p}{)}
+\PYG{p}{:}\PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{o}{|}
+     \PYG{n}{eqv\PYGZus{}reflexive}   \PYG{p}{:}\PYG{o}{=} \PYG{n}{brel\PYGZus{}reduce\PYGZus{}nat\PYGZus{}reflexive} \PYG{n}{ceiling}
+   \PYG{p}{;} \PYG{n}{eqv\PYGZus{}transitive}  \PYG{p}{:}\PYG{o}{=} \PYG{n}{brel\PYGZus{}reduce\PYGZus{}nat\PYGZus{}transitive} \PYG{n}{ceiling}
+   \PYG{p}{;} \PYG{n}{eqv\PYGZus{}symmetric}   \PYG{p}{:}\PYG{o}{=} \PYG{n}{brel\PYGZus{}reduce\PYGZus{}nat\PYGZus{}symmetric} \PYG{n}{ceiling}
+   \PYG{p}{;} \PYG{n}{eqv\PYGZus{}congruence}  \PYG{p}{:}\PYG{o}{=} \PYG{n}{brel\PYGZus{}reduce\PYGZus{}nat\PYGZus{}congruence} \PYG{n}{ceiling}
+   \PYG{p}{;} \PYG{n}{eqv\PYGZus{}witness}     \PYG{p}{:}\PYG{o}{=} \PYG{l+m+mi}{0}
+\PYG{o}{|}\PYG{p}{\PYGZcb{}}\PYG{o}{.}
+
+
+\PYG{n}{Definition} \PYG{n}{min\PYGZus{}proofs} \PYG{p}{(}\PYG{n}{ceiling} \PYG{p}{:} \PYG{n}{nat}\PYG{p}{)} \PYG{p}{:}
+\PYG{n}{commutative\PYGZus{}selective\PYGZus{}semigroup\PYGZus{}proofs} \PYG{n}{nat}
+	\PYG{p}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{p}{(}\PYG{n}{uop\PYGZus{}nat} \PYG{n}{ceiling}\PYG{p}{)} \PYG{n}{brel\PYGZus{}eq\PYGZus{}nat}\PYG{p}{)}
+	\PYG{p}{(}\PYG{n}{bop\PYGZus{}nat\PYGZus{}min} \PYG{n}{ceiling}\PYG{p}{)}
+\PYG{p}{:}\PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{o}{|}
+  \PYG{n}{cssg\PYGZus{}associative}   \PYG{p}{:}\PYG{o}{=} \PYG{n}{bop\PYGZus{}nat\PYGZus{}min\PYGZus{}associative} \PYG{n}{ceiling}
+\PYG{p}{;} \PYG{n}{cssg\PYGZus{}congruence}    \PYG{p}{:}\PYG{o}{=} \PYG{n}{bop\PYGZus{}nat\PYGZus{}min\PYGZus{}congruence} \PYG{n}{ceiling}
+\PYG{p}{;} \PYG{n}{cssg\PYGZus{}commutative}   \PYG{p}{:}\PYG{o}{=} \PYG{n}{bop\PYGZus{}nat\PYGZus{}min\PYGZus{}commutative} \PYG{n}{ceiling}
+\PYG{p}{;} \PYG{n}{cssg\PYGZus{}selective}     \PYG{p}{:}\PYG{o}{=} \PYG{n}{bop\PYGZus{}nat\PYGZus{}min\PYGZus{}selective} \PYG{n}{ceiling}
+\PYG{o}{|}\PYG{p}{\PYGZcb{}}\PYG{o}{.}
+
+\PYG{n}{Definition} \PYG{n}{plus\PYGZus{}proofs} \PYG{p}{(}\PYG{n}{ceiling} \PYG{p}{:} \PYG{n}{nat}\PYG{p}{)} \PYG{p}{:}
+\PYG{n}{commutative\PYGZus{}semigroup\PYGZus{}proofs} \PYG{n}{nat}
+	\PYG{p}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{p}{(}\PYG{n}{uop\PYGZus{}nat} \PYG{n}{ceiling}\PYG{p}{)} \PYG{n}{brel\PYGZus{}eq\PYGZus{}nat}\PYG{p}{)}
+	\PYG{p}{(}\PYG{n}{bop\PYGZus{}nat\PYGZus{}plus} \PYG{n}{ceiling}\PYG{p}{)}
+\PYG{p}{:}\PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{o}{|}
+  \PYG{n}{csg\PYGZus{}associative}   \PYG{p}{:}\PYG{o}{=} \PYG{n}{bop\PYGZus{}nat\PYGZus{}plus\PYGZus{}associative} \PYG{n}{ceiling}
+  \PYG{p}{;} \PYG{n}{csg\PYGZus{}congruence}    \PYG{p}{:}\PYG{o}{=} \PYG{n}{bop\PYGZus{}nat\PYGZus{}plus\PYGZus{}congruence} \PYG{n}{ceiling}
+\PYG{p}{;} \PYG{n}{csg\PYGZus{}commutative}    \PYG{p}{:}\PYG{o}{=} \PYG{n}{bop\PYGZus{}nat\PYGZus{}plus\PYGZus{}commutative} \PYG{n}{ceiling}
+\PYG{o}{|}\PYG{p}{\PYGZcb{}}\PYG{o}{.}
+
+\PYG{n}{Definition} \PYG{n}{min\PYGZus{}plus\PYGZus{}dioid\PYGZus{}proofs} \PYG{p}{(}\PYG{n}{ceiling} \PYG{p}{:} \PYG{n}{nat}\PYG{p}{)} \PYG{p}{:}
+\PYG{n}{dioid\PYGZus{}proofs} \PYG{n}{nat} \PYG{p}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{p}{(}\PYG{n}{uop\PYGZus{}nat} \PYG{n}{ceiling}\PYG{p}{)} \PYG{n}{brel\PYGZus{}eq\PYGZus{}nat}\PYG{p}{)}
+	\PYG{p}{(}\PYG{n}{bop\PYGZus{}nat\PYGZus{}min} \PYG{n}{ceiling}\PYG{p}{)} \PYG{p}{(}\PYG{n}{bop\PYGZus{}nat\PYGZus{}plus} \PYG{n}{ceiling}\PYG{p}{)} \PYG{n}{ceiling}  \PYG{l+m+mi}{0}
+\PYG{p}{:}\PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{o}{|}
+  \PYG{n}{dioid\PYGZus{}left\PYGZus{}distributive}
+  	\PYG{p}{:}\PYG{o}{=} \PYG{n}{bop\PYGZus{}left\PYGZus{}distributive\PYGZus{}ceiling\PYGZus{}min\PYGZus{}plus} \PYG{n}{ceiling}
+\PYG{p}{;} \PYG{n}{dioid\PYGZus{}right\PYGZus{}distributive}
+	\PYG{p}{:}\PYG{o}{=} \PYG{n}{bop\PYGZus{}right\PYGZus{}distributive\PYGZus{}ceiling\PYGZus{}min\PYGZus{}plus} \PYG{n}{ceiling}
+\PYG{p}{;} \PYG{n}{dioid\PYGZus{}zero\PYGZus{}is\PYGZus{}add\PYGZus{}id}
+	\PYG{p}{:}\PYG{o}{=} \PYG{n}{bop\PYGZus{}is\PYGZus{}id\PYGZus{}ceiling\PYGZus{}min\PYGZus{}ceiling} \PYG{n}{ceiling}
+\PYG{p}{;} \PYG{n}{dioid\PYGZus{}one\PYGZus{}is\PYGZus{}mul\PYGZus{}id}
+	\PYG{p}{:}\PYG{o}{=} \PYG{n}{bop\PYGZus{}is\PYGZus{}id\PYGZus{}ceiling\PYGZus{}plus\PYGZus{}zero} \PYG{n}{ceiling}
+\PYG{p}{;} \PYG{n}{dioid\PYGZus{}one\PYGZus{}is\PYGZus{}add\PYGZus{}ann}
+	\PYG{p}{:}\PYG{o}{=} \PYG{n}{bop\PYGZus{}is\PYGZus{}ann\PYGZus{}ceiling\PYGZus{}min\PYGZus{}zero} \PYG{n}{ceiling}
+\PYG{p}{;} \PYG{n}{dioid\PYGZus{}zero\PYGZus{}is\PYGZus{}mul\PYGZus{}ann}
+	\PYG{p}{:}\PYG{o}{=} \PYG{n}{bop\PYGZus{}is\PYGZus{}ann\PYGZus{}ceiling\PYGZus{}plus\PYGZus{}ceiling} \PYG{n}{ceiling}
+\PYG{o}{|}\PYG{p}{\PYGZcb{}}\PYG{o}{.}
+
+\PYG{n}{Definition} \PYG{n}{min\PYGZus{}plus\PYGZus{}dioid} \PYG{p}{(}\PYG{n}{ceiling} \PYG{p}{:} \PYG{n}{nat}\PYG{p}{)} \PYG{p}{:}
+\PYG{n}{commutative\PYGZus{}selective\PYGZus{}dioid} \PYG{n}{nat}
+\PYG{p}{:}\PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{o}{|}
+    \PYG{n}{csdioid\PYGZus{}eq}         \PYG{p}{:}\PYG{o}{=} \PYG{n}{brel\PYGZus{}reduce} \PYG{p}{(}\PYG{n}{uop\PYGZus{}nat} \PYG{n}{ceiling}\PYG{p}{)} \PYG{n}{brel\PYGZus{}eq\PYGZus{}nat}
+  \PYG{p}{;} \PYG{n}{csdioid\PYGZus{}add}        \PYG{p}{:}\PYG{o}{=} \PYG{n}{bop\PYGZus{}nat\PYGZus{}min} \PYG{n}{ceiling}
+  \PYG{p}{;} \PYG{n}{csdioid\PYGZus{}mul}        \PYG{p}{:}\PYG{o}{=} \PYG{n}{bop\PYGZus{}nat\PYGZus{}plus} \PYG{n}{ceiling}
+  \PYG{p}{;} \PYG{n}{csdioid\PYGZus{}zero}       \PYG{p}{:}\PYG{o}{=} \PYG{n}{ceiling}
+  \PYG{p}{;} \PYG{n}{csdioid\PYGZus{}one}        \PYG{p}{:}\PYG{o}{=} \PYG{l+m+mi}{0}
+  \PYG{p}{;} \PYG{n}{csdiode\PYGZus{}eqv}        \PYG{p}{:}\PYG{o}{=} \PYG{n}{eqv\PYGZus{}proofs\PYGZus{}eq\PYGZus{}nat} \PYG{n}{ceiling}
+  \PYG{p}{;} \PYG{n}{csdiode\PYGZus{}add\PYGZus{}pfs}    \PYG{p}{:}\PYG{o}{=} \PYG{n}{min\PYGZus{}proofs} \PYG{n}{ceiling}
+  \PYG{p}{;} \PYG{n}{csdiode\PYGZus{}mul\PYGZus{}pfs}    \PYG{p}{:}\PYG{o}{=} \PYG{n}{plus\PYGZus{}proofs} \PYG{n}{ceiling}
+  \PYG{p}{;} \PYG{n}{csdioid\PYGZus{}pfs}        \PYG{p}{:}\PYG{o}{=} \PYG{n}{min\PYGZus{}plus\PYGZus{}dioid\PYGZus{}proofs} \PYG{n}{ceiling}
+\PYG{o}{|}\PYG{p}{\PYGZcb{}}\PYG{o}{.}
+\end{Verbatim}

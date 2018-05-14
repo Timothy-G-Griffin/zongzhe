@@ -1020,8 +1020,202 @@ bop_right_distributive S (brel_reduce r eq)
 
 Therefore, we can conclude that as of now, the properties of the distributivity and the reduction that is traditional on the two operators in the semiring are equivalent.
 \section{Simple example: Min Plus with Ceiling Semiring}
+We've slightly introduced the "min plus with ceiling" problem in the previous section. Here we are giving a formal and constructive definition of it. The original problem set is the natural number (without infinity).
+The binary relationship and the original two operators in our semiring are\\
+$Definition$ $brel\_eq\_nat  : brel$ $nat  := Arith.EqNat.beq\_nat.$\\
+$Definition$ $min :binary\_op $ $ nat:= Nat.min.$\\
+$Definition$ $plus :binary\_op $ $ nat:= Nat.add.$\\.
+Here we want to limit the scope of our problem set by providing a ceiling (max value) into our problem set, which is acting as a predicate reduction.\\
+$Definition$ $P (ceiling : nat): nat \rightarrow bool := \lambda n, ceiling \leq? n.$\\
+Initially, from Coq library we can easily conclude that the binary relationship is reflexive, symmetric,transitive and congruence.\\
+Next, we can easily prove that the binary relationship preserves those properties after applying the reduction.
+We should define our predicate reduction base on the predicate.\\
+$Definition$ $uop\_nat (ceiling : nat) : unary\_op$ $nat := uop\_predicate\_reduce$ $ceiling$ $(P$ $ceiling).$
+\begin{lstlisting}
+Lemma brel_reduce_nat_reflexive (ceiling :nat) : 
+brel_reflexive nat (brel_reduce (uop_nat ceiling) brel_eq_nat).
+
+Lemma brel_reduce_nat_symmetric (ceiling :nat) : 
+brel_symmetric nat (brel_reduce (uop_nat ceiling) brel_eq_nat).
+
+Lemma brel_reduce_nat_transitive (ceiling :nat) : 
+brel_transitive nat (brel_reduce (uop_nat ceiling) brel_eq_nat).
+
+Lemma brel_reduce_nat_congruence (ceiling :nat) : 
+brel_congruence nat (brel_reduce (uop_nat ceiling) brel_eq_nat) 
+		    (brel_reduce (uop_nat ceiling) brel_eq_nat).
+\end{lstlisting}
+Then, we should discuss some properties of the predicate we defined.
+\begin{lstlisting}
+Lemma P_congruence (ceiling : nat): p
+red_congruence nat brel_eq_nat (P ceiling).
+
+Lemma P_true (ceiling : nat): 
+pred_true nat (P ceiling) ceiling.
+\end{lstlisting}
+To prove that the reduction we defined here is really a reduction, we should prove the properties of idempotent and congruence of our reduction.
+\begin{lstlisting}
+Lemma uop_nat_idempontent (ceiling : nat): 
+uop_idempotent nat brel_eq_nat 
+	(uop_predicate_reduce ceiling (P ceiling)).
+	
+Lemma uop_nat_congruence (ceiling : nat) : 
+uop_congruence nat brel_eq_nat 
+	(uop_predicate_reduce ceiling (P ceiling)).
+\end{lstlisting}
+Next, based on the lemma in the Coq library, we can easily prove the properteis of our two operators. Our 'min' operator has the properties of congruence, associative, commutative, selective. Our 'plus' operator has the properties of associative, congruence and commutative.\\
+Then we can easily prove that our two operators have distributive law on natural number.\\
+Furthermore, we recognise that 0 is the identity of 'plus' and the annihilator of 'min'. And our reduction also preserve id for 'plus' and ann for 'min'.
+Similarly we can prove that our definition of reduction saves id/ann for plus/min operator.\\
+It is worth mentioning that since our problem set (natural number) does not include infinity, the original min operator does not have identity, and the plus operator does not have an annihilator.
+Fortunately, after reduction, the ceiling we defined becomes the identity/annihilator of min/plus.\\
+We should define the reduced binary operator at first.\\
+$Definition$ $bop\_nat\_min$ $(ceiling : nat) : binary\_op$ $nat := bop\_fpr$ $ceiling $ $(P$ $ ceiling)$ $ min.$\\
+$Definition$ $bop\_nat\_plus$ $(ceiling : nat) : binary\_op$ $nat := bop\_fpr$ $ceiling $ $(P$ $ ceiling)$ $ plus.$
+\begin{lstlisting}
+Lemma bop_is_ann_min_zero : bop_is_ann nat brel_eq_nat min 0.
+
+Lemma uop_ceiling_min_preserves_ann (ceiling : nat) :
+ uop_preserves_ann nat brel_eq_nat min (uop_nat ceiling).
+
+Lemma bop_is_id_plus_zero : bop_is_id nat brel_eq_nat plus 0.
+
+Lemma uop_ceiling_plus_preserves_id (ceiling : nat) :
+uop_preserves_id nat brel_eq_nat plus (uop_nat ceiling).
+
+Lemma bop_is_id_ceiling_min_ceiling (ceiling : nat): 
+bop_is_id nat (brel_reduce (uop_nat ceiling) brel_eq_nat) 
+	(bop_nat_min ceiling) ceiling.
+
+Lemma bop_is_id_ceiling_plus_zero (ceiling : nat): 
+bop_is_id nat (brel_reduce (uop_nat ceiling) brel_eq_nat) 
+(bop_nat_plus ceiling) 0.
+\end{lstlisting}
+Finally, we should further discuss the properties of predicates on two operators. We conclude that min has the properties of decompose and preserve order on predicate P, and plus has compose property.
+\begin{lstlisting}
+Lemma P_min_decompose (ceiling : nat): 
+pred_bop_decompose nat (P ceiling) min.
+       
+Lemma P_plus_compose (ceiling : nat): 
+pred_bop_compose nat (P ceiling) plus.
+
+Lemma P_min_preserve_order (ceiling : nat): 
+pred_preserve_order nat (P ceiling) brel_eq_nat min.
+\end{lstlisting}
+By further inferring the above properties, based on the conclusions I made in the predicate reduction section, we can infer that our reduction is traditional on both min and plus operator (have the properties of left/right invariant).\\
+Therefore, based on the conclusions in the bop\_full\_reduce section and the distributivity section, we can easily infer the following conclusions:\\
+Reduced 'min' operator has the properties of congruence, associative, commutative, selective.\\
+Reduced 'plus' operator has the properties of associative, congruence and commutative.\\
+Reduced 'min' operator and reduced 'plus' operator have the property of distributivity.\\\\
+Finally, we can use the conclusions above to construct our 'min plus with ceiling' semiring.
+\begin{lstlisting}
+Definition eqv_proofs_eq_nat (ceiling : nat) : 
+eqv_proofs nat (brel_reduce (uop_nat ceiling) brel_eq_nat)
+:= {| 
+     eqv_reflexive   := brel_reduce_nat_reflexive ceiling
+   ; eqv_transitive  := brel_reduce_nat_transitive ceiling
+   ; eqv_symmetric   := brel_reduce_nat_symmetric ceiling
+   ; eqv_congruence  := brel_reduce_nat_congruence ceiling
+   ; eqv_witness     := 0
+|}. 
+
+
+Definition min_proofs (ceiling : nat) : 
+commutative_selective_semigroup_proofs nat 
+	(brel_reduce (uop_nat ceiling) brel_eq_nat) 
+	(bop_nat_min ceiling) 
+:= {|
+  cssg_associative   := bop_nat_min_associative ceiling
+; cssg_congruence    := bop_nat_min_congruence ceiling
+; cssg_commutative   := bop_nat_min_commutative ceiling
+; cssg_selective     := bop_nat_min_selective ceiling                                         
+|}.
+
+Definition plus_proofs (ceiling : nat) : 
+commutative_semigroup_proofs nat 
+	(brel_reduce (uop_nat ceiling) brel_eq_nat) 
+	(bop_nat_plus ceiling) 
+:= {|
+  csg_associative   := bop_nat_plus_associative ceiling
+  ; csg_congruence    := bop_nat_plus_congruence ceiling
+; csg_commutative    := bop_nat_plus_commutative ceiling                                                 
+|}.
+
+Definition min_plus_dioid_proofs (ceiling : nat) : 
+dioid_proofs nat (brel_reduce (uop_nat ceiling) brel_eq_nat) 
+	(bop_nat_min ceiling) (bop_nat_plus ceiling) ceiling  0 
+:= {|  
+  dioid_left_distributive  
+  	:= bop_left_distributive_ceiling_min_plus ceiling
+; dioid_right_distributive 
+	:= bop_right_distributive_ceiling_min_plus ceiling
+; dioid_zero_is_add_id     
+	:= bop_is_id_ceiling_min_ceiling ceiling 
+; dioid_one_is_mul_id      
+	:= bop_is_id_ceiling_plus_zero ceiling 
+; dioid_one_is_add_ann     
+	:= bop_is_ann_ceiling_min_zero ceiling    
+; dioid_zero_is_mul_ann    
+	:= bop_is_ann_ceiling_plus_ceiling ceiling 
+|}.
+
+Definition min_plus_dioid (ceiling : nat) : 
+commutative_selective_dioid nat 
+:= {|
+    csdioid_eq         := brel_reduce (uop_nat ceiling) brel_eq_nat
+  ; csdioid_add        := bop_nat_min ceiling
+  ; csdioid_mul        := bop_nat_plus ceiling                                  
+  ; csdioid_zero       := ceiling
+  ; csdioid_one        := 0
+  ; csdiode_eqv        := eqv_proofs_eq_nat ceiling
+  ; csdiode_add_pfs    := min_proofs ceiling 
+  ; csdiode_mul_pfs    := plus_proofs ceiling                                      
+  ; csdioid_pfs        := min_plus_dioid_proofs ceiling 
+|}.
+\end{lstlisting}
 
 \section{Add Constant by Disjoint Union}
+In the previous example (min plus with ceiling), even if our min/plus operators do not have annihilator/identity at the beginning, we are fortunate to find the appropriate annihilator/identity (ceiling) for them after reduction.
+However, we have not always been so lucky. 
+There are some operators that don't have an identity/annihilator on our problem set, even after our reduction. So we need to artificially add an identity/annihilator to them by using disjoint union. Here we split it into two cases, adding an identity or adding an annihilator.\\
+First we need to define our constant. 
+$Definition$ $cas\_constant : Type          := string.   $\\
+Next we need to define a new binary relationship based on the original problem set and the added constant. It is worth mentioning that we assume that all constants are equal.
+\begin{lstlisting}
+Definition brel_add_constant : 
+forall {S : Type}, brel S -> cas_constant -> brel (cas_constant + S)
+:= λ  {S} rS c x y, 
+   match x, y with
+   | (inl _), (inl _) => true (* all constants equal! *) 
+   | (inl _), (inr _) => false 
+   | (inr _), (inl _) => false 
+   | (inr a), (inr b) => rS a b 
+   end.
+\end{lstlisting}
+After that, we can define two new binary operator by adding a new constant to the original one that acting as the identity/annihilator.
+\begin{lstlisting}
+Definition bop_add_ann : 
+forall {S : Type}, binary_op S -> cas_constant 
+-> binary_op (cas_constant + S)
+:= λ {S} bS c x y, 
+   match x, y with
+   | (inl _), _       => inl c
+   |       _, (inl _) => inl c
+   | (inr a), (inr b) => inr _ (bS a b)
+   end.
+
+Definition bop_add_id : 
+forall {S : Type}, binary_op S -> cas_constant 
+-> binary_op (cas_constant + S)
+:= λ  {S} bS c x y, 
+   match x, y with
+   | (inl _), (inl _) => inl c 
+   | (inl _), (inr _) => y
+   | (inr _), (inl _) => x
+   | (inr a), (inr b) => inr _ (bS a b)
+   end.
+\end{lstlisting}
+In the following sections we will meet the situation where we must manually add an annihilator into our problem set (in the elementary path problem, our select/min operator does not have an identity, and our concat operator does not have an annihilator).
 
 \section{Predicate Reduction with Disjoint Annihilator}
 

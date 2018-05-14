@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.12.12)  13 MAY 2018 22:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.12.12)  14 MAY 2018 19:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -757,15 +757,47 @@ r\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 mul\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 r$ $c\O
 T1/cmr/m/n/12 )(\OML/cmm/m/it/12 r$ $a\OT1/cmr/m/n/12 ))))) =
  []
 
-[38] [39] [40
+[38] [39] [40]
+Underfull \vbox (badness 1092) has occurred while \output is active []
 
-]
+ [41]
+Underfull \hbox (badness 10000) in paragraph at lines 1105--1111
+
+ []
+
+[42]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [43]
+Overfull \hbox (21.68367pt too wide) in paragraph at lines 1165--1166
+[][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (28.88374pt too wide) in paragraph at lines 1186--1187
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+Missing character: There is no Î in font ptmr7t!
+Missing character: There is no » in font ptmr7t!
+[44]
+Missing character: There is no Î in font ptmr7t!
+Missing character: There is no » in font ptmr7t!
+Missing character: There is no Î in font ptmr7t!
+Missing character: There is no » in font ptmr7t!
+
+Underfull \vbox (badness 4686) has occurred while \output is active []
+
+ [45]
+[46]
 Chapter 4.
-[41] [42
+[47
+
+] [48
 
 ]
 Chapter 5.
-(./acs-dissertation.bbl [43] [44
+(./acs-dissertation.bbl [49] [50
 
 ]
 Missing character: There is no Ã in font ptmr7t!
@@ -774,7 +806,7 @@ Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no ¤ in font ptmr7t!
 Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no ­ in font ptmr7t!
-) [45] (./acs-dissertation.aux) ) 
+) [51] (./acs-dissertation.aux) ) 
 Here is how much of TeX's memory you used:
  4017 strings out of 492995
  56552 string characters out of 6132703
@@ -782,7 +814,7 @@ Here is how much of TeX's memory you used:
  7453 multiletter control sequences out of 15000+600000
  26157 words of font info for 55 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 39i,9n,32p,875b,1397s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 39i,9n,32p,875b,1399s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2017/texmf-dist/fonts/enc/
 dvips/base/8r.enc}</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfon
 ts/cm/cmex10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfont
@@ -797,10 +829,10 @@ fb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb
 /usr/local/texlive/2017/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local
 /texlive/2017/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2
 017/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on acs-dissertation.pdf (57 pages, 303155 bytes).
+Output written on acs-dissertation.pdf (63 pages, 321638 bytes).
 PDF statistics:
- 253 PDF objects out of 1000 (max. 8388607)
- 176 compressed objects within 2 object streams
+ 272 PDF objects out of 1000 (max. 8388607)
+ 189 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
