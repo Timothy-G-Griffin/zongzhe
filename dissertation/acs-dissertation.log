@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.12.12)  14 MAY 2018 19:31
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.12.12)  14 MAY 2018 19:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -778,26 +778,19 @@ Overfull \hbox (28.88374pt too wide) in paragraph at lines 1186--1187
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
-Missing character: There is no Î in font ptmr7t!
-Missing character: There is no » in font ptmr7t!
 [44]
-Missing character: There is no Î in font ptmr7t!
-Missing character: There is no » in font ptmr7t!
-Missing character: There is no Î in font ptmr7t!
-Missing character: There is no » in font ptmr7t!
-
 Underfull \vbox (badness 4686) has occurred while \output is active []
 
  [45]
-[46]
-Chapter 4.
-[47
+[46] [47] [48
 
-] [48
+]
+Chapter 4.
+[49] [50
 
 ]
 Chapter 5.
-(./acs-dissertation.bbl [49] [50
+(./acs-dissertation.bbl [51] [52
 
 ]
 Missing character: There is no Ã in font ptmr7t!
@@ -806,7 +799,7 @@ Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no ¤ in font ptmr7t!
 Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no ­ in font ptmr7t!
-) [51] (./acs-dissertation.aux) ) 
+) [53] (./acs-dissertation.aux) ) 
 Here is how much of TeX's memory you used:
  4017 strings out of 492995
  56552 string characters out of 6132703
@@ -829,10 +822,10 @@ fb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb
 /usr/local/texlive/2017/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local
 /texlive/2017/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2
 017/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on acs-dissertation.pdf (63 pages, 321638 bytes).
+Output written on acs-dissertation.pdf (65 pages, 324472 bytes).
 PDF statistics:
- 272 PDF objects out of 1000 (max. 8388607)
- 189 compressed objects within 2 object streams
+ 278 PDF objects out of 1000 (max. 8388607)
+ 193 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

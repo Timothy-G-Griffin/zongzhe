@@ -1184,7 +1184,7 @@ Next we need to define a new binary relationship based on the original problem s
 \begin{lstlisting}
 Definition brel_add_constant : 
 forall {S : Type}, brel S -> cas_constant -> brel (cas_constant + S)
-:= λ  {S} rS c x y, 
+:= lambda  {S} rS c x y, 
    match x, y with
    | (inl _), (inl _) => true (* all constants equal! *) 
    | (inl _), (inr _) => false 
@@ -1197,7 +1197,7 @@ After that, we can define two new binary operator by adding a new constant to th
 Definition bop_add_ann : 
 forall {S : Type}, binary_op S -> cas_constant 
 -> binary_op (cas_constant + S)
-:= λ {S} bS c x y, 
+:= lambda {S} bS c x y, 
    match x, y with
    | (inl _), _       => inl c
    |       _, (inl _) => inl c
@@ -1207,7 +1207,7 @@ forall {S : Type}, binary_op S -> cas_constant
 Definition bop_add_id : 
 forall {S : Type}, binary_op S -> cas_constant 
 -> binary_op (cas_constant + S)
-:= λ  {S} bS c x y, 
+:= lambda  {S} bS c x y, 
    match x, y with
    | (inl _), (inl _) => inl c 
    | (inl _), (inr _) => y
@@ -1217,7 +1217,35 @@ forall {S : Type}, binary_op S -> cas_constant
 \end{lstlisting}
 In the following sections we will meet the situation where we must manually add an annihilator into our problem set (in the elementary path problem, our select/min operator does not have an identity, and our concat operator does not have an annihilator).
 
-\section{Predicate Reduction with Disjoint Annihilator}
+\section{Predicate Reduction with Disjoint Constant}
+Very similar to the previous predicate reduction, but we add a distinct constant using disjoint union into our reduction. We define a new version of reduction by adding a constant into our problem set that acting as the identity/annihilator (depends on the operator is whether additive component or multiplicative component).
+\begin{lstlisting}
+Definition uop_predicate_reduce_disjoint : 
+forall {S : Type}, cas_constant -> (S -> bool) 
+-> unary_op (cas_constant + S)
+:= lambda  {S} c p x,
+   match x with     
+   | inl a => x
+   | inr a => if p a then inl c else x
+   end.
+\end{lstlisting}
+As with predicate reduce, we can easily prove that our definition of reduction has the properties of congruence and idempotent.\\
+Next, we can define the binary operator depends on the original operator on the problem set and our predefined method.
+\begin{lstlisting}
+Definition bop_fprd_add_id {S : Type} 
+(c : cas_constant) (P : S -> bool) (bS : binary_op S) 
+:= (bop_full_reduce (uop_predicate_reduce_disjoint c P) 
+	(bop_add_id bS c)).
+
+Definition bop_fprd_add_ann {S : Type} 
+(c : cas_constant) (P : S -> bool) (bS : binary_op S) 
+:= (bop_full_reduce (uop_predicate_reduce_disjoint c P) 
+	(bop_add_ann bS c)).
+\end{lstlisting}
+At the same time, we can find that if our additive component has the property of reserve order, or our multiplicative component has the property of compose, then our reduction is traditional, which is exactly the same as we found in the predicate reduction.\\
+Even preconditions to those properties such as congruence, associative, and even distributive are all the same as predicate reduction.\\
+So we can conclude that after adding a constant, our problem set has a distinctive identity/annihilator (depending on our operator), but it does not affect the properties and representation of our reduction.
+
 
 \section{Another example: Elementary Path Problem}
 

@@ -32,7 +32,7 @@
 \contentsline {section}{\numberline {3.8}Discussion on Distributivity}{35}
 \contentsline {section}{\numberline {3.9}Simple example: Min Plus with Ceiling Semiring}{39}
 \contentsline {section}{\numberline {3.10}Add Constant by Disjoint Union}{44}
-\contentsline {section}{\numberline {3.11}Predicate Reduction with Disjoint Annihilator}{46}
-\contentsline {section}{\numberline {3.12}Another example: Elementary Path Problem}{46}
-\contentsline {chapter}{\numberline {4}Evaluation}{47}
-\contentsline {chapter}{\numberline {5}Summary and Conclusions}{49}
+\contentsline {section}{\numberline {3.11}Predicate Reduction with Disjoint Constant}{46}
+\contentsline {section}{\numberline {3.12}Another example: Elementary Path Problem}{47}
+\contentsline {chapter}{\numberline {4}Evaluation}{49}
+\contentsline {chapter}{\numberline {5}Summary and Conclusions}{51}
