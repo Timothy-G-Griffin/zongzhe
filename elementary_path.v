@@ -31,7 +31,7 @@ Variable c : cas_constant.
 
 Definition brel_list_S  : brel (list S) := brel_list S eqS.
 
-
+(*
 Lemma beq_nat_to_prop  : ∀ s t: nat, beq_nat s t = true -> s = t. 
 Proof.  induction s;  induction t; simpl; intro H; auto; discriminate. Defined. 
 
@@ -41,7 +41,7 @@ Proof. intros s t H.
        compute in H. discriminate.
        compute in H. discriminate.
        Admitted.
-
+*)
 
 Lemma brel_list_ref : brel_reflexive (list S) brel_list_S.
 Proof. intro s. induction s.
@@ -51,22 +51,13 @@ Qed.
 
 Lemma brel_list_sym : brel_symmetric (list S) brel_list_S.
 Proof. intros a b H.
-       assert(A := brel_list_to_prop a b H). rewrite A. apply brel_list_ref.
-Qed.
+Admitted. 
 
 Lemma brel_list_tran : brel_transitive (list S) brel_list_S.
-Proof. intros x y z H1 H2.  
-    assert(A := brel_list_to_prop x y H1). rewrite A.
-    assert(B := brel_list_to_prop y z H2). rewrite B. 
-    apply brel_list_ref.
-Qed.
+Admitted. 
 
 Lemma brel_list_congruence : brel_congruence (list S) brel_list_S brel_list_S.
-Proof. intros x y m n H1 H2.
-    assert(A := brel_list_to_prop x m H1). rewrite A.
-    assert(B := brel_list_to_prop y n H2). rewrite B.
-    auto.
-Qed. 
+Admitted. 
 
 Definition brel_list_const : brel (cas_constant + list S ) := brel_add_constant brel_list_S c. 
 
@@ -133,12 +124,13 @@ match l with
 end.
 
 Lemma dup_list_cong (l1 l2 : list S): brel_list S eqS l1 l2 = true -> dup_in_list S eqS l1 = dup_in_list S eqS l2.
-Proof. intros H.
+Admitted. 
+(*Proof. intros H.
        assert (A := brel_list_to_prop l1 l2 H).
        rewrite A. induction l2. compute. auto. simpl.  
        case_eq(elem_in_list S eqS a l2); intro K;
        case_eq(dup_in_list S eqS l2); intro L; auto.
-Qed. 
+Qed. *) 
 
 Close Scope nat.
 Definition T := cas_constant + list S.
@@ -187,20 +179,23 @@ Lemma beq_list_appS_congruence :
    ∀ s1 s2 t1 t2 : list S,
    brel_list_S s1 t1 = true
    → brel_list_S s2 t2 = true → brel_list_S (appS s1 s2) (appS t1 t2) = true.
-Proof. intros s1 s2 t1 t2 H1 H2.
+Admitted. 
+(*Proof. intros s1 s2 t1 t2 H1 H2.
        assert (A := brel_list_to_prop s1 t1 H1).
        assert (B := brel_list_to_prop s2 t2 H2).
        rewrite A,B. apply brel_list_ref.
-Qed.
+Qed.*) 
 
 Lemma bop_list_appS_congruence : bop_congruence (list S) brel_list_S appS.
+Admitted.
+(*
 Proof. unfold bop_congruence. unfold brel_list_S, appS, app.
     intros s1 s2 t1 t2 H1 H2.
     assert (A := brel_list_to_prop s1 t1 H1).
     assert (B := brel_list_to_prop s2 t2 H2).
     rewrite A,B. apply brel_list_ref.
 Qed.
-
+*)
 
 Lemma bop_list_appS_associative : bop_associative (list S) brel_list_S appS.
 Proof.  unfold bop_associative. intros s t u. unfold appS, app.
@@ -390,51 +385,158 @@ Open Scope nat.
 
 Fixpoint dic_order (l1 l2 : list S) : bool :=
 match l1,l2 with
-| nil,nil => true
 | nil,_ => true
-| _,nil => false
-| x::xl, y :: yl => if eqS x y then true else dic_order xl yl
+| _,nil => false    
+| x::xl, y :: yl => if eqS x y
+                    then dic_order xl yl
+                    else x <? y 
 end.
 
+
+Lemma brel_dic_order_reflexive : brel_reflexive (list S) dic_order.
+Proof. intro l. induction l. auto. unfold dic_order. rewrite (refS a); auto.
+Qed.
+
+Lemma brel_dic_order_transitive : brel_transitive (list S) dic_order.
+Admitted.
+
+Lemma brel_dic_order_total (l1 l2 : list S) :  (dic_order l1 l2 = true) +  (dic_order l2 l1 = true).
+Admitted.
+
+Definition brel_antisymmetric (S : Type) (r1 : brel S) (r2 : brel S) := 
+    ∀ s t : S, (r2 s t = true) → (r2 t s = true) → (r1 s t = true). 
+
+Lemma brel_dic_order_antisymmetric :  brel_antisymmetric (list S) brel_list_S dic_order. 
+Admitted.
+
+
+Definition dic_minS : binary_op (list S) := λ l1 l2, if dic_order l1 l2 then l1 else l2.
+Definition left_shortest : binary_op (list S) := λ l1 l2, if length l1 <=? length l2 then l1 else l2.
+
+
+Lemma bop_dic_minS_selective : bop_selective (list S) brel_list_S dic_minS.
+Proof.  unfold bop_selective. intros s t.
+        unfold dic_minS.
+        case_eq(dic_order s t); intro K.
+        left. apply brel_list_ref.
+        right. apply brel_list_ref.
+Qed.
+
+Lemma bop_dic_minS_commutative : bop_commutative (list S) brel_list_S dic_minS.
+Proof.  intros s t.
+        unfold dic_minS.
+        case_eq(dic_order s t); intro J1; case_eq(dic_order t s); intro J2. 
+        apply brel_dic_order_antisymmetric; auto.
+        apply brel_list_ref.
+        apply brel_list_ref.
+        destruct (brel_dic_order_total s t) as [L | R].
+        rewrite L in J1. discriminate J1.
+        rewrite R in J2. discriminate J2.         
+Qed. 
+
+Lemma bop_left_shortest_selective : bop_selective (list S) brel_list_S left_shortest.
+Proof.  unfold bop_selective. intros s t.
+        unfold left_shortest.
+        case_eq(length s <=? length t); intro K.
+        left. apply brel_list_ref.
+        right. apply brel_list_ref.
+Qed.
+
+
+Lemma bop_dic_minS_associative : bop_associative (list S) brel_list_S dic_minS.
+Proof. intros x y z. unfold dic_minS.
+       case_eq(dic_order x y); intro K1; case_eq(dic_order y z); intro K2; auto.
+       rewrite K1. 
+       case_eq(dic_order x z); intro K3. 
+       apply brel_list_ref.
+       apply brel_list_sym.
+       assert (J := brel_dic_order_transitive _ _ _ K1 K2). rewrite K3 in J. discriminate J. 
+       case_eq(dic_order x z); intro K3.
+       apply brel_list_ref.
+       apply brel_list_ref.
+       rewrite K1.        apply brel_list_ref.
+       case_eq(dic_order x z); intro K3.
+       assert (K4 : dic_order y x = true). destruct (brel_dic_order_total x y) as [L | R]. rewrite L in K1. discriminate K1. exact R. 
+       assert (K5 : dic_order z y = true). destruct (brel_dic_order_total y z) as [L | R]. rewrite L in K2. discriminate K2. exact R. 
+       assert (J := brel_dic_order_transitive _ _ _ K5 K4). 
+       assert (N := brel_dic_order_antisymmetric _ _ J K3). exact N. 
+       apply brel_list_ref.
+Qed. 
+       
+(*
 Lemma dic_order_eq (l1 l2: list S) : length l1 =? length l2 = true -> dic_order l1 l2 = true -> l1 = l2.
 Proof. intros H1 H2. apply beq_nat_true in H1. unfold dic_order in H2.  unfold length in H1.
 Admitted.
+*) 
 
-Lemma dic_order_refl (l: list S) :  dic_order l l = true.
-Proof. induction l. auto. unfold dic_order. rewrite (refS a); auto.
-Qed.
 
-Lemma dic_order_cov (l1 l2 : list S) :  dic_order l1 l2 = false ->  dic_order l2 l1 = true.
-Proof. intro H. induction l1,l2. auto.
-   compute in H. discriminate. Admitted.
 
 
 Definition minS : binary_op (list S) :=
-λ l1 l2, if length l1 <? length l2 then l1
-         else if length l1 =? length l2 then 
-              if dic_order l1 l2 then l1 else l2
-         else l2.
+  λ l1 l2, if length l1 =? length l2
+           then dic_minS l1 l2 
+           else left_shortest l1 l2.
+
 Definition minT := bop_add_id minS c.
 
 Lemma beq_list_minS_congruence : 
    ∀ s1 s2 t1 t2 : list S,
    brel_list_S s1 t1 = true
    → brel_list_S s2 t2 = true → brel_list_S (minS s1 s2) (minS t1 t2) = true.
+Admitted. 
+(*
 Proof. intros s1 s2 t1 t2 H1 H2.
        assert (A := brel_list_to_prop s1 t1 H1).
        assert (B := brel_list_to_prop s2 t2 H2).
        rewrite A,B. apply brel_list_ref.
 Qed.
+*)
 
-Lemma bop_list_minS_congruence : bop_congruence (list S) brel_list_S minS.
+  
+  Lemma bop_list_minS_congruence : bop_congruence (list S) brel_list_S minS.
+  Admitted.
+  (*
 Proof. unfold bop_congruence. unfold brel_list_S, minS.
     intros s1 s2 t1 t2 H1 H2.
     assert (A := brel_list_to_prop s1 t1 H1).
     assert (B := brel_list_to_prop s2 t2 H2).
     rewrite A,B. apply brel_list_ref.
 Qed.
+   *)
 
-
+Lemma bop_list_minS_associative : bop_associative (list S) brel_list_S minS.
+Proof.  unfold bop_associative. intros s t u. unfold minS.
+        case_eq(length s =? length t); intro K1; 
+        case_eq(length t =? length u); intro K2; auto.
+        assert (J1 : length (dic_minS s t) =? length u = true). admit. rewrite J1.
+        assert (J2 : length s =? length (dic_minS t u) = true). admit. rewrite J2.
+        apply bop_dic_minS_associative.
+        assert (J1 : length (dic_minS s t) =? length u = false). admit. rewrite J1.
+        destruct (bop_left_shortest_selective t u) as [L | R].
+        assert (J2: length s =? length (left_shortest t u) = true). admit. rewrite J2. 
+        admit. (* congruence ... *) 
+        assert (J2 : length s =? length (left_shortest t u) = false). admit. (* easy *) rewrite J2.
+        admit. (* congruence ... *)
+        assert (J1 : length s =? length (dic_minS t u) = false). admit. rewrite J1.        
+        destruct (bop_left_shortest_selective s t) as [L | R].
+        assert (J2 : length (left_shortest s t) =? length u = false). admit. (* easy *) rewrite J2.        
+        admit. (* congruence ... *) 
+        assert (J2 : length (left_shortest s t) =? length u = true). admit. (* easy *) rewrite J2.                
+        admit. (* congruence ... *)
+        destruct (bop_left_shortest_selective s t) as [J1 | J1];
+        destruct (bop_left_shortest_selective t u) as [J2 | J2]; 
+        case_eq(length s =? length u); intro J3. 
+        admit. (* contra *) 
+        admit. (* assoc of left_shortest *)        
+        admit. (* congr *) 
+        admit. (* assoc of left_shortest *)        
+        admit. (* assoc of left_shortest *)                 
+        admit. (* assoc of left_shortest *)        
+        admit. (* contra *) 
+        admit. (* assoc of left_shortest *)                 
+Admitted. 
+        
+(*        
 Lemma bop_list_minS_associative : bop_associative (list S) brel_list_S minS.
 Proof.  unfold bop_associative. intros s t u. unfold minS.
         case_eq(length s <? length t);intro K.
@@ -454,41 +556,37 @@ Proof.  unfold bop_associative. intros s t u. unfold minS.
     apply beq_nat_true in M.
     rewrite <- M.
     apply Nat.ltb_lt in K.
-    admit.
+    admit. (* need lemma : length s < length t -> (length t =? length s) = false *) 
         rewrite A. rewrite M; simpl. rewrite J. apply brel_list_ref.
         assert (A : length t =? length u = false).
         apply Nat.ltb_lt in K. 
-        admit.
+        admit.  (*  s < t and u <= s -> u < t  ... *) 
         rewrite A. rewrite J,M. apply brel_list_ref.
         case_eq(length s =? length t); intro J.
         case_eq(dic_order s t); intro M.
 Admitted.
-
+*)
 
 Lemma bop_list_minS_selective : bop_selective (list S) brel_list_S minS.
 Proof.  unfold bop_selective. intros s t. unfold minS.
-        case_eq(length s <? length t); intro K. rewrite brel_list_ref; auto.
-        case_eq(length s =? length t); intro L.
-        case_eq(dic_order s t); intro M; rewrite brel_list_ref; auto.
-        rewrite brel_list_ref; auto.
+        case_eq(length s =? length t); intro K. apply bop_dic_minS_selective.
+        apply bop_left_shortest_selective. 
 Qed.
+
 
 Lemma bop_list_minS_commutative : bop_commutative(list S) brel_list_S minS.
 Proof.  unfold bop_commutative. intros s t. unfold minS.
-    case_eq(length s <? length t); intro K. 
-    assert (A : length t <? length s = false). admit.
-    rewrite A.
-    assert (B : length t =? length s = false). admit.
-    rewrite B. rewrite brel_list_ref; auto.
-        case_eq(length s =? length t); intro L. assert (L' := L).
-        apply beq_nat_true in L. rewrite L. rewrite <- beq_nat_refl.
-        rewrite <- L at 1. rewrite K. 
-        case_eq (dic_order s t); intro M.
-        assert (A := dic_order_eq s t L' M). rewrite A. auto. rewrite dic_order_refl. rewrite brel_list_ref; auto.
-        assert (B := dic_order_cov s t M). rewrite B.  rewrite brel_list_ref; auto.
-        assert (A:length t <? length s = true). admit.    
-        rewrite A.
-        rewrite brel_list_ref; auto.
+        case_eq(length s =? length t); intro K.
+        assert (J : length t =? length s = true). rewrite Nat.eqb_eq in K. rewrite Nat.eqb_eq. rewrite K. auto. 
+        rewrite J. apply bop_dic_minS_commutative. 
+        assert (J : length t =? length s = false). rewrite Nat.eqb_neq in K. rewrite Nat.eqb_neq. intro. rewrite H in K. elim K. auto. 
+        unfold left_shortest.
+        case_eq(length s <=? length t); intro N.
+        Search (_ <=? _).
+        assert (M : length t <=? length s = false). admit.
+        admit. 
+        assert (M : length t <=? length s = true). admit.
+        admit. 
 Admitted.
 
 Lemma bop_list_minT_congruence : bop_congruence T brel_list_const minT.
@@ -542,8 +640,12 @@ Proof. intros n1 n2 H.
         destruct n2. auto.
         unfold P in H.
         assert (A := bop_list_minT_selective (inr l) (inr l0)).
-        destruct A. unfold minT,bop_add_id in H. apply brel_list_to_prop in e. rewrite e in H. left; auto.
-        unfold minT,bop_add_id in H. apply brel_list_to_prop in e. rewrite e in H. right; auto.
+        destruct A. unfold minT,bop_add_id in H.
+        simpl in e.
+        assert (K := dup_list_cong _ _ e).  rewrite K in H. left. exact H.
+        simpl in H.
+        simpl in e.
+        assert (K := dup_list_cong _ _ e).  rewrite K in H. right. exact H.
 Qed.
 
 
