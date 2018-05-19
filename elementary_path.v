@@ -47,6 +47,10 @@ Admitted.
 Lemma brel_list_congruence : brel_congruence (list S) brel_list_S brel_list_S.
 Admitted. 
 
+Lemma brel_list_length_cong (l1 l2 : list S): brel_list_S l1 l2 = true -> length l1 = length l2.
+Proof. intro H. unfold length.
+Admitted.
+
 Definition brel_list_const : brel (cas_constant + list S ) := brel_add_constant brel_list_S c. 
 
 Lemma brel_list_const_ref : brel_reflexive (cas_constant + list S) brel_list_const.
@@ -274,17 +278,32 @@ Proof. intro s. destruct s; unfold appT, appS,bop_add_ann,brel_list_const,brel_a
 Qed.
 
 Lemma neq_list_cons (a : S): forall l : list S, brel_list_S (a :: l) l = false.
-Proof. intros l. induction l. compute. auto.
-       unfold brel_list_S,brel_list.
-       case_eq (eqS a a0); intros K; simpl; rewrite K. simpl.
-       admit. 
+Proof. intros l. 
+       case_eq(brel_list_S (a :: l) l); intro K. 
+       assert (A :=     brel_list_length_cong _ _ K ).
+       simpl in A.
+       assert (B := n_Sn (length l)).
+   elim B. rewrite A. auto.
        auto.
-Admitted.
+Qed.
 
 Lemma neq_list_app (l : list S): forall a: S, forall l0 : list S, brel_list_S (a::l0 ++ l) l = false.
-Proof. intros a l0. induction l0. rewrite app_nil_l. apply neq_list_cons.
-       rewrite app_comm_cons.
-Admitted.
+Proof. intros a l0. 
+   case_eq(brel_list_S (a :: l0 ++ l) l); intro K. 
+   assert (A :=     brel_list_length_cong _ _ K ).
+   rewrite app_comm_cons in A.
+   rewrite app_length in A.
+   rewrite <- Nat.add_0_l in A.
+rewrite plus_comm in A.
+assert (length l + length (a :: l0) = length l + 0).
+rewrite A. rewrite plus_comm. auto.
+apply plus_reg_l in H.
+compute in H.
+symmetry in H.
+apply O_S in H.
+elim H.
+ auto.
+Qed.
 
 Lemma uop_app_preserves_ann  :
  uop_preserves_ann T brel_list_const appT  uop_list.
@@ -370,6 +389,7 @@ Qed.
 
 Lemma brel_dic_order_transitive : brel_transitive (list S) dic_order.
 Proof. intros x y z H1 H2.
+       
 Admitted.
 
 Lemma brel_dic_order_total (l1 l2 : list S) :  (dic_order l1 l2 = true) +  (dic_order l2 l1 = true).
@@ -475,10 +495,6 @@ Proof. intros x y m n H1 H2.
        assert (A := brel_dic_order_congruence _ _ _ _ H1 H2).
        rewrite A in K. rewrite K. exact H2.
 Qed.
-
-Lemma brel_list_length_cong (l1 l2 : list S): brel_list_S l1 l2 = true -> length l1 = length l2.
-Proof. intro H. unfold length.
-Admitted.
 
 Lemma bop_left_shortest_congruence : bop_congruence (list S) brel_list_S left_shortest.
 Proof. intros x y m n H1 H2.
