@@ -3,7 +3,7 @@ Require Import Coq.Bool.Bool.
 Require Import CAS.basic. 
 Require Import CAS.properties. 
 Require Import CAS.structures.
-Require Import CAS.reduce_annihilators_redux. 
+Require Import CAS.reduce_annihilators. 
 Require Import CAS.predicate_reduce.
 
 
