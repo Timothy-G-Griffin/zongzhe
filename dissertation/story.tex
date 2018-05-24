@@ -88,6 +88,15 @@ For a given graph $G = (V,E)$, A cut set $C \in E$ for nodes $i$ and $j$ is a se
 So Martelli’s semiring =$(S,\oplus,\otimes,\bar0,\bar1)$ where $S = min_\leq(2^{2^E})$, $X\oplus Y = min_\leq(\{U \cup V | U \in X, V \in Y\})$, $X\otimes Y = min_\leq(X \cup Y)$, $\bar0 = \{\{\}\}$ and $\bar1 = \{\}$.\\
 Here we can easily prove that $min_\leq$ satisfies our previous definition of reduction. So $min_\leq$ is a classical reduction. (I am considering whether or not paste the proof of matrelli's semiring)
 \section{Generalized Reduction}
+The previous section mentioned that our definition of classical reduction is implement un-friendly.
+This is because in the classical reduction, our actual problem set is $S_r = \{s\in S|r(s)= s\}$ with record. Record is difficult to be accurately represented in most situations. 
+At the same time, since our real problem set has changed from the original $S$ to the current $S_r = \{s\in S|r(s)= s\}$, all of our operator/relationship domains have changed. 
+This makes it almost impossible for us to define the combinator that exists on reduction. 
+Taking into account the elementary path problem we previously focused on, in which the reduction does not satisfy the properties of classical reduction, so we need to represent/generalize our reduction in a new way.\\\\
+How generalize reduction is exactly what we need to consider.
+First we start with binary relationship:equality as the starting point.\\
+If there is an equality $=$, which is a binary relationship, on the original problem set $S$, then it is obvious that the equality $=_r$ on the reduced problem set  $S_r = \{s\in S|r(s)= s\}$ will no longer to be $=$ any more. If we have $x,y \in \{s\in S|r(s)= s\}$, because we have $r(x) =x$ and $r(y) = y$, then $x =_r y \leftrightarrow r(x) = r(y)$. So we can represent the equality on the reduced set as $\forall x,y \in \{s\in S|r(s)= s\}, x =_r y \equiv r(x) = r(y)$.\\
+For the same problem, we need to generalize the binary operator under the reduction type. 
 
 \section{Predicate Reduction}
 \section{Construct the Path Problem Semiring}
