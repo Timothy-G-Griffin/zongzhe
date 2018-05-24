@@ -993,6 +993,28 @@ Proof. apply bop_full_reduce_is_ann.
     apply bop_is_ann_app_const;auto.
 Qed.
 
+
+
+Lemma bop_not_left_distributive_min_app : bop_not_left_distributive T (brel_reduce uop_list brel_list_const) bop_list_min bop_list_app.
+Proof. exists (inr (1::nil), inr (1::2::nil),inr (2::3::4::nil)). 
+       compute. auto.
+Qed.
+
+
+Lemma bop_not_right_distributive_min_app : bop_not_right_distributive T (brel_reduce uop_list brel_list_const) bop_list_min bop_list_app.
+Proof. exists (inr (1::nil), inr (1::2::nil),inr (2::3::4::nil)). 
+       compute. auto.
+Qed.
+
+Lemma bop_left_distributive_min_app_decidable : bop_left_distributive_decidable T (brel_reduce uop_list brel_list_const) bop_list_min bop_list_app.
+Proof. right. apply  bop_not_left_distributive_min_app.
+Qed.
+
+Lemma bop_right_distributive_min_app_decidable : bop_right_distributive_decidable T (brel_reduce uop_list brel_list_const) bop_list_min bop_list_app.
+Proof. right. apply  bop_not_right_distributive_min_app.
+Qed.
+
+
 Definition min_proofs  : 
 commutative_selective_semigroup_proofs T (brel_reduce uop_list brel_list_const) bop_list_min
 := {|
@@ -1020,46 +1042,29 @@ Definition eqv_proofs_eq_T : eqv_proofs T (brel_reduce uop_list brel_list_const)
    ; eqv_witness     := (inl c)
 |}. 
 
-Record non_distributive_dioid_proofs (S: Type) (eq : brel S) (add mul : binary_op S) (zero : S) (one : S) :=
-{  
-  dioid_zero_is_add_id     : bop_is_id S eq add zero
-; dioid_one_is_mul_id      : bop_is_id S eq mul one                                                      
-; dioid_zero_is_mul_ann    : bop_is_ann S eq mul zero
-; dioid_one_is_add_ann     : bop_is_ann S eq add one
-}.
-
 Definition min_app_non_distributive_dioid_proofs : 
-non_distributive_dioid_proofs T (brel_reduce uop_list brel_list_const) bop_list_min bop_list_app (inl c) (inr nil)
+bioid_proof T (brel_reduce uop_list brel_list_const) bop_list_min bop_list_app (inl c) (inr nil)
 := {|  
-  dioid_zero_is_add_id     := bop_is_id_min
-; dioid_one_is_mul_id      := bop_is_id_app
-; dioid_one_is_add_ann     := bop_is_ann_min
-; dioid_zero_is_mul_ann    := bop_is_ann_app
+bioid_left_distributive_decidable := bop_left_distributive_min_app_decidable
+; bioid_right_distributive_decidable := bop_right_distributive_min_app_decidable
+; bioid_zero_is_add_id     := bop_is_id_min
+; bioid_one_is_mul_id      := bop_is_id_app 
+; bioid_zero_is_mul_ann     := bop_is_ann_app
+; bioid_one_is_add_ann    := bop_is_ann_min
 |}.
 
-Record non_distributive_selective_dioid (S : Type) := {
-    dioid_eq         : brel S  
-  ; dioid_add        : binary_op S
-  ; dioid_mul        : binary_op S                                   
-  ; dioid_zero       : S
-  ; dioid_one        : S
-  ; diode_eqv        : eqv_proofs S dioid_eq
-  ; diode_add_pfs    : commutative_selective_semigroup_proofs S dioid_eq dioid_add 
-  ; diode_mul_pfs    : semigroup_proofs S dioid_eq dioid_mul 
-  ; dioid_pfs        : non_distributive_dioid_proofs S dioid_eq dioid_add dioid_mul dioid_zero dioid_one
-}.
 
-Definition min_app_non_distributive_dioid : non_distributive_selective_dioid T
+Definition min_app_non_distributive_dioid : selective_bioid T
 := {|
-    dioid_eq         := brel_reduce uop_list brel_list_const
-  ; dioid_add        := bop_list_min
-  ; dioid_mul        := bop_list_app                                 
-  ; dioid_zero       := inl c
-  ; dioid_one        := inr nil
-  ; diode_eqv        := eqv_proofs_eq_T
-  ; diode_add_pfs    := min_proofs
-  ; diode_mul_pfs    := app_proofs
-  ; dioid_pfs        := min_app_non_distributive_dioid_proofs
+    sbioid_eq         := brel_reduce uop_list brel_list_const
+  ; sbioid_add        := bop_list_min
+  ; sbioid_mul        := bop_list_app                                 
+  ; sbioid_zero       := inl c
+  ; sbioid_one        := inr nil
+  ; sbioid_eqv        := eqv_proofs_eq_T
+  ; sbioid_add_pfs    := min_proofs
+  ; sbioid_mul_pfs    := app_proofs
+  ; sbioid_pfs        := min_app_non_distributive_dioid_proofs
 |}.
 
 End ElementaryPath.

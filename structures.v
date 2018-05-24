@@ -254,4 +254,25 @@ Record commutative_selective_dioid (S : Type) := {
   ; csdioid_pfs        : dioid_proofs S csdioid_eq csdioid_add csdioid_mul csdioid_zero csdioid_one
 }.
 
+Record bioid_proof (S: Type) (eq : brel S) (add mul : binary_op S) (zero : S) (one : S) :=
+{  
+  bioid_left_distributive_decidable  : bop_left_distributive_decidable S eq add mul
+; bioid_right_distributive_decidable : bop_right_distributive_decidable S eq add mul
+; bioid_zero_is_add_id     : bop_is_id S eq add zero
+; bioid_one_is_mul_id      : bop_is_id S eq mul one                                                      
+; bioid_zero_is_mul_ann    : bop_is_ann S eq mul zero
+; bioid_one_is_add_ann     : bop_is_ann S eq add one
+}.
 
+
+Record selective_bioid (S : Type) := {
+  sbioid_eq         : brel S  
+  ; sbioid_add        : binary_op S
+  ; sbioid_mul        : binary_op S                                   
+  ; sbioid_zero       : S
+  ; sbioid_one        : S
+  ; sbioid_eqv        : eqv_proofs S sbioid_eq
+  ; sbioid_add_pfs    : commutative_selective_semigroup_proofs S sbioid_eq sbioid_add 
+  ; sbioid_mul_pfs    : semigroup_proofs S sbioid_eq sbioid_mul 
+  ; sbioid_pfs        : bioid_proof S sbioid_eq sbioid_add sbioid_mul sbioid_zero sbioid_one
+}.
