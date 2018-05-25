@@ -10,6 +10,7 @@ Require Import CAS.reduce_annihilators.
 Require Import CAS.reduction_theory.
 Require Import CAS.min_plus_ceiling_reduction.
 Require Import CAS.elementary_path.
+Require Import CAS.lexicographic_product.
 
 Section Lexicographic_product_minPlusWithCeiling_ElementaryPath.
 
@@ -60,6 +61,43 @@ Definition brel_eq_M :brel M := brel_reduce uop_rap eqM.
 Definition bop_rap_add : binary_op M := bop_fpr zero P add.
 Definition bop_rap_mul : binary_op M := bop_fpr zero P mul.
 
+Lemma brel_M_reflexive: brel_reflexive M eqM.
+Proof. apply brel_product_reflexive.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_reflexive.
+    apply elementary_path.brel_reduce_list_const_reflexive.
+    apply brel_eq_nat_reflexive.
+Qed.
+
+Lemma brel_M_symmetric : brel_symmetric M eqM.
+Proof. 
+    apply brel_product_symmetric; auto.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric.
+    apply elementary_path.brel_reduce_list_const_symmetric.
+    apply brel_eq_nat_reflexive.
+    apply brel_eq_nat_symmetric.
+    apply brel_eq_nat_transitive.
+Qed.  
+
+Lemma brel_M_transitive : brel_transitive M eqM.
+Proof. 
+    apply brel_product_transitive; auto.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_transitive.
+    apply elementary_path.brel_reduce_list_const_transitive.
+    apply brel_eq_nat_reflexive.
+    apply brel_eq_nat_symmetric.
+    apply brel_eq_nat_transitive.
+Qed.  
+
+Lemma brel_M_congruence : brel_congruence M eqM eqM.
+Proof. 
+    apply brel_product_congruence; auto. 
+    apply min_plus_ceiling_reduction.brel_reduce_nat_congruence.
+    apply elementary_path.brel_reduce_list_const_congruence.
+    apply brel_eq_nat_reflexive.
+    apply brel_eq_nat_symmetric.
+    apply brel_eq_nat_transitive.
+Qed.  
+
 Lemma brel_eq_M_reflexive : brel_reflexive M brel_eq_M.
 Proof. apply brel_reduce_reflexive.
     apply brel_product_reflexive; auto.
@@ -98,10 +136,164 @@ Proof. apply brel_reduce_congruence; auto.
     apply brel_eq_nat_transitive.
 Qed.  
 
-       
-Lemma bop_rap_mul_associative :  bop_associative M brel_eq_M bop_rap_mul.
-Proof.
+Lemma P_decompose_add : pred_bop_decompose M P add.
+Proof. intros s1 s2 H1.
+       (* selective *)
 Admitted.
+
+
+Lemma bop_rap_add_associative :  bop_associative M brel_eq_M bop_rap_add.
+Proof. apply bop_associative_fpr_decompositional_id.
+    apply brel_M_reflexive;auto.
+    apply brel_M_symmetric;auto.
+    apply brel_M_transitive;auto.
+    apply P_true.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_reflexive; auto.
+    apply P_congruence.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+    apply elementary_path.brel_reduce_list_const_symmetric;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       apply elementary_path.brel_reduce_list_const_transitive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       admit. (* apply bop_lexicographic_product_congruence;auto. *)
+       admit. (* apply bop_lexicographic_product_associative. *)
+       apply P_decompose_add.
+       apply bop_lexicographic_product_is_id.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+          apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+          apply elementary_path.brel_reduce_list_const_reflexive;auto.
+          apply brel_eq_nat_reflexive; auto.
+          apply bop_is_id_ceiling_min_ceiling.
+          apply bop_is_id_min.
+          apply brel_eq_nat_reflexive; auto.
+          apply brel_eq_nat_symmetric.
+          apply brel_eq_nat_transitive.
+Admitted.
+
+
+Lemma bop_rap_add_commutative :  bop_commutative M brel_eq_M bop_rap_add.
+Proof. apply bop_full_reduce_commutative.
+    apply uop_predicate_reduce_congruence; auto.
+    apply brel_product_reflexive; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_reflexive; auto.
+       apply elementary_path.brel_reduce_list_const_reflexive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       unfold pred_congruence. apply P_congruence.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+       apply elementary_path.brel_reduce_list_const_symmetric;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       apply elementary_path.brel_reduce_list_const_transitive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+      apply bop_lexicographic_product_commutative.
+      apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+       apply elementary_path.brel_reduce_list_const_reflexive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply bop_nat_min_selective.
+       apply bop_nat_min_commutative.
+       apply bop_list_min_commutative.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+Qed.
+
+
+       
+Lemma bop_rap_add_congruence : bop_congruence M brel_eq_M bop_rap_add.
+Proof. apply bop_full_reduce_congruence; auto.
+       apply uop_predicate_reduce_congruence; auto.
+       apply brel_product_reflexive; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_reflexive; auto.
+       apply elementary_path.brel_reduce_list_const_reflexive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       unfold pred_congruence. apply P_congruence.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+       apply elementary_path.brel_reduce_list_const_symmetric;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       apply elementary_path.brel_reduce_list_const_transitive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       apply bop_lexicographic_product_congruence; auto.
+Admitted.
+
+Lemma bop_rap_add_selective : bop_selective M brel_eq_M bop_rap_add.
+Proof. apply bop_full_reduce_selective; auto.
+       apply brel_M_transitive;auto.
+       apply uop_predicate_reduce_congruence; auto.
+       apply brel_product_reflexive; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_reflexive; auto.
+       apply elementary_path.brel_reduce_list_const_reflexive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       unfold pred_congruence. apply P_congruence.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+       apply elementary_path.brel_reduce_list_const_symmetric;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       apply elementary_path.brel_reduce_list_const_transitive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       apply uop_predicate_reduce_idempotent;auto.
+       apply brel_M_reflexive.
+       apply bop_lexicographic_product_selective; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+       apply elementary_path.brel_reduce_list_const_reflexive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply bop_nat_min_selective.
+       apply bop_list_min_selective;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+Qed.
+
+Lemma bop_rap_mul_associative :  bop_associative M brel_eq_M bop_rap_mul.
+Proof. apply bop_rap_mul_associative_compositional.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_reflexive; auto.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+    apply elementary_path.brel_reduce_list_const_reflexive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply elementary_path.brel_reduce_list_const_symmetric;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       apply elementary_path.brel_reduce_list_const_transitive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       apply min_plus_ceiling_reduction.bop_nat_plus_congruence.
+       apply elementary_path.bop_list_app_congruence.
+       apply brel_eq_nat_reflexive.
+        apply brel_eq_nat_symmetric.
+        apply brel_eq_nat_transitive.
+        apply min_plus_ceiling_reduction.bop_nat_plus_associative.
+        apply elementary_path.bop_list_app_associative.
+        apply brel_eq_nat_reflexive.
+        apply brel_eq_nat_symmetric.
+        apply brel_eq_nat_transitive.
+        apply bop_is_ann_ceiling_plus_ceiling.
+        apply bop_is_ann_app.
+        apply brel_eq_nat_reflexive.
+        apply brel_eq_nat_symmetric.
+        apply brel_eq_nat_transitive.
+Qed.
 
 
 Lemma bop_rap_mul_congruence : bop_congruence M brel_eq_M bop_rap_mul.
@@ -130,29 +322,188 @@ Proof. apply bop_full_reduce_congruence; auto.
         apply brel_eq_nat_transitive.
 Qed.
 
+Lemma bop_mul_not_commutative : bop_not_commutative M eqM mul.
+Proof. apply bop_product_not_commutative_right.
+       exact ceiling.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_reflexive; auto.
+       apply bop_list_app_not_commutative.
+Qed.
+
+(* question *)
 Lemma bop_rap_mul_not_commutative : bop_not_commutative M brel_eq_M bop_rap_mul.
-Proof.
+Proof. 
 Admitted.
 
 Lemma bop_rap_mul_commutative_decidable : bop_commutative_decidable M brel_eq_M bop_rap_mul.
 Proof. right. apply bop_rap_mul_not_commutative.
 Qed.
 
-Lemma bop_is_id_add_zero : bop_is_id M eqM add zero.
-Proof.
+
+Lemma bop_is_id_add_zero : bop_is_id M brel_eq_M bop_rap_add zero.
+Proof. apply bop_full_reduce_is_id.
+       apply brel_M_reflexive.
+       apply brel_M_transitive.
+       apply uop_predicate_reduce_congruence; auto.
+       apply brel_M_reflexive;auto.
+       unfold pred_congruence. apply P_congruence.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+       apply elementary_path.brel_reduce_list_const_symmetric;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       apply elementary_path.brel_reduce_list_const_transitive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       apply uop_predicate_reduce_idempotent;auto.
+       apply brel_M_reflexive.
+       admit. (* apply bop_lexicographic_product_congruence. *)
+       unfold uop_preserves_id. intros s H.
+       assert (A : bop_is_id M eqM add zero). 
+       apply bop_lexicographic_product_is_id.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+       apply elementary_path.brel_reduce_list_const_reflexive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply bop_is_id_ceiling_min_ceiling.
+       apply bop_is_id_min.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       assert (B := bop_is_id_unique M eqM brel_M_symmetric brel_M_transitive _ _ add H A).
+       assert (C := P_congruence nat T eqN eqT).
+       admit. (* question *)
+       apply bop_lexicographic_product_is_id.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+       apply elementary_path.brel_reduce_list_const_reflexive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply bop_is_id_ceiling_min_ceiling.
+       apply bop_is_id_min.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
 Admitted.
 
-Lemma bop_is_ann_add_one : bop_is_ann M eqM add one.
-Proof.
+Lemma bop_is_ann_add_one : bop_is_ann M brel_eq_M bop_rap_add one.
+Proof. apply bop_full_reduce_is_ann.
+    apply brel_M_reflexive.
+    apply brel_M_transitive.
+    apply uop_predicate_reduce_congruence; auto.
+    apply brel_M_reflexive;auto.
+    unfold pred_congruence. apply P_congruence.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+    apply elementary_path.brel_reduce_list_const_symmetric;auto.
+    apply brel_eq_nat_reflexive; auto.
+    apply brel_eq_nat_symmetric.
+    apply brel_eq_nat_transitive.
+    apply elementary_path.brel_reduce_list_const_transitive;auto.
+    apply brel_eq_nat_reflexive; auto.
+    apply brel_eq_nat_symmetric.
+    apply brel_eq_nat_transitive.
+    admit. (* apply bop_lexicographic_product_congruence. *)
+    unfold uop_preserves_ann. intros s H.
+       assert (A : bop_is_ann M eqM add one). 
+       apply bop_lexicographic_product_is_ann.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+       apply elementary_path.brel_reduce_list_const_reflexive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply bop_is_ann_ceiling_min_zero.
+       apply bop_is_ann_min.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       assert (B := bop_is_ann_unique M eqM brel_M_symmetric brel_M_transitive _ _ add H A).
+       assert (C := P_congruence nat T eqN eqT).
+       admit. (* question *)
+    apply bop_lexicographic_product_is_ann.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+       apply elementary_path.brel_reduce_list_const_reflexive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply bop_is_ann_ceiling_min_zero.
+       apply bop_is_ann_min.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
 Admitted.
 
-Lemma bop_is_id_mul_one : bop_is_id M eqM mul one.
-Proof.
+(* ceiling is not 0 *)
+Lemma bop_is_id_mul_one : bop_is_id M brel_eq_M bop_rap_mul one.
+Proof. apply bop_rap_mul_is_id. 
+    apply min_plus_ceiling_reduction.brel_reduce_nat_reflexive; auto.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+    apply elementary_path.brel_reduce_list_const_reflexive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply elementary_path.brel_reduce_list_const_symmetric;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       apply elementary_path.brel_reduce_list_const_transitive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       apply min_plus_ceiling_reduction.bop_nat_plus_congruence.
+       apply elementary_path.bop_list_app_congruence.
+       apply brel_eq_nat_reflexive.
+        apply brel_eq_nat_symmetric.
+        apply brel_eq_nat_transitive.
+        apply bop_is_id_ceiling_plus_zero.
+        apply bop_is_id_app.
+        apply brel_eq_nat_reflexive.
+        apply brel_eq_nat_symmetric.
+        apply brel_eq_nat_transitive.
+    admit.
+    compute. auto.
 Admitted.
 
-Lemma bop_is_ann_mul_zero : bop_is_ann M eqM mul zero.
-Proof.
+Lemma bop_is_ann_mul_zero : bop_is_ann M brel_eq_M bop_rap_mul zero.
+Proof. apply bop_rap_mul_is_ann.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_reflexive; auto.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+    apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+    apply elementary_path.brel_reduce_list_const_reflexive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply elementary_path.brel_reduce_list_const_symmetric;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       apply elementary_path.brel_reduce_list_const_transitive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       apply min_plus_ceiling_reduction.bop_nat_plus_congruence.
+       apply elementary_path.bop_list_app_congruence.
+       apply brel_eq_nat_reflexive.
+        apply brel_eq_nat_symmetric.
+        apply brel_eq_nat_transitive.
+        apply bop_is_ann_ceiling_plus_ceiling.
+        apply bop_is_ann_app.
+        apply brel_eq_nat_reflexive.
+        apply brel_eq_nat_symmetric.
+        apply brel_eq_nat_transitive.
+Qed.
+
+Lemma bop_not_left_distributive_add_mul : bop_not_left_distributive M brel_eq_M bop_rap_add bop_rap_mul.
+Proof. 
 Admitted.
+
+
+Lemma bop_not_right_distributive_add_mul : bop_not_right_distributive M brel_eq_M bop_rap_add bop_rap_mul.
+Proof. 
+Admitted.
+
+Lemma bop_left_distributive_add_mul_decidable : bop_left_distributive_decidable M brel_eq_M bop_rap_add bop_rap_mul.
+Proof. right. apply  bop_not_left_distributive_add_mul.
+Qed.
+
+Lemma bop_right_distributive_add_mul_decidable : bop_right_distributive_decidable M brel_eq_M bop_rap_add bop_rap_mul.
+Proof. right. apply  bop_not_right_distributive_add_mul.
+Qed.
 
 Definition eqv_proofs_eq_T : eqv_proofs M brel_eq_M
 := {| 
@@ -165,12 +516,12 @@ Definition eqv_proofs_eq_T : eqv_proofs M brel_eq_M
 
 
 Definition min_proofs  : 
-commutative_selective_semigroup_proofs T (brel_reduce uop_list brel_list_const) bop_list_min
+commutative_selective_semigroup_proofs M brel_eq_M bop_rap_add
 := {|
-  cssg_associative   := bop_list_min_associative
-; cssg_congruence    := bop_list_min_congruence
-; cssg_commutative   := bop_list_min_commutative
-; cssg_selective     := bop_list_min_selective                                        
+  cssg_associative   := bop_rap_add_associative
+; cssg_congruence    := bop_rap_add_congruence
+; cssg_commutative   := bop_rap_add_commutative
+; cssg_selective     := bop_rap_add_selective                                       
 |}.
 
 Definition app_proofs: 
@@ -183,24 +534,24 @@ sg_associative   := bop_rap_mul_associative
 
 
 Definition min_app_non_distributive_dioid_proofs : 
-bioid_proof T (brel_reduce uop_list brel_list_const) bop_list_min bop_list_app (inl c) (inr nil)
+bioid_proof M brel_eq_M bop_rap_add bop_rap_mul zero one
 := {|  
-bioid_left_distributive_decidable := bop_left_distributive_min_app_decidable
-; bioid_right_distributive_decidable := bop_right_distributive_min_app_decidable
-; bioid_zero_is_add_id     := bop_is_id_min
-; bioid_one_is_mul_id      := bop_is_id_app 
-; bioid_zero_is_mul_ann     := bop_is_ann_app
-; bioid_one_is_add_ann    := bop_is_ann_min
+bioid_left_distributive_decidable := bop_left_distributive_add_mul_decidable
+; bioid_right_distributive_decidable := bop_right_distributive_add_mul_decidable
+; bioid_zero_is_add_id     := bop_is_id_add_zero
+; bioid_one_is_mul_id      := bop_is_id_mul_one 
+; bioid_zero_is_mul_ann    := bop_is_ann_mul_zero
+; bioid_one_is_add_ann     := bop_is_ann_add_one
 |}.
 
 
-Definition min_app_non_distributive_dioid : selective_bioid T
+Definition min_app_non_distributive_dioid : selective_bioid M
 := {|
-    sbioid_eq         := brel_reduce uop_list brel_list_const
-  ; sbioid_add        := bop_list_min
-  ; sbioid_mul        := bop_list_app                                 
-  ; sbioid_zero       := inl c
-  ; sbioid_one        := inr nil
+    sbioid_eq         := brel_eq_M
+  ; sbioid_add        := bop_rap_add
+  ; sbioid_mul        := bop_rap_mul                                 
+  ; sbioid_zero       := zero
+  ; sbioid_one        := one
   ; sbioid_eqv        := eqv_proofs_eq_T
   ; sbioid_add_pfs    := min_proofs
   ; sbioid_mul_pfs    := app_proofs

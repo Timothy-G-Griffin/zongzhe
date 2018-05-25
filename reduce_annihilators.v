@@ -145,6 +145,31 @@ Proof. intros [s1 t1] [s2 t2]; compute.
           rewrite R in H4. discriminate H4.        
 Qed.
 
+(* important!! mul is always not decompose but compose!! *)
+Lemma P_mul_compose : pred_bop_compose (S * T) P (bop_product mulS mulT).
+Proof. intros [s1 t1] [s2 t2]; compute.
+       intro H.
+       case_eq(eqS s1 zeroS); intro H1; case_eq(eqS s2 zeroS); intro H2; auto.
+       assert (A := cong_mulS s1 s2 zeroS zeroS H1 H2).
+       assert (B := zeroS_is_mul_ann zeroS). destruct B as [B _].
+       assert (C := tranS _ _ _ A B). rewrite C. auto.
+       assert (A := cong_mulS s1 s2 zeroS s2 H1 (refS s2)).
+       assert (B := zeroS_is_mul_ann s2). destruct B as [B _].
+       assert (C := tranS _ _ _ A B). rewrite C. auto.
+       assert (A := cong_mulS s1 s2 s1 zeroS (refS s1) H2).
+       assert (B := zeroS_is_mul_ann s1). destruct B as [_ B].
+       assert (C := tranS _ _ _ A B). rewrite C. auto.
+       rewrite H2 in H. rewrite H1 in H.   
+       case_eq(eqS (mulS s1 s2) zeroS); intro K. auto.
+       destruct H as [H | H].
+       assert (A := cong_mulT t1 t2 zeroT t2 H (refT t2)).
+       assert (B := zeroT_is_mul_ann t2). destruct B as [B _].
+       assert (C := tranT _ _ _ A B). rewrite C. auto.
+       assert (A := cong_mulT t1 t2 t1 zeroT (refT t1) H).
+       assert (B := zeroT_is_mul_ann t1). destruct B as [_ B].
+       assert (C := tranT _ _ _ A B). rewrite C. auto.
+Qed.
+
 Definition bop_rap_add : binary_op (S * T) := bop_fpr (zeroS, zeroT) P (bop_product addS addT).
 Definition bop_rap_lexicographic_add : brel S -> binary_op (S * T) := λ eqS, bop_fpr (zeroS, zeroT) P (bop_llex eqS addS addT).
 Definition bop_rap_mul : binary_op (S * T) := bop_fpr (zeroS, zeroT) P (bop_product mulS mulT).
@@ -192,6 +217,19 @@ Proof. apply bop_associative_fpr_decompositional_ann; auto.
        apply bop_product_is_ann; auto. 
 Qed.
 
+Lemma bop_rap_mul_associative_compositional :  bop_associative (S * T) (brel_reduce uop_rap (brel_product eqS eqT)) bop_rap_mul.
+Proof. apply bop_associative_fpr_compositional; auto. 
+       apply brel_product_reflexive; auto.
+       apply brel_product_symmetric; auto.       
+       apply brel_product_transitive; auto.
+       apply P_true. 
+       unfold pred_congruence. apply P_congruence.
+       apply P_mul_compose.
+       apply bop_product_congruence; auto.
+       apply bop_product_associative; auto.
+Qed.
+
+
 
 Lemma bop_rap_add_commutative :
   bop_commutative S eqS addS ->
@@ -217,6 +255,28 @@ Proof. intros C1 C2.
        unfold pred_congruence. apply P_congruence.
        apply bop_product_commutative; auto.
 Qed.
+
+(* qeustion on this *)
+Lemma bop_rap_mul_not_commutative :
+bop_not_commutative (S * T) (brel_product eqS eqT) (bop_product mulS mulT) ->
+     bop_not_commutative (S * T) (brel_reduce uop_rap (brel_product eqS eqT)) bop_rap_mul.
+Proof. intros H. unfold bop_not_commutative. unfold bop_not_commutative in H.
+       destruct H. destruct x as [x1 x2].
+       exists (x1,x2).
+       unfold brel_reduce,uop_rap,uop_predicate_reduce.
+       unfold P,bop_rap_mul,bop_fpr,uop_predicate_reduce,bop_full_reduce,P;simpl.
+       destruct x1 as [s1 t1]. destruct x2 as [s2 t2].
+       assert (H1:eqS s1 zeroS = false). admit. rewrite H1.
+       assert (H2:eqS s2 zeroS = false). admit. rewrite H2.
+       assert (H3:eqT t1 zeroT = false). admit. rewrite H3.
+       assert (H4:eqT t2 zeroT = false). admit. rewrite H4.
+       simpl.
+     assert (eqS (mulS s1 s2) zeroS || eqT (mulT t1 t2) zeroT = false). admit.
+     rewrite H. rewrite H.
+     assert (eqS (mulS s2 s1) zeroS || eqT (mulT t2 t1) zeroT = false). admit.
+     rewrite H0. rewrite H0. exact y.
+Admitted.
+
 
 Lemma uop_rap_add_preserves_id :
  uop_preserves_id (S * T) (brel_product eqS eqT) (bop_product addS addT) uop_rap. 
