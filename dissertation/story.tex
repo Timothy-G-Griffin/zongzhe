@@ -90,14 +90,42 @@ Here we can easily prove that $min_\leq$ satisfies our previous definition of re
 \section{Generalized Reduction}
 The previous section mentioned that our definition of classical reduction is implement un-friendly.
 This is because in the classical reduction, our actual problem set is $S_r = \{s\in S|r(s)= s\}$ with record. Record is difficult to be accurately represented in most situations. 
-At the same time, since our real problem set has changed from the original $S$ to the current $S_r = \{s\in S|r(s)= s\}$, all of our operator/relationship domains have changed. 
-This makes it almost impossible for us to define the combinator that exists on reduction. 
+Imagine we have two different reductions $r_1$ and $r_2$ for $S$, then the problem set after applying reduction $r_1$ and $r_2$ will be $S_r = \{y\in \{x \in S | r_1(x) = x\}|r_2(y)= y\}$. 
+The changing of our problem domain makes all the reasoning and calculation step into trouble. 
+At the same time, since our real problem set has changed from the original $S$ to the current $S_r = \{s\in S|r(s)= s\}$ (suppose we only have on reduction $r$), all of our operator/relationship domains have changed. If we originally have a binary operator $\oplus : S \rightarrow S$, then the binary operator after reduction will become the binary operator $\oplus_r : \{s\in S|r(s)= s\} \rightarrow \{s\in S|r(s)= s\}$. And if we apply two/more reductions simultaneously, the entangle of reduction with problem set and relationship/operator makes it almost impossible for us to define the combinator that exists on reduction and solve the problem at all. 
 Taking into account the elementary path problem we previously focused on, in which the reduction does not satisfy the properties of classical reduction, so we need to represent/generalize our reduction in a new way.\\\\
-How generalize reduction is exactly what we need to consider.
-First we start with binary relationship:equality as the starting point.\\
+How to generalize reduction is exactly what we need to consider.
+First we take the binary relationship, the equality, as the starting point.\\
 If there is an equality $=$, which is a binary relationship, on the original problem set $S$, then it is obvious that the equality $=_r$ on the reduced problem set  $S_r = \{s\in S|r(s)= s\}$ will no longer to be $=$ any more. If we have $x,y \in \{s\in S|r(s)= s\}$, because we have $r(x) =x$ and $r(y) = y$, then $x =_r y \leftrightarrow r(x) = r(y)$. So we can represent the equality on the reduced set as $\forall x,y \in \{s\in S|r(s)= s\}, x =_r y \equiv r(x) = r(y)$.\\
-For the same problem, we need to generalize the binary operator under the reduction type. 
-
+For the same problem, we need to generalize the binary operator under the reduction type.
+If we originally have a binary operator $\oplus : S \rightarrow S$, then the binary operator after reduction will become the binary operator $\oplus_r : \{s\in S|r(s)= s\} \rightarrow \{s\in S|r(s)= s\}$. Considering that $r(x) =x$ and $r(y) = y$, the binary operator $\oplus_r$ could be represent as $\forall x,y \in \{s\in S|r(s)= s\}, x \oplus_r y \equiv r(r(x) \oplus r(y))$.\\\\
+After having a new representation method, we need to prove the equivalent of this new method and the classical reduction on representation.\\
+Here we mainly focus on the equivalence of these properties:\\
+Reflexive, Symmetric, Transitive and Congruence for equality(binary relationship) and\\
+Commutative, Associative, Selective, Congruence, Has Identity and Has Annihilator for the binary operator.\\
+So we first define how to represent reduction $r$ on problem set $S$ as a classical reduction.\\
+If we have a semigroup $(S,\oplus)_=$, the reduced semigroup will be $(S_r,\oplus_r)_{=_r}$, where\\
+$S_r \equiv \{s\in S|r(s)= s\}$, \\ 
+$\forall a,b \in \{s\in S|r(s)= s\}, a =_r b \equiv \pi_1a = \pi_1 b$ ($\pi$ is the projection function, since the reduced set is represented as a record, we can project the first/second element from the record),and\\
+$\forall a,b \in \{s\in S|r(s)= s\}, a \oplus_r b \equiv (r(\pi_1x \oplus \pi_1y), r(r(\pi_1x \oplus \pi_1y)) = r(\pi_1x \oplus \pi_1y)) \in \{s\in S|r(s)= s\}$.\\
+In this way, we can clearly see that the original representation of classical reduction is very implement unfriendly.
+Next we try to represent the same problem with our newly defined representation method.\\
+If we have a semigroup $(S,\oplus)_=$, the reduced semigroup will be $(S,\oplus_r)_{=_r}$, where\\
+$\forall a,b \in S, a =_r b \equiv r(a) = r(b)$, and\\
+$\forall a,b \in S, a \oplus_r b \equiv  r(r (a) \oplus r(b))$.\\
+Next, we need to show that the properties in the classical representation is isomorphic to the properties in our new representation.\\
+$\forall a \in \{s\in S|r(s)= s\}, a =_r a \equiv \pi_1a = \pi_1 a \longleftrightarrow \forall a \in S, a =_r a \equiv r(a) = r(a)$ (reflexive)\\
+and more examples, includes equality and binary operator\\\\
+It is worth mentioning that in our new form of representation, if reduction has a left/right invariant property on the binary operator, then we can conclude that $\forall a,b \in S, a \oplus_r b \equiv  r(r (a) \oplus r(b)) = r (a \oplus b)$. 
+But on the other hand, it also shows that our new reduction representation can be used to represent a reduction that does not have an left/right invariant property (as we mentioned earlier in the reduction of the elementary path problem which does not have those properties on $min$ operator).
+This also solves the problem that we previously mentioned that classical reduction cannot be used to define the reduction that we need.\\\\
+Among all the properties of binary operators 
+(commutative, associative, selective, congruence, has identity and has annihilator), the associative law is the most special one. 
+Take the proof of commutative law as an example:\\
+$\forall a,b \in S, a \oplus_r b \equiv  r(r (a) \oplus r(b)) =_r r(r (b) \oplus r(a)) \equiv b \oplus_r a$. And by the definition of $=_r$ we get $r(r (a) \oplus r(b)) =_r r(r (b) \oplus r(a)) \equiv r(r(r (a) \oplus r(b))) = r(r(r (b) \oplus r(a)))$. 
+However, in the proof, we only need to use the commutative law of the original binary operator, which is $\forall a,b \in S, a \oplus b = b \oplus a$, and the property of the congruence of our reduction, which is $\forall a,b \in S, a = b \rightarrow r(a) = r(b)$. However, the proof of associativity is not the same. We need to proof $\forall a,b,c \in S, (a \oplus_r b) \oplus_r c  \equiv  r(r(r (a) \oplus r(b)) \oplus r(c)) =_r r(r (a) \oplus r(r(b) \oplus r(c))) \equiv a\oplus_r (b \oplus_r c)$. In the proof we not only need the associative law of the original binary operator, which is $\forall a,b,c \in S, (a\oplus b) \oplus c = a \oplus (b\oplus c)$, and the property of the congruence of reduction, we also need our reduction to have the nature of left/right invariant.\\
+We've mentioned earlier that the reduction we expect in the elementary path problem does not have these properties on the $min$ operator. However, we hope to prove the property of its associative law. So we hope to have a better way to represent associative under reduction, and we call it pseudo-associative: $\forall a,b,c \in S, r(r(r(a)\oplus r(b)) \oplus r(c)) = r(r(a) \oplus r(r(b)\oplus r(c)))$. At the same time we can prove that pseudo-associative and associative under reduction are isomorphic.\\
+So our defined generalize reduction solves both the implement unfriendly and the inability to represent reduction without the left/right invariant properties for classical reduction, while finding another way to prove associative for those reductions that don't have left/right invariant properties.
 \section{Predicate Reduction}
 \section{Construct the Path Problem Semiring}
 
