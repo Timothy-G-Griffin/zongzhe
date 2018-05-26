@@ -127,6 +127,27 @@ However, in the proof, we only need to use the commutative law of the original b
 We've mentioned earlier that the reduction we expect in the elementary path problem does not have these properties on the $min$ operator. However, we hope to prove the property of its associative law. So we hope to have a better way to represent associative under reduction, and we call it pseudo-associative: $\forall a,b,c \in S, r(r(r(a)\oplus r(b)) \oplus r(c)) = r(r(a) \oplus r(r(b)\oplus r(c)))$. At the same time we can prove that pseudo-associative and associative under reduction are isomorphic.\\
 So our defined generalize reduction solves both the implement unfriendly and the inability to represent reduction without the left/right invariant properties for classical reduction, while finding another way to prove associative for those reductions that don't have left/right invariant properties.
 \section{Predicate Reduction}
+In the previous section we discussed the representation of generalize's reduction, its properties, and that it is isomorphic to traditional reduction. In order to better implement the construction of the path problem we mentioned earlier, we define a type of reduction and perform detailed reasoning on its properties in this section. 
+If we deeply consider our reduction, whether it is to eliminate the path with a loop, or to turn an unqualified element tuple into a specific element --additive identity/multiplicative annihilator, we can easily find that our reduction is in the situation that a predicate is set to reduce the elements that satisfy/not satisfy the condition. Therefore, we call this kind of reduction as predicate reduction.\\\\
+Initially for our problem set $S$, we define a predicate $P$, which is a function from $S$ to $bool$ and we need to provide a specific element $c$ (the predicate reduction will reduce all the element that satisfied the predicate to $c \in S$). Then we can define the predicate reduction as $\forall a \in S,  r_p(a)=\left\{
+\begin{aligned}
+c &  & P(a) = true \\
+a &  & otherwise 
+\end{aligned}
+\right.$\\
+We also mentioned in the previous chapters that the reduction we defined represented by the generalize method does not necessarily have the properties of left/right invariant. 
+But as a reduction it must have the properties of the idempontent and congruence, which are $\forall a \in S, r(a) = r(r(a))$ and $\forall a,b\in S, a = b \rightarrow r(a) = r(b)$. So we need to analyse these two properties. For the property of the idempotent, we need to discuss the input element, split the case that the element satisfies the predicate or not. If the element doesn't satisfy the predicate, then $r(a) = a = r(r(a))$. If the element does satisfy the predicate, then $r(a) = c$ and $r(r(a)) = r(c)$, hence we need to prove/provide the property that $c$ must satisfy the predicate $P(c) = true$. For the property of the congruence, we can conclude from $\forall a,b \in S, r_p(a)=\left\{
+\begin{aligned}
+c &  & P(a) = true \\
+a &  & otherwise 
+\end{aligned}
+\right. = 
+r_p(b)=\left\{
+\begin{aligned}
+c &  & P(b) = true \\
+b &  & otherwise 
+\end{aligned}
+\right.$ that we need a property $\forall a,b \in S, a = b \rightarrow P(a) = P(b)$, which is the congruence of the predicate $P$.\\
 \section{Construct the Path Problem Semiring}
 
 \medskip
