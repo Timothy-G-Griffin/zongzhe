@@ -125,7 +125,26 @@ Take the proof of commutative law as an example:\\
 $\forall a,b \in S, a \oplus_r b \equiv  r(r (a) \oplus r(b)) =_r r(r (b) \oplus r(a)) \equiv b \oplus_r a$. And by the definition of $=_r$ we get $r(r (a) \oplus r(b)) =_r r(r (b) \oplus r(a)) \equiv r(r(r (a) \oplus r(b))) = r(r(r (b) \oplus r(a)))$. 
 However, in the proof, we only need to use the commutative law of the original binary operator, which is $\forall a,b \in S, a \oplus b = b \oplus a$, and the property of the congruence of our reduction, which is $\forall a,b \in S, a = b \rightarrow r(a) = r(b)$. However, the proof of associativity is not the same. We need to proof $\forall a,b,c \in S, (a \oplus_r b) \oplus_r c  \equiv  r(r(r (a) \oplus r(b)) \oplus r(c)) =_r r(r (a) \oplus r(r(b) \oplus r(c))) \equiv a\oplus_r (b \oplus_r c)$. In the proof we not only need the associative law of the original binary operator, which is $\forall a,b,c \in S, (a\oplus b) \oplus c = a \oplus (b\oplus c)$, and the property of the congruence of reduction, we also need our reduction to have the nature of left/right invariant.\\
 We've mentioned earlier that the reduction we expect in the elementary path problem does not have these properties on the $min$ operator. However, we hope to prove the property of its associative law. So we hope to have a better way to represent associative under reduction, and we call it pseudo-associative: $\forall a,b,c \in S, r(r(r(a)\oplus r(b)) \oplus r(c)) = r(r(a) \oplus r(r(b)\oplus r(c)))$. At the same time we can prove that pseudo-associative and associative under reduction are isomorphic.\\
-So our defined generalize reduction solves both the implement unfriendly and the inability to represent reduction without the left/right invariant properties for classical reduction, while finding another way to prove associative for those reductions that don't have left/right invariant properties.
+So our defined generalize reduction solves both the implement unfriendly and the inability to represent reduction without the left/right invariant properties for classical reduction, while finding another way to prove associative for those reductions that don't have left/right invariant properties.\\\\
+What we need to discuss next is the issue of the distribution of two operators on semiring, which is left distributive $\forall a,b,c \in S, a\otimes (b \oplus c) = a \otimes b \oplus a \otimes c$ and right distributive $\forall a,b,c \in S, (a \oplus b) \otimes c = a \otimes c \oplus b \otimes c$.
+We need to discuss whether the original semiring remains the property of distributive law after our reduction. \\
+As before, we need to begin with classical reduction. We are very surprised to find that if our reduction is classical and we have left/right invariant laws on both operators, then our semiring can remain the distribution law after reduction.\\
+We also mentioned earlier that the representation of classical is equivalent to the generalize expression we find in this section, so this indicates the sufficient condition of that the semiring remains the distributive law is the properties of the left/right invariant is sufficient.\\
+$\forall a,b,c \in S,  a \otimes_r (b \oplus_r c)  \\
+= r(r(a) \otimes r(r(r(b)\oplus r(c)))) $ by the definition of $\oplus_r$ and $\otimes_r$\\
+$= r(r(a) \otimes r(r(b)\oplus r(c))) $ by the right invariant property of $\otimes_r$\\
+$= r(r(a) \otimes r(b \oplus c)) $ by the left and right invariant property of $\oplus_r$\\
+$= r(r(a) \otimes (b \oplus c)) $ by the right invariant property of $\otimes_r$\\
+$= r((r(a) \otimes b) \oplus (r(a) \otimes c)) $ by the distributive law of $\oplus$ and $otimes$\\
+$= r((r(a) \otimes r(b)) \oplus (r(a) \otimes r(c))) $ by the right invariant property of $\otimes_r$\\
+$= r(r(r(a) \otimes r(b)) \oplus r(r(a) \otimes r(c))) $ by the left and right invariant property of $\oplus_r$\\
+Qed.\\
+Similarly, in the proof of right distributive law, we need left/right invariant properties of $\oplus_r$ and left invariant property of $\otimes_r$.
+Considering the same problems as the previous associative law, we here regard the relationship between distributive law and reduction as a separate property, pseudo-distributive.
+Because sometimes our reduction does not satisfy the left/right invariant properties, it still has the opportunity to allow the semiring to preserve the properties of the distributive law, satisfying the pseudo-distributive law. Because the left/right invariant property is only a sufficient condition for the semiring to retain the properties of the distributive law rather than a necessary and sufficient condition. \\
+pseudo-left-distributive: $\forall a,b,c \in S, r(r(a) \otimes r(r(b)\oplus r(c))) = r(r(r(a) \otimes r(b)) \oplus r(r(a) \otimes r(c)))$, and \\
+pseudo-right-distributive: $\forall a,b,c \in S, r(r(r(a) \oplus r(b)) \otimes r(c)) = r(r(r(a) \otimes r(c)) \oplus r(r(b) \otimes r(c)))$. \\
+Later we will discuss further why our reduction satisfies pseudo-distributive law when satisfying certain specific properties.
 \section{Predicate Reduction}
 In the previous section we discussed the representation of generalize's reduction, its properties, and that it is isomorphic to traditional reduction. In order to better implement the construction of the path problem we mentioned earlier, we define a type of reduction and perform detailed reasoning on its properties in this section. 
 If we deeply consider our reduction, whether it is to eliminate the path with a loop, or to turn an unqualified element tuple into a specific element --additive identity/multiplicative annihilator, we can easily find that our reduction is in the situation that a predicate is set to reduce the elements that satisfy/not satisfy the condition. Therefore, we call this kind of reduction as predicate reduction.\\\\
@@ -147,7 +166,45 @@ r_p(b)=\left\{
 c &  & P(b) = true \\
 b &  & otherwise 
 \end{aligned}
-\right.$ that we need a property $\forall a,b \in S, a = b \rightarrow P(a) = P(b)$, which is the congruence of the predicate $P$.\\
+\right.$ that we need a property $\forall a,b \in S, a = b \rightarrow P(a) = P(b)$, which is the congruence of the predicate $P$.\\\\
+Next we need to reduce the binary operator according to the generalize reduction we defined earlier. For our problem set $S$ and a given binary operator $\oplus$, we defined reduced binary operator as $\forall a,b \in S, a \oplus_r b = r_p (r_p(a) \oplus r_p(b))$.\\
+Since we completely use the generalize reduction representation defined in the previous section, the reduction we defined has all the above-mentioned properties, such as commutative, selective, congruence, and so on. What deserves our attention is the associative law of a single binary operator and the distribution law of reduce semiring.\\
+We also mentioned above that under our generalize reduction representation, the reduction we defined may not satisfy the properties of the left/right invariant (like the $min$ operator under the elementary path problem), so we need to prove (or give certain preconditions) that our reduction to satisfy the pseudo-associative and pseudo-distributive law.\\
+Here for our predicate reduction, we found several interesting properties, that is the relationship for the predicate on the elements before/after the binary operation.\\
+For a problem set $S$, a given binary operator $\oplus$ and a predicate $P$, we have\\
+Predicate-Decomposition : $\forall a,b \in S, P(a \oplus b)= true \rightarrow P(a) = true \bigvee P (b) = true$.\\
+Predicate-Composition : $\forall a,b \in S, P(a) = true \bigvee P (b) = true \rightarrow P(a \oplus b)= true$.\\ 
+From the property of decomposition we can infer that $\forall a,b \in S, P(a) = false \bigwedge P (b) = false \rightarrow P(a \oplus b)= false$, which means the binary operator will not create elements that satisfy the predicate condition from the elements that don't satisfy the condition.\\
+From the property of decomposition we can infer that $\forall a,b \in S, P(a \oplus b)= false \rightarrow P(a) = false \bigwedge P (b) = false$, which means the result of the binary operation will decide the predicate condition of its arguments.\\
+Generally speaking, because our additive component of the semiring is mostly selective, then most of our additive components have decomposition properties. At the same time, because our multiplicative component is generally the role of an accumulator, it also makes the composition of this property important for multiplicative components.\\
+Let us discuss the above two properties at the level of reduction. If a predicate is decomposed/composition on an operator, it means that the reduction formed by this predicate has the following properties on this operator.\\
+$\forall a,b \in S, r_p(a\oplus b) = c \rightarrow r_p(a) = c \bigvee r_p (b) = c$, which is 
+$\forall a,b \in S, r_p(a) = a \bigwedge r_p (b) = b \rightarrow r_p(a \oplus b)= a \oplus b$, or\\
+$\forall a,b \in S, r_p(a) = c \bigvee r_p (b) = c \rightarrow r_p(a \oplus b)= c$, which is 
+$\forall a,b \in S, r_p(a\oplus b) = a \oplus b \rightarrow r_p(a) = a \bigwedge r_p (b) = b$.\\
+It is clear that these two properties help us determine the relationship between element and operator under reduction.\\
+We first discuss the property of composition. 
+We have found that reduction and operator with composition are both left/right invariant.
+In other words, composition means that reduction is traditional. According to our previous proof, it also means that this operator retains the property of the associative law under reduction.\\
+$\forall a,b \in S, r_p(r_p(a) \otimes b)$. Then we do case analysis on $P(a)$ and $P(b)$:\\
+$r_p(r_p(a) \otimes b) = r_p(c \otimes b) = c = r_p(a \otimes b)$, by $P(a) = true$, $P(b) = true$, $P(c) = true$, $P(a \otimes b) = true$ (composition property) and $P(c \otimes b) = true$ (composition property).\\
+$r_p(r_p(a) \otimes b) = r_p(c \otimes b) = c = r_p(a \otimes b)$, by $P(a) = true$, $P(b) = false$, $P(c) = true$, $P(a \otimes b) = true$ (composition property) and $P(c \otimes b) = true$ (composition property).\\
+$r_p(r_p(a) \otimes b) = c = r_p(a \otimes b)$ by $P(a) = false$, $P(b) = true$, composition property, congruence of $\otimes$ and congruence of $r_p$.\\
+$r_p(r_p(a) \otimes b) = r_p(a \otimes b)$ by $P(a) = false$, $P(b) = false$, congruence of $\otimes$ and congruence of $r_p$.\\
+Thus, we can conclude that $\forall a,b \in S, r_p(r_p(a) \otimes b) = r_p(a \otimes b)$, which is the left invariant property. We can do the same proof for right invariant property.\\
+Next we need to discuss the property of decomposition. We find that if the predicate reduce element (c) is the identity/annihilator for the operator, then the operator has pseudo-associative property after reduction, which we have proved that is isomorphic to the associative property under reduction (the proof needs too many case analysis, that we only provide the Coq proof version instead of formal mathematical proof).\\\\
+Then comes to the topic of our greatest concern, the law of distributive. Earlier we mentioned that the left/right invariant is a sufficient condition for the reduction remaining distributive property. Here we hope to try to solve the problem of distributive law from the perspective of predicates.\\
+$\forall a,b,c \in S, r_p(r_p(a) \otimes r_p(r_p(r_p(b) \oplus r_p(c))))$. \\
+First of all, whether any of a, b, c satisfies predicate $P$, then the result is definite, and the distributive property remains after reduction.\\
+The most critical problem is that a, b, and c alone does not satisfy predicate $P$, but $a \otimes b$ or $a \otimes c$ does. We assume that $b \oplus c = b$, $P(a \otimes b) = true$ and $P(a \otimes c) = false$. It is obvious that $r_p(r_p(a) \otimes r_p(r_p(r_p(b) \oplus r_p(c)))) = r_p(a \otimes b) = c$, However $r_p(r_p(r_p(a) \otimes r_p(b)) \oplus r_p(r_p(a) \otimes r_p(c))) = a \otimes c$, which means the distributive law doesn't hold after reduction.\\
+So we need to try to stop this kind of thing from happening.\\
+First we can make $P(a \otimes b)$ be forced to false, if both $P(a)$ and $P(b)$ are false, and this is our decomposition property. However, as we said earlier, most of our multiplicative components are composition rather than decomposition.\\
+Then from a different perspective, we can force $P(a\otimes c)$ to false. From our assumption we have $b \oplus c = b$, then we have $(a \otimes b) \oplus (a \otimes c) = (a \otimes b)$ by the congruence of $\oplus$ and $otimes$. 
+Since our additive component is selective, we implicitly define a partial order in our problem set $\forall a,b \in S, a \oplus b = a \longleftrightarrow a \leq b$. 
+So we think that if our predicate preserve order on the additive component, both $\forall a,b \in S, a \leq b \rightarrow P(a) = true \rightarrow P(b) = true$, then we can achieve our purpose.\\
+However, we were also surprised to find that if an operator is selective and preserve order, then the reduction is traditional (has left/right property) on this operator.
+So far, although we have found proof that the distribution law is preserved when both operators are decomposing, for the most of the time, the preservation of distributive law still depends on the property of traditional reduction, namely left/right invariant.\\\\
+After the general reasoning of predicate reduction, we used predicate reduction to define three concrete reductions. These three reductions will be used in the construction of our final path problem semiring in the later section.
 \section{Construct the Path Problem Semiring}
 
 \medskip
