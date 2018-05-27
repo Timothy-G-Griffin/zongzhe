@@ -204,9 +204,74 @@ Since our additive component is selective, we implicitly define a partial order 
 So we think that if our predicate preserve order on the additive component, both $\forall a,b \in S, a \leq b \rightarrow P(a) = true \rightarrow P(b) = true$, then we can achieve our purpose.\\
 However, we were also surprised to find that if an operator is selective and preserve order, then the reduction is traditional (has left/right property) on this operator.
 So far, although we have found proof that the distribution law is preserved when both operators are decomposing, for the most of the time, the preservation of distributive law still depends on the property of traditional reduction, namely left/right invariant.\\\\
-After the general reasoning of predicate reduction, we used predicate reduction to define three concrete reductions. These three reductions will be used in the construction of our final path problem semiring in the later section.
-\section{Construct the Path Problem Semiring}
 
+\section{Construct the Path Problem Semiring}
+After the general reasoning of predicate reduction, we used predicate reduction to define three concrete reductions. These three reductions will be used in the construction of our final path problem semiring in the later section. \\\\
+In the previous introduction we mentioned the two reductions of elementary path and reduce pair annihilator. The third reduction we used in constructing the final semiring is working on $(\mathbb{N},min,+)$. As mentioned earlier, our path problem is represented by a tuple, which is the path problem with path $(d,P)$. The distance in our path is calculated by $(\mathbb{N},min,+)$ semiring. However, sometimes the distance is too long, which means that some problems may occur during the calculation (for example, an infinite loop in calculation). In addition, in practical applications, we will consider limiting the length of the path. Long paths will not be considered by us. So we can define a reduction that will reduce all long paths distance into one element, we call it ceiling, and the reduction semiring problem is called min plus with ceiling problem. $\forall n \in \mathbb{N}, r_c(n) = \left\{
+\begin{aligned}
+ceiling &  & n \geq ceiling \\
+n &  & otherwise 
+\end{aligned}
+\right.$ and the predicate here is that $\forall n \in \mathbb{N}, n \geq ceiling$.\\
+Since we still use predicate reduce to define reduction here, properties such as commutative and selective have already been proved in the previous part using the properties of predicate reduce. 
+So we only care about the property of the predicate itself, and the relationship between the predicate and the operator.\\
+First taking into account, we can easily obtain these two properties: $P(ceiling) = true$ which is $ceiling \geq ceiling$ and $\forall a,b \in \mathbb{N}, a = b \rightarrow P(a) = P(b)$ which is $a = b \rightarrow a \geq ceiling = b \geq ceiling$. With these two properties, we can infer from our previous proof that the reduction we defined satisfies the properties of the idempotent and congruence.\\
+Next we begin to discuss the relationship between the predicate and operators. \\
+We find that our defined predicate is decomposition and preserve order on the $min$ operator.
+Decomposition: $\forall a,b \in \mathbb{N}, P(min $ $a$ $b) = true \rightarrow P(a) = true \bigvee $(actually is $\bigwedge$) $P(a) = true$, because $\forall a,b \in \mathbb{N}, min $ $a$ $b \geq ceiling \rightarrow a \geq ceiling \wedge b \geq ceiling$.\\
+Preserve order: $\forall a,b \in \mathbb{N}, a \leq b$, (which means $min $ $a$ $b = a$), and $P (a) = true \rightarrow P(b) = true$, because $\forall a,b \in \mathbb{N}, b \geq a \wedge a \geq ceiling \rightarrow b \geq ceiling$.\\
+We also find that our defined predicate is composition on the $+$ operator.\\
+Composition: $\forall a,b \in \mathbb{N}, P(a) = true \bigvee P(b) = true \rightarrow P(a + b) = true$, because $\forall a,b \in \mathbb{N}, a \geq ceiling \vee b \geq ceiling \rightarrow a + b \geq ceiling$.\\
+From our previous proof, we can conclude that since the predicate is preserving order on $min$ and it is composition on $+$, the reduction we defined is both traditional on $min$ and $+$, and has both left/right invariant properties. 
+This means that inside our reduced semiring, the reduced $min$ and reduced $+$ operator both retain the associative property, and the combination of the two also has the property of the distributive.\\
+At this point, we finish the first reduce semiring built by predicate reduction, and this is also the first half part of the problem that we ultimately need to solve.\\\\
+The second predicate reduction we need to define is the reduction that reduce all the path that has loop. First of all, we need to consider how to express our path. For a graph $G = (V,E)$, our problem set should be $\mathbb{P}(E^*)$. However, in fact, we can also use $V$ to represent the path, and this representation is more convenient for us to calculate. For a path $p$ that passes through several points $n_1,n_2 ... n_k \in V$ in turn, we use an ordered list to represent the path $p = [n_1,n_2 ... n_k]$. 
+Since the node here is just a reference for a name, in order to facilitate our proof and calculation, we define our path $P = List(\mathbb{N})$, using the natural number to indicate nodes.\\
+Next we need to define our two binary operators, min and concat. 
+Before defining min we need to define a helper binary order: dictionary order $\forall a,b \in Path,\\ d(nil,b) = nil\\
+d(a,nil) = nil\\
+d(a::as,b::bs) =
+\left\{
+\begin{aligned}
+a &  & a \leq b \\
+b &  & otherwise 
+\end{aligned}
+\right.$.\\
+Then we can use the dictionary order to define our $min$ operator as additive component: \\
+$\forall a,b \in Path, min(a,b) = \left\{
+\begin{aligned}
+a &  & length(a) \leq length(b) \\
+d(a,b) &  & length(a) = length(b) \\
+b &  & otherwise 
+\end{aligned}
+\right.$\\
+Then the $concat$ operator as the multiplicative component is just the simple concat function of list.\\
+Finally we should define the predicate: there has loops in the path. It is really easy since if a path has loop, it must pass at least node more than one times. 
+Therefore, as long as there is a duplicate in the list represented for a path, it means that there is a loop in this path.\\
+$\forall p \in Path, P(p) \equiv dup(p)$.\\
+However, the next problem we have is that there is no identity/annihilator for our additive/multiplicative component in our problem set, since there is no path with infinity length.
+Analogous to the previous min plus problem, there is no infinite element in it as well. In the previous question, we manually added a ceiling into the reduction and made it an identity/annihilator for our additive/multiplicative component. However, in this issue we cannot do the same thing. 
+Hence we need to manually add an identity/annihilator for our additive/multiplicative component using disjoint union, and our problem set becomes $c + list(\mathbb{N})$.\\
+So we can define our reduction as $\forall p \in (c + Path), r(inl(c)) = inl(a)\\
+r(inr (a))
+\left\{
+\begin{aligned}
+inl(c) &  & P(a) = true \\
+inr(a) &  & otherwise 
+\end{aligned}
+\right.$.\\
+In the same way, we can simply prove two properties $P(inl c) = true$ and $\forall a,b \in (c + Path), a = b \rightarrow P(a) = P(b)$. So we can simply prove the properties of the reduction that we defined here for congruence and idempotent.\\
+Next we also need to discuss the relationship between predicates and binary operators. 
+We can prove that the predicate is decomposition on $min$ and composition on $concat$. \\
+Because our definition of the $min$ operator is selective, it is obvious that it is decomposition on the predicate. \\
+For $concat$ operator, it is very similar to the previous $+$ on $\mathbb{N}$ that there is a loop in any of the arguments to the operator will lead to the result of $concat$ yields a loop path. At the same time, we can conclude the traditional property: left/right invariant for the reduction on the $concat$ operator by our previous proof. 
+Further we can also prove the associativity property for the $concat$ operator.\\
+The trouble is that our $min$ operator does not preserve order under predicate. 
+We can easily find counterexamples: $p_1,p_2 \in Path, length (p_1) < length(p_2) \rightarrow min(p_1,p_2) = p_1, dup(p_1) = true, dup(p_2) = false, P(inr(p_1)) = true, P(inr(p_2)) = false$. 
+This means that our reduction is not traditional on $min$ and does not have the property of left/right invariant.\\
+Fortunately we can still prove that the $min$ operator is associative, by a lot of case analysis.\\
+Unfortunately, we find that the distribution property on this reduced semiring is not valid, and we can quickly find counterexamples.
+Suppose $p_1,p_2,p_3 \in Path, length (p_2) < length(p_3) \rightarrow min(p_2,p_3) = p_3, dup(p_3) = false,dup(p_3) = false,dup(p_3) = false,dup(p_1 . p_2) = true,dup(p_1 . p_3) = false, r(p_1 . r(min (p_2,p_3))) = r(p_1 . r(p_2)) = r(p_1 . p_2) = \infty$, but $r(min(r(p_1 . p_2),r(p_1 . p_3))) = r(min(\infty,p_1 . p_3)) = r(p_1 . p_3) = p_1 . p_3$ (The rigorous proof we used here ignores the problem of disjoint unions for the moment).
 \medskip
 
 \bibliographystyle{unsrt} 

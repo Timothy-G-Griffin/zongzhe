@@ -138,7 +138,21 @@ Qed.
 
 Lemma P_decompose_add : pred_bop_decompose M P add.
 Proof. intros s1 s2 H1.
-       (* selective *)
+        assert (A : bop_selective M eqM add).
+        apply bop_lexicographic_product_selective; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
+       apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
+       apply elementary_path.brel_reduce_list_const_reflexive;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply bop_nat_min_selective.
+       apply bop_list_min_selective;auto.
+       apply brel_eq_nat_reflexive; auto.
+       apply brel_eq_nat_symmetric.
+       apply brel_eq_nat_transitive.
+       assert (B := A s1 s2).
+       destruct B.
+       assert (C : P s1 = true). admit. left; auto. (* P_cong *)
+       assert (C : P s2 = true). admit. right; auto. (* P_cong *)
 Admitted.
 
 
