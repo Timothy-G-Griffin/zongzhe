@@ -155,6 +155,14 @@ Proof. intros s1 s2 H1.
        assert (C : P s2 = true). admit. right; auto. (* P_cong *)
 Admitted.
 
+Lemma P_compose_mul : pred_bop_compose M P mul.
+Proof. intros s1 s2 H1. destruct s1,s2.
+       unfold mul,bop_product.
+       unfold P,reduce_annihilators.P in H1.
+       assert (A := P_plus_compose ceiling).
+       assert (B := P_app_compose c).
+Admitted.
+
 
 Lemma bop_rap_add_associative :  bop_associative M brel_eq_M bop_rap_add.
 Proof. apply bop_associative_fpr_decompositional_id.

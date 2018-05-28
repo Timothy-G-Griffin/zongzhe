@@ -265,13 +265,48 @@ Next we also need to discuss the relationship between predicates and binary oper
 We can prove that the predicate is decomposition on $min$ and composition on $concat$. \\
 Because our definition of the $min$ operator is selective, it is obvious that it is decomposition on the predicate. \\
 For $concat$ operator, it is very similar to the previous $+$ on $\mathbb{N}$ that there is a loop in any of the arguments to the operator will lead to the result of $concat$ yields a loop path. At the same time, we can conclude the traditional property: left/right invariant for the reduction on the $concat$ operator by our previous proof. 
-Further we can also prove the associativity property for the $concat$ operator.\\
+Further we can also prove the associativity property for the $concat$ operator. 
+However, it is worth noting that the $concat$ operator does not have the commutative property and it is easy to find the example, because the $list$ is ordered list, $[1] ++ [2] \neq [2] ++ [1]$.\\
 The trouble is that our $min$ operator does not preserve order under predicate. 
 We can easily find counterexamples: $p_1,p_2 \in Path, length (p_1) < length(p_2) \rightarrow min(p_1,p_2) = p_1, dup(p_1) = true, dup(p_2) = false, P(inr(p_1)) = true, P(inr(p_2)) = false$. 
 This means that our reduction is not traditional on $min$ and does not have the property of left/right invariant.\\
 Fortunately we can still prove that the $min$ operator is associative, by a lot of case analysis.\\
 Unfortunately, we find that the distribution property on this reduced semiring is not valid, and we can quickly find counterexamples.
-Suppose $p_1,p_2,p_3 \in Path, length (p_2) < length(p_3) \rightarrow min(p_2,p_3) = p_3, dup(p_3) = false,dup(p_3) = false,dup(p_3) = false,dup(p_1 . p_2) = true,dup(p_1 . p_3) = false, r(p_1 . r(min (p_2,p_3))) = r(p_1 . r(p_2)) = r(p_1 . p_2) = \infty$, but $r(min(r(p_1 . p_2),r(p_1 . p_3))) = r(min(\infty,p_1 . p_3)) = r(p_1 . p_3) = p_1 . p_3$ (The rigorous proof we used here ignores the problem of disjoint unions for the moment).
+Suppose $p_1,p_2,p_3 \in Path, length (p_2) < length(p_3) \rightarrow min(p_2,p_3) = p_3, dup(p_3) = false,dup(p_3) = false,dup(p_3) = false,dup(p_1 . p_2) = true,dup(p_1 . p_3) = false, r(p_1 . r(min (p_2,p_3))) = r(p_1 . r(p_2)) = r(p_1 . p_2) = \infty$, but $r(min(r(p_1 . p_2),r(p_1 . p_3))) = r(min(\infty,p_1 . p_3)) = r(p_1 . p_3) = p_1 . p_3$ (The rigorous proof we used here ignores the problem of disjoint unions for the moment).\\\\
+At this point, we have already defined the two components needed for our path problem, $(\mathbb{N},min,+)$ with ceiling predicate reduction and $(list(\mathbb{N}),min_l,concat)$ with elementary predicate reduction. Next we need to combine the two semirings together to form the semiring of our final path problem. The method we used to combine two semirings was derived from the lexicographic produce mentioned in L11.\\ Path problem = $red_1 (list(\mathbb{N}),min_l,concat) \bar{\times} red_2 (list(\mathbb{N}),min_l,concat)$.\\
+According to the definition in L11, for two semiring $(S_1,\oplus_1,\otimes_1)$,$(S_2,\oplus_2,\otimes_2)$, the lexicographic product them is $(S_1,\oplus_1,\otimes_1) \bar{\times} (S_2,\oplus_2,\otimes_2) = (S_1\times S_2, \oplus_{\bar{\times}}, \otimes_\times)$.
+Suppose $(S_1,\oplus_1)$ is a commutative and selective semigroup and $(S_2,\oplus_2)$ is a semigroup, then the lexicographic product of two semigroups $(S_1,\oplus_1) \bar{\times} (S_2,\oplus_2) = (S_1\times S_2, \oplus_{\bar{\times}})$ where\\
+$(s_1,t_1) \oplus_{\bar{\times}} (s_2,t_2)=\left\{
+\begin{array}{rcl}
+(s_1\oplus_1 s_2,t_1\oplus_2 t_2)      &      & { s_1 = s_1 \oplus_1 s_2 = s_2}\\
+(s_1\oplus_1 s_2,t_1)       &      & {s_1 = s_1 \oplus_1 s_2 \neq s_2}\\
+(s_1\oplus_1 s_2,t_2)       &      & {s_1 \neq s_1 \oplus_1 s_2 = s_2}
+\end{array} \right.$\\
+And suppose $(S_1,\otimes_1)$ and $(S_2,\otimes_2)$ are semigroups, then the direct product of two semigroups $(S_1,\otimes_1) \times (S_2,\otimes_2) = (S_1\times S_2, \otimes_\times)$ where\\
+$(s_1,t_1) \otimes_\times (s_2,t_2)= (s_1 \otimes_1 s_2, t_1\otimes_2 t_2)$.\\
+First we discuss the properties of the direct product. Obviously the direct product has the ability to retain the binary operator properties. For example, if the original two binary operators all have associative laws, then the direct product of those binary operators also has the property of associative. Similarly if $i_1,i_2$/$a_1,a_2$ are the identity/annihilator to the binary operator $\oplus_1$, $\oplus_2$, then $(i_1,i_2)$/$(a_1,a_2)$ is the identity/annihilator to the direct product of those two operator $\oplus_1 \times \oplus_2$.\\
+So we can conclude that our multiplicative component of the path problem has the properties of congruence and associative. However, because the concat operator in the elementary path semiring is not commutative, the multiplicative component of the path problem is not commutative as well.\\
+Then let us focus on the additive component built with lexicographic product. 
+The operators constructed by lexicographic product are much more complicated in properties, and the reasoning of these properties is not the main content discussed by our project, so we directly borrowed the properties stated in the L11 class.\\
+We assume $(S_1,\oplus_1)$ is associative, commutative and selective, then we get:\\
+$\oplus_{\bar{\times}}$ is associative iff $\oplus_2$ is associative.\\
+$\oplus_{\bar{\times}}$ has identity iff $\oplus_1$ and $\oplus_2$ both has identity.\\
+$\oplus_{\bar{\times}}$ has annihilator iff $\oplus_1$ and $\oplus_2$ both has annihilator.\\
+$\oplus_{\bar{\times}}$ is commutative iff $\oplus_2$ is commutative.\\
+$\oplus_{\bar{\times}}$ is selective iff $\oplus_2$ is selective.\\
+So we can conclude that our additive component of the path problem has the properties of congruence, associative, commutative, selective. It also has identity and annihilator.\\\\
+Let us finally define our third predicate reduce and complete our construction of the path problem semiring. According to our previous reasoning, $(ceiling,inl (c))$ is the identity/annihilator for the additive/multiplicative component of path problem semiring, therefore, the desired role of the predicate reduce is to reduce all pairs of $(ceiling,\_)$ and $(\_,inl(c))$ to $(ceiling,inl(c))$.
+Hence we define the predicate as following $\forall (n,p) \in \mathbb{N}\times Path, P((n,p)) \equiv n = ceiling \vee p = inr(c)$. It is obvious that $P((ceiling,inl (c))) = true$ and $P$ has the property of congruence. Thus the predicate reduce $r(a) = \left\{
+\begin{aligned}
+(ceiling,inl (c)) &  & P(a) = true \\
+a &  & otherwise 
+\end{aligned}
+\right.$ has the properties of congruence and idempotent.\\
+Because the additive component of the Path problem is selective, $P$ is decomposed on the additive component.
+At the same time, because the multiplicative component is constructed from the direct product, and both of its components have composition properties on their respective predicates, it is composition therefore.
+Unfortunately, because the $min$ in the elementary path does not reserve order, our additive component does not have the preserve order property on the predicate, which means it is not a traditional reduction and does not have the property of left/right invariant. This means that although we can get the associative property through the previous lexicographic product properties, the semiring we construct here does not have the property of the distributive.
+\section{Conclusion}
+What should I write in this section??
 \medskip
 
 \bibliographystyle{unsrt} 
