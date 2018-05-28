@@ -155,12 +155,13 @@ Proof. intros s1 s2 H1.
        assert (C : P s2 = true). admit. right; auto. (* P_cong *)
 Admitted.
 
+Close Scope nat.
 Lemma P_compose_mul : pred_bop_compose M P mul.
 Proof. intros s1 s2 H1. destruct s1,s2.
        unfold mul,bop_product.
        unfold P,reduce_annihilators.P in H1.
-       assert (A := P_plus_compose ceiling).
-       assert (B := P_app_compose c).
+       destruct H1.
+       assert (A : eqN n zero1 = true + eqT t zero2 = true).
 Admitted.
 
 
