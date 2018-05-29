@@ -220,8 +220,9 @@ However, we were also surprised to find that if an operator is selective and pre
 So far, although we have found proof that the distribution law is preserved when both operators are decomposing, for the most of the time, the preservation of distributive law still depends on the property of traditional reduction, namely left/right invariant.\\\\
 
 \section{Construct the Path Problem Semiring}
-After the general reasoning of predicate reduction, we used predicate reduction to define three concrete reductions. These three reductions will be used in the construction of our final path problem semiring in the later section. \\\\
-In the previous introduction we mentioned the two reductions of elementary path and reduce pair annihilator. The third reduction we used in constructing the final semiring is working on $(\mathbb{N},min,+)$. As mentioned earlier, our path problem is represented by a tuple, which is the path problem with path $(d,P)$. The distance in our path is calculated by $(\mathbb{N},min,+)$ semiring. However, sometimes the distance is too long, which means that some problems may occur during the calculation (for example, an infinite loop in calculation). In addition, in practical applications, we will consider limiting the length of the path. Long paths will not be considered by us. So we can define a reduction that will reduce all long paths distance into one element, we call it ceiling, and the reduction semiring problem is called min plus with ceiling problem. $\forall n \in \mathbb{N}, r_c(n) = \left\{
+After the general reasoning of predicate reduction, we used predicate reduction to define three concrete reductions. These three reductions will be used in the construction of our final path problem semiring in the later section. \\
+\subsection{Min Plus With Ceiling}
+In the previous introduction section we mentioned two reductions: elementary path and reduce pair annihilator. The third reduction we used in constructing the final semiring is working on $(\mathbb{N},min,+)$, the first part of the path problem. As mentioned earlier, our path problem is represented by a tuple $(d,P)$, which represents the path problem with path. The distance in our path is calculated by $(\mathbb{N},min,+)$ semiring. However, sometimes the distance is too long, which may lead to some crucial problem during the calculation (for example, an infinite loop in calculation). In addition, we will also consider limiting the length of the path in real world problems and long paths (path with long distance) will not be considered by us. So we can define a reduction that will reduce all long paths distance into one element, in which we call it ceiling, and the reduction semiring problem is called min plus with ceiling problem. $\forall n \in \mathbb{N}, r_c(n) = \left\{
 \begin{aligned}
 ceiling &  & n \geq ceiling \\
 n &  & otherwise 
@@ -229,7 +230,7 @@ n &  & otherwise
 \right.$ and the predicate here is that $\forall n \in \mathbb{N}, n \geq ceiling$.\\
 Since we still use predicate reduce to define reduction here, properties such as commutative and selective have already been proved in the previous part using the properties of predicate reduce. 
 So we only care about the property of the predicate itself, and the relationship between the predicate and the operator.\\
-First taking into account, we can easily obtain these two properties: $P(ceiling) = true$ which is $ceiling \geq ceiling$ and $\forall a,b \in \mathbb{N}, a = b \rightarrow P(a) = P(b)$ which is $a = b \rightarrow a \geq ceiling = b \geq ceiling$. With these two properties, we can infer from our previous proof that the reduction we defined satisfies the properties of the idempotent and congruence.\\
+First taking into account, we can easily obtain these two properties: $P(ceiling) = true$ which is $ceiling \geq ceiling$ and $\forall a,b \in \mathbb{N}, a = b \rightarrow P(a) = P(b)$ which is $a = b \rightarrow a \geq ceiling = b \geq ceiling$. With these two properties, we can infer from our previous proof that the reduction we defined satisfies the properties of idempotent and congruence.\\
 Next we begin to discuss the relationship between the predicate and operators. \\
 We find that our defined predicate is decomposition and preserve order on the $min$ operator.
 Decomposition: $\forall a,b \in \mathbb{N}, P(min $ $a$ $b) = true \rightarrow P(a) = true \bigvee $(actually is $\bigwedge$) $P(a) = true$, because $\forall a,b \in \mathbb{N}, min $ $a$ $b \geq ceiling \rightarrow a \geq ceiling \wedge b \geq ceiling$.\\
@@ -238,11 +239,12 @@ We also find that our defined predicate is composition on the $+$ operator.\\
 Composition: $\forall a,b \in \mathbb{N}, P(a) = true \bigvee P(b) = true \rightarrow P(a + b) = true$, because $\forall a,b \in \mathbb{N}, a \geq ceiling \vee b \geq ceiling \rightarrow a + b \geq ceiling$.\\
 From our previous proof, we can conclude that since the predicate is preserving order on $min$ and it is composition on $+$, the reduction we defined is both traditional on $min$ and $+$, and has both left/right invariant properties. 
 This means that inside our reduced semiring, the reduced $min$ and reduced $+$ operator both retain the associative property, and the combination of the two also has the property of the distributive.\\
-At this point, we finish the first reduce semiring built by predicate reduction, and this is also the first half part of the problem that we ultimately need to solve.\\\\
-The second predicate reduction we need to define is the reduction that reduce all the path that has loop. First of all, we need to consider how to express our path. For a graph $G = (V,E)$, our problem set should be $\mathbb{P}(E^*)$. However, in fact, we can also use $V$ to represent the path, and this representation is more convenient for us to calculate. For a path $p$ that passes through several points $n_1,n_2 ... n_k \in V$ in turn, we use an ordered list to represent the path $p = [n_1,n_2 ... n_k]$. 
+At this point, we finish the first reduce semiring built by predicate reduction, and this is also the first half part of the problem that we ultimately need to solve.\\
+\subsection{Elementary Path}
+The second predicate reduction we need to define is the reduction that reduce all the path that has loop to a single element. First of all, we need to consider the problem that expressing our path. For a graph $G = (V,E)$, our problem set should be $\mathbb{P}(E^*)$. In fact, we can also use $V$ to represent the path, and this representation is more convenient for us to calculate. For a path $p$ that passes through several points $n_1,n_2 ... n_k \in V$ in turn, we use an ordered list to represent the path $p = [n_1,n_2 ... n_k]$. 
 Since the node here is just a reference for a name, in order to facilitate our proof and calculation, we define our path $P = List(\mathbb{N})$, using the natural number to indicate nodes.\\
-Next we need to define our two binary operators, min and concat. 
-Before defining min we need to define a helper binary order: dictionary order $\forall a,b \in Path,\\ d(nil,b) = nil\\
+Next we need to define our two binary operators, $min$ and $concat$. 
+Before defining the operator $min$ we need to define a helper binary order: dictionary order $\forall a,b \in Path,\\ d(nil,b) = nil\\
 d(a,nil) = nil\\
 d(a::as,b::bs) =
 \left\{
@@ -260,11 +262,11 @@ b &  & otherwise
 \end{aligned}
 \right.$\\
 Then the $concat$ operator as the multiplicative component is just the simple concat function of list.\\
-Finally we should define the predicate: there has loops in the path. It is really easy since if a path has loop, it must pass at least node more than one times. 
+Finally we should define the predicate: the path has loops in its representation. It is really easy since if a path has loop, it must pass at least one node more than one times. 
 Therefore, as long as there is a duplicate in the list represented for a path, it means that there is a loop in this path.\\
 $\forall p \in Path, P(p) \equiv dup(p)$.\\
 However, the next problem we have is that there is no identity/annihilator for our additive/multiplicative component in our problem set, since there is no path with infinity length.
-Analogous to the previous min plus problem, there is no infinite element in it as well. In the previous question, we manually added a ceiling into the reduction and made it an identity/annihilator for our additive/multiplicative component. However, in this issue we cannot do the same thing. 
+Analogous to the previous min plus problem, there is no infinite element in it as well. In the previous question, we manually added a ceiling into the reduction and made it as an identity/annihilator for our additive/multiplicative component. However, in this issue we cannot do the same thing. 
 Hence we need to manually add an identity/annihilator for our additive/multiplicative component using disjoint union, and our problem set becomes $c + list(\mathbb{N})$.\\
 So we can define our reduction as $\forall p \in (c + Path), r(inl(c)) = inl(a)\\
 r(inr (a))
@@ -274,11 +276,11 @@ inl(c) &  & P(a) = true \\
 inr(a) &  & otherwise 
 \end{aligned}
 \right.$.\\
-In the same way, we can simply prove two properties $P(inl c) = true$ and $\forall a,b \in (c + Path), a = b \rightarrow P(a) = P(b)$. So we can simply prove the properties of the reduction that we defined here for congruence and idempotent.\\
+In the same way, we can simply prove two properties $P(inl( c)) = true$ and $\forall a,b \in (c + Path), a = b \rightarrow P(a) = P(b)$. So we can simply prove the properties of the reduction that we defined here for congruence and idempotent.\\
 Next we also need to discuss the relationship between predicates and binary operators. 
 We can prove that the predicate is decomposition on $min$ and composition on $concat$. \\
 Because our definition of the $min$ operator is selective, it is obvious that it is decomposition on the predicate. \\
-For $concat$ operator, it is very similar to the previous $+$ on $\mathbb{N}$ that there is a loop in any of the arguments to the operator will lead to the result of $concat$ yields a loop path. At the same time, we can conclude the traditional property: left/right invariant for the reduction on the $concat$ operator by our previous proof. 
+For $concat$ operator, it is very similar to the previous $+$ on $\mathbb{N}$ that if there is a loop in any of the arguments to the operator then it will lead to the result of $concat$ yielding a loop path. At the same time, we can conclude the traditional property: left/right invariant for the reduction on the $concat$ operator by our previous proof. 
 Further we can also prove the associativity property for the $concat$ operator. 
 However, it is worth noting that the $concat$ operator does not have the commutative property and it is easy to find the example, because the $list$ is ordered list, $[1] ++ [2] \neq [2] ++ [1]$.\\
 The trouble is that our $min$ operator does not preserve order under predicate. 
@@ -286,9 +288,10 @@ We can easily find counterexamples: $p_1,p_2 \in Path, length (p_1) < length(p_2
 This means that our reduction is not traditional on $min$ and does not have the property of left/right invariant.\\
 Fortunately we can still prove that the $min$ operator is associative, by a lot of case analysis.\\
 Unfortunately, we find that the distribution property on this reduced semiring is not valid, and we can quickly find counterexamples.
-Suppose $p_1,p_2,p_3 \in Path, length (p_2) < length(p_3) \rightarrow min(p_2,p_3) = p_3, dup(p_3) = false,dup(p_3) = false,dup(p_3) = false,dup(p_1 . p_2) = true,dup(p_1 . p_3) = false, r(p_1 . r(min (p_2,p_3))) = r(p_1 . r(p_2)) = r(p_1 . p_2) = \infty$, but $r(min(r(p_1 . p_2),r(p_1 . p_3))) = r(min(\infty,p_1 . p_3)) = r(p_1 . p_3) = p_1 . p_3$ (The rigorous proof we used here ignores the problem of disjoint unions for the moment).\\\\
+Suppose $p_1,p_2,p_3 \in Path, length (p_2) < length(p_3) \rightarrow min(p_2,p_3) = p_3, dup(p_3) = false,dup(p_3) = false,dup(p_3) = false,dup(p_1 . p_2) = true,dup(p_1 . p_3) = false, r(p_1 . r(min (p_2,p_3))) = r(p_1 . r(p_2)) = r(p_1 . p_2) = \infty$, but $r(min(r(p_1 . p_2),r(p_1 . p_3))) = r(min(\infty,p_1 . p_3)) = r(p_1 . p_3) = p_1 . p_3$ (The rigorous proof we used here ignores the problem of disjoint unions for the moment).\\
+\subsection{Lexicographic Product}
 At this point, we have already defined the two components needed for our path problem, $(\mathbb{N},min,+)$ with ceiling predicate reduction and $(list(\mathbb{N}),min_l,concat)$ with elementary predicate reduction. Next we need to combine the two semirings together to form the semiring of our final path problem. The method we used to combine two semirings was derived from the lexicographic produce mentioned in L11.\\ Path problem = $red_1 (list(\mathbb{N}),min_l,concat) \bar{\times} red_2 (list(\mathbb{N}),min_l,concat)$.\\
-According to the definition in L11, for two semiring $(S_1,\oplus_1,\otimes_1)$,$(S_2,\oplus_2,\otimes_2)$, the lexicographic product them is $(S_1,\oplus_1,\otimes_1) \bar{\times} (S_2,\oplus_2,\otimes_2) = (S_1\times S_2, \oplus_{\bar{\times}}, \otimes_\times)$.
+According to the definition in L11, for two semiring $(S_1,\oplus_1,\otimes_1)$,$(S_2,\oplus_2,\otimes_2)$, the lexicographic product of them is $(S_1,\oplus_1,\otimes_1) \bar{\times} (S_2,\oplus_2,\otimes_2) = (S_1\times S_2, \oplus_{\bar{\times}}, \otimes_\times)$.
 Suppose $(S_1,\oplus_1)$ is a commutative and selective semigroup and $(S_2,\oplus_2)$ is a semigroup, then the lexicographic product of two semigroups $(S_1,\oplus_1) \bar{\times} (S_2,\oplus_2) = (S_1\times S_2, \oplus_{\bar{\times}})$ where\\
 $(s_1,t_1) \oplus_{\bar{\times}} (s_2,t_2)=\left\{
 \begin{array}{rcl}
@@ -299,8 +302,8 @@ $(s_1,t_1) \oplus_{\bar{\times}} (s_2,t_2)=\left\{
 And suppose $(S_1,\otimes_1)$ and $(S_2,\otimes_2)$ are semigroups, then the direct product of two semigroups $(S_1,\otimes_1) \times (S_2,\otimes_2) = (S_1\times S_2, \otimes_\times)$ where\\
 $(s_1,t_1) \otimes_\times (s_2,t_2)= (s_1 \otimes_1 s_2, t_1\otimes_2 t_2)$.\\
 First we discuss the properties of the direct product. Obviously the direct product has the ability to retain the binary operator properties. For example, if the original two binary operators all have associative laws, then the direct product of those binary operators also has the property of associative. Similarly if $i_1,i_2$/$a_1,a_2$ are the identity/annihilator to the binary operator $\oplus_1$, $\oplus_2$, then $(i_1,i_2)$/$(a_1,a_2)$ is the identity/annihilator to the direct product of those two operator $\oplus_1 \times \oplus_2$.\\
-So we can conclude that our multiplicative component of the path problem has the properties of congruence and associative. However, because the concat operator in the elementary path semiring is not commutative, the multiplicative component of the path problem is not commutative as well.\\
-Then let us focus on the additive component built with lexicographic product. 
+So we can conclude that our multiplicative component of the path problem has the properties of congruence and associative. However, because the $concat$ operator in the elementary path semiring is not commutative, the multiplicative component of the path problem is not commutative as well.\\\\
+Then let us focus on the additive component that is built with lexicographic product. 
 The operators constructed by lexicographic product are much more complicated in properties, and the reasoning of these properties is not the main content discussed by our project, so we directly borrowed the properties stated in the L11 class.\\
 We assume $(S_1,\oplus_1)$ is associative, commutative and selective, then we get:\\
 $\oplus_{\bar{\times}}$ is associative iff $\oplus_2$ is associative.\\
@@ -308,8 +311,9 @@ $\oplus_{\bar{\times}}$ has identity iff $\oplus_1$ and $\oplus_2$ both has iden
 $\oplus_{\bar{\times}}$ has annihilator iff $\oplus_1$ and $\oplus_2$ both has annihilator.\\
 $\oplus_{\bar{\times}}$ is commutative iff $\oplus_2$ is commutative.\\
 $\oplus_{\bar{\times}}$ is selective iff $\oplus_2$ is selective.\\
-So we can conclude that our additive component of the path problem has the properties of congruence, associative, commutative, selective. It also has identity and annihilator.\\\\
-Let us finally define our third predicate reduce and complete our construction of the path problem semiring. According to our previous reasoning, $(ceiling,inl (c))$ is the identity/annihilator for the additive/multiplicative component of path problem semiring, therefore, the desired role of the predicate reduce is to reduce all pairs of $(ceiling,\_)$ and $(\_,inl(c))$ to $(ceiling,inl(c))$.
+So we can conclude that our additive component of the path problem has the properties of congruence, associative, commutative, selective. It also has identity and annihilator.\\
+\subsection{Reduction Annihilator}
+Let us finally define our third predicate reduce and complete our construction of the path problem semiring. According to our previous reasoning, $(ceiling,inl (c))$ is the identity/annihilator for the additive/multiplicative component of path problem semiring. Therefore, the desired role of the predicate reduce is to reduce all pairs of $(ceiling,\_)$ and $(\_,inl(c))$ to $(ceiling,inl(c))$.
 Hence we define the predicate as following $\forall (n,p) \in \mathbb{N}\times Path, P((n,p)) \equiv n = ceiling \vee p = inr(c)$. It is obvious that $P((ceiling,inl (c))) = true$ and $P$ has the property of congruence. Thus the predicate reduce $r(a) = \left\{
 \begin{aligned}
 (ceiling,inl (c)) &  & P(a) = true \\
