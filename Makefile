@@ -18,7 +18,7 @@ all:
 	coqc -q -R . CAS  min_plus_ceiling_reduction.v
 	coqc -q -R . CAS  elementary_path.v
 	coqc -q -R . CAS  lexicographic_product.v
-
+	coqc -q -R . CAS  lexicographic_product_mP_eP.v
 clean:
 	rm -f  *.glob  .*.aux *.vo *.d *~
 

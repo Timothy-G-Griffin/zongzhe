@@ -34,6 +34,7 @@ Section LexicographicProduct.
   Variable bS_cong : bop_congruence S eqS bS. 
   Variable bS_ass  : bop_associative S eqS bS.
   Variable bS_sel  : bop_selective S eqS bS.
+
   Variable bS_comm : bop_commutative S eqS bS.  
 
   Variable bT_cong : bop_congruence T eqT bT. 
@@ -55,9 +56,26 @@ Section LexicographicProduct.
          apply symS in e. rewrite e.
      Admitted.
 
-     (* maybe can't be proved *)
-Lemma bop_lexicographic_product_associative : bop_associative (S * T) (brel_product eqS eqT) (bop_llex eqS bS bT). 
-   Admitted.     
+
+(* proofs come from L11 slides *)
+Lemma bop_lexicographic_product_congruence : 
+bop_associative S eqS bS ->
+bop_commutative S eqS bS ->
+bop_selective S eqS bS ->
+bop_congruence S eqS bS ->
+bop_congruence T eqT bT ->
+bop_congruence (S * T) (brel_product eqS eqT) (bop_llex eqS bS bT).
+Proof. 
+Admitted.
+
+Lemma bop_lexicographic_product_associative : 
+bop_associative S eqS bS ->
+bop_commutative S eqS bS ->
+bop_selective S eqS bS ->
+bop_associative T eqT bT ->
+bop_associative (S * T) (brel_product eqS eqT) (bop_llex eqS bS bT). 
+Proof. 
+Admitted.     
    
 
 Lemma bop_lexicographic_product_commutative : bop_commutative S eqS bS -> bop_commutative T eqT bT -> bop_commutative (S * T) (brel_product eqS eqT) (bop_llex eqS bS bT). 
@@ -99,7 +117,7 @@ Proof. intros aS aT is_annS is_annT [s t]; compute. destruct (is_annS s) as [LS 
 Qed.
 
 
-Lemma  bop_product_is_id : ∀ (aS : S) (aT : T) (is_idS : bop_is_id S eqS bS aS) (is_idT : bop_is_id T eqT bT aT),  
+Lemma  bop_lexicographic_product_is_id : ∀ (aS : S) (aT : T) (is_idS : bop_is_id S eqS bS aS) (is_idT : bop_is_id T eqT bT aT),  
        bop_is_id (S * T) (brel_product eqS eqT) (bop_llex eqS bS bT) (aS, aT).
        Proof. intros aS aT is_idS is_idT [s t]; compute. destruct (is_idS s) as [LS RS]. destruct (is_idT t) as [LT RT].
         rewrite LS, RS. apply symS in LS.
