@@ -34,6 +34,7 @@ Section LexicographicProduct.
   Variable bS_cong : bop_congruence S eqS bS. 
   Variable bS_ass  : bop_associative S eqS bS.
   Variable bS_sel  : bop_selective S eqS bS.
+  Variable bS_comm : bop_commutative S eqS bS.  
 
   Variable bT_cong : bop_congruence T eqT bT. 
   Variable bT_ass  : bop_associative T eqT bT.  
@@ -56,9 +57,6 @@ Section LexicographicProduct.
 
      (* maybe can't be proved *)
 Lemma bop_lexicographic_product_associative : bop_associative (S * T) (brel_product eqS eqT) (bop_llex eqS bS bT). 
-Proof. intros [s1 s2] [t1 t2] [u1 u2]; simpl.
-       apply andb_intro. split.
-       apply bS_ass.
    Admitted.     
    
 
