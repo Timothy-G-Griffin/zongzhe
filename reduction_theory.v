@@ -690,3 +690,4 @@ Definition commutative_semigroup_direct_reduction :
 ;  csgp  := reduced_commutative_semigroup_proofs S (ceq S csg) r (cbop S csg) (ceqv S csg) (csgp S csg) req rb
 |}.
 End Reduced_Semigroup_Direct.
+

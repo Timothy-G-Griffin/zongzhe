@@ -58,12 +58,25 @@ The result shows that if we do not limit the number of steps in the calculation,
 Therefore, in the course L11, instead of using RIP and simple matrix semiring approach, we used another protocol called BGP (here need the reference for BGP). We start from the simple $(\mathbb{N},min,+)$ semiring that calculate the shortest distance, and we use lexicographic product (need reference to the Background/Definition) to construct a new semiring that contains the shortest-path metric and the set of its path.\\\\
 (these definition could be moved into definition section)\\
 Here we need to define some new operators/new rules for our semigroup:\\
-Assume $(S,\bullet)$ is a semigroup. Let $lift(S,\bullet)\equiv (fin(2^S),\hat\bullet)$ where
+Assume $(S,\bullet)$ is a semigroup. Let
+\begin{equation}
+  \label{eq:lift:def} 
+  lift(S,\bullet)  \equiv (fin(2^S),\hat\bullet)
+\end{equation}   
+where
 $X \hat\bullet Y = \{x\bullet y |x\in X,y\in Y\}$.\\
 Then we can use our $lift$ to construct a bi-semigroup:\\
-Assume $(S,\bullet)$ is a semigroup. Let $union\_lift(S,\bullet)\equiv (\mathcal{P}(S),\cup,\hat\bullet)$ where
+Assume $(S,\bullet)$ is a semigroup. Let
+\[
+union\_lift(S,\bullet)\equiv (\mathcal{P}(S),\cup,\hat\bullet)
+\]
+where
 $X \hat\bullet Y = \{x\bullet y |x\in X,y\in Y\}$, and $X,Y \in \mathcal{P}(S)$, which is the set of finite subsets of $S$.\\
-Then for a given graph $G = (V,E)$, we define $path(E)\equiv union\_lift(E^*,.)$ where . is the concatenation function of sequence.\\
+Then for a given graph $G = (V,E)$, we define
+\[
+path(E)\equiv union\_lift(E^*,.)
+\]
+where . is the concatenation function of sequence.\\
 Finally we get our "shortest paths with paths" semiring from a given graph $G = (V,E)$: $spwp \equiv AddZero(\bar0,(\mathbb{N},min,+) \overrightarrow{\times} path(E))$.\\
 \subsection{Introduce Reduction into Our Problem}
 Here comes to the problem, when we are using $spwp$ for doing calculations, because there may have loops in our $path(E)$, we need a lot of extra computation (though it will eventually yield correct results) to prove the paths have loops are not the shortest path.
@@ -138,16 +151,19 @@ So our defined generalize reduction solves both the problem of that the traditio
 What we need to discuss next is the issue of the distribution of two operators on semiring, which is left distributive $\forall a,b,c \in S, a\otimes (b \oplus c) = a \otimes b \oplus a \otimes c$ and right distributive $\forall a,b,c \in S, (a \oplus b) \otimes c = a \otimes c \oplus b \otimes c$.
 We need to discuss whether or not the original semiring remains the property of distributive law after our reduction. \\
 As what we did in the previous section, we should discuss the problem beginning  with  the classical reduction. We are very surprised to find that if our reduction is classical and we have left/right invariant properties on both operators, then our semiring can remain the distribution property after reduction.\\
-We also mentioned in the previous section that the traditional representation of reduction is equivalent to the generalize representation we defined in this section, which indicates that the sufficient condition to that the semiring remains the distributive law is the properties of the left/right invariant.\\
-$\forall a,b,c \in S,  a \otimes_r (b \oplus_r c)  \\
-= r(r(a) \otimes r(r(r(b)\oplus r(c)))) $ by the definition of $\oplus_r$ and $\otimes_r$\\
-$= r(r(a) \otimes r(r(b)\oplus r(c))) $ by the right invariant property of $\otimes_r$\\
-$= r(r(a) \otimes r(b \oplus c)) $ by the left and right invariant property of $\oplus_r$\\
-$= r(r(a) \otimes (b \oplus c)) $ by the right invariant property of $\otimes_r$\\
-$= r((r(a) \otimes b) \oplus (r(a) \otimes c)) $ by the distributive law of $\oplus$ and $otimes$\\
-$= r((r(a) \otimes r(b)) \oplus (r(a) \otimes r(c))) $ by the right invariant property of $\otimes_r$\\
-$= r(r(r(a) \otimes r(b)) \oplus r(r(a) \otimes r(c))) $ by the left and right invariant property of $\oplus_r$\\
-Qed.\\\\
+We also mentioned in the previous section that the traditional representation of reduction is equivalent to the generalize representation we defined in this section, which indicates that the sufficient condition to that the semiring remains the distributive law is the properties of the left/right invariant.
+For every $a,b,c \in S$ we have   
+\[
+\begin{array}{rcll} 
+a \otimes_r (b \oplus_r c)  & = & r(r(a) \otimes r(r(r(b)\oplus r(c)))) & \mbox{by the definition of $\oplus_r$ and $\otimes_r$}\\
+& = & r(r(a) \otimes r(r(b)\oplus r(c))) & \mbox{by the right invariant property of $\otimes_r$}\\
+& = & r(r(a) \otimes r(b \oplus c)) & \mbox{by the left and right invariant property of $\oplus_r$}\\
+& = & r(r(a) \otimes (b \oplus c)) & \mbox{by the right invariant property of $\otimes_r$}\\
+& = & r((r(a) \otimes b) \oplus (r(a) \otimes c)) & \mbox{by the distributive law of $\oplus$ and $otimes$}\\
+& = & r((r(a) \otimes r(b)) \oplus (r(a) \otimes r(c))) & \mbox{by the right invariant property of $\otimes_r$}\\
+& = & r(r(r(a) \otimes r(b)) \oplus r(r(a) \otimes r(c))) & \mbox{by the left and right invariant property of $\oplus_r$}\\
+\end{array}
+\] 
 Similarly, in the proof of right distributive law, we need left/right invariant properties of $\oplus_r$ and left invariant property of $\otimes_r$.
 Considering the same problems as we met in the previous associative proof, we here regard the relationship between distributive law and reduction as a separate property, pseudo-distributive.
 Because sometimes our reduction does not satisfy the left/right invariant properties, it still has the opportunity to allow the semiring to preserve the properties of the distributive law by satisfying the pseudo-distributive law. Here we just state that the left/right invariant property is only a sufficient condition for the semiring to retain the properties of the distributive law rather than a necessary and sufficient condition. \\
@@ -244,15 +260,20 @@ At this point, we finish the first reduce semiring built by predicate reduction,
 The second predicate reduction we need to define is the reduction that reduce all the path that has loop to a single element. First of all, we need to consider the problem that expressing our path. For a graph $G = (V,E)$, our problem set should be $\mathbb{P}(E^*)$. In fact, we can also use $V$ to represent the path, and this representation is more convenient for us to calculate. For a path $p$ that passes through several points $n_1,n_2 ... n_k \in V$ in turn, we use an ordered list to represent the path $p = [n_1,n_2 ... n_k]$. 
 Since the node here is just a reference for a name, in order to facilitate our proof and calculation, we define our path $P = List(\mathbb{N})$, using the natural number to indicate nodes.\\
 Next we need to define our two binary operators, $min$ and $concat$. 
-Before defining the operator $min$ we need to define a helper binary order: dictionary order $\forall a,b \in Path,\\ d(nil,b) = nil\\
-d(a,nil) = nil\\
-d(a::as,b::bs) =
+Before defining the operator $min$ we need to define a helper binary order -- dictionary order: for all  $a,b \in Path$,
+\[
+\begin{array}{rcl} 
+d(nil,b) & = & nil\\
+d(a,nil) & = & nil\\
+d(a::as,b::bs) & = & 
 \left\{
 \begin{aligned}
 a &  & a \leq b \\
-b &  & otherwise 
+b &  & otherwise
 \end{aligned}
-\right.$.\\
+\right.
+\end{array}
+\] 
 Then we can use the dictionary order to define our $min$ operator as additive component: \\
 $\forall a,b \in Path, min(a,b) = \left\{
 \begin{aligned}
