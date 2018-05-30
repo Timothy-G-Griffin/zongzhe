@@ -31,31 +31,6 @@ Section LexicographicProduct.
   Variable symT   : brel_symmetric T eqT. 
   Variable transT : brel_transitive T eqT.
 
-  Variable bS_cong : bop_congruence S eqS bS. 
-  Variable bS_ass  : bop_associative S eqS bS.
-  Variable bS_sel  : bop_selective S eqS bS.
-
-  Variable bS_comm : bop_commutative S eqS bS.  
-
-  Variable bT_cong : bop_congruence T eqT bT. 
-  Variable bT_ass  : bop_associative T eqT bT.  
-
-
-  (* maybe can't be proved 
-  Lemma bop_lexicographic_product_congruence : bop_congruence (S * T) (brel_product eqS eqT) (bop_llex eqS bS bT).
-  Proof. intros [s1 t1] [s2 t2] [s3 t3] [s4 t4]; simpl. intros H1 H2. 
-         destruct (andb_elim _ _ H1) as [C1 C2].
-         destruct (andb_elim _ _ H2) as [C3 C4].
-         apply andb_intro. split.
-         apply bS_cong; auto. 
-         compute.
-         case_eq (eqS s1 s2); intro A.
-         case_eq (eqS s3 s4); intro B.
-         assert (C := bT_cong t1 t2 t3 t4 C2 C4). exact C.
-         assert (C := bS_sel s3 s4). destruct C.
-         apply symS in e. rewrite e.
-     Admitted.
-*)
 
 (* proofs come from L11 slides *)
 Lemma bop_lexicographic_product_congruence : 
@@ -78,8 +53,8 @@ Proof.
 Admitted.     
    
 
-Lemma bop_lexicographic_product_commutative : bop_commutative S eqS bS -> bop_commutative T eqT bT -> bop_commutative (S * T) (brel_product eqS eqT) (bop_llex eqS bS bT). 
-Proof. intros Scomm Tcomm [s1 t1] [s2 t2] ; compute. 
+Lemma bop_lexicographic_product_commutative : bop_selective S eqS bS -> bop_commutative S eqS bS -> bop_commutative T eqT bT -> bop_commutative (S * T) (brel_product eqS eqT) (bop_llex eqS bS bT). 
+Proof. intros bS_sel Scomm Tcomm [s1 t1] [s2 t2] ; compute. 
        apply andb_intro. split.
        apply Scomm.
        case_eq (eqS s1 s2); intro A. apply symS in A. rewrite A. exact (Tcomm t1 t2).
@@ -128,5 +103,20 @@ Lemma  bop_lexicographic_product_is_id : ∀ (aS : S) (aT : T) (is_idS : bop_is_
         apply (brel_symmetric_false S eqS symS) in A. rewrite A. apply symS in RS. rewrite RS. auto.
        Qed.
 
+
+       Variable addS : binary_op S.
+       Variable addT : binary_op T.  
+       Variable mulS : binary_op S.
+       Variable mulT : binary_op T.  
+
+
+Lemma bop_not_left_distributive : bop_not_left_distributive T eqT addT mulT 
+-> bop_not_left_distributive (S * T) (brel_product eqS eqT) (bop_llex eqS addS addT) (bop_product mulS mulT).
+Proof. Admitted.
+
+
+Lemma bop_not_right_distributive : bop_not_right_distributive T eqT addT mulT 
+-> bop_not_right_distributive (S * T) (brel_product eqS eqT) (bop_llex eqS addS addT) (bop_product mulS mulT).
+Proof. Admitted.  
 
 End LexicographicProduct.

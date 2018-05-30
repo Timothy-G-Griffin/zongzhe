@@ -13,6 +13,7 @@ Require Import CAS.reduction_theory.
 Require Import Coq.Lists.List.
 Require Import Coq.Bool.Bool. 
 Require Import Coq.Arith.Arith.
+Require Import CAS.min_plus_ceiling_reduction.
 Open Scope nat.
 Open Scope list_scope.
 
@@ -24,9 +25,19 @@ Definition brel_list (S : Type)(eq : brel S)  := λ x y, brel_list eq x y.
 
 Definition S := nat.
 Definition eqS := Arith.EqNat.beq_nat.
-Variable refS : brel_reflexive S eqS.
-Variable symS : brel_symmetric S eqS.
-Variable tranS : brel_transitive S eqS.
+
+Lemma refS : brel_reflexive S eqS.
+Proof. apply brel_eq_nat_reflexive.
+Qed.
+
+Lemma symS : brel_symmetric S eqS.
+Proof. apply brel_eq_nat_symmetric.
+Qed.
+
+Lemma tranS : brel_transitive S eqS.
+Proof. apply brel_eq_nat_transitive.
+Qed.
+
 Variable c : cas_constant.
 
 Definition brel_list_S  : brel (list S) := brel_list S eqS.

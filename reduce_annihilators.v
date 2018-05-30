@@ -256,27 +256,6 @@ Proof. intros C1 C2.
        apply bop_product_commutative; auto.
 Qed.
 
-(* qeustion on this *)
-Lemma bop_rap_mul_not_commutative :
-bop_not_commutative (S * T) (brel_product eqS eqT) (bop_product mulS mulT) ->
-     bop_not_commutative (S * T) (brel_reduce uop_rap (brel_product eqS eqT)) bop_rap_mul.
-Proof. intros H. unfold bop_not_commutative. unfold bop_not_commutative in H.
-       destruct H. destruct x as [x1 x2].
-       exists (x1,x2).
-       unfold brel_reduce,uop_rap,uop_predicate_reduce.
-       unfold P,bop_rap_mul,bop_fpr,uop_predicate_reduce,bop_full_reduce,P;simpl.
-       destruct x1 as [s1 t1]. destruct x2 as [s2 t2].
-       assert (H1:eqS s1 zeroS = false). admit. rewrite H1.
-       assert (H2:eqS s2 zeroS = false). admit. rewrite H2.
-       assert (H3:eqT t1 zeroT = false). admit. rewrite H3.
-       assert (H4:eqT t2 zeroT = false). admit. rewrite H4.
-       simpl.
-     assert (eqS (mulS s1 s2) zeroS || eqT (mulT t1 t2) zeroT = false). admit.
-     rewrite H. rewrite H.
-     assert (eqS (mulS s2 s1) zeroS || eqT (mulT t2 t1) zeroT = false). admit.
-     rewrite H0. rewrite H0. exact y.
-Admitted.
-
 
 Lemma uop_rap_add_preserves_id :
  uop_preserves_id (S * T) (brel_product eqS eqT) (bop_product addS addT) uop_rap. 
