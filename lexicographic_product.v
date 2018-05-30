@@ -41,7 +41,7 @@ Section LexicographicProduct.
   Variable bT_ass  : bop_associative T eqT bT.  
 
 
-  (* maybe can't be proved *)
+  (* maybe can't be proved 
   Lemma bop_lexicographic_product_congruence : bop_congruence (S * T) (brel_product eqS eqT) (bop_llex eqS bS bT).
   Proof. intros [s1 t1] [s2 t2] [s3 t3] [s4 t4]; simpl. intros H1 H2. 
          destruct (andb_elim _ _ H1) as [C1 C2].
@@ -55,7 +55,7 @@ Section LexicographicProduct.
          assert (C := bS_sel s3 s4). destruct C.
          apply symS in e. rewrite e.
      Admitted.
-
+*)
 
 (* proofs come from L11 slides *)
 Lemma bop_lexicographic_product_congruence : 

@@ -52,6 +52,8 @@ Definition one2  : T := inr nil.
 Definition zero  : M := (zero1,zero2).
 Definition one   : M := (one1,one2).
 
+Variable  One_not_Zero : eqN one1 zero1 = false. 
+
 Definition P := reduce_annihilators.P nat T eqN eqT zero1 zero2.
 Definition P_congruence := reduce_annihilators.P_congruence.
 Definition P_true := reduce_annihilators.P_true.
@@ -156,12 +158,34 @@ Proof. intros s1 s2 H1.
 Admitted.
 
 Close Scope nat.
+
+Open Scope bool.
+
+Lemma orb_is_true_right : ∀ b1 b2 : bool, (b1 = true) + (b2 = true) → b1 || b2 = true. 
+Proof. induction b1; induction b2; simpl; intros [H | H]; auto. Defined. 
+
+Lemma orb_is_false_left : ∀ b1 b2 : bool, b1 || b2 = false → (b1 = false) * (b2 = false). 
+Proof. induction b1; induction b2; simpl; intros; split.   
+       assumption. assumption. assumption. reflexivity. 
+       reflexivity. assumption. reflexivity. reflexivity.
+Defined. 
+
+Lemma orb_is_true_left : ∀ b1 b2 : bool, b1 || b2 = true → (b1 = true) + (b2 = true). 
+Proof. induction b1; induction b2; simpl; intros.  
+       left; reflexivity. 
+       left. reflexivity. 
+       right. reflexivity. 
+       left. assumption. 
+Defined. 
+
+
 Lemma P_compose_mul : pred_bop_compose M P mul.
 Proof. intros s1 s2 H1. destruct s1,s2.
        unfold mul,bop_product.
        unfold P,reduce_annihilators.P in H1.
        destruct H1.
-       assert (A : eqN n zero1 = true + eqT t zero2 = true).
+       apply orb_is_true_left in e. 
+(*       assert (A : eqN n zero1 = true + eqT t zero2 = true). *) 
 Admitted.
 
 
@@ -183,6 +207,9 @@ Proof. apply bop_associative_fpr_decompositional_id.
        apply brel_eq_nat_reflexive; auto.
        apply brel_eq_nat_symmetric.
        apply brel_eq_nat_transitive.
+       unfold M, eqM, add.
+       apply bop_lexicographic_product_congruence; auto.
+(*       
        admit. (* apply bop_lexicographic_product_congruence;auto. *)
        admit. (* apply bop_lexicographic_product_associative. *)
        apply P_decompose_add.
@@ -196,6 +223,7 @@ Proof. apply bop_associative_fpr_decompositional_id.
           apply brel_eq_nat_reflexive; auto.
           apply brel_eq_nat_symmetric.
           apply brel_eq_nat_transitive.
+*) 
 Admitted.
 
 
@@ -395,8 +423,10 @@ Proof. apply bop_full_reduce_is_id.
        apply brel_eq_nat_symmetric.
        apply brel_eq_nat_transitive.
        assert (B := bop_is_id_unique M eqM brel_M_symmetric brel_M_transitive _ _ add H A).
-       assert (C := P_congruence nat T eqN eqT).
-       admit. (* question *)
+       assert (C := P_congruence nat T eqN eqT). unfold uop_predicate_reduce. 
+       case_eq(P s); intro Z. 
+       admit. (* use symmetry *)
+       admit. (* reflex *) 
        apply bop_lexicographic_product_is_id.
        apply min_plus_ceiling_reduction.brel_reduce_nat_symmetric; auto.
        apply min_plus_ceiling_reduction.brel_reduce_nat_transitive; auto.
@@ -425,7 +455,7 @@ Proof. apply bop_full_reduce_is_ann.
     apply elementary_path.brel_reduce_list_const_transitive;auto.
     apply brel_eq_nat_reflexive; auto.
     apply brel_eq_nat_symmetric.
-    apply brel_eq_nat_transitive.
+    apply brel_eq_nat_transitive. (* unfold!!!*)
     admit. (* apply bop_lexicographic_product_congruence. *)
     unfold uop_preserves_ann. intros s H.
        assert (A : bop_is_ann M eqM add one). 
@@ -480,9 +510,9 @@ Proof. apply bop_rap_mul_is_id.
         apply brel_eq_nat_reflexive.
         apply brel_eq_nat_symmetric.
         apply brel_eq_nat_transitive.
-    admit.
+        exact One_not_Zero. 
     compute. auto.
-Admitted.
+Qed. 
 
 Lemma bop_is_ann_mul_zero : bop_is_ann M brel_eq_M bop_rap_mul zero.
 Proof. apply bop_rap_mul_is_ann.
@@ -582,3 +612,5 @@ Definition min_app_non_distributive_dioid : selective_bioid M
 |}.
 
 End Lexicographic_product_minPlusWithCeiling_ElementaryPath.
+
+Check bop_is_id_mul_one . 
