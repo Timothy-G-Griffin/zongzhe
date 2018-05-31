@@ -338,10 +338,10 @@ Therefore, here we refer to the definition of reduction in L11 (also the definit
 \caption{Illustration of Reduction}
 \end{figure}
 For a problem set $S$, the reduced problem set under reduction $r: S \rightarrow S$ is represented as 
-\e{r:def:traditional}{r(S) \equiv \{s \in S | r(s) = s\}}
-Then for the problem set $S$ that represented as a semirgroup $(S,=_S,\oplus)$, the reduced problem set will be represented as $({r(S) \equiv \{s \in S | r(s) = s\}},=_S,\oplus_r)$ where 
-\e{r:def:binary_operator}{\forall a, b \in \{r(S) \equiv \{s \in S | r(s) = s\}, a \oplus_r b \equiv r(a \oplus b)}
-It is worth mentioning that although we use reduction to reduce the problem set from $S$ to $\{r(S) \equiv \{s \in S | r(s) = s\}$, our equality $=_S$ is still the original equality $=_S$, .
+\e{r:def:traditional}{r(S) \equiv \{s \in S | r(s) =_S s\}}
+Then for the problem set $S$ that represented as a semirgroup $(S,=_S,\oplus)$, the reduced problem set will be represented as $({r(S) \equiv \{s \in S | r(s) =_S s\}},=_S,\oplus_r)$ where 
+\e{r:def:binary_operator}{\forall a, b \in \{r(S) \equiv \{s \in S | r(s) =_S s\}, a \oplus_r b \equiv r(a \oplus b)}
+It is worth mentioning that although we use reduction to reduce the problem set from $S$ to $\{r(S) \equiv \{s \in S | r(s) =_S s\}$, our equality $=_S$ is still the original equality $=_S$, .
 This can be seen from the figure (\ref{reduction}), although we currently only focus on a subset of the original problem set $S$, the equality established on the problem set is still established on this subset.
 Here as the reduction $r$ need to have the following properties.
 
@@ -355,13 +355,225 @@ To help us understand reduction and study its properties, we found another examp
 
 The reduction is call $min_{\leq}$ (Martelli’s semiring)\cite{martelli_gaussian_1976} which means removing all the superset.
 For a given graph $G = (V,E)$, A cut set $C \in E$ for nodes $i$ and $j$ is a set of edges such there is no path from $i$ to $j$ in the graph $(V, E - C)$. $C$ is minimal if no proper subset of $C$ is a cut set. And Martelli’s semiring is such that $A^{(*)}(i, j)$ is the set of all minimal cut sets for $i$ and $j$. 
-So Martelli’s semiring =\[(S,\oplus,\otimes,\bar0,\bar1)\] where \[S = min_\leq(2^{2^E})\] \[X\oplus Y = min_\leq(\{U \cup V | U \in X, V \in Y\})\] \[X\otimes Y = min_\leq(X \cup Y)\] \[\bar0 = \{\{\}\}\] \[\bar1 = \{\}\]
+So Martelli’s semiring is represented as \[(S,\oplus,\otimes,\bar0,\bar1)\] where \[S = min_\leq(2^{2^E})\] \[X\oplus Y = min_\leq(\{U \cup V | U \in X, V \in Y\})\] \[X\otimes Y = min_\leq(X \cup Y)\] \[\bar0 = \{\{\}\}\] \[\bar1 = \{\}\]
 Here we can easily prove that $min_\leq$ satisfies our previous definition of reduction. So $min_\leq$ is a classical reduction.
 \subsection{Reasoning on Classical Reduction}
+Next we need to make a detailed reasoning the properties of the reduction.
+Because we are talking about classical reduction, we assume that our reduction $r$ has properties of congruence (\ref{r:def:congruence}), idempotent (\ref{r:def:idempotent}), left invariant (\ref{r:def:left_invariant}) and right invariant (\ref{r:def:right_invariant}).
 
+First we discuss the properties of equality on reduction set. We assume the equality $=_S$ has the properties of reflexive (\ref{def:eq:reflexive}), symmetric (\ref{def:eq:symmetric}), transitive (\ref{def:eq:transitive}) and congruence (\ref{def:eq:congruence}) on the original problem set $S$.
+Then in the definition of our reduction representation we mentioned "although we use reduction to reduce the problem set from $S$ to $\{r(S) \equiv \{s \in S | r(s) =_S s\} $, we equality $=_S$ is still the original equality $=_S$”, so on reduced problem set $\{r(S) \equiv \{s \in S | r(s) =_S s\}$ ,the equality $=_S$ still has the property of reflexive, symmetric, transitive and congruence.
+
+Next we need to discuss the properties of the binary operator under reduced problem set. 
+Recalling to our definition, for a binary operator $\oplus : S \times S \rightarrow S$, the reduced binary operator under reduction $r$ is defined as \[\forall a, b \in \{r(S) \equiv \{s \in S | r(s) =_S s\}, a \oplus_r b \equiv r(a \oplus b)\]
+So we first assume that the original binary operator $\oplus$ has certain properties on $S$, and then reasoning that these properties are remained after reduction ($\oplus_r$ still has the same property under $\{r(S) \equiv \{s \in S | r(s) =_S s\}$)
+
+Commutative: we initially assume that $\oplus$ is commutative under $S$, which is $\forall a,b \in S, a \oplus b =_S b \oplus a$. Then we want to proof that $\forall a,b \in \{s \in S | r(s) =_S s\}, a \oplus_r b =_S b \oplus_r a$.
+\e{r:proof:commutative}{
+\begin{array}{rcll} 
+a \oplus_r b & =_S & r(a \oplus b) &\mbox{by the definition of $\oplus_r$} \\
+			 & =_S & r(b \oplus a) &\mbox{by commutative of $\oplus$ and congruence of $r$}\\
+             & =_S & b \oplus_r a &\mbox{by the definition of $\oplus_r$} \\
+\end{array}}
+So we can conclude that commutative of $\oplus$ plus congruence of $r$ implies commutative of $\oplus_r$.
+
+Congruence: we initially assume that $\oplus$ is congruence under $S$, which is $\forall a,b,c,d \in S, a =_S b \wedge c =_S d \rightarrow a \oplus c =_S b \oplus d$. Then we want to proof that $\forall a,b,c,d \in \{s \in S | r(s) =_S s\}, a =_S b \wedge c =_S d \rightarrow a \oplus_r c =_S b \oplus_r d$.
+\e{r:proof:congruence}{
+\begin{array}{rcll} 
+a \oplus_r c & =_S & r(a \oplus c) &\mbox{by the definition of $\oplus_r$} \\
+			 & =_S & r(b \oplus c) &\mbox{by congruence of $\oplus$ and congruence of $r$}\\
+			 & =_S & r(b \oplus d) &\mbox{by congruence of $\oplus$ and congruence of $r$}\\
+             & =_S & b \oplus_r d &\mbox{by the definition of $\oplus_r$} \\
+\end{array}}
+So we can conclude that congruence of $\oplus$ plus congruence of $r$ implies congruence of $\oplus_r$.
+
+Selective: we initially assume that $\oplus$ is selective under $S$, which is $\forall a,b \in S, a \oplus b =_S a \bigvee a \oplus b =_S b$. Then we want to proof that $\forall a,b \in \{s \in S | r(s) =_S s\}, a \oplus_r b =_S a \bigvee a \oplus_r b =_S b$. By using the selective property, we can split the cases of $a\oplus b$.
+
+case 1: $a \oplus b =_S a$
+\[
+\begin{array}{rcll} 
+a \oplus_r b & =_S & r(a \oplus b) &\mbox{by the definition of $\oplus_r$} \\
+			 & =_S & r(a) &\mbox{congruence of $r$}\\
+			 & =_S & a &\mbox{because $r(a) = a$}\\
+\end{array}
+\]
+case 2: $a \oplus b =_S b$
+\[
+\begin{array}{rcll} 
+a \oplus_r b & =_S & r(a \oplus b) &\mbox{by the definition of $\oplus_r$} \\
+			 & =_S & r(b) &\mbox{congruence of $r$}\\
+			 & =_S & b &\mbox{because $r(b) = b$}\\
+\end{array}
+\]
+So we can conclude that selective of $\oplus$ plus congruence of $r$ implies selective of $\oplus_r$.
+
+Associative: we initially assume that $\oplus$ is associative under $S$, which is $\forall a,b,c \in S, a \oplus (b \oplus c) =_S (a \oplus b) \oplus c$. Then we want to proof that $\forall a,b,c \in \{s \in S | r(s) =_S s\}, a \oplus_r (b \oplus_r c) =_S (a \oplus_r b) \oplus_r c$. 
+\e{r:proof:associative}{
+\begin{array}{rcll} 
+a \oplus_r (b \oplus_r c) & =_S & r(a \oplus r(b \oplus c)) &\mbox{by the definition of $\oplus_r$} \\
+			 & =_S & r(a \oplus (b \oplus c)) &\mbox{by right invariant property of $r$ on $\oplus$}\\
+			 & =_S & r((a \oplus b) \oplus c) &\mbox{by associative of $\oplus$ and congruence of $r$}\\
+			 & =_S & r(r(a \oplus b) \oplus c) &\mbox{by left invariant property of $r$ on $\oplus$}\\
+             & =_S & (a \oplus_r b) \oplus_r c  &\mbox{by the definition of $\oplus_r$} \\
+\end{array}}
+So we can conclude that associative of $\oplus$ plus congruence, left and right invariant of $r$ on $\oplus$ implies associative of $\oplus_r$.
+Here we find that associative is not the same as the other three properties under binary operators. The proof that a binary operator satisfies the associative under reduction uses the left/right invariant properties of reduction. And in the later section we will focus on the properties of the associative and do reasoning on it. 
+
+Left Distributive: by adding another binary operator $\otimes : S \times S \rightarrow S$, the reduced binary operator $\otimes_r$ as $\forall a,b \in \{s \in S | r(s) =_S s\}, a \otimes_r b \equiv r(a \otimes b)$, we initially assume that $\oplus$ and $\otimes$ are left distributive under $S$, which is $\forall a,b,c \in S, a \otimes (b \oplus c) =_S (a \otimes b) \oplus (a \otimes c)$. Then we want to proof that $\forall a,b,c \in \{s \in S | r(s) =_S s\}, a \otimes_r (b \oplus_r c) =_S (a \otimes_r b) \oplus_r (a \otimes_r c)$. 
+\e{r:proof:left_distributive}{
+\begin{array}{rcll} 
+a \otimes_r (b \oplus_r c) & =_S & r(a \otimes r(b \oplus c)) &\mbox{by the definition of $\oplus_r$ and $\otimes_r$} \\
+			 & =_S & r(a \otimes (b \oplus c)) &\mbox{by right invariant property of $r$ on $\otimes$}\\
+			 & =_S & r((a \otimes b) \oplus (a \otimes c)) &\mbox{by left distributive of $\oplus$ and $\otimes$}\\
+			 & =_S & r(r(a \otimes b) \oplus r(a \otimes c)) &\mbox{by left and right invariant of $r$ on $\oplus$}\\			 
+			 & =_S & r((a \otimes_r b) \oplus (a \otimes_r c)) &\mbox{by the definition of $\otimes_r$}\\
+             & =_S & (a \otimes_r b) \oplus_r (a \otimes_r c)  &\mbox{by the definition of $\oplus_r$} \\
+\end{array}}
+So we can conclude that left distributive of $\oplus$ and $\otimes$ plus congruence, left and right invariant of $r$ on $\oplus$, right invariant of $r$ on $\otimes$ implies left distributive of $\oplus_r$ and $\otimes_r$.
+
+Similarly we can conclude that right distributive of $\oplus$ and $\otimes$ plus congruence, left and right invariant of $r$ on $\oplus$, left invariant of $r$ on $\otimes$ implies right distributive of $\oplus_r$ and $\otimes_r$.
+
+Thus, we get the conclusion that distributive of $\oplus$ and $\otimes$ plus congruence, left and right invariant of $r$ on $\oplus$ and $\otimes$ implies distributive of $\oplus_r$ and $\otimes_r$.
+It is also worth mentioning that the property of the distributive is also one of the major features we will discuss in the later section.
 
 \section{New Reduction Representation}
+The previous section have mentioned that our definition of classical reduction traditional representation is implementation unfriendly.
+
+This is because inside traditional reduction representation our actual problem set is $r(S) = \{s\in S|r(s)=_S s\}$ which is a type with record. Record is difficult to be accurately represented in most situations. 
+
+Imagine we have two different reductions $r_1$ and $r_2$ for $S$, then the problem set after applying reduction $r_1$ and $r_2$ will be $r_2(r_1(S)) = \{y\in \{x \in S | r_1(x) =_S x\}|r_2(y)=_S y\}$. 
+
+The nest record of reduction in our problem domain makes all the reasoning and calculation step into trouble. 
+At the same time, since our real problem set has changed from the original $S$ to the current $r(S) = \{s\in S|r(s)=_S s\}$ (suppose we only have one reduction $r$), the domain of our binary operator has changed. If we originally have a binary operator $\oplus : S\times S \rightarrow S$, then the binary operator after reduction will become the binary operator \[\oplus_r : \{s\in S|r(s)=_S s\} \times \{s\in S|r(s)=_S s\} \rightarrow \{s\in S|r(s)= s\}\] And if we apply two/more reductions simultaneously, the entangling of reductions with problem set and operator makes it almost impossible for us to define the combinator that exists on reduction and solve the problem at all.
+
+Our goal is to redefine the equality and binary operators without changing the problem set $S$. 
+Then the reduced problem set based on $(S,=_S,\oplus)$ by reduction $r$ will become $(S,=^r_S,\oplus^r)$, which is still a problem set on $S$, but not $(\{x \in S | r(x) =_S x\}, =,\oplus_r)$. 
+Then we will prove the isomorphism between these two representations.
+
+\subsection{Generalized Representation of Equality and Binary Operator}
+Let us look back and forth at the figure (\ref{reduction}). In the figure, our reduction will reduce the problem set $S$ to a subset of $S$. In our traditional representation, because reduction has already brought problem set from $S$ to $\{x \in S | r(x) =_S x\}$, which means when we are comparing two elements from the problem set, those two elements are already inside $\{x \in S | r(x) =_S x\}$, we can directly use the original equality $=_S$ as well.
+
+However if we want to keep our problem set still as $S$, when we are doing equality comparison, we must guarantee that the elements we compared are already inside the reduced problem set. Thus we defined the new equality as
+\e{gr:def:eq}{\forall a,b \in S, a =^r_S b \equiv r(a) =_S r(b)}
+
+The same reason for our binary operator $\oplus$, when we defined $\oplus_r$ earlier, because the arguments we need have been reduced to $\{x \in S | r(x) =_S x \}$, we only need to consider that the result of operation must also be in $\{x \in S | r(x) =_S x\}$, so we give the definition above (\ref{r:def:binary_operator}).
+
+Similarly to the equality, if we want to keep our problem set still as $S$, when we are doing binary operation, we not only need to consider that the result of the operation is in the reduced problem set, we also need to ensure that the two arguments of the binary operator are in the reduced problem set. Therefore we define our binary operator under reduction:
+\e{gr:def:binary_operator}{\forall a,b \in S, a \oplus^r b \equiv r(r(a) \oplus r(b))}
+
+\subsection{Isomorphism between Transitional and Generalized Representation}
+Next we need to prove that our new generalized representation is isomorphic to the previous traditional representation.
+
+\subsubsection{Isomorphic On Equality Properties}
+First we discuss the properties on equality between the traditional representation and the generalized representation.
+
+Congruence: we need to proof that $=_S$ is congruence on $\{x \in S | r(x) =_S x\}$ is isomorphic to $=^r_S$ is congruence on $S$, which means 
+\[\forall a,b,c,d \in \{x \in S | r(x) =_S x \}, a =_S b \wedge c =_S d \rightarrow a =_S c = b =_S d \]
+\[\longleftrightarrow \]
+\[\forall a,b,c,d \in S, a =^r_S b \wedge c =^r_S d \rightarrow a =^r_S c = b =^r_S d
+\]
+
+Reflexive: we need to proof that $=_S$ is reflexive on $\{x \in S | r(x) =_S x \}$ is isomorphic to $=^r_S$ is reflexive on $S$, which means 
+\[\forall a \in \{x \in S | r(x) =_S x \}, a =_S a \]
+\[\longleftrightarrow \]
+\[\forall a \in S, a =^r_S a
+\]
+
+Symmetric: we need to proof that $=_S$ is symmetric on $\{x \in S | r(x) =_S x\}$ is isomorphic to $=^r_S$ is symmetric on $S$, which means 
+\[\forall a,b \in \{x \in S | r(x) =_S x \}, a =_S b \rightarrow b =_S a \]
+\[\longleftrightarrow \]
+\[\forall a,b \in S, a =^r_S b \rightarrow b =^r_S a
+\]
+
+Transitive: we need to proof that $=_S$ is transitive on $\{x \in S | r(x) =_S x \}$ is isomorphic to $=^r_S$ is transitive on $S$, which means 
+\[\forall a,b,c \in \{x \in S | r(x) =_S x \}, a =_S b \wedge b =_S c \rightarrow a =_S c \]
+\[\longleftrightarrow \]
+\[\forall a,b,c \in S, a =^r_S b \wedge b =^r_S c \rightarrow a =^r_S c
+\]
+
+These proof are really trivial and only need the property of idempotent of $r$, which is $\forall a \in S, r(a) = r(r(a))$.
+
+\subsubsection{Isomorphic On Binary Operator Properties}
+Next we discuss the properties on binary operator $\oplus$ (and $\otimes$ when we are talking about distributive) between the traditional representation and the generalized representation.
+
+Commutative: we need to proof that $\oplus_r$ is commutative on $\{x \in S | r(x) =_S x\}$ is isomorphic to $\oplus^r$ is commutative on $S$, which means 
+\[\forall a,b \in \{x \in S | r(x) =_S x \}, a \oplus_r b =_S b \oplus_r a \]
+\[\longleftrightarrow \]
+\[\forall a,b \in S, a \oplus^r b =^r_S b \oplus^r a
+\]
+
+Selective:  we need to proof that $\oplus_r$ is selective on $\{x \in S | r(x) =_S x\}$ is isomorphic to $\oplus^r$ is selective on $S$, which means 
+\[\forall a,b \in \{x \in S | r(x) =_S x\}, a \oplus_r b =_S a \bigvee a \oplus_r b =_S b \]
+\[\longleftrightarrow \]
+\[\forall a,b \in S, a \oplus^r b =^r_S a \bigvee a \oplus^r b =^r_S b
+\]
+
+Congruence: we need to proof that $\oplus_r$ is congruence on $\{x \in S | r(x) =_S x\}$ is isomorphic to $\oplus^r$ is congruence on $S$, which means 
+\[\forall a,b,c,d \in \{x \in S | r(x) =_S x \}, a =_S b \wedge c =_S d \rightarrow a \oplus_r c =_S b \oplus_r d \]
+\[\longleftrightarrow \]
+\[\forall a,b,c,d \in S, a =^r_S b \wedge c =^r_S d \rightarrow a \oplus^r c =^r_S b \oplus^r d
+\]
+
+Associative: we need to proof that $\oplus_r$ is associative on $\{x \in S | r(x) =_S x\}$ is isomorphic to $\oplus^r$ is associative on $S$, which means 
+\[\forall a,b,c \in \{x \in S | r(x) =_S x \}, a \oplus_r (b \oplus_r c) =_S (a \oplus_r b) \oplus_r c \]
+\[\longleftrightarrow \]
+\[\forall a,b,c \in S, a \oplus^r (b \oplus^r c) =^r_S (a \oplus^r b) \oplus^r c
+\]
+
+Left Distributive: we need to proof that $\oplus_r$ and $\otimes_r$ are left distributive on $\{x \in S | r(x) =_S x\}$ is isomorphic to $\oplus^r$ and $\oplus^r$ are left distributive on $S$, which means 
+\[\forall a,b,c \in \{x \in S | r(x) =_S x \}, a \otimes_r (b \oplus_r c) =_S (a \otimes_r b) \oplus_r (a \otimes_r c) \]
+\[\longleftrightarrow \]
+\[\forall a,b,c \in S, a \otimes^r (b \oplus^r c) =^r_S (a \otimes^r b) \oplus^r (a \otimes^r c)
+\]
+
+Right Distributive: we need to proof that $\oplus_r$ and $\otimes_r$ are right distributive on $\{x \in S | r(x) =_S x\}$ is isomorphic to $\oplus^r$ and $\oplus^r$ are right distributive on $S$, which means 
+\[\forall a,b,c \in \{x \in S | r(x) =_S x \}, (a \oplus_r b) \otimes_r c =_S (a \otimes_r c) \oplus_r (b \otimes_r c) \]
+\[\longleftrightarrow \]
+\[\forall a,b,c \in S, (a \oplus^r b) \otimes^r c =^r_S (a \otimes^r c) \oplus^r (b \otimes^r c)
+\]
+
+These proof will be shown in Coq file and we only need the property of congruence and idempotent of $r$, which is $\forall a \in S, r(a) = r(r(a))$ and $\forall a,b \in S, a =_S b \rightarrow r(a) =_S r(b)$.
+
+This proves that our generalized representation of reduction is isomorphic to the traditional representation of reduction, which means all the properties we have proved in the classical reduction section could be used directly into our generalized representation.
+
 \section{Generalized Reduction}
+In our previously defined classical reduction (either in traditional representation or generalized representation), reduction must satisfy four properties that it is congruence, idempotent, left and right invariant. However, the reduction we encounter in reality does not all have the above four properties, especially the left/right invariant properties. In particular, the elementary reduction in the elementary path problem that we mentioned earlier, which will also be used in the later section to construct our final path problem, does not satisfy the properties of the left/right invariant on the $min$ operator. 
+
+Assuming $P_1,P_2 \in Path, P_1 \leq P_2, loop(P_1) = true \wedge loop(P_2) = false$. 
+Then $r(min(P_1,P_2)) = r(P_1) = \infty$.
+However $r(min(r(P_1),P_2)) = r(min(\infty,P_2)) r(P_2) = P_2$. 
+
+Therefore, in order to define our elementary path reduction and also to better represent other reductions, we generalize the definition reduction as: $r$ is a reduction on $S$ if $r$ has the properties of congruence and idempotent, and get rid of the constraint of left/right invariant properties, and we name this kind of reduction as generalized reduction.
+
+Do not confuse generalized representation of reduction with generalized reduction here. 
+Generalized representation of reduction is a new representation of reduction, compared to and isomorphic to the traditional representation of reduction, that is implementation friendly. A reduction that represented by generalized representation could be classical reduction (that has left/right invariant properties) or generalized reduction (left/right invariant properties can be gotten rid of).
+Generalized reduction we defined here is a kind of reduction that is only asked for idempotent and congruence properties without forced to be left/right invariant. Generalized reduction could be represented by using traditional representation or generalized representation.
+
+Because the generalized representation is implementation friendly, and we have proved the isomorphism between the generalized representation and traditional representation, we will use generalized representation to represent reduction in the following paragraph.
+
+\subsection{Properties of Generalized Reduction, Pseudo Associative and Pseudo Distributive}
+We have reasoned about the relationship between reduction and equality/binary operators in the previous section of classical reduction. 
+Since in the last section we have already reached a grossized representation is isomorphic to the traditional representation, and the generalized reduction is just the classical reduction without left/right invariant properties, by assuming that the reduction $r$ is congruence and idempotent, we can have the following conclusion:
+
+If $=_S$ is congruence/reflexive/symmetric/transitive on the problem set $S$, then $=^r_S$ is congruence/reflexive/symmetric/transitive on the problem set $S$.
+
+If $\oplus$ has the properties of commutative/selective/congruence on the problem set $S$, then $\oplus^r$ has the properties of commutative/selective/congruence on the problem set $S$.
+
+The more troublesome is the properties of associative and distributive. Since the proof used the property of left/right invariant, and we don't have those properties inside generalized reduction by default, we cannot directly get the these two properties. So we conclude that generalized reduction with left/right properties will allow the operator(s) remaining associative and distributive properties.
+
+However, the elementary path reduction we want to define afterwards is only a generalized reduction and does not have left/right invariant properties on the $min$ operator. We still want to discuss the properties and relationship between the reduction and the operator and discuss whether $min$ has associative property under reduction, and discuss whether the entire semiring has distributive properties.
+
+Therefore, we found two sufficient condition, separately for associative properties and distributive properties respectively that we can prove the properties if we can prove the sufficient condition is holding.
+
+Pseudo Associative:
+\e{gr:def:pseudo_associative}{\forall a,b,c \in S, r(r(r(a)\oplus r(b)) \oplus r(c)) = r(r(a) \oplus r(r(b)\oplus r(c)))}
+Pseudo Left Distributive: 
+\e{gr:def:pseudo_left_distributive}{\forall a,b,c \in S, r(r(a) \otimes r(r(b)\oplus r(c))) = r(r(r(a) \otimes r(b)) \oplus r(r(a) \otimes r(c)))}
+Pseudo Right Distributive: 
+\e{gr:def:pseudo_right_distributive}{\forall a,b,c \in S, r(r(r(a) \oplus r(b)) \otimes r(c)) = r(r(r(a) \otimes r(c)) \oplus r(r(b) \otimes r(c)))}
+It is easy to prove $\oplus^r$ is associative on $S$, and $\oplus^r$ and $\otimes^r$ are distributive on $S$ by using pseudo associative and pseudo distributive properties.
+
+
 \section{Predicate Reduction}
 \section{Path Problem Construction}
 \medskip

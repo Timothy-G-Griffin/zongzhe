@@ -180,6 +180,13 @@ Lemma red_tran_iso : brel_transitive red_Type red_eq <-> brel_transitive S (brel
          compute. apply transS. 
 Qed.          
 
+Lemma red_brel_cong_iso : brel_congruence red_Type red_eq red_eq <-> brel_congruence S (brel_reduce r eqS) (brel_reduce r eqS).
+Proof. split. intros H x y m n. compute. intros H1 H2.
+       assert (K := H (inj x) (inj y) (inj m) (inj n)). compute in K. 
+       apply K; auto.
+       intros H [s1 p1] [s2 p2] [s3 p3] [s4 p4].
+       compute. apply eqS_cong.
+Qed. 
 
 Lemma red_cong_iso : bop_congruence red_Type red_eq red_bop <-> bop_congruence S (brel_reduce r eqS) (bop_full_reduce r b).
 Proof. split.
