@@ -559,6 +559,8 @@ If $=_S$ is congruence/reflexive/symmetric/transitive on the problem set $S$, th
 
 If $\oplus$ has the properties of commutative/selective/congruence on the problem set $S$, then $\oplus^r$ has the properties of commutative/selective/congruence on the problem set $S$.
 
+There is another property that we may be interested in, if $i$/$a$ is the identity/annihilator for $\oplus$ on $S$, and the reduction $r$ has the properties of preserve id/ann (\ref{def:uop:preserve_id},\ref{def:uop:preserve_ann}), then $i$/$a$ is the identity/annihilator for $\oplus^r$ on $S$.
+
 The more troublesome is the properties of associative and distributive. Since the proof used the property of left/right invariant, and we don't have those properties inside generalized reduction by default, we cannot directly get the these two properties. So we conclude that generalized reduction with left/right properties will allow the operator(s) remaining associative and distributive properties.
 
 However, the elementary path reduction we want to define afterwards is only a generalized reduction and does not have left/right invariant properties on the $min$ operator. We still want to discuss the properties and relationship between the reduction and the operator and discuss whether $min$ has associative property under reduction, and discuss whether the entire semiring has distributive properties.
@@ -573,8 +575,85 @@ Pseudo Right Distributive:
 \e{gr:def:pseudo_right_distributive}{\forall a,b,c \in S, r(r(r(a) \oplus r(b)) \otimes r(c)) = r(r(r(a) \otimes r(c)) \oplus r(r(b) \otimes r(c)))}
 It is easy to prove $\oplus^r$ is associative on $S$, and $\oplus^r$ and $\otimes^r$ are distributive on $S$ by using pseudo associative and pseudo distributive properties.
 
+Associative: by definition of $=^r_S$, $\oplus^r$
+\[
+\forall a,b,c \in S, a \oplus^r (b \oplus^r c) =^r_S (a \oplus^r b) \oplus^r c
+\]
+\[\longleftrightarrow \]
+\[
+	r(r(r(a) \oplus r(r(r(b) \oplus r(c))))) =_S r(r(r(r(r(a) \oplus r(b))) \oplus r(c)))
+\]
+$r(r(r(a) \oplus r(r(r(b) \oplus r(c)))))$
+\e{gr:proof:associative}{
+\begin{array}{rcll}
+	 & =_S & r(r(a) \oplus r(r(r(b) \oplus r(c)))) & \mbox {by idempotent property of $r$} \\
+	& =_S & r(r(a) \oplus r(r(b) \oplus r(c))) & \mbox {by idempotent property of $r$ and congruence of $\oplus$}\\
+	 & =_S & r(r(r(a)\oplus r(b)) \oplus r(c)) & \mbox {by pseudo associative}\\
+	 & =_S & r(r(r(r(a)\oplus r(b))) \oplus r(c)) & \mbox {by idempotent property of $r$ and congruence of $\oplus$}\\
+	 & =_S & r(r(r(r(r(a)\oplus r(b))) \oplus r(c))) & \mbox {by idempotent property of $r$}\\
+\end{array}
+}
+
+Left Distributive: by definition of $=^r_S$, $\oplus^r$ and $\otimes^r$
+\[
+\forall a,b,c \in S, a \otimes^r (b \oplus^r c) =^r_S (a \otimes^r b) \oplus^r (a \otimes^r c)
+\]
+\[\longleftrightarrow \]
+\[
+	r(r(r(a)) \otimes r(r(r(b) \oplus r(c))))) =_S r(r(r(r(r(a) \otimes r(b))) \oplus r(r(r(a) \otimes r(c)))))
+\]
+$r(r(r(a)) \otimes r(r(r(b) \oplus r(c)))))$
+\e{gr:proof:left_distributive}{
+\begin{array}{rcll}
+	 & =_S & r(r(a) \otimes r(r(b) \oplus r(c)))) & \mbox {by idempotent property of $r$ and congruence of $\otimes$} \\
+	 & =_S & r(r(r(a) \otimes r(b)) \oplus r(r(a) \otimes r(c))) & \mbox {by pseudo left distributive} \\
+	 & =_S & r(r(r(r(a) \otimes r(b))) \oplus r(r(r(a) \otimes r(c)))) & \mbox {by idempotent property of $r$ and congruence of $\oplus$} \\
+	 & =_S & r(r(r(r(r(a) \otimes r(b))) \oplus r(r(r(a) \otimes r(c))))) & \mbox {by idempotent property of $r$} \\
+\end{array}
+}
+
+Similar proof for right distributivity. 
+
+So we can conclude that for generalized reduction, although it may not have the property of left/right invariant, if we can directly prove the properties of pseudo associative/pseudo distributive, then we can also prove that binary operator(s) remains associative/distributive under reduction.
 
 \section{Predicate Reduction}
+In order to better implement the construction of the path problem we mentioned earlier, we are going to define a type of reduction and perform detailed reasoning on its properties in this section. 
+If we deeply consider our reduction, whether it is to eliminate the path with a loop, or to turn an unqualified element tuple into a specific element -- additive identity/multiplicative annihilator, we can easily find the situation that our reduction is depending on a predicate and reducing the elements that satisfy/not satisfy the condition. Therefore, we call this kind of reduction as predicate reduction.
+
+We define a new type of reduction, predicate reduction based on generalized reduction. 
+Predicate reduction is a kind of generalized reduction, but it is not as much generalized as the generalized reduction. Generalized reduction could define almost all kinds of reductions, but predicate reduction couldn't, and it is the reason why it is not as much generalized as the previous one. For example, when we are talking about the min set $min_\leq = \{ x \in X | \forall y \in X, y \not\leq x \}$, which is introduced as Martelli’s semiring in our previous section, we can't define $min_\leq$ using predicate reduce. The reason is, when we are defining a predicate, the predicate only know the information on its current element, but not the whole problem set. Predicate reduction is still a kind of generalized reduction but not classical reduction because it is not forcing the reduction to have left/right invariant properties. Have or not those properties depends on the predicate inside reduction. For example, we will use predicate reduction to define three different reductions in the later section, two of them (min plus with ceiling and reduction annihilator) has the properties of left/right invariant on both operator, but one of them (elementary path) doesn't on its $min$ operator.
+
+Here comes to our definition. Initially for our problem set $S$, we define a predicate $P$, which is a function from $S$ to $bool$ and we need to provide a specific element $c$ (the predicate reduction will reduce all the element that satisfied the predicate to $c \in S$). Then we can define the predicate reduction as 
+\e{pr:def:def}{\forall a \in S,  r_p(a)=\left\{
+\begin{aligned}
+c &  & P(a) = true \\
+a &  & otherwise 
+\end{aligned}
+\right.}
+
+As we mentioned previously, predicate reduction is defined based on the generalized reduction, which means it has all the properties that generalized reduction has. Hence, we are not interested on the properties of equality, congruence, commutative and selective, has identity and has annihilator properties of binary operator any more. We mainly talk about the associative and distributive in the reasoning section (although we may use the properties of has identity and has annihilator during the process of proof).
+
+\subsection{Properties of Predicate}
+In predicate reduction, we hope to explore the properties of predicate reduction that are different from generalized reduction.
+But as the predicate reduction is a kind of generalized reduction, it must have the properties of the idempotent and congruence property, which are $\forall a \in S, r(a) = r(r(a))$ and $\forall a,b\in S, a = b \rightarrow r(a) = r(b)$. So we need to do reasoning on these two properties. For the property of the idempotent, we need to discuss the input element, split the case that the element satisfies the predicate or not. If the element doesn't satisfy the predicate, then $r(a) = a = r(r(a))$. If the element does satisfy the predicate, then $r(a) = c$ and $r(r(a)) = r(c)$, hence we need to prove/provide the property that $c$ must satisfy the predicate \e{pr:proof:p_true}{P(c) = true}
+For the property of the congruence, we can conclude from 
+\[\forall a,b \in S, r_p(a)=\left\{
+\begin{aligned}
+c &  & P(a) = true \\
+a &  & otherwise 
+\end{aligned}
+\right. = 
+r_p(b)=\left\{
+\begin{aligned}
+c &  & P(b) = true \\
+b &  & otherwise 
+\end{aligned}
+\right.\] that we need such a property \e{pr:proof:p_cong}{\forall a,b \in S, a = b \rightarrow P(a) = P(b)} which is the congruence of the predicate $P$.\\
+
+Next we need to reduce the binary operator according to the generalize representation we defined earlier using the predicate reduction. For our problem set $S$ and a given binary operator $\oplus$, we defined reduced binary operator as \e{pr:def:binary_operator}{\forall a,b \in S, a \oplus_r b = r_p (r_p(a) \oplus r_p(b))}
+
+Since we completely use the generalize reduction representation defined in the previous section, the reduction we defined has all the above-mentioned properties, such as commutative, selective, congruence, and so on. What deserves our attention is the associative property of a single binary operator and the distribution law of reduced semiring.\\
+We also mentioned above that under our generalize reduction representation, the reduction we defined may not satisfy the properties of the left/right invariant (like the $min$ operator under the elementary path problem), so we need to prove (or give certain preconditions) that our reduction to satisfy the pseudo-associative and pseudo-distributive law.\\
 \section{Path Problem Construction}
 \medskip
 
