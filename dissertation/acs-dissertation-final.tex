@@ -1,27 +1,105 @@
-\documentclass[a4paper,10pt]{article}
+%% 
+%% ACS project dissertation template. 
+%% 
+%% Currently designed for printing two-sided, but if you prefer to 
+%% print single-sided just remove ",twoside,openright" from the 
+%% \documentclass[] line below. 
+%%
+%%
+%%   SMH, May 2010. 
+
+
+\documentclass[a4paper,12pt,twoside,openright]{report}
+
+
+%%
+%% EDIT THE BELOW TO CUSTOMIZE
+%%
+
+\def\authorname{Zongzhe Yuan\xspace}
+\def\authorcollege{Christ's College\xspace}
+\def\authoremail{zy272@cl.cam.ac.uk}
+\def\dissertationtitle{Extending CAS with Algebraic Reductions}
+\def\wordcount{14,235}
+
+
+\usepackage{epsfig,graphicx,parskip,setspace,tabularx,xspace} 
+\usepackage{a4wide,parskip,times}
+\usepackage{amsmath}
+\usepackage{nicefrac}
+\usepackage{ amssymb }
+\usepackage{mleftright}
+\usepackage{listings}
+
 \usepackage[utf8]{inputenc}
 \usepackage{amsfonts}
 \usepackage{tikz}
-\usepackage{amsmath}
 \usetikzlibrary{arrows}
 \usepackage{float}
 
-\title{Telling a Story}
-\author{Zongzhe Yuan}
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\setmonofont{Latin Modern Mono}
 
-\setlength{\parindent}{0em}
-\setlength{\parskip}{1em}
+\usepackage{minted}
+\usemintedstyle{xcode}
+
+
 \newcommand{\e}[2]{
 \begin{equation}
   \label{#1} 
   #2
 \end{equation}
 }
+
+
+%% START OF DOCUMENT
 \begin{document}
 
-\maketitle
 
-\section{Introduction To the Problem}
+%% FRONTMATTER (TITLE PAGE, DECLARATION, ABSTRACT, ETC) 
+\pagestyle{empty}
+\singlespacing
+\input{titlepage}
+\onehalfspacing
+\input{declaration}
+\singlespacing
+\input{abstract}
+
+\pagenumbering{roman}
+\setcounter{page}{0}
+\pagestyle{plain}
+\tableofcontents
+\listoffigures
+%\listoftables
+
+
+\renewcommand{\lstlistlistingname}{List of Listings}
+\addcontentsline{toc}{chapter}{\listoflistingscaption}%
+\listof{listing}{\listoflistingscaption}%
+
+\onehalfspacing
+
+%% START OF MAIN TEXT 
+
+\chapter{Introduction}
+\pagenumbering{arabic} 
+\setcounter{page}{1} 
+
+%This is the introduction where you should introduce your work.  In
+%general the thing to aim for here is to describe a little bit of the
+%context for your work --- why did you do it (motivation), what was the
+%hoped-for outcome (aims) --- as well as trying to give a brief
+%overview of what you actually did.
+%
+%It's often useful to bring forward some ``highlights'' into 
+%this chapter (e.g.\ some particularly compelling results, or 
+%a particularly interesting finding). 
+%
+%It's also traditional to give an outline of the rest of the
+%document, although without care this can appear formulaic 
+%and tedious. Your call. 
+
 The discussion of our problem originated from a concept that was mentioned in the L11 Algebraic Path Problem class but was not introduced in detail \cite{griffin_2017}. In L11 class, the concept of reduction was proposed, along with some examples, and was used to solve some problems that we could not solve before. However, in addition to the definition of reduction provided in the lecture, the property of reduction has not been thoroughly discussed. At the same time, although we have found the definition of reduction and practical examples in other papers and thesis before, unfortunately, as in the case of L11, none of them discussed the property of reduction itself in detail and provided a soundness reasoning process. This makes the detailed discussion of reduction a valuable research topic, and becomes to the topic to our project.
 
 In our research, we will not only conduct detailed reasoning on the properties of reduction, but we will also accomplish the following three goals:
@@ -31,6 +109,24 @@ In our research, we will not only conduct detailed reasoning on the properties o
   \item Based on the application of reduction to the real problems, we define a class of reduction, predicate reduction on the basis of the previous section generalized reduction. Although predicate reduction is more concrete than generalized reduction (which means that there are some reductions that cannot be represented by predicate reduction), it is a fairly generalized reduction, and we can also use it to define a lot of concrete instance of reduction.
 \end{itemize}
 Finally, we will use the predicate reduction defined earlier, combined with the properties of reduction and some other mathematical structures, to define the path problem we encountered in L11 lecture.
+
+
+\chapter{Background} 
+
+%A more extensive coverage of what's required to understand your 
+%work. In general you should assume the reader has a good undergraduate 
+%degree in computer science, but is not necessarily an expert in 
+%the particular area you've been working on. Hence this chapter 
+%may need to summarize some ``text book'' material. 
+%
+%This is not something you'd normally require in an academic paper, 
+%and it may not be appropriate for your particular circumstances. 
+%Indeed, in some cases it's possible to cover all of the ``background'' 
+%material either in the introduction or at appropriate places in 
+%the rest of the dissertation. 
+
+\section{Combinator for Algebraic System}
+Combinator for Algebraic system (CAS)\cite{griffin_metarouting_2005} is introduced in $L11$. It is a language to design algebraic systems, in which many algebraic properties are automatically received and people can combine different operators to obtain a new semiring\cite{griffin_metarouting_2005}. We can also generalize a more complex path problem (in other words, we can abstract a more complex path problem with this new semiring, such as the lexicographic products \cite{gurney_lexicographic_2007}). CAS can easily return the properties of those combined-operation semirings and it is already defined in Coq\cite{Coq} (mentioned in $L11$ by Dr Timothy Griffin).
 
 \section{Basic Definition}
 Before all the introductions begin, we first introduce a series of mathematical concepts that we will use in our project and will focus on. 
@@ -78,6 +174,15 @@ Not Right Distributive: Given another binary operator $\times : S \times S \righ
 \e{def:bop:not_right_distributive}{\exists a,b,c \in S, (a \oplus b) \otimes c \neq_S (a \otimes c) \oplus (b \otimes c)}
 
 \section{Semiring and Path Problem}
+The path problem has always fascinated mathematicians and computer scientists. 
+At the very beginning, programmer and scientists designed algorithms to solve each of the path problem. 
+The most famous path problem is the shortest distance problem and there are several well-known algorithm that can solve such a problem: Dijkstra's algorithm, Bellman–Ford algorithm, A* search algorithm and Floyd–Warshall algorithm. People use different primitive metrics and various complicated algorithms to solve different path problems.
+
+However, such an approach has its obvious shortcomings. Even at some point, designing a new algorithm can "steal" the ideas of the original algorithm, people must design a completely new independent algorithm in the face of each new problem (new metric), and this makes it difficult to have a generic (or framework) approach to solve this type of problem.  Even if the path problem has minor changes to the problem, it is difficult for people to solve the new problem by slightly modifying existing algorithms. 
+
+Hence, lots of predecessors have found the algebraic approaches to work around this kind of problem. 
+Using the knowledge of abstract algebra, people find that the routing problem (path problem) can be represent using a data structure called "semiring" $(S,\oplus,\otimes,\bar{0},\bar{1})$\cite{carre_algebra_1971,WONGSEELASHOTE197955,dynerowicz_forwarding_2013,mohri_semiring_2002,gurney_lexicographic_2007}. For example, the popular "shortest path problem" can be represented as $(S, min,+,\infty,0)$\cite{mohri_semiring_2002} and the "maximal capacity path problem" can be represented as $(S, max,min, 0, \infty)$. 
+
 Before we going into our real problem, let us introduce a basic definition, called semiring. This section will start with a basic mathematical structure called "semiring". Then we will mention why semiring will be applied to solve the path problem. 
 \subsection{Semiring}
 In abstract algebra, a semiring is a data structure $(S,\oplus,\otimes,\bar0,\bar1)$ where $S$ is a set (Type) and $\oplus,\otimes$ are two binary operators $:S\times S \rightarrow S$.
@@ -103,16 +208,87 @@ Finally, $\bar0$ is the  annihilator of $\otimes$:
 \[\forall a \in S, a \otimes \bar{0} = \bar{0} = \bar{0} \otimes a\]
 Some definition will include that $\bar1$ is the annihilator of $\oplus$:
 \[\forall a \in S, a \oplus \bar{1} = \bar{1} = \bar{1} \oplus a\]
+
+\subsection{Matrix Semiring and Stability}
+For each semiring $(S,\oplus,\otimes,\bar0,\bar1)$ (that represent the rule of a path problem), we can define a matrix semiring $(M_n(S),\oplus,\otimes,\bar{J},\bar{I})$ to represent the concrete path problem. $M_n(S)$ is a $n\times n$ matrices over $S$,
+\[(A \oplus B)(i,j) = A(i,j)\oplus B(i,j)\]
+\[(A \otimes B)(i,j) = \bigoplus_{1\leq q \leq n}A(i,q)\otimes B(q,j)\]
+\[\bar{J}(i,j) = \bar0\]
+\[\bar{I}(i,j)=\left\{
+\begin{array}{rcl}
+\bar1       &      & {i = j}\\
+\bar0     &      & {otherwise}
+\end{array} \right.\]
+So here we can easily use this matrix to encode any specific path problem and use matrix multiplication to calculate our answer. 
+
+For a graph $G = (V,E)$ a directed graph and a weight function $w \in E \rightarrow S$, 
+we can define the weight of a path $p = i_1,i_2, \dots i_k$ is $w(p) = w (i_1,i_2) \otimes w(i_2,i_3)\otimes \dots \otimes w(i_{k-1},i_k)$, while the empty path is given the weight of $\bar1$.
+Then we can define the adjacency matrix $A$ as 
+\[A(i,j)=\left\{
+\begin{array}{rcl}
+w(i,j)      &      & {(i,j)\in E}\\
+\bar0     &      & {otherwise}
+\end{array} \right.\]
+And our problem will be represent as $A^*(i,j) = \bigoplus_{p \in \pi (i,j)}w(p)$.
+
+However, our calculations depend on the properties of the semiring.
+
+$a\in S$,we define the powers $a^k$ as, $a^0 = \bar{1}$ and $a^{k+1} = a \otimes a^k$.
+
+$a\in S$,we define the closure $a^*$ as, $a^{(k)} = a^0 \oplus a^1 \dots  a^k$ and $a^* = a^0 \oplus a^1 \dots  a^k \oplus \dots$.
+
+Here we say, if there exists a $q$ such that $a^{q} = a^{(q+1)}$, then $a$ is q-stable, which means $a^{q} = a^*$.
+
+And if we know that $S$ is 0-stable, then $M_n(S)$ is $n-1$-stable (because we can ignore paths with loops, which is one of the reduction that will be introduced in the later section). 
+This allows us to actually calculate at most $n-1$ steps when calculating path problems.
+
+Therefore we can define the power and closure on the matrix semiring,
+
+$A\in M_n(S)$,we define the powers $A^k$ as, $A^0 = \bar{I}$ and $A^{k+1} = A \otimes A^k$.
+
+$A\in M_n(S)$,we define the closure $A^*$ as, $A^{(k)} = A^0 \oplus A^1 \dots  A^k$ and $A^* = A^0 \oplus A^1 \dots  A^k \oplus \dots$.
+
+
+Hence we have $\pi(i,j)$ which is the set of paths from $i$ to $j$, then $\pi^k(i,j)$ will be the set of paths from $i$ to $j$ with exactly $k$ arcs, then $\pi^{(k)}(i,j)$ will be the set of paths from $i$ to $j$ with at most $k$ arcs. Then we have:
+\[A^k(i,j) = \bigoplus_{p \in \pi^k (i,j)}w(p)\]
+\[A^{(k)}(i,j) = \bigoplus_{p \in \pi^{(k)} (i,j)}w(p)\]
+\[A^*(i,j) = \bigoplus_{p \in \pi^* (i,j)}w(p)\]
+It is worth mentioning that $A^*(i,j)$ may not be well defined, but if $M_n(S)$ is $k$ stable, then for $A\in M_n(S)$, \[A^*(i,j) = A^{(k)}(i,j)\]
+
+\subsection{Distributivity and Lexicographic Product}
+It is worth mentioning that the properties of distributivity (left and right) play an important role in the computation of routing problem.
+We've defined $M_n(S)$ the matrix and its related semiring on the given semiring $(S,\oplus,\otimes,\bar0,\bar1)$.
+However we still need to check the properties of $M_n(S)$, to make sure that it is exactly a semiring.
+Consider about the distributivity properties, $M_n(S)$ is left/right distributive if $S$ has the distributivity properties.
+
+But some times when we are defining some complex routing problem, such as the widest-shortest path problem, which is constructed by shortest path problem semiring and widest path problem semiring by lexicographic product, it is not guarantee that the new data structure still have the properties of distributivity.
+
+Suppose $(S,\oplus_S)$ is a commutative and selective semigroup and $(T,\oplus_t)$ is a semigroup, then the lexicographic product of two semigroups $(S,\oplus_S) \bar{\times} (T,\oplus_T) = (S\times T, \oplus_{\bar{\times}})$ where
+\[(s_1,t_1) \oplus_{\bar{\times}} (s_2,t_2)=\left\{
+\begin{array}{rcl}
+(s_1\oplus_S s_2,t_1\oplus_T t_2)      &      & { s_1 = s_1 \oplus_S s_2 = s_2}\\
+(s_1\oplus_S s_2,t_1)       &      & {s_1 = s_1 \oplus_S s_2 \neq s_2}\\
+(s_1\oplus_S s_2,t_2)       &      & {s_1 \neq s_1 \oplus_S s_2 = s_2}
+\end{array} \right.\]
+
+As mentioned above, we used the lexicographic product when constructing the widest shortest path problem, and used the elementary path reduction. We also added a distinct annihilator in order to prevent excessive useless calculations. 
+
+These constructs make it difficult to speculate about the properties of our semiring (or new data structure), which is what our project is devoted to research that the relationship between reduction and semiring properties.
+
+\subsection{Global optimality VS Left/Right local optimality}
+On the other hand, we also need to discuss how to make our approach embrace the algebras that violate distributivity.
+
+The global optimality: $A^*(i,j) = \bigoplus_{p \in \pi (i,j)}w(p)$,
+
+The left local optimality which is the distributed Bellman-Ford algorithm: $L = (A\otimes L) \oplus \bar{I}$ which is  $L(i,j) = \bigoplus_{q \in V} A(i,q)\otimes L(q,j)$,
+
+The right local optimality which is the Dijkstra's algorithm: $R = (R\otimes A) \oplus \bar{I}$ which is  $L(i,j) = \bigoplus_{q \in V} R(i,q)\otimes A(q,j)$,
+
+Noting that with distributivity, $M_n(S)$ is a semiring and the three optimality problems are essentially the same, the local optimal solutions are global solutions :$A^* = L = R$.
+
+However with out distributivity, those three solutions may all exists but all distinct, and that comes to the part of our project -- discussing about the relationship between reductions and semirings.
+
 \subsection{Semiring Representation of Path Problem}
-The path problem has always fascinated mathematicians and computer scientists. 
-At the very beginning, programmer and scientists designed algorithms to solve each of the path problem. 
-The most famous path problem is the shortest distance problem and there are several well-known algorithm that can solve such a problem: Dijkstra's algorithm, Bellman–Ford algorithm, A* search algorithm and Floyd–Warshall algorithm. People use different primitive metrics and various complicated algorithms to solve different path problems.
-
-However, such an approach has its obvious shortcomings. Even at some point, designing a new algorithm can "steal" the ideas of the original algorithm, people must design a completely new independent algorithm in the face of each new problem (new metric), and this makes it difficult to have a generic (or framework) approach to solve this type of problem.  Even if the path problem has minor changes to the problem, it is difficult for people to solve the new problem by slightly modifying existing algorithms. 
-
-Hence, lots of predecessors have found the algebraic approaches to work around this kind of problem. 
-Using the knowledge of abstract algebra, people find that the routing problem (path problem) can be represent using a data structure called "semiring" $(S,\oplus,\otimes,\bar{0},\bar{1})$\cite{carre_algebra_1971,WONGSEELASHOTE197955,dynerowicz_forwarding_2013,mohri_semiring_2002,gurney_lexicographic_2007}. For example, the popular "shortest path problem" can be represented as $(S, min,+,\infty,0)$\cite{mohri_semiring_2002} and the "maximal capacity path problem" can be represented as $(S, max,min, 0, \infty)$. 
-
 For each path problem that represented as a semiring, we can construct a corresponding matrix semiring that represent the concrete problem (the edges and the distances for the shortest path problem for example). Then using matrix multiplication and stability of the closure (the semiring), we can solve the real problem of each concrete path problem. However, the simple matrix approach can only solve the "trivial" path problem. Those complicated problem, for example the widest shortest path problem that constructed from the shortest path problem semiring and the widest path problem (maximal capacity path problem) semiring using lexicograhpic product, can't be solved by this "traditional" theory approach. Some times even the method can find an optimal solution, there is no guarantee to find all optimal solutions using the classical method.
 
 Therefore, people have found a non-classical theory of algebraic path finding method, so that algebras that violated the distribution law can be accepted. This non-classical theory can handle the problem the simple classical theory can't handle, such as the problem that can't be solved by Dijkstra or Bellman-Ford.
@@ -322,6 +498,37 @@ These are the topics that we need to focus on in our discussion.
 It is worth mentioning that the first reduction (reduce all pathes that are not elementary) that we defined above does not follow the property of the reduction on the $min$ operation (doesn't have left/right invariant property). Imagine we have path $A = \{a,b,c,d\}$ that is longer but does not have loop and $B = \{a,b,b\}$ that is shorter but does have loop. Then $r(A\oplus B) = r(B) = \infty$ because $B$ is shorter but has loop, but $r(A\oplus r(B)) = r(A \oplus \infty) = r(A) = A$ because $B$ has loops but $A$ doesn't.
 
 Therefore, we not only discuss the properties of reduction, but also try to find another way to represent reduction to solve our path problem.
+
+
+
+%\chapter{Related Work} 
+%
+%This chapter covers relevant (and typically, recent) research 
+%which you build upon (or improve upon). There are two complementary 
+%goals for this chapter: 
+%\begin{enumerate} 
+%  \item to show that you know and understand the state of the art; and 
+%  \item to put your work in context
+%\end{enumerate} 
+%
+%Ideally you can tackle both together by providing a critique of
+%related work, and describing what is insufficient (and how you do
+%better!)
+%
+%The related work chapter should usually come either near the front or
+%near the back of the dissertation. The advantage of the former is that
+%you get to build the argument for why your work is important before
+%presenting your solution(s) in later chapters; the advantage of the
+%latter is that don't have to forward reference to your solution too
+%much. The correct choice will depend on what you're writing up, and
+%your own personal preference.
+
+\chapter{Design and Implementation} 
+
+%This chapter may be called something else\ldots but in general 
+%the idea is that you have one (or a few) ``meat'' chapters which
+%describe the work you did in technical detail. 
+
 \section{Classical Reduction, Example and Reasoning}
 \subsection{Origin of the Concept of Reduction.}
 In order to better understand reduction and further analyze it in detail, we trace the source to find out if there is any other definition and study of reduction before us. 
@@ -995,7 +1202,7 @@ Preserving Order: we can prove that $min^r \bar{\times} min^r_d$ doesn't have th
 
 Thus, we can conclude that our definition of reduction is classical on multiplicative component but is not classical on additive component.
 
-We also knows that, by the assumption that $ceiling$ is not 0, $P((0,inr[])) = false$. Hence, the reduction preserve annihilator/identity for additive/multiplicative component.
+We also knows that, by the assumption that $ceiling$ is not 0, $P((0,inr([]))) = false$. Hence, the reduction preserve annihilator/identity for additive/multiplicative component.
 
 Because our additive component is decomposition, and $(ceiling,inl (c))$ is the identity for $min^r \bar{\times} min^r_d$, and $min^r \bar{\times} min^r_d$ has the property of associative, thus $min^r \bar{\times} min^r_d$ remains the property of associative after reduction.
 
@@ -1004,14 +1211,48 @@ By the assumption that $ceiling$ is not 0, because our multiplicative component 
 
 By the assumption that $ceiling$ is not 0, and $min^r \bar{\times} min^r_d$ and $+^r \times concat^r_d$ are not distributive on $\mathbb{N} \times (c + Path)$, we get the result that $min^r \bar{\times} min^r_d$ and $+^r \times concat^r_d$ are not distributive on $\mathbb{N} \times (c + Path)$ after reduction. Similarly to commutative properties, we can easily find a counterexample, by assigning $a = (0,inr([1])), b = (0,inr([1])), c = b = (0,inr([2,3])) \in \mathbb{N} \times (c + Path)$, the left hand side of the equation will become $(ceiling,inl (c))$ after calculation, but the right hand side of equation will become $(0,inr([1,2,3]))$ after calculation.
 
-Thus, we can conclude that \[(\mathbb{N} \times (c + Path),(min^r \bar{\times} min^r_d)_a,(+^r \times concat^r_d)_a,(ceiling,inl(c)),(0,inr[]))\] is the reduced semiring, and the semiring for our final path problem that 
+Thus, we can conclude that \[(\mathbb{N} \times (c + Path),(min^r \bar{\times} min^r_d)_a,(+^r \times concat^r_d)_a,(ceiling,inl(c)),(0,inr([])))\] is the reduced semiring, and the semiring for our final path problem that 
 \begin{itemize}
-  \item additive component $(min^r \bar{\times} min^r_d)_a$ has the properties of selective, congruence, associative, commutative, has identity of $(ceiling,inl(c))$, has annihilator of $(0,inr[])$.
-  \item multiplicative component $(+^r \times concat^r_d)_a$ has the properties of congruence and associative, but not commutative, has identity of $(0,inr[])$, has annihilator of $(ceiling,inl(c))$.
+  \item additive component $(min^r \bar{\times} min^r_d)_a$ has the properties of selective, congruence, associative, commutative, has identity of $(ceiling,inl(c))$, has annihilator of $(0,inr([]))$.
+  \item multiplicative component $(+^r \times concat^r_d)_a$ has the properties of congruence and associative, but not commutative, has identity of $(0,inr([]))$, has annihilator of $(ceiling,inl(c))$.
   \item $(min^r \bar{\times} min^r_d)_a$ and $(+^r \times concat^r_d)_a$ are not distributive on $\mathbb{N} \times (c + Path)$.
 \end{itemize}
 
-\medskip
+\section{Coq Implementation}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\footnotesize]{coq}
+Definition brel (S : Type)              := S → S → bool.
+Definition pred (S : Type)              := S → bool.
+Definition unary_op (S : Type)          := S → S. 
+Definition binary_op (S : Type)         := S → S → S. 
+\end{minted}
+\caption{my caption} 
+\label{my label}
+\end{listing}
+
+
+\chapter{Evaluation} 
+
+%For any practical projects, you should almost certainly have
+%some kind of evaluation, and it's often useful to separate 
+%this out into its own chapter. 
+
+
+\chapter{Summary and Conclusions} 
+
+%As you might imagine: summarizes the dissertation, and draws 
+%any conclusions. Depending on the length of your work, and 
+%how well you write, you may not need a summary here. 
+%
+%You will generally want to draw some conclusions, and point
+%to potential future work. 
+
+
+
+
+\appendix
+\singlespacing
 
 \bibliographystyle{unsrt} 
 \bibliography{MphilProject}
