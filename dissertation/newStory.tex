@@ -783,7 +783,7 @@ Preserving order: the additive component, $min$ operator, has the property of pr
 
 So we can conclude that our definition of reduction is classical on both operators. At the same time we consider the following properties.
 \begin{itemize}
-  \item $\forall a \in \mathbb{N}, min(0,n) = n = min(n,0)$ (0 is the annihilator for $min$)
+  \item $\forall a \in \mathbb{N}, min(0,n) = 0 = min(n,0)$ (0 is the annihilator for $min$)
   \item $\forall a \in \mathbb{N}, 0 + n = n = n + 0$ (0 is the identity for $+$)
   \item $ 0 \neq ceiling \rightarrow ceiling \not\leq 0$ (reduction preserve annihilator/identity for $min$/$+$)
   \item $min$ has the properties of selective, congruence, associative, commutative
@@ -792,9 +792,9 @@ So we can conclude that our definition of reduction is classical on both operato
 \end{itemize}
 We can conclude that $(\mathbb{N},min^r,+^r,ceiling,0)$ is the reduced semiring that 
 \begin{itemize}
-  \item additive component $min^r$ has the properties of selective, congruence, associative, commutative, has identity of 0, has annihilator of 0.
-  \item multiplicative component $+^r$ has the properties of congruence, associative, commutative, has identity of $ceiling$, has annihilator of $ceiling$.
-  \item $min^r$ and $+^r$ are distributive on $\mathbb{N}$
+  \item additive component $min^r$ has the properties of selective, congruence, associative, commutative, has identity of $ceiling$, has annihilator of 0.
+  \item multiplicative component $+^r$ has the properties of congruence, associative, commutative, has identity of 0, has annihilator of $ceiling$.
+  \item $min^r$ and $+^r$ are distributive on $\mathbb{N}$.
 \end{itemize}
  
 
@@ -802,7 +802,7 @@ We can conclude that $(\mathbb{N},min^r,+^r,ceiling,0)$ is the reduced semiring 
 The second predicate reduction we need to define is the reduction that reduce all the path that has loop to a single elementary is called the elementary path. 
 
 First of all, we need to consider the problem that constructing the representation of our path. For a graph $G = (V,E)$, our problem set should be $\mathbb{P}(E^*)$. In fact, we can also use $V$ to represent the path, and this representation is more convenient for us to calculate. For a path $p$ that passes through several points $n_1,n_2 ... n_k \in V$ in turn, we use an ordered list to represent the path $p = [n_1,n_2 ... n_k]$. 
-Since the node here is just a reference for a name, in order to facilitate our proof and calculation, we define our path $P = List(\mathbb{N})$, using the natural number to indicate nodes.
+Since the node here is just a reference for a name, in order to facilitate our proof and calculation, we define our path $Path \equiv List(\mathbb{N})$, using the natural number to indicate nodes.
 
 Next we need to define our two binary operators, $min$ and $concat$. 
 Before defining the operator $min$ we need to define a helper binary order, the dictionary order: for all  $a,b \in Path$,
@@ -848,10 +848,168 @@ inr(a) &  & otherwise
 \end{aligned}
 \right.\]
 
+Next, based on the steps we mentioned in the predicate reduction, we perform one-by-one reasoning on the loop predicate that we have defined.
+
+P\_true: it is obvious from our definition that $P(inl(c)) = true$.
+
+P\_congruence: here we need to define a helper lemma that $\forall p_1,p_2 \in Path, p_1 = p_2 \rightarrow dup(p_1) = dup(p_2)$ and it is trivial true, due to our definition of list and duplicate. 
+Thus, it is obvious that $\forall a,b \in (c + Path), a = b \rightarrow P(a) = P(b)$.
+
+Considering our problem set has changed from $Path$ to $(c + Path)$, we need to redefine our $min$ and $concat$ operator. $\forall a,b \in Path,$
+\e{pf:def:elementary_path_min_d}{
+\begin{array}{rcl}
+min_d(inl(c),a)	 & = & a \\
+min_d(a,inl(c))	 & = & a \\
+min_d(inr(p_1),inr(p_2))	 & = & min(p_1,p_2)\\
+\end{array}
+}
+
+\e{pf:def:elementary_path_concat_d}{
+\begin{array}{rcl}
+concat_d(inl(c),\_)	 & = & inl(c) \\
+concat_d(\_,inl(c))	 & = & inl(c) \\
+concat_d(inr(p_1),inr(p_2))	 & = & concat(p_1,p_2)\\
+\end{array}
+}
+
+According to our definition, it is obvious that $inl(c)$ is the identity/annihilator for $min_d$/$concat_d$.
+
+Then because we defined our additive operator by ourselves, we need to reason the property of this operator. We have proved that $min_d$ has the properties of selective, congruence, associative and commutative. Detailed proof can be found in Coq file.
+
+Decomposition: because $min_d$ is selective, then it is obvious that $min_d$ is decomposition under the predicate.
+
+Composition: we can prove that $concat_d$ is composition. Considering $p_1,p_2 \in Path$, if either of them has loop inside path, then the result of the concatenation of them must has loop. Detailed proof can be found in Coq file.
+
+Preserving Order: although we defined a selective additive component which implicitly defines a partial order on $Path$, the order has no relationship with either the path having loop or not. Therefore the additive component $min_d$ doesn't have the property of preserving order and we can easily find an example. Imagine $a = inr([1,2,2])$ and $b = inr([1,2,3,4])$, it is obvious that $a \leq_p b$ because $min_d(a,b) = a$. However, by our definition we have $P(a) = true$ but $P(b) = false$. Similarly we can prove that the reduction on the $min_d$ is not classical because $r(min_d(r(a),b)) = b$ but $r(min_d(a,b)) = inl(c)$.
+
+
+
+Another point that worthy of our attention is that $concat_d$ does not have commutative property because $concat$ doesn't. For example $a = inr([1])$ and $b = inr([2])$, then $concat_d(a,b) = inr([1,2])$ but $concat_d(b,a) = inr([2,1])$.
+
+At the same time, $inr([])$ is the annihilator/identity for our additive/multiplicative component according to our definition.
+
+Thus, we can conclude that our definition of reduction is classical on multiplicative component but is not classical on additive component. At the same time we consider the following properties.
+\begin{itemize}
+  \item $\forall a \in (c + Path), min_d(inr([]),n) = inr([]) = min_d(n,inr([]))$ ($inr([])$ is the annihilator for $min_d$)
+  \item $\forall a \in (c + Path), concat_d(inr([]),n) = n = concat_d(n,inr([]))$ ($inr([])$ is the identity for $concat_d$)
+  \item $ dup([]) = false \rightarrow P(inr[]) = false$ (reduction preserve annihilator/identity for $min$/$+$)
+  \item $min_d$ has the properties of selective, congruence, associative, commutative
+  \item $concat_d$ has the properties of congruence and associative
+  \item $min_d$ and $concat_d$ are distributive on $(c + Path)$
+\end{itemize}
+
+However $min^r_d$ and $concat^r_d$ are not distributive on $(c + Path)$ and we can provide a counterexample. Let $a,b,c \in (c + Path), a = inr([1]), b = inr([1,2]), c = inr([2,3,4])$, then 
+\[concat^r_d (a,min^r_d(b,c)) = concat^r_d (a,b) = r(inr([1,1,2])) = inl(c)\]
+\[min^r_d (concat^r_d(a,b),concat^r_d(a,c)) = min^r_d (inl(c),inr([1,2,3,4])) = inr([1,2,3,4])\]
+Hence, the left distributive property doesn't hold and we can do the similar proof for right distributive.
+
+Thus, we can conclude that $((c + Path),min^r_d,concat^r_d,inl(c),inr([]))$ is the reduced semiring that 
+\begin{itemize}
+  \item additive component $min^r_d$ has the properties of selective, congruence, associative, commutative, has identity of $inl(c)$, has annihilator of $inr([])$.
+  \item multiplicative component $concat^r_d$ has the properties of congruence and associative, but not commutative, has identity of $inr([])$, has annihilator of $inl(c)$.
+  \item $min^r_d$ and $concat^r_d$ are not distributive on $(c + Path)$.
+\end{itemize}
+
 \subsection{Lexicographic Product and Direct Product}
+We have already defined the two components needed for our path problem, $(\mathbb{N},min^r,+^r,ceiling,0)$ and $((c + Path),min^r_d,concat^r_d,inl(c),inr([]))$. 
+Next we need to combine these two semirings together to form the semiring of our final path problem. The method we used to combine two semirings was derived from the lexicographic produce mentioned in L11. Path Problem =
+\[(\mathbb{N},min^r,+^r,ceiling,0) \bar{\times} ((c + Path),min^r_d,concat^r_d,inl(c),inr([]))\]
+=
+\[(\mathbb{N} \times (c + Path), min^r \bar{\times} min^r_d, +^r \times concat^r_d, (ceiling,inl(c)), (0,inr([])))\]
+Following the definition of lexicographic product of two semiring from L11.
+According to the definition in L11, for two semiring $(S_1,\oplus_1,\otimes_1)$,$(S_2,\oplus_2,\otimes_2)$, the lexicographic product of them is $(S_1,\oplus_1,\otimes_1) \bar{\times} (S_2,\oplus_2,\otimes_2) = (S_1\times S_2, \oplus_{\bar{\times}}, \otimes_\times)$.
 
+Here comes to the definition of lexicographic product and direct product for two operators. 
+
+Suppose $(S_1,\oplus_1)$ is a commutative and selective semigroup and $(S_2,\oplus_2)$ is a semigroup, then the lexicographic product of two semigroups $(S_1,\oplus_1) \bar{\times} (S_2,\oplus_2) = (S_1\times S_2, \oplus_{\bar{\times}})$ where
+\[(s_1,t_1) \oplus_{\bar{\times}} (s_2,t_2)=\left\{
+\begin{array}{rcl}
+(s_1\oplus_1 s_2,t_1\oplus_2 t_2)      &      & { s_1 = s_1 \oplus_1 s_2 = s_2}\\
+(s_1\oplus_1 s_2,t_1)       &      & {s_1 = s_1 \oplus_1 s_2 \neq s_2}\\
+(s_1\oplus_1 s_2,t_2)       &      & {s_1 \neq s_1 \oplus_1 s_2 = s_2}
+\end{array} \right.\]
+
+And suppose $(S_1,\otimes_1)$ and $(S_2,\otimes_2)$ are semigroups, then the direct product of two semigroups $(S_1,\otimes_1) \times (S_2,\otimes_2) = (S_1\times S_2, \otimes_\times)$ where
+\[(s_1,t_1) \otimes_\times (s_2,t_2)= (s_1 \otimes_1 s_2, t_1\otimes_2 t_2)\]
+
+Next we need to discuss the properties of the direct product and lexicographic product. Since these properties are not the concentrate point of our project, I will not provide detailed proofs for those properties here. Some theorems are directly referenced from existing properties on L11 lecture.
+
+First we discuss the properties of the direct product. Obviously the direct product has the ability to retain the binary operator properties. For example, if the original two binary operators both have associative property, then the direct product of those binary operators also has the property of associative. Similarly if $i_1,i_2$/$a_1,a_2$ are the identity/annihilator to the binary operator $\oplus_1$, $\oplus_2$, then $(i_1,i_2)$/$(a_1,a_2)$ is the identity/annihilator to the direct product of those two operator $\oplus_1 \times \oplus_2$.
+
+So we can conclude that our multiplicative component $+^r \times concat^r_d$ of the path problem has the properties of congruence and associative. However, because the $concat^r_d$ operator in the elementary path semiring is not commutative, the multiplicative component of the path problem is not commutative as well. And we can conclude that $(0,inr([]))$ is the identity of $+^r \times concat^r_d$ and $(ceiling,inl(c))$ is the annihilator of $+^r \times concat^r_d$.
+
+
+Then we discuss the properties of the lexicographic product.
+Because the reasoning part of these properties is not the main content discussed by our project, so we directly borrowed the properties stated in the L11 class.
+
+We assume $(S_1,\oplus_1)$ is associative, commutative and selective, then we get:
+
+\begin{center}
+$\oplus_{\bar{\times}}$ is associative $\longleftrightarrow$ $\oplus_2$ is associative.
+
+$\oplus_{\bar{\times}}$ has identity $\longleftrightarrow$ $\oplus_1$ and $\oplus_2$ both has identity.
+
+$\oplus_{\bar{\times}}$ has annihilator $\longleftrightarrow$ $\oplus_1$ and $\oplus_2$ both has annihilator.
+
+$\oplus_{\bar{\times}}$ is commutative $\longleftrightarrow$ $\oplus_2$ is commutative.
+
+$\oplus_{\bar{\times}}$ is selective $\longleftrightarrow$ $\oplus_2$ is selective.
+
+$\oplus_{\bar{\times}}$ is congruence $\longleftrightarrow$ $\oplus_1$ and $\oplus_2$ are both congruence.
+
+$\otimes_1$ and $\otimes_2$ are not distributive on $S_2$ $\longrightarrow$ $\oplus_{\bar{\times}}$ and  $\otimes_\times$ are not distributive on $S_1 \times S_2$.
+
+\end{center}
+
+
+So we can conclude that our additive component $min^r \bar{\times} min^r_d$  of the path problem has the properties of congruence, associative, commutative, selective. And we can conclude that  $(ceiling,inl(c))$  is the identity of $min^r \bar{\times} min^r_d$ and $(0,inr([]))$ is the annihilator of $+^r \times concat^r_d$. $min^r \bar{\times} min^r_d$ and $+^r \times concat^r_d$ are not distributive on $\mathbb{N} \times (c + Path)$.
 \subsection{Reduce Annihilator}
+Finally we defined our third predicate reduction. The reduction will reduce all the pairs of elements $(x,y) \in X \times Y$ to $(a,b)$ where $a$ is the annihilator for the multiplicative component of $X$ and $b$ is the annihilator for the multiplicative component of $Y$, if $x = a \vee y = b$.
 
+According to our previous reasoning, $(ceiling,inl (c))$ is the identity/annihilator for the additive/multiplicative component of path problem semiring. Therefore, following the definition, the predicate reduction is goint to to reduce all pairs of $(ceiling,\_)$ and $(\_,inl(c))$ to $(ceiling,inl(c))$.
+
+Hence we define the predicate as following 
+\e{pr:def:reduce_annihilator_p}{\forall (n,p) \in \mathbb{N} \times (c + Path), P((n,p)) \equiv n = ceiling \vee p = inl(c)}
+And the predicate reduction of reduce annihilator is defined as \e{pr:def:reduce_annihilator_r}{r_a(a) = \left\{
+\begin{aligned}
+(ceiling,inl (c)) &  & P(a) = true \\
+a &  & otherwise 
+\end{aligned}
+\right.}
+
+Then we are going to reason the properties of the reduce annihilator reduction.
+
+P\_true: It is obvious that $P((ceiling,inl (c))) = true$.
+
+P\_congruence: because we have both congruence property for natural number and list, then it is obvious that $P$ has the property of congruence.
+
+And as what we defined in the reduction, $(ceiling,inl (c))$ is the identity/annihilator for the additive/multiplicative component of path problem semiring.
+
+Then we need to discuss the property between the predicate and our binary operators.
+
+Decomposition: since we have proved (using the properties of lexicographic product), $min^r \bar{\times} min^r_d$ is selective, then it is obvious that $min^r \bar{\times} min^r_d$ has the property of decomposition.
+
+Composition: it is easy to prove that $+^r \times concat^r_d$ is composition under the predicate. Suppose we have $(n_1,p_1),(n_2,p_2) \in \mathbb{N} \times (c + Path)$, if $P(((n_1,p_1))) = true$ which means $n_1 = ceiling \vee p_1 = inl(c)$, in both case, the result of the binary operation will yield a tuple that contains at least one of $ceiling$ or $inl(c)$, which lead to the result satisfying the predicate, and same proof for $P(((n_2,p_2))) = true$.
+
+Preserving Order: we can prove that $min^r \bar{\times} min^r_d$ doesn't have the property of preserving order and provide the counter example. Suppose we have $a = (0,inl (c)), b = (1,inr([])) \in \mathbb{N} \times (c + Path)$, it is obvious that $ a min^r \bar{\times} min^r_d b = a$ by the definition of lexicographic product, and $P(a) = true$, however it is also obvious that $P(b) = false$. And it is obvious that the additive component doesn't have left/right invariant property by the example we provided here.
+
+Thus, we can conclude that our definition of reduction is classical on multiplicative component but is not classical on additive component.
+
+We also knows that, by the assumption that $ceiling$ is not 0, $P((0,inr[])) = false$. Hence, the reduction preserve annihilator/identity for additive/multiplicative component.
+
+Because our additive component is decomposition, and $(ceiling,inl (c))$ is the identity for $min^r \bar{\times} min^r_d$, and $min^r \bar{\times} min^r_d$ has the property of associative, thus $min^r \bar{\times} min^r_d$ remains the property of associative after reduction.
+
+By the assumption that $ceiling$ is not 0, because our multiplicative component is not commutative, then $+^r \times concat^r_d$ is still not commutative after reduction. We can easily find the counterexample that, let $a = (0,inr([1])), b = (0,inr([2])) \in \mathbb{N} \times (c + Path)$, 
+\[(+^r \times concat^r_d)_a(a,b) = (0,inr([1,2])) \neq (0,inr([2,1])) = (+^r \times concat^r_d)_a(b,a)\] with the assumption that $ceiling \neq 0$.
+
+By the assumption that $ceiling$ is not 0, and $min^r \bar{\times} min^r_d$ and $+^r \times concat^r_d$ are not distributive on $\mathbb{N} \times (c + Path)$, we get the result that $min^r \bar{\times} min^r_d$ and $+^r \times concat^r_d$ are not distributive on $\mathbb{N} \times (c + Path)$ after reduction.
+
+Thus, we can conclude that \[(\mathbb{N} \times (c + Path),(min^r \bar{\times} min^r_d)_a,(+^r \times concat^r_d)_a,(ceiling,inl(c)),(0,inr[]))\] is the reduced semiring, and the semiring for our final path problem that 
+\begin{itemize}
+  \item additive component $(min^r \bar{\times} min^r_d)_a$ has the properties of selective, congruence, associative, commutative, has identity of $(ceiling,inl(c))$, has annihilator of $(0,inr[])$.
+  \item multiplicative component $(+^r \times concat^r_d)_a$ has the properties of congruence and associative, but not commutative, has identity of $(0,inr[])$, has annihilator of $(ceiling,inl(c))$.
+  \item $(min^r \bar{\times} min^r_d)_a$ and $(+^r \times concat^r_d)_a$ are not distributive on $\mathbb{N} \times (c + Path)$.
+\end{itemize}
 
 \medskip
 
