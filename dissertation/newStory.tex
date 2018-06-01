@@ -648,13 +648,211 @@ r_p(b)=\left\{
 c &  & P(b) = true \\
 b &  & otherwise 
 \end{aligned}
-\right.\] that we need such a property \e{pr:proof:p_cong}{\forall a,b \in S, a = b \rightarrow P(a) = P(b)} which is the congruence of the predicate $P$.\\
+\right.\] that we need such a property \e{pr:proof:p_cong}{\forall a,b \in S, a = b \rightarrow P(a) = P(b)} which is the congruence of the predicate $P$.
 
-Next we need to reduce the binary operator according to the generalize representation we defined earlier using the predicate reduction. For our problem set $S$ and a given binary operator $\oplus$, we defined reduced binary operator as \e{pr:def:binary_operator}{\forall a,b \in S, a \oplus_r b = r_p (r_p(a) \oplus r_p(b))}
+Next we need to reduce the binary operator according to the generalize representation we defined earlier using the predicate reduction. For our problem set $S$ and a given binary operator $\oplus$, we defined reduced binary operator as 
+\e{pr:def:binary_operator}{\forall a,b \in S, a \oplus_r b = r_p (r_p(a) \oplus r_p(b))}
 
-Since we completely use the generalize reduction representation defined in the previous section, the reduction we defined has all the above-mentioned properties, such as commutative, selective, congruence, and so on. What deserves our attention is the associative property of a single binary operator and the distribution law of reduced semiring.\\
-We also mentioned above that under our generalize reduction representation, the reduction we defined may not satisfy the properties of the left/right invariant (like the $min$ operator under the elementary path problem), so we need to prove (or give certain preconditions) that our reduction to satisfy the pseudo-associative and pseudo-distributive law.\\
+Therefore, here we mainly discuss the properties of predicates and their relationship with binary operators, and then try to prove associative/distributive by using pseudo associative/distributive without forcing the left/right invariant on the reduction. In this process we discovered three very interesting properties about predicates. 
+
+Before describing these three properties, we first introduce an implicit definition. If our operator is selective, then we actually implicitly define a partial order on the problem set.
+\[\forall a,b \in S, a \oplus b =_S a \leftrightarrow a \leq b\]
+
+Next we begin to formally introduce our three properties for the predicate.
+
+Decomposition: \e{pr:def:decomposition}{\forall a,b \in S, P(a \oplus b)= true \rightarrow P(a) = true \bigvee P (b) = true}
+Composition: \e{pr:def:composition}{\forall a,b \in S, P(a) = true \bigvee P (b) = true \rightarrow P(a \oplus b)= true}
+Preserve Order: \e{pr:def:preserve_order}{\forall a,b \in S, a \leq b \wedge P(a) = true \rightarrow P(b) = true}
+From the property of decomposition we can infer that \e{pr:proof:decomposition_contra}{\forall a,b \in S, P(a) = false \bigwedge P (b) = false \rightarrow P(a \oplus b)= false} which means the binary operator will not create elements that satisfy the predicate condition from the elements that don't satisfy the condition.
+
+From the property of decomposition we can infer that \e{pr:proof:composition_contra}{\forall a,b \in S, P(a \oplus b)= false \rightarrow P(a) = false \bigwedge P (b) = false} which means the result of the binary operation will decide the predicate condition of its arguments.
+
+Generally speaking, because our additive component of the semiring is mostly selective, then most of our additive components have decomposition properties, and we are mostly concerning about whether our additive component preserving the order or not. At the same time, because our multiplicative component always plays the role of an accumulator, which makes the composition property important for multiplicative components.
+
+Let us discuss the above two properties at the level of reduction. If a predicate is decomposed/composition on an operator, it means that the reduction formed by this predicate has the following properties on this operator.
+\[\forall a,b \in S, r_p(a\oplus b) = c \rightarrow r_p(a) = c \bigvee r_p (b) = c\] 
+which is 
+\[\forall a,b \in S, r_p(a) = a \bigwedge r_p (b) = b \rightarrow r_p(a \oplus b)= a \oplus b\]
+or
+\[\forall a,b \in S, r_p(a) = c \bigvee r_p (b) = c \rightarrow r_p(a \oplus b)= c\]
+which is 
+\[\forall a,b \in S, r_p(a\oplus b) = a \oplus b \rightarrow r_p(a) = a \bigwedge r_p (b) = b\]
+
+Another thing to note is that in the construction of predicate reduction we will manually add a constant value $c$ and reduce all elements that satisfy the predicate to $c$.
+Although for generally speaking the constant $c$ could be arbitrary element in the problem set $S$, however, in the most cases it is the identity/annihilator to the additive/multiplicative component.
+
+Then we can start our reasoning on the predicate reduction. We firstly assume that the predicate $P$ has property of $P\_true$ (\ref{pr:proof:p_true}) and $P\_congruence$ (\ref{pr:proof:p_cong}). 
+
+Then we were surprised to find the following two properties.
+
+1, If the special constant $c$ is the identity to the operator, then the property the the operator preserving order on the predicate is isomorphic to the left/right invariant properties.
+
+If \[\forall a \in S, c \oplus a =_S a =_S a \oplus c\]
+Then
+\[\forall a,b \in S, a \leq b \wedge P(a) = true \rightarrow P(b) = true\]
+\[\longleftrightarrow\]
+\[\forall a,b \in S, r_p(r_p(a) \oplus b) =_S r_p(a \oplus b) \bigwedge r_p(a \oplus r_p(b)) =_S r_p(a \oplus b)\]
+2, If the operator is compositional, then we can get left/right invariant properties from the operator under the predicate reduction.
+\[\forall a,b \in S, P(a) = true \bigvee P (b) = true \rightarrow P(a \oplus b)= true\]
+\[\longrightarrow\]
+\[\forall a,b \in S, r_p(r_p(a) \oplus b) =_S r_p(a \oplus b) \bigwedge r_p(a \oplus r_p(b)) =_S r_p(a \oplus b)\]
+
+The detailed proofs will be presented in the later Coq file, and no more details will be given here.
+
+In conjunction with the above proofs and the common properties of the previously mentioned additive/multiplicative, we can draw the following conclusions.
+
+1, For a semiring, if the additive component has the properties of preserving order, and the constant $c$ is the identity for the additive component, then the predicate reduction under additive component is classical.
+
+2, For a semiring, if the multiplicative component has the properties of composition, then the predicate reduction under multiplicative component is classical.
+\subsubsection{Predicate and Associative}
+According to our previous proof, we can draw two methods that make operator keep the associative property under the predicate reduction.
+
+1, the reduced constant $c$ is the identity to the operator, and the operator has the property of preserving order.
+
+2, the operator has the property of composition.
+
+The reason is that both can infer that reduction is classical on the operator, and we have shown that classical reduction has the property of retaining associative.
+
+However, it is surprising that we have found a third sufficient condition that can prove associative property.
+
+3, the reduced constant $c$ is the identity/annihilator to the operator, and the operator has the property of decomposition.
+
+Because the proof needs too many case analysis, thus we only provide the Coq proof version instead of formal mathematical proof.
+
+Therefore, we summarize the sufficient conditions for a semiring that can be demonstrated that the operator is associative under reduction, which further proves that left/right invariant properties are only sufficient conditions for associative rather than sufficient and necessary conditions.
+\begin{itemize}
+  \item $c$ is identity for $\oplus$ and $\oplus$ has the property of preserving order (\ref{pr:def:preserve_order}).
+  \item $\otimes$ has the property of composition (\ref{pr:def:composition}).
+  \item $c$ is identity/annihilator for $\oplus$ and $\oplus$ has the property of decomposition (\ref{pr:def:decomposition}).
+\end{itemize}
+\subsubsection{Predicate and Distributive}
+Like associative proof, for a semiring,  if the additive component has the properties of preserving order, and the constant $c$ is the identity for the additive component, and the multiplicative component has the properties of composition, then the predicate reduction is classical under the two operators, which has been proved that is the sufficient condition to the proposition that the semiring is left/right distributive under the reduction.
+
+Also surprising is that we found that if the two operators in a semiring are both decomposition, then the semiring is also distributive under predicate reduction.
+
+We take the left distributive property as an example, $\forall a,b,c \in S,$ we get the left hand side of the equality $r_p(r_p(a) \otimes r_p(r_p(r_p(b) \oplus r_p(c))))$
+
+If any of a, b, c satisfies predicate $P$, the result is definite, and the distributive property remains after reduction.
+
+The most critical problem is that a, b, and c alone does not satisfy predicate $P$, but $a \otimes b$ or $a \otimes c$ does. However, because we've assumed that both operator are decomposition, which completely eliminate the occurrence of such things. This means that if $P(a) = false$, $P(b) = false$, $P(c) = false$, then $P(a \otimes b) = false$ and $P(a \otimes c) = false$, which leads to the property of left distributive.
+
+Similar proof is constructed for right distributive. This means that apart from the classical reduction, we also find another way to prove distributive, just like associative.
+
+\subsubsection{Summary for Predicate Reduction}
+We now make a small summary of our definition of predicate reduction. 
+In the process of our later constructing/reasoning predicate reduction instance, we need to consider the following things.
+\begin{itemize}
+  \item reasoning the $P\_true$ property (\ref{pr:proof:p_true}).
+  \item reasoning the $P\_congruence$ property (\ref{pr:proof:p_cong}).
+  \item checking whether $c$ is the identity/annihilator for $\oplus^r$/$\otimes^r$ or not.
+  \item reasoning the properties of decomposition (\ref{pr:def:decomposition}), composition (\ref{pr:def:composition}) and preserving order (\ref{pr:def:preserve_order}) for both operator.
+  \item reasoning the associative property if the reduction is not classical.
+  \item reasoning the distributive proeprty if the reduction is not classcal.
+\end{itemize}
+
 \section{Path Problem Construction}
+After the general reasoning of predicate reduction, we used predicate reduction to define three concrete reductions. These three reductions will be used in the construction of our final path problem semiring in the this section, and we will do detailed reasoning on these three reductions. 
+\subsection{Min Plus With Ceiling Reduction}
+Here we define a reduction based on predicate reduction, which we will use in constructing the final semiring, is working on $(\mathbb{N},min,+)$, the first part of the path problem. 
+As we mentioned in the early section, our path problem is represented by a tuple $(d,P)$, which represents the path problem with path. 
+The distance in our path is calculated by $(\mathbb{N},min,+)$ semiring. 
+However, sometimes the distance is too long, which may lead to some crucial problem during the calculation (for example, an infinite loop in calculation). In addition, we will also consider limiting the length of the path in real world problems and long paths (path with long distance) will not be considered by us. 
+So we can define a reduction that will reduce all long path distance into one element, in which we call it ceiling, and the reduction semiring problem is called min plus with ceiling problem. \e{pr:def:min_plus_ceiling}{\forall n \in \mathbb{N}, r_c(n) = \left\{
+\begin{aligned}
+ceiling &  & n \geq ceiling \\
+n &  & otherwise 
+\end{aligned}
+\right.} and the predicate here is that \[P : \forall n \in \mathbb{N}, n \geq ceiling\]
+
+Next, based on the steps we mentioned in the predicate reduction, we perform one-by-one reasoning on the ceiling predicate that we have defined.
+
+P\_true: it is obvious that $P(ceiling) = true$ because $ceiling \leq ceiling$.
+
+P\_congruence: it is also obvious because we are living in the world of natural number, which means \[\forall a,b \in \mathbb{N}, a = b \wedge a \leq ceiling \rightarrow b \leq ceiling\]
+
+Ceiling is the identity for $min^r$ operator, because in our reduced problem set, the scope of natural number element will be limited into $[0,ceiling]$ (all the number that is greater than $ceiling$ will be reduced to $ceiling$ due to our reduction definition). This means that $ceiling$ is the biggest element in our problem set, which means \[\forall a \in r(\mathbb{N}), min^r (a,ceiling) = min^r(ceiling,a) = a\]
+
+Ceiling is the annihilator for $+^r$ operator, because we have a lemma in natural number that \[\forall a \in \mathbb{N}, \forall b \in \mathbb{N}, a \leq a + b\] Then it is obvious that $\forall n \in \mathbb{N}, ceiling \leq a + ceiling$. Hence we get \[\forall n \in \mathbb{N}, ceiling +^r n = ceiling = n +^r ceiling\] due to the definition of our reduction.
+
+Decomposition: the additive component, $min$ operator, has the property of selective, which means it is decomposition. We can also prove the property by \[\forall a, b\in \mathbb{N}, ceiling \leq min(a,b) \rightarrow ceiling \leq a \bigwedge ceilling \leq b \rightarrow ceiling \leq a \bigvee ceilling \leq b\]
+
+Composition: the multiplicative component, $+$ operator, has the property of composition and we can prove it directly. \[\forall a,b \in \mathbb{N}, ceiling \leq a \bigvee ceiling \leq b \rightarrow ceiling \leq a + b\]
+
+Preserving order: the additive component, $min$ operator, has the property of preserving order and we can prove it directly by the transitive property of $\leq$
+\[\forall a,b \in \mathbb{N}, a \leq b \wedge ceiling \leq a \rightarrow ceiling \leq b\]
+
+So we can conclude that our definition of reduction is classical on both operators. At the same time we consider the following properties.
+\begin{itemize}
+  \item $\forall a \in \mathbb{N}, min(0,n) = n = min(n,0)$ (0 is the annihilator for $min$)
+  \item $\forall a \in \mathbb{N}, 0 + n = n = n + 0$ (0 is the identity for $+$)
+  \item $ 0 \neq ceiling \rightarrow ceiling \not\leq 0$ (reduction preserve annihilator/identity for $min$/$+$)
+  \item $min$ has the properties of selective, congruence, associative, commutative
+  \item $+$ has the properties of congruence, associative, commutative
+  \item $min$ and $+$ are distributive on $\mathbb{N}$
+\end{itemize}
+We can conclude that $(\mathbb{N},min^r,+^r,ceiling,0)$ is the reduced semiring that 
+\begin{itemize}
+  \item additive component $min^r$ has the properties of selective, congruence, associative, commutative, has identity of 0, has annihilator of 0.
+  \item multiplicative component $+^r$ has the properties of congruence, associative, commutative, has identity of $ceiling$, has annihilator of $ceiling$.
+  \item $min^r$ and $+^r$ are distributive on $\mathbb{N}$
+\end{itemize}
+ 
+
+\subsection{Elementary Path}
+The second predicate reduction we need to define is the reduction that reduce all the path that has loop to a single elementary is called the elementary path. 
+
+First of all, we need to consider the problem that constructing the representation of our path. For a graph $G = (V,E)$, our problem set should be $\mathbb{P}(E^*)$. In fact, we can also use $V$ to represent the path, and this representation is more convenient for us to calculate. For a path $p$ that passes through several points $n_1,n_2 ... n_k \in V$ in turn, we use an ordered list to represent the path $p = [n_1,n_2 ... n_k]$. 
+Since the node here is just a reference for a name, in order to facilitate our proof and calculation, we define our path $P = List(\mathbb{N})$, using the natural number to indicate nodes.
+
+Next we need to define our two binary operators, $min$ and $concat$. 
+Before defining the operator $min$ we need to define a helper binary order, the dictionary order: for all  $a,b \in Path$,
+\[
+\begin{array}{rcl} 
+d(nil,b) & = & nil\\
+d(a,nil) & = & nil\\
+d(a::as,b::bs) & = & 
+\left\{
+\begin{aligned}
+a &  & a \leq b \\
+b &  & otherwise
+\end{aligned}
+\right.
+\end{array}
+\] 
+Then we can use the dictionary order $d$ to define our $min$ operator as the additive component: 
+\e{pf:def:elementary_path_min}{\forall a,b \in Path, min(a,b) = \left\{
+\begin{aligned}
+a &  & length(a) \leq length(b) \\
+d(a,b) &  & length(a) = length(b) \\
+b &  & otherwise 
+\end{aligned}
+\right.}
+Then the $concat$ operator as the multiplicative component is just the simple concatenation function of list.
+
+Finally we should define the predicate: the path has loops in its representation. It is really easy since if a path has loop, it must pass at least one node more than one times. 
+Therefore, as long as there is a duplicate in the list represented for a path, it means that there is a loop in this path.
+\[\forall p \in Path, P(p) \equiv dup(p)\]
+However, the next problem we have is that there is no identity/annihilator for our additive/multiplicative component in our problem set, since there is no path with infinity length.
+Analogous to the previous min plus problem, there is no infinite element in the problem set as well. In the previous question, we manually added a ceiling into the reduction and made it as an identity/annihilator for our additive/multiplicative component. However, in this issue we cannot do the same thing. 
+Hence we need to manually add an identity/annihilator for our additive/multiplicative component using disjoint union, and our problem set becomes \[c + List(\mathbb{N})\]
+So we can define our predicate and reduction as $\forall p \in (c + Path),$
+\[ P(inl(c)) = true\]
+\[ P(inr(p)) \equiv dup(p)\]
+\[ r(inl(c)) = inl(c)\]
+\[
+r(inr (a)) =
+\left\{
+\begin{aligned}
+inl(c) &  & P(a) = true \\
+inr(a) &  & otherwise 
+\end{aligned}
+\right.\]
+
+\subsection{Lexicographic Product and Direct Product}
+
+\subsection{Reduce Annihilator}
+
+
 \medskip
 
 \bibliographystyle{unsrt} 
