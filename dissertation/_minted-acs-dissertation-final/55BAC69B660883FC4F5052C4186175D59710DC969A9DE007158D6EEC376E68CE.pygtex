@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{pred} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)}              \PYG{o}{:=} \PYG{n}{S} \PYG{err}{→} \PYG{k+kt}{bool}\PYG{o}{.}
+\end{Verbatim}

@@ -43,7 +43,11 @@
 
 \usepackage{minted}
 \usemintedstyle{xcode}
-
+\usepackage{libertine}
+\usepackage{newunicodechar}
+\newunicodechar{λ}{$\lambda$}
+\newunicodechar{∀}{$\forall$}
+\newunicodechar{→}{$\rightarrow$}
 
 \newcommand{\e}[2]{
 \begin{equation}
@@ -1219,16 +1223,165 @@ Thus, we can conclude that \[(\mathbb{N} \times (c + Path),(min^r \bar{\times} m
 \end{itemize}
 
 \section{Coq Implementation}
+All the aforementioned proofs can be found in my Coq file.
+In the Coq file, we directly admitted (all of these proofs are actually held) some lemma in places where it has nothing to do with our problem (for example, the properties of lexicographic product) or the proof of lemma is trivial true (for example, the proof of $a::as \neq as$).
 
+In thesis, we will list some key definitions and key proofs to help understand the content mentioned above.
+
+\subsection{Basic Definition}
+First we need to define some basic mathematical concepts in Coq. We define the equality as a binary relationship, the unary operator and the binary operator.
 \begin{listing}[H]
-\begin{minted}[fontsize=\footnotesize]{coq}
+\begin{minted}[fontsize=\scriptsize]{coq}
 Definition brel (S : Type)              := S → S → bool.
-Definition pred (S : Type)              := S → bool.
 Definition unary_op (S : Type)          := S → S. 
 Definition binary_op (S : Type)         := S → S → S. 
 \end{minted}
-\caption{my caption} 
-\label{my label}
+\caption{Basic Definition} 
+\label{coq:def:basic}
+\end{listing}
+
+Then we need to define the product type: direct product and lexicographic product.
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition brel_product {S T : Type} (eqS : brel S) (eqT : brel T) : brel (S * T)
+:= λ x y, match x, y with
+          | (s1, t1), (s2, t2) => andb (eqS s1 s2) (eqT t1 t2) 
+          end.
+          
+Definition bop_product {S T : Type} (bS : binary_op S) (bT : binary_op T): binary_op (S * T) 
+:= λ x y, match x, y with
+          | (s1, t1), (s2, t2) => (bS s1 s2, bT t1 t2) 
+          end.
+          
+Definition brel_complement : ∀ {S : Type}, brel S -> brel S 
+:= λ {S} r x y,  if (r x y) then false else true. 
+   
+Definition brel_conjunction : ∀ {S : Type}, brel S -> brel S -> brel S 
+:= λ {S} r1 r2 x y,  (r1 x y) && (r2 x y). 
+   
+Definition brel_llte : ∀ {S : Type}, brel S → binary_op S → brel S 
+:= λ {S} eq b x y, eq x (b x y). 
+   
+Definition brel_llt : ∀ {S : Type}, brel S → binary_op S → brel S 
+:= λ {S} eq b, brel_conjunction (brel_llte eq b) (brel_complement eq). 
+ 
+Definition bop_llex : ∀ {S T : Type}, brel S → binary_op S → binary_op T → binary_op (S * T) 
+:= λ {S T} eq b1 b2 x y,  
+   match x, y with
+    | (a, b), (c, d) => 
+        (b1 a c, 
+         if eq a c 
+         then (b2 b d)
+         else if brel_llt eq b1 a c 
+              then b 
+              else d)
+   end.
+\end{minted}
+\caption{Product Type Definition} 
+\label{coq:def:product}
+\end{listing}
+
+Finally we need to define the method to add a constant by disjoint union.
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition cas_constant : Type          := string.   
+
+Definition brel_add_constant : ∀ {S : Type}, brel S → cas_constant → brel (cas_constant + S)
+:= λ  {S} rS c x y, 
+   match x, y with
+   | (inl _), (inl _) => true (* all constants equal! *) 
+   | (inl _), (inr _) => false 
+   | (inr _), (inl _) => false 
+   | (inr a), (inr b) => rS a b 
+   end.
+   
+Definition bop_add_ann : ∀ {S : Type}, binary_op S → cas_constant → binary_op (cas_constant + S)
+:= λ {S} bS c x y, 
+   match x, y with
+   | (inl _), _       => inl c
+   |       _, (inl _) => inl c
+   | (inr a), (inr b) => inr _ (bS a b)
+   end.
+   
+Definition bop_add_id : ∀ {S : Type}, binary_op S → cas_constant → binary_op (cas_constant + S)
+:= λ  {S} bS c x y, 
+   match x, y with
+   | (inl _), (inl _) => inl c 
+   | (inl _), (inr _) => y
+   | (inr _), (inl _) => x
+   | (inr a), (inr b) => inr _ (bS a b)
+   end.
+\end{minted}
+\caption{Adding Constant by Disjoint Union} 
+\label{coq:def:add_constant}
+\end{listing}
+
+\subsection{Basic Properties}
+
+We define the properties that we mentioned in our previous section using Coq.
+
+\subsubsection{Properties for Binary Relationship}
+We define the properties of reflexive, symmetric, transitive and congruence for binary relationship (equality).
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition brel_reflexive (S : Type) (r : brel S) :=
+  ∀ s : S, r s s = true.
+
+Definition brel_symmetric (S : Type) (r : brel S) := 
+    ∀ s t : S, (r s t = true) → (r t s = true). 
+
+Definition brel_transitive (S : Type) (r : brel S) := 
+  ∀ s t u: S, (r s t = true) → (r t u = true) → (r s u = true).
+
+Definition brel_congruence (S : Type) (eq : brel S) (r : brel S) := 
+   ∀ s t u v : S, eq s u = true → eq t v = true → r s t = r u v.
+\end{minted}
+\caption{Binary Relationship Property} 
+\label{coq:def:brel_properties}
+\end{listing}
+
+\subsubsection{Properties for Unary Operator}
+We define the properties of preserve identity/annihilator, congruence, idempotent, left/right invariant for the unary operator (reduction).
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition uop_preserves_id (S : Type) (eq : brel S) (b : binary_op S) (r : unary_op S) :=
+  ∀ (s : S), bop_is_id S eq b s -> eq (r s) s = true.
+  
+Definition uop_preserves_ann (S : Type) (eq : brel S) (b : binary_op S) (r : unary_op S) :=
+  ∀ (s : S), bop_is_ann S eq b s -> eq (r s) s = true.
+
+Definition uop_congruence (S : Type) (eq : brel S) (r : unary_op S) := 
+  ∀ (s1 s2 : S), eq s1 s2 = true -> eq (r s1) (r s2) = true. 
+
+Definition uop_idempotent (S : Type) (eq : brel S) (r : unary_op S) := 
+  ∀ s : S, eq (r (r s)) (r s) = true.
+  
+Definition bop_left_uop_invariant (S : Type) (eq : brel S) (b : binary_op S) (r : unary_op S) :=
+  ∀ s1 s2 : S, eq (b (r s1) s2) (b s1 s2)  = true.
+
+Definition bop_right_uop_invariant (S : Type) (eq : brel S) (b : binary_op S) (r : unary_op S) :=
+  ∀ s1 s2 : S, eq (b s1 (r s2)) (b s1 s2)  = true.
+\end{minted}
+\caption{Unary Operator Property} 
+\label{coq:def:uop_properties}
+\end{listing}
+
+\subsection{Construction of Semiring}
+\subsection{Traditional Representation of Reduction}
+\subsection{Generalized Representation of Reduction}
+
+\subsection{Predicate Reduction}
+
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition pred (S : Type)              := S → bool.
+\end{minted}
+\caption{Predicate Reduction Definition} 
+\label{coq:def:predicate}
 \end{listing}
 
 
