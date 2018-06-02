@@ -20,6 +20,108 @@ Definition bop_fpr {S : Type} (s : S ) (P : S -> bool) (bS : binary_op S) :=
   bop_full_reduce (uop_predicate_reduce s P) bS.
 
 
+
+(* non-commutativity *)
+
+(* First, show that witnesses (w1, w2) must have P(w1) = P(w2) = false *) 
+
+Definition bop_not_commutative_witness(S : Type) (r : brel S) (b : binary_op S) (z : S * S)
+  := match z with (s, t) => r (b s t) (b t s) = false end.
+
+Lemma bop_fpr_not_commutative_and_id_implies_witnesses_P_false {S : Type} (s w1 w2 : S ) (P : S -> bool) (eq: brel S) (bS : binary_op S) :
+  brel_reflexive S eq ->
+  brel_symmetric S eq ->
+  brel_transitive S eq -> 
+  pred_true S P s -> pred_congruence S eq P -> bop_is_id S eq bS s -> 
+  bop_not_commutative_witness S eq (bop_fpr s P bS) (w1, w2) -> 
+  ((P w1 = false) * (P w2 = false)). 
+Proof. intros refS symS tranS Ps Pc id W. compute in W. 
+       case_eq(P w1); intro H1; case_eq(P w2); intro H2; rewrite H1, H2 in W.
+       destruct (id s) as [L _]. apply Pc in L. rewrite Ps in L.  rewrite L in W. rewrite (refS s) in W. discriminate W.
+       destruct (id w2) as [L R]. apply Pc in L. apply Pc in R. rewrite H2 in L, R.  rewrite L, R in W.
+       destruct (id w2) as [L2 R2]. apply symS in R2.
+       assert (H3 := tranS _ _ _ L2 R2). rewrite H3 in W. discriminate W.
+       destruct (id w1) as [L R]. apply Pc in L. apply Pc in R. rewrite H1 in L, R.  rewrite L, R in W.
+       destruct (id w1) as [L2 R2]. apply symS in L2.
+       assert (H3 := tranS _ _ _ R2 L2). rewrite H3 in W. discriminate W.
+       auto.
+Qed.
+
+Lemma bop_fpr_not_commutative_and_ann_implies_witnesses_P_false {S : Type} (s w1 w2 : S ) (P : S -> bool) (eq: brel S) (bS : binary_op S) :
+  brel_reflexive S eq ->
+  pred_true S P s -> pred_congruence S eq P -> bop_is_ann S eq bS s -> 
+  bop_not_commutative_witness S eq (bop_fpr s P bS) (w1, w2) -> 
+  ((P w1 = false) * (P w2 = false)). 
+Proof. intros refS Ps Pc ann W. compute in W. 
+       case_eq(P w1); intro H1; case_eq(P w2); intro H2; rewrite H1, H2 in W.
+       destruct (ann s) as [L _]. apply Pc in L. rewrite Ps in L.  rewrite L in W. rewrite (refS s) in W. discriminate W.
+       destruct (ann w2) as [L R]. apply Pc in L. apply Pc in R. rewrite Ps in L, R.  rewrite L, R in W.
+       rewrite (refS s) in W. discriminate W.
+       destruct (ann w1) as [L R]. apply Pc in L. apply Pc in R. rewrite Ps in L, R.  rewrite L, R in W.
+       rewrite (refS s) in W. discriminate W.
+       auto. 
+Qed.
+
+Lemma bop_fpr_not_commutative_implies_witnesses_P_false {S : Type} (s w1 w2 : S ) (P : S -> bool) (eq: brel S) (bS : binary_op S) :
+  brel_reflexive S eq ->
+  brel_symmetric S eq ->
+  brel_transitive S eq -> 
+  pred_true S P s -> pred_congruence S eq P -> ((bop_is_id S eq bS s) + (bop_is_ann S eq bS s)) -> 
+  bop_not_commutative_witness S eq (bop_fpr s P bS) (w1, w2) -> 
+  ((P w1 = false) * (P w2 = false)). 
+Proof. intros refS symS tranS pS Pc [id | ann] W.
+       apply (bop_fpr_not_commutative_and_id_implies_witnesses_P_false s w1 w2 P eq bS); auto.
+       apply (bop_fpr_not_commutative_and_ann_implies_witnesses_P_false s w1 w2 P eq bS); auto.
+Qed.        
+
+
+(* Now, the othe direction ... *) 
+
+Lemma bop_fpr_decompose_not_commutative {S : Type} (s w1 w2 : S ) (P : S -> bool) (eq: brel S) (bS : binary_op S) :
+  pred_true S P s -> pred_congruence S eq P ->
+  pred_bop_decompose S P bS ->
+  bop_not_commutative_witness S eq (bop_fpr s P bS) (w1, w2) ->   
+  ((P w1 = false) * (P w2 = false)) ->
+  bop_not_commutative S eq (bop_fpr s P bS). 
+Proof. intros Ps Pc D W [H1 H2]; exists (w1, w2); compute.
+       rewrite H1, H2. 
+       case_eq(P (bS w1 w2)); intro H3; case_eq(P (bS w2 w1)); intro H4; auto.
+          destruct (D _ _ H3) as [F | F]. rewrite F in H1. discriminate H1. rewrite F in H2. discriminate H2. 
+          destruct (D _ _ H3) as [F | F]. rewrite F in H1. discriminate H1. rewrite F in H2. discriminate H2.
+          destruct (D _ _ H4) as [F | F]. rewrite F in H2. discriminate H2. rewrite F in H1. discriminate H1.
+          compute in W. rewrite H1, H2 in W. rewrite H3, H4 in W. exact W. 
+Qed. 
+
+(* a bit more general *)
+
+Definition pred_bop_weak_decompose (S : Type) (P : pred S) (bS : binary_op S) 
+  := ∀ (a b : S), P (bS a b) = true -> P (bS b a) = true -> (P a = true) + (P b = true).
+
+Lemma bop_fpr_not_commutative {S : Type} (s w1 w2 : S ) (P : S -> bool) (eq: brel S) (bS : binary_op S) :
+  brel_symmetric S eq -> 
+  pred_true S P s -> pred_congruence S eq P ->
+  pred_bop_weak_decompose S P bS ->
+  bop_self_divisor S eq bS s -> 
+  bop_not_commutative_witness S eq (bop_fpr s P bS) (w1, w2) ->   
+  ((P w1 = false) * (P w2 = false)) ->
+  bop_not_commutative S eq (bop_fpr s P bS). 
+Proof. intros symS Ps Pc wD sd W [H1 H2]; exists (w1, w2); compute.
+       rewrite H1, H2. compute in Ps. 
+       case_eq(P (bS w1 w2)); intro H3; case_eq(P (bS w2 w1)); intro H4; auto.
+          destruct (wD _ _ H3 H4) as [F | F]. rewrite F in H1. discriminate H1. rewrite F in H2. discriminate H2.
+          case_eq(eq s (bS w2 w1)); intro J.
+             apply symS in J.
+             destruct (sd _ _ J) as [F | F].
+             apply Pc in F. rewrite H2 in F. rewrite Ps in F. discriminate F.
+             apply Pc in F. rewrite H1 in F. rewrite Ps in F. discriminate F.              
+             reflexivity. 
+          compute in W. rewrite H1, H2 in W. rewrite H3, H4 in W. exact W.
+          compute in W. rewrite H1, H2 in W. rewrite H3, H4 in W. exact W.              
+Qed. 
+
+(* End non-commutative *) 
+
+
 Section PredicateReduce. 
 
 Variable S : Type.
