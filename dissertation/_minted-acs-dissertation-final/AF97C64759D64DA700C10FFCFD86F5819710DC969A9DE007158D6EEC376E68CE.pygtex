@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{bop\PYGZus{}pseudo\PYGZus{}associative} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eq} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{o}{:} \PYG{n}{unary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{b} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)}
+  \PYG{o}{:=} \PYG{err}{∀} \PYG{n}{s} \PYG{n}{t} \PYG{n}{u} \PYG{o}{:} \PYG{n}{S}\PYG{o}{,} \PYG{n}{eq} \PYG{o}{(}\PYG{n}{r} \PYG{o}{(}\PYG{n}{b} \PYG{o}{(}\PYG{n}{r} \PYG{o}{(}\PYG{n}{b} \PYG{o}{(}\PYG{n}{r} \PYG{n}{s}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{n}{t}\PYG{o}{)))} \PYG{o}{(}\PYG{n}{r} \PYG{n}{u}\PYG{o}{)))} \PYG{o}{(}\PYG{n}{r} \PYG{o}{(}\PYG{n}{b} \PYG{o}{(}\PYG{n}{r} \PYG{n}{s}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{o}{(}\PYG{n}{b} \PYG{o}{(}\PYG{n}{r} \PYG{n}{t}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{n}{u}\PYG{o}{)))))} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{.}
+
+\PYG{k+kn}{Definition} \PYG{n}{bop\PYGZus{}pseudo\PYGZus{}left\PYGZus{}distributive} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eq} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{o}{:} \PYG{n}{unary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)}
+\PYG{o}{(}\PYG{n}{add} \PYG{n}{mul} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)}
+  \PYG{o}{:=} \PYG{err}{∀} \PYG{n}{a} \PYG{n}{b} \PYG{n}{c} \PYG{o}{:} \PYG{n}{S}\PYG{o}{,}
+  \PYG{n}{eq} \PYG{o}{(}\PYG{n}{r} \PYG{o}{(}\PYG{n}{mul} \PYG{o}{(}\PYG{n}{r} \PYG{n}{a}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{o}{(}\PYG{n}{add} \PYG{o}{(}\PYG{n}{r} \PYG{n}{b}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{n}{c}\PYG{o}{)))))}
+     \PYG{o}{(}\PYG{n}{r} \PYG{o}{(}\PYG{n}{add} \PYG{o}{(}\PYG{n}{r} \PYG{o}{(}\PYG{n}{mul} \PYG{o}{(}\PYG{n}{r} \PYG{n}{a}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{n}{b}\PYG{o}{)))} \PYG{o}{(}\PYG{n}{r} \PYG{o}{(}\PYG{n}{mul} \PYG{o}{(}\PYG{n}{r} \PYG{n}{a}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{n}{c}\PYG{o}{)))))} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{.}
+
+\PYG{k+kn}{Definition} \PYG{n}{bop\PYGZus{}pseudo\PYGZus{}right\PYGZus{}distributive} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eq} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{o}{:} \PYG{n}{unary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)}
+\PYG{o}{(}\PYG{n}{add} \PYG{n}{mul} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)}
+  \PYG{o}{:=} \PYG{err}{∀} \PYG{n}{a} \PYG{n}{b} \PYG{n}{c} \PYG{o}{:} \PYG{n}{S}\PYG{o}{,}
+  \PYG{n}{eq} \PYG{o}{(}\PYG{n}{r} \PYG{o}{(}\PYG{n}{mul} \PYG{o}{(}\PYG{n}{r} \PYG{o}{(}\PYG{n}{add} \PYG{o}{(}\PYG{n}{r} \PYG{n}{b}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{n}{c}\PYG{o}{)))} \PYG{o}{(}\PYG{n}{r} \PYG{n}{a}\PYG{o}{)))}
+     \PYG{o}{(}\PYG{n}{r} \PYG{o}{(}\PYG{n}{add} \PYG{o}{(}\PYG{n}{r} \PYG{o}{(}\PYG{n}{mul} \PYG{o}{(}\PYG{n}{r} \PYG{n}{b}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{n}{a}\PYG{o}{)))} \PYG{o}{(}\PYG{n}{r} \PYG{o}{(}\PYG{n}{mul} \PYG{o}{(}\PYG{n}{r} \PYG{n}{c}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{n}{a}\PYG{o}{)))))} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{.}
+\end{Verbatim}

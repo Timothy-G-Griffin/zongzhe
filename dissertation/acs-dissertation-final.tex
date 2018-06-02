@@ -322,7 +322,7 @@ Here provides two examples that if we following the basis of distributed Bellman
 ;
 \end{tikzpicture}
 \label{example:rip:1}
-\caption{First Example Of RIP solution 1}
+\caption{Example Of RIP solution 1}
 \end{figure}
 We will get the following initial path problem adjacency matrix by using the RIP protocol.
 \[
@@ -365,7 +365,7 @@ After using the RIP protocol for matrix calculations (multiplication), we obtain
 ;
 \end{tikzpicture}
 \label{example:rip:2}
-\caption{First Example Of RIP solution 2}
+\caption{Example Of RIP solution 2}
 \end{figure}
 We will get the following initial path problem adjacency matrix by using the RIP protocol.
 \[
@@ -410,7 +410,7 @@ For example, we may meet the following situation (node 3 is not connected to all
 ;
 \end{tikzpicture}
 \label{example:rip:3}
-\caption{First Example Of RIP solution 3}
+\caption{Example Of RIP solution 3}
 \end{figure}
 We will get the following initial path problem matrix by using the RIP protocol.
 \[
@@ -527,7 +527,7 @@ Therefore, we not only discuss the properties of reduction, but also try to find
 %much. The correct choice will depend on what you're writing up, and
 %your own personal preference.
 
-\chapter{Design and Implementation} 
+\chapter{Mathematical Reasoning and Coq Implementation} 
 
 %This chapter may be called something else\ldots but in general 
 %the idea is that you have one (or a few) ``meat'' chapters which
@@ -1247,12 +1247,25 @@ Definition brel_product {S T : Type} (eqS : brel S) (eqT : brel T) : brel (S * T
 := λ x y, match x, y with
           | (s1, t1), (s2, t2) => andb (eqS s1 s2) (eqT t1 t2) 
           end.
-          
+        
+\end{minted}
+\caption{Binary Relationship of Product Type} 
+\label{coq:def:product_relationship}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
 Definition bop_product {S T : Type} (bS : binary_op S) (bT : binary_op T): binary_op (S * T) 
 := λ x y, match x, y with
           | (s1, t1), (s2, t2) => (bS s1 s2, bT t1 t2) 
           end.
-          
+\end{minted}
+\caption{Direct Product of Binary Operator} 
+\label{coq:def:direct_product}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
 Definition brel_complement : ∀ {S : Type}, brel S -> brel S 
 := λ {S} r x y,  if (r x y) then false else true. 
    
@@ -1277,8 +1290,8 @@ Definition bop_llex : ∀ {S T : Type}, brel S → binary_op S → binary_op T �
               else d)
    end.
 \end{minted}
-\caption{Product Type Definition} 
-\label{coq:def:product}
+\caption{Lexicographic Product} 
+\label{coq:def:lexicographic_product}
 \end{listing}
 
 Finally we need to define the method to add a constant by disjoint union.
@@ -1295,7 +1308,15 @@ Definition brel_add_constant : ∀ {S : Type}, brel S → cas_constant → brel 
    | (inr _), (inl _) => false 
    | (inr a), (inr b) => rS a b 
    end.
-   
+
+\end{minted}
+\caption{Definition of Adding a Constant} 
+\label{coq:def:add_const}
+\end{listing}
+
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
 Definition bop_add_ann : ∀ {S : Type}, binary_op S → cas_constant → binary_op (cas_constant + S)
 := λ {S} bS c x y, 
    match x, y with
@@ -1304,6 +1325,14 @@ Definition bop_add_ann : ∀ {S : Type}, binary_op S → cas_constant → binary
    | (inr a), (inr b) => inr _ (bS a b)
    end.
    
+\end{minted}
+\caption{Construct Binary Operator by Adding Annihilator} 
+\label{coq:def:add_const_ann}
+\end{listing}
+
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
 Definition bop_add_id : ∀ {S : Type}, binary_op S → cas_constant → binary_op (cas_constant + S)
 := λ  {S} bS c x y, 
    match x, y with
@@ -1313,8 +1342,8 @@ Definition bop_add_id : ∀ {S : Type}, binary_op S → cas_constant → binary_
    | (inr a), (inr b) => inr _ (bS a b)
    end.
 \end{minted}
-\caption{Adding Constant by Disjoint Union} 
-\label{coq:def:add_constant}
+\caption{Construct Binary Operator by Adding Identity} 
+\label{coq:def:add_const_ann}
 \end{listing}
 
 \subsection{Basic Properties}
@@ -1369,30 +1398,120 @@ Definition bop_right_uop_invariant (S : Type) (eq : brel S) (b : binary_op S) (r
 \label{coq:def:uop_properties}
 \end{listing}
 
+\subsubsection{Properties for Binary Operator}
+We define the properties of commutative/not-commutative, congruence, selective, associative, has identity and has annihilator for our binary operator.
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition bop_commutative (S : Type) (r : brel S) (b : binary_op S) 
+    := ∀ s t : S, r (b s t) (b t s) = true. 
+Definition bop_not_commutative(S : Type) (r : brel S) (b : binary_op S) 
+  := { z : S * S & match z with (s, t) => r (b s t) (b t s) = false end }.
+  
+Definition bop_selective (S : Type) (eq : brel S) (b : binary_op S) 
+    := ∀ s t : S, (eq (b s t) s = true) + (eq (b s t) t = true).
+    
+Definition bop_is_id (S : Type) (r : brel S) (b : binary_op S) (i : S) 
+    := ∀ s : S, (r (b i s) s = true) * (r (b s i) s = true).
+    
+Definition bop_is_ann (S : Type) (r : brel S) (b : binary_op S) (a : S)
+    :=  ∀ s : S, (r (b a s) a = true) * (r (b s a) a = true).
+    
+Definition bop_congruence (S : Type) (r : brel S) (b : binary_op S) := 
+   ∀ (s1 s2 t1 t2 : S), r s1 t1 = true -> r s2 t2 = true -> r (b s1 s2) (b t1 t2) = true.
+
+Definition bop_associative (S : Type) (r : brel S) (b : binary_op S) 
+  := ∀ s t u : S, r (b (b s t) u) (b s (b t u)) = true.
+\end{minted}
+\caption{Basic Binary Operator Property} 
+\label{coq:def:binary_properties_basic}
+\end{listing}
+
+We also define the distributive properties for two binary operators.
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition bop_left_distributive (S : Type) (r : brel S) 
+(add : binary_op S) (mul : binary_op S) 
+   := ∀ s t u : S, r (mul s (add t u)) (add (mul s t) (mul s u)) = true. 
+
+Definition bop_right_distributive (S : Type) (r : brel S) 
+(add : binary_op S) (mul : binary_op S) 
+   := ∀ s t u : S, r (mul (add t u) s) (add (mul t s) (mul u s)) = true. 
+
+Definition bop_not_left_distributive (S : Type) (r : brel S) 
+(add : binary_op S) (mul : binary_op S) 
+   := {a : S * S * S & match a with (s,t,u) 
+   => r (mul s (add t u)) (add (mul s t) (mul s u)) = false end}. 
+
+Definition bop_not_right_distributive (S : Type) (r : brel S) 
+(add : binary_op S) (mul : binary_op S) 
+   := {a : S * S * S & match a with (s,t,u) 
+   => r (mul (add t u) s) (add (mul t s) (mul u s)) = false end}.
+\end{minted}
+\caption{Binary Operator Distributive} 
+\label{coq:def:binary_properties_distributive}
+\end{listing}
+
+Finally we define those pseudo properties (we mentioned in the previous section) to help us do reasoning on our reduction.
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition bop_pseudo_associative (S : Type) (eq : brel S) (r : unary_op S) (b : binary_op S) 
+  := ∀ s t u : S, eq (r (b (r (b (r s) (r t))) (r u))) (r (b (r s) (r (b (r t) (r u))))) = true.
+
+Definition bop_pseudo_left_distributive (S : Type) (eq : brel S) (r : unary_op S) 
+(add mul : binary_op S) 
+  := ∀ a b c : S, 
+  eq (r (mul (r a) (r (add (r b) (r c))))) 
+     (r (add (r (mul (r a) (r b))) (r (mul (r a) (r c))))) = true. 
+         
+Definition bop_pseudo_right_distributive (S : Type) (eq : brel S) (r : unary_op S) 
+(add mul : binary_op S) 
+  := ∀ a b c : S, 
+  eq (r (mul (r (add (r b) (r c))) (r a))) 
+     (r (add (r (mul (r b) (r a))) (r (mul (r c) (r a))))) = true.
+
+\end{minted}
+\caption{Binary Operator Pseudo Properties} 
+\label{coq:def:binary_properties_pseudo}
+\end{listing}
+
 \subsection{Construction of Semiring}
 \subsection{Traditional Representation of Reduction}
 \subsection{Generalized Representation of Reduction}
 
 \subsection{Predicate Reduction}
-
+Initially we provide a definition of the predicate, and define several properties of our predicate we've mentioned in the previous section.
 
 \begin{listing}[H]
 \begin{minted}[fontsize=\scriptsize]{coq}
 Definition pred (S : Type)              := S → bool.
+
+Definition pred_true (S : Type) (P : pred S) (s : S) 
+  := P s = true. 
+
+Definition pred_congruence (S : Type) (eq : brel S) (P : pred S) 
+  := ∀ (a b : S), eq a b = true -> P a = P b.
+
+Definition pred_bop_decompose (S : Type) (P : pred S) (bS : binary_op S) 
+  := ∀ (a b : S), P (bS a b) = true -> (P a = true) + (P b = true).
+
+Definition pred_bop_compose (S : Type) (P : pred S) (bS : binary_op S) 
+  := ∀ (a b : S), (P a = true) + (P b = true) -> P (bS a b) = true.
+
+Definition pred_preserve_order (S : Type) (P : pred S) (eqS : brel S) (bS : binary_op S)
+  := ∀ (a b : S), eqS (bS a b) a = true -> P a = true -> P b = true.
 \end{minted}
-\caption{Predicate Reduction Definition} 
+\caption{Predicate Definition and Properties} 
 \label{coq:def:predicate}
 \end{listing}
 
 
-\chapter{Evaluation} 
+\chapter{Evaluation, Summary and Conclusions} 
 
 %For any practical projects, you should almost certainly have
 %some kind of evaluation, and it's often useful to separate 
 %this out into its own chapter. 
-
-
-\chapter{Summary and Conclusions} 
 
 %As you might imagine: summarizes the dissertation, and draws 
 %any conclusions. Depending on the length of your work, and 
