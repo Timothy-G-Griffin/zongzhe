@@ -751,7 +751,7 @@ This proves that our generalized representation of reduction is isomorphic to th
 \section{Generalized Reduction}
 In our previously defined classical reduction (either in traditional representation or generalized representation), reduction must satisfy four properties that it is congruence, idempotent, left and right invariant. However, the reduction we encounter in reality does not all have the above four properties, especially the left/right invariant properties. In particular, the elementary reduction in the elementary path problem that we mentioned earlier, which will also be used in the later section to construct our final path problem, does not satisfy the properties of the left/right invariant on the $min$ operator. 
 
-Assuming $P_1,P_2 \in Path, P_1 \leq P_2, loop(P_1) = true \wedge loop(P_2) = false$. 
+Assuming $P_1,P_2 \in Path, P_1 \leq P_2, loop(P_1) \wedge \not loop(P_2)$. 
 Then $r(min(P_1,P_2)) = r(P_1) = \infty$.
 However $r(min(r(P_1),P_2)) = r(min(\infty,P_2)) r(P_2) = P_2$. 
 
@@ -838,7 +838,7 @@ Predicate reduction is a kind of generalized reduction, but it is not as much ge
 Here comes to our definition. Initially for our problem set $S$, we define a predicate $P$, which is a function from $S$ to $bool$ and we need to provide a specific element $c$ (the predicate reduction will reduce all the element that satisfied the predicate to $c \in S$). Then we can define the predicate reduction as 
 \e{pr:def:def}{\forall a \in S,  r_p(a)=\left\{
 \begin{aligned}
-c &  & P(a) = true \\
+c &  & P(a) \\
 a &  & otherwise 
 \end{aligned}
 \right.}
@@ -847,17 +847,17 @@ As we mentioned previously, predicate reduction is defined based on the generali
 
 \subsection{Properties of Predicate}
 In predicate reduction, we hope to explore the properties of predicate reduction that are different from generalized reduction.
-But as the predicate reduction is a kind of generalized reduction, it must have the properties of the idempotent and congruence property, which are $\forall a \in S, r(a) = r(r(a))$ and $\forall a,b\in S, a = b \rightarrow r(a) = r(b)$. So we need to do reasoning on these two properties. For the property of the idempotent, we need to discuss the input element, split the case that the element satisfies the predicate or not. If the element doesn't satisfy the predicate, then $r(a) = a = r(r(a))$. If the element does satisfy the predicate, then $r(a) = c$ and $r(r(a)) = r(c)$, hence we need to prove/provide the property that $c$ must satisfy the predicate \e{pr:proof:p_true}{P(c) = true}
+But as the predicate reduction is a kind of generalized reduction, it must have the properties of the idempotent and congruence property, which are $\forall a \in S, r(a) = r(r(a))$ and $\forall a,b\in S, a = b \rightarrow r(a) = r(b)$. So we need to do reasoning on these two properties. For the property of the idempotent, we need to discuss the input element, split the case that the element satisfies the predicate or not. If the element doesn't satisfy the predicate, then $r(a) = a = r(r(a))$. If the element does satisfy the predicate, then $r(a) = c$ and $r(r(a)) = r(c)$, hence we need to prove/provide the property that $c$ must satisfy the predicate \e{pr:proof:p_true}{P(c)}
 For the property of the congruence, we can conclude from 
 \[\forall a,b \in S, r_p(a)=\left\{
 \begin{aligned}
-c &  & P(a) = true \\
+c &  & P(a) \\
 a &  & otherwise 
 \end{aligned}
 \right. = 
 r_p(b)=\left\{
 \begin{aligned}
-c &  & P(b) = true \\
+c &  & P(b) \\
 b &  & otherwise 
 \end{aligned}
 \right.\] that we need such a property \e{pr:proof:p_cong}{\forall a,b \in S, a = b \rightarrow P(a) = P(b)} which is the congruence of the predicate $P$.
@@ -872,12 +872,12 @@ Before describing these three properties, we first introduce an implicit definit
 
 Next we begin to formally introduce our three properties for the predicate.
 
-Decomposition: \e{pr:def:decomposition}{\forall a,b \in S, P(a \oplus b)= true \rightarrow P(a) = true \bigvee P (b) = true}
-Composition: \e{pr:def:composition}{\forall a,b \in S, P(a) = true \bigvee P (b) = true \rightarrow P(a \oplus b)= true}
-Preserve Order: \e{pr:def:preserve_order}{\forall a,b \in S, a \leq b \wedge P(a) = true \rightarrow P(b) = true}
-From the property of decomposition we can infer that \e{pr:proof:decomposition_contra}{\forall a,b \in S, P(a) = false \bigwedge P (b) = false \rightarrow P(a \oplus b)= false} which means the binary operator will not create elements that satisfy the predicate condition from the elements that don't satisfy the condition.
+Decomposition: \e{pr:def:decomposition}{\forall a,b \in S, P(a \oplus b) \rightarrow P(a) \bigvee P (b)}
+Composition: \e{pr:def:composition}{\forall a,b \in S, P(a) \bigvee P (b) \rightarrow P(a \oplus b)}
+Preserve Order: \e{pr:def:preserve_order}{\forall a,b \in S, a \leq b \wedge P(a) \rightarrow P(b)}
+From the property of decomposition we can infer that \e{pr:proof:decomposition_contra}{\forall a,b \in S, \not P(a) \bigwedge \not P(b) \rightarrow \not P(a \oplus b)} which means the binary operator will not create elements that satisfy the predicate condition from the elements that don't satisfy the condition.
 
-From the property of decomposition we can infer that \e{pr:proof:composition_contra}{\forall a,b \in S, P(a \oplus b)= false \rightarrow P(a) = false \bigwedge P (b) = false} which means the result of the binary operation will decide the predicate condition of its arguments.
+From the property of decomposition we can infer that \e{pr:proof:composition_contra}{\forall a,b \in S, \not P(a \oplus b) \rightarrow \not P(a) \bigwedge \not P(b)} which means the result of the binary operation will decide the predicate condition of its arguments.
 
 Generally speaking, because our additive component of the semiring is mostly selective, then most of our additive components have decomposition properties, and we are mostly concerning about whether our additive component preserving the order or not. At the same time, because our multiplicative component always plays the role of an accumulator, which makes the composition property important for multiplicative components.
 
@@ -901,11 +901,11 @@ Then we were surprised to find the following two properties.
 
 If \[\forall a \in S, c \oplus a =_S a =_S a \oplus c\]
 Then
-\[\forall a,b \in S, a \leq b \wedge P(a) = true \rightarrow P(b) = true\]
+\[\forall a,b \in S, a \leq b \wedge P(a) \rightarrow P(b)\]
 \[\longleftrightarrow\]
 \[\forall a,b \in S, r_p(r_p(a) \oplus b) =_S r_p(a \oplus b) \bigwedge r_p(a \oplus r_p(b)) =_S r_p(a \oplus b)\]
 2, If the operator is compositional, then we can get left/right invariant properties from the operator under the predicate reduction.
-\[\forall a,b \in S, P(a) = true \bigvee P (b) = true \rightarrow P(a \oplus b)= true\]
+\[\forall a,b \in S, P(a) \bigvee P (b) \rightarrow P(a \oplus b)\]
 \[\longrightarrow\]
 \[\forall a,b \in S, r_p(r_p(a) \oplus b) =_S r_p(a \oplus b) \bigwedge r_p(a \oplus r_p(b)) =_S r_p(a \oplus b)\]
 
@@ -946,7 +946,7 @@ We take the left distributive property as an example, $\forall a,b,c \in S,$ we 
 
 If any of a, b, c satisfies predicate $P$, the result is definite, and the distributive property remains after reduction.
 
-The most critical problem is that a, b, and c alone does not satisfy predicate $P$, but $a \otimes b$ or $a \otimes c$ does. However, because we've assumed that both operator are decomposition, which completely eliminate the occurrence of such things. This means that if $P(a) = false$, $P(b) = false$, $P(c) = false$, then $P(a \otimes b) = false$ and $P(a \otimes c) = false$, which leads to the property of left distributive.
+The most critical problem is that a, b, and c alone does not satisfy predicate $P$, but $a \otimes b$ or $a \otimes c$ does. However, because we've assumed that both operator are decomposition, which completely eliminate the occurrence of such things. This means that if $\not P(a)$, $\not P(b)$, $\not P(c)$, then $\not P(a \otimes b)$ and $\not P(a \otimes c)$, which leads to the property of left distributive.
 
 Similar proof is constructed for right distributive. This means that apart from the classical reduction, we also find another way to prove distributive, just like associative.
 
@@ -978,7 +978,7 @@ n &  & otherwise
 
 Next, based on the steps we mentioned in the predicate reduction, we perform one-by-one reasoning on the ceiling predicate that we have defined.
 
-P\_true: it is obvious that $P(ceiling) = true$ because $ceiling \leq ceiling$.
+P\_true: it is obvious that $P(ceiling)$ because $ceiling \leq ceiling$.
 
 P\_congruence: it is also obvious because we are living in the world of natural number, which means \[\forall a,b \in \mathbb{N}, a = b \wedge a \leq ceiling \rightarrow b \leq ceiling\]
 
@@ -1048,21 +1048,21 @@ However, the next problem we have is that there is no identity/annihilator for o
 Analogous to the previous min plus problem, there is no infinite element in the problem set as well. In the previous question, we manually added a ceiling into the reduction and made it as an identity/annihilator for our additive/multiplicative component. However, in this issue we cannot do the same thing. 
 Hence we need to manually add an identity/annihilator for our additive/multiplicative component using disjoint union, and our problem set becomes \[c + List(\mathbb{N})\]
 So we can define our predicate and reduction as $\forall p \in (c + Path),$
-\[ P(inl(c)) = true\]
+\[ P(inl(c))\]
 \[ P(inr(p)) \equiv dup(p)\]
 \[ r(inl(c)) = inl(c)\]
 \[
 r(inr (a)) =
 \left\{
 \begin{aligned}
-inl(c) &  & P(a) = true \\
+inl(c) &  & P(a) \\
 inr(a) &  & otherwise 
 \end{aligned}
 \right.\]
 
 Next, based on the steps we mentioned in the predicate reduction, we perform one-by-one reasoning on the loop predicate that we have defined.
 
-P\_true: it is obvious from our definition that $P(inl(c)) = true$.
+P\_true: it is obvious from our definition that $P(inl(c))$.
 
 P\_congruence: here we need to define a helper lemma that $\forall p_1,p_2 \in Path, p_1 = p_2 \rightarrow dup(p_1) = dup(p_2)$ and it is trivial true, due to our definition of list and duplicate. 
 Thus, it is obvious that $\forall a,b \in (c + Path), a = b \rightarrow P(a) = P(b)$.
@@ -1092,7 +1092,7 @@ Decomposition: because $min_d$ is selective, then it is obvious that $min_d$ is 
 
 Composition: we can prove that $concat_d$ is composition. Considering $p_1,p_2 \in Path$, if either of them has loop inside path, then the result of the concatenation of them must has loop. Detailed proof can be found in Coq file.
 
-Preserving Order: although we defined a selective additive component which implicitly defines a partial order on $Path$, the order has no relationship with either the path having loop or not. Therefore the additive component $min_d$ doesn't have the property of preserving order and we can easily find an example. Imagine $a = inr([1,2,2])$ and $b = inr([1,2,3,4])$, it is obvious that $a \leq_p b$ because $min_d(a,b) = a$. However, by our definition we have $P(a) = true$ but $P(b) = false$. Similarly we can prove that the reduction on the $min_d$ is not classical because $r(min_d(r(a),b)) = b$ but $r(min_d(a,b)) = inl(c)$.
+Preserving Order: although we defined a selective additive component which implicitly defines a partial order on $Path$, the order has no relationship with either the path having loop or not. Therefore the additive component $min_d$ doesn't have the property of preserving order and we can easily find an example. Imagine $a = inr([1,2,2])$ and $b = inr([1,2,3,4])$, it is obvious that $a \leq_p b$ because $min_d(a,b) = a$. However, by our definition we have $P(a)$ but $\not P(b)$. Similarly we can prove that the reduction on the $min_d$ is not classical because $r(min_d(r(a),b)) = b$ but $r(min_d(a,b)) = inl(c)$.
 
 
 
@@ -1104,7 +1104,7 @@ Thus, we can conclude that our definition of reduction is classical on multiplic
 \begin{itemize}
   \item $\forall a \in (c + Path), min_d(inr([]),n) = inr([]) = min_d(n,inr([]))$ ($inr([])$ is the annihilator for $min_d$)
   \item $\forall a \in (c + Path), concat_d(inr([]),n) = n = concat_d(n,inr([]))$ ($inr([])$ is the identity for $concat_d$)
-  \item $ dup([]) = false \rightarrow P(inr[]) = false$ (reduction preserve annihilator/identity for $min$/$+$)
+  \item $ \not dup([]) \rightarrow \not P(inr[])$ (reduction preserve annihilator/identity for $min$/$+$)
   \item $min_d$ has the properties of selective, congruence, associative, commutative
   \item $concat_d$ has the properties of congruence and associative
   \item $min_d$ and $concat_d$ are distributive on $(c + Path)$
@@ -1184,14 +1184,14 @@ Hence we define the predicate as following
 \e{pr:def:reduce_annihilator_p}{\forall (n,p) \in \mathbb{N} \times (c + Path), P((n,p)) \equiv n = ceiling \vee p = inl(c)}
 And the predicate reduction of reduce annihilator is defined as \e{pr:def:reduce_annihilator_r}{r_a(a) = \left\{
 \begin{aligned}
-(ceiling,inl (c)) &  & P(a) = true \\
+(ceiling,inl (c)) &  & P(a) \\
 a &  & otherwise 
 \end{aligned}
 \right.}
 
 Then we are going to reason the properties of the reduce annihilator reduction.
 
-P\_true: It is obvious that $P((ceiling,inl (c))) = true$.
+P\_true: It is obvious that $P((ceiling,inl (c)))$.
 
 P\_congruence: because we have both congruence property for natural number and list, then it is obvious that $P$ has the property of congruence.
 
@@ -1201,13 +1201,13 @@ Then we need to discuss the property between the predicate and our binary operat
 
 Decomposition: since we have proved (using the properties of lexicographic product), $min^r \bar{\times} min^r_d$ is selective, then it is obvious that $min^r \bar{\times} min^r_d$ has the property of decomposition.
 
-Composition: it is easy to prove that $+^r \times concat^r_d$ is composition under the predicate. Suppose we have $(n_1,p_1),(n_2,p_2) \in \mathbb{N} \times (c + Path)$, if $P(((n_1,p_1))) = true$ which means $n_1 = ceiling \vee p_1 = inl(c)$, in both case, the result of the binary operation will yield a tuple that contains at least one of $ceiling$ or $inl(c)$, which lead to the result satisfying the predicate, and same proof for $P(((n_2,p_2))) = true$.
+Composition: it is easy to prove that $+^r \times concat^r_d$ is composition under the predicate. Suppose we have $(n_1,p_1),(n_2,p_2) \in \mathbb{N} \times (c + Path)$, if $P(((n_1,p_1)))$ which means $n_1 = ceiling \vee p_1 = inl(c)$, in both case, the result of the binary operation will yield a tuple that contains at least one of $ceiling$ or $inl(c)$, which lead to the result satisfying the predicate, and same proof for $P(((n_2,p_2)))$.
 
-Preserving Order: we can prove that $min^r \bar{\times} min^r_d$ doesn't have the property of preserving order and provide the counter example. Suppose we have $a = (0,inl (c)), b = (1,inr([])) \in \mathbb{N} \times (c + Path)$, it is obvious that $ a min^r \bar{\times} min^r_d b = a$ by the definition of lexicographic product, and $P(a) = true$, however it is also obvious that $P(b) = false$. And it is obvious that the additive component doesn't have left/right invariant property by the example we provided here.
+Preserving Order: we can prove that $min^r \bar{\times} min^r_d$ doesn't have the property of preserving order and provide the counter example. Suppose we have $a = (0,inl (c)), b = (1,inr([])) \in \mathbb{N} \times (c + Path)$, it is obvious that $ a min^r \bar{\times} min^r_d b = a$ by the definition of lexicographic product, and $P(a)$, however it is also obvious that $\not P(b)$. And it is obvious that the additive component doesn't have left/right invariant property by the example we provided here.
 
 Thus, we can conclude that our definition of reduction is classical on multiplicative component but is not classical on additive component.
 
-We also knows that, by the assumption that $ceiling$ is not 0, $P((0,inr([]))) = false$. Hence, the reduction preserve annihilator/identity for additive/multiplicative component.
+We also knows that, by the assumption that $ceiling$ is not 0, $\not P((0,inr([])))$. Hence, the reduction preserve annihilator/identity for additive/multiplicative component.
 
 Because our additive component is decomposition, and $(ceiling,inl (c))$ is the identity for $min^r \bar{\times} min^r_d$, and $min^r \bar{\times} min^r_d$ has the property of associative, thus $min^r \bar{\times} min^r_d$ remains the property of associative after reduction.
 
@@ -1956,7 +1956,7 @@ Definition min := Nat.min.
 Definition plus := Nat.add.
 Definition P (ceiling : nat): nat -> bool := λ n, ceiling <=? n.
 \end{minted}
-\caption{Preserving Order implies Classical} 
+\caption{Min Plus With Ceiling Definition} 
 \label{coq:def:min_plus_with_ceiling}
 \end{listing}
 
@@ -1973,6 +1973,17 @@ Lemma P_plus_compose (ceiling : nat): pred_bop_compose nat (P ceiling) plus.
 \end{minted}
 \caption{Properties for the Predicate} 
 \label{coq:proof:predicate_properties}
+\end{listing}
+
+Then we can define our reduction based on the predicate.
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition uop_nat (ceiling : nat) : unary_op nat := uop_predicate_reduce ceiling (P ceiling).
+Definition bop_nat_min (ceiling : nat) : binary_op nat := bop_fpr ceiling (P ceiling) min.
+Definition bop_nat_plus (ceiling : nat) : binary_op nat := bop_fpr ceiling (P ceiling) plus.
+\end{minted}
+\caption{Min Plus With Ceiling Reduction} 
+\label{coq:def:min_plus_with_ceiling_reduction}
 \end{listing}
 
 The rest of the properties can be proved using the properties defined in the predicate reduction and generalized reduction section.
@@ -2016,7 +2027,7 @@ commutative_semigroup_proofs nat
 (brel_reduce (uop_nat ceiling) brel_eq_nat) (bop_nat_plus ceiling) 
 := {|
   csg_associative   := bop_nat_plus_associative ceiling
-  ; csg_congruence    := bop_nat_plus_congruence ceiling
+; csg_congruence    := bop_nat_plus_congruence ceiling
 ; csg_commutative    := bop_nat_plus_commutative ceiling                                                 
 |}.
 \end{minted}
@@ -2061,7 +2072,335 @@ Definition min_plus_dioid (ceiling : nat) : commutative_selective_dioid nat
 \end{listing}
 
 \subsection{Elementary Path}
+Initially we provide the definition of the equality, two operators and the predicate. 
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition brel_list : ∀ {S : Type}, brel S → brel(list S)
+:= fix f {S} U x y := 
+      match x, y with
+         | nil, nil => true 
+         | nil, _ => false 
+         | _, nil => false 
+         | a::tla, b::tlb => andb (U a b) (f U tla tlb)
+      end.
+Definition S := nat.
+Definition eqS := Arith.EqNat.beq_nat.
+Definition brel_list_S  : brel (list S) := brel_list S eqS.
+Variable c : cas_constant.
+Definition brel_list_const : brel (cas_constant + list S ) 
+:= brel_add_constant brel_list_S c. 
+Definition T := cas_constant + list S.
+\end{minted}
+\caption{Elementary Path Equality} 
+\label{coq:def:elementary_path_eq}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Fixpoint dic_order (l1 l2 : list S) : bool :=
+match l1,l2 with
+| nil,_ => true
+| _,nil => false    
+| x::xl, y :: yl => if eqS x y
+                    then dic_order xl yl
+                    else x <? y 
+end.
+Definition minS : binary_op (list S) :=
+  λ l1 l2, if length l1 =? length l2
+           then dic_minS l1 l2 
+           else left_shortest l1 l2.
+Definition minT := bop_add_id minS c.
+\end{minted}
+\caption{Elementary Path Additive Component} 
+\label{coq:def:elementary_path_min}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition app := List.app.
+Definition appS := app S.
+Definition appT := bop_add_ann appS c.
+\end{minted}
+\caption{Elementary Path Multiplicative Component} 
+\label{coq:def:elementary_path_app}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Fixpoint elem_in_list  (S : Type)(eqS : brel S)(x : S)(l : list S) : bool :=
+match l with
+| nil => false
+| y :: yl => orb (eqS x y) (elem_in_list S eqS x yl)
+end.
+Fixpoint dup_in_list (S : Type)(eqS : brel S)(l : list S): bool :=
+match l with
+| nil => false
+| y :: yl =>  orb (elem_in_list S eqS y yl) (dup_in_list S eqS yl)
+end.
+Definition P : T -> bool :=  λ x,
+match x with
+| inr xl => dup_in_list S eqS xl
+| inl _ => true
+end.
+\end{minted}
+\caption{Elementary Path Predicate} 
+\label{coq:def:elementary_path_predicate}
+\end{listing}
+
+We also reasoning the properties for the multiplicative component that it has the properties of associative, congruence, selective and commutative.
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Lemma bop_list_minT_commutative : bop_commutative T brel_list_const minT.
+Lemma bop_list_minT_selective : bop_selective T brel_list_const minT.
+Lemma bop_list_minT_associative : bop_associative T brel_list_const minT.
+Lemma bop_list_minT_congruence : bop_congruence T brel_list_const minT.
+\end{minted}
+\caption{Properties for Min} 
+\label{coq:proof:elementary_path_min}
+\end{listing}
+By using the lemmas in Coq library for $app$, we can easily get the properties of the multiplicative component.
+
+Then we need to discuss the properties of predicate, and the properties between the predicate and the two binary operators.
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Lemma P_true : pred_true T P (inl c).
+Lemma P_congruence : pred_congruence T brel_list_const P.
+Lemma P_min_decompose : pred_bop_decompose T P minT.
+Lemma P_app_compose : pred_bop_compose T P appT.
+\end{minted}
+\caption{Properties for the Predicate} 
+\label{coq:proof:predicate_properties}
+\end{listing}
+
+Then based on the predicate we can define our reduction.
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition uop_list : unary_op T := uop_predicate_reduce (inl c) P.
+Definition bop_list_app : binary_op T := bop_fpr (inl c) P appT.
+Definition bop_list_min : binary_op T := bop_fpr (inl c) P minT.
+\end{minted}
+\caption{Elementary Path Reduction} 
+\label{coq:def:elementary_path_reduction}
+\end{listing}
+
+The rest of the properties can be proved using the properties defined in the predicate reduction and generalized reduction section (not commutative for multiplicative component, and not distributive on both operator).
+
+Finally we can construct our semiring.
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition eqv_proofs_eq_T : eqv_proofs T (brel_reduce uop_list brel_list_const)
+:= {| 
+     eqv_reflexive   := brel_reduce_list_const_reflexive
+   ; eqv_transitive  := brel_reduce_list_const_transitive
+   ; eqv_symmetric   := brel_reduce_list_const_symmetric
+   ; eqv_congruence  := brel_reduce_list_const_congruence
+   ; eqv_witness     := (inl c)
+|}.  
+\end{minted}
+\caption{Equality Proof} 
+\label{coq:proof:eqv_proofs_eq_T}
+\end{listing}
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition min_proofs  : 
+commutative_selective_semigroup_proofs T 
+(brel_reduce uop_list brel_list_const) bop_list_min
+:= {|
+  cssg_associative   := bop_list_min_associative
+; cssg_congruence    := bop_list_min_congruence
+; cssg_commutative   := bop_list_min_commutative
+; cssg_selective     := bop_list_min_selective                                        
+|}.
+\end{minted}
+\caption{Proof for Min Operator} 
+\label{coq:def:min_proofs}
+\end{listing}
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition app_proofs: 
+semigroup_proofs T (brel_reduce uop_list brel_list_const) bop_list_app
+:= {|
+  sg_associative   := bop_list_app_associative
+; sg_congruence    := bop_list_app_congruence
+; sg_commutative_d    := bop_list_app_commutative_decidable                                                
+|}.
+\end{minted}
+\caption{Proof for Plus Operator} 
+\label{coq:def:app_proofs}
+\end{listing}
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition min_app_non_distributive_dioid_proofs : 
+bioid_proof T (brel_reduce uop_list brel_list_const) 
+bop_list_min bop_list_app (inl c) (inr nil)
+:= {|  
+  bioid_left_distributive_decidable := bop_left_distributive_min_app_decidable
+; bioid_right_distributive_decidable := bop_right_distributive_min_app_decidable
+; bioid_zero_is_add_id     := bop_is_id_min
+; bioid_one_is_mul_id      := bop_is_id_app 
+; bioid_zero_is_mul_ann     := bop_is_ann_app
+; bioid_one_is_add_ann    := bop_is_ann_min
+|}.
+\end{minted}
+\caption{Proof for None Distributive Semiring Property} 
+\label{coq:def:min_app_non_distributive_dioid_proofs}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition min_app_non_distributive_dioid : selective_bioid T
+:= {|
+    sbioid_eq         := brel_reduce uop_list brel_list_const
+  ; sbioid_add        := bop_list_min
+  ; sbioid_mul        := bop_list_app                                 
+  ; sbioid_zero       := inl c
+  ; sbioid_one        := inr nil
+  ; sbioid_eqv        := eqv_proofs_eq_T
+  ; sbioid_add_pfs    := min_proofs
+  ; sbioid_mul_pfs    := app_proofs
+  ; sbioid_pfs        := min_app_non_distributive_dioid_proofs
+|}.
+\end{minted}
+\caption{Elementary Path Semiring} 
+\label{coq:def:min_app_non_distributive_dioid}
+\end{listing}
 \subsection{Final Path Problem}
+Finally we construct our final Path problem semiring by using the lexicographic product we defined previously.
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Variable ceiling : nat.
+Variable c : cas_constant.
+Definition T := cas_constant + list nat.
+Definition min_plus_ceiling_dioid := min_plus_dioid ceiling.
+Definition elementary_path_bioid := min_app_non_distributive_dioid c.
+Definition add1 := csdioid_add nat min_plus_ceiling_dioid.
+Definition mul1 := csdioid_mul nat min_plus_ceiling_dioid.
+Definition add2 := sbioid_add T elementary_path_bioid.
+Definition mul2 := sbioid_mul T elementary_path_bioid.
+Definition eqN := csdioid_eq nat min_plus_ceiling_dioid.
+Definition eqT := sbioid_eq T elementary_path_bioid.
+Definition M := nat * T.
+Definition eqM : brel M := brel_product eqN eqT.
+Definition add :binary_op M := bop_llex eqN add1 add2.
+Definition mul :binary_op M:= bop_product mul1 mul2.
+Definition zero1 : nat := ceiling.
+Definition one1  : nat := 0.
+Definition zero2 : T := inl c.
+Definition one2  : T := inr nil.
+Definition zero  : M := (zero1,zero2).
+Definition one   : M := (one1,one2).
+\end{minted}
+\caption{Path Problem Basic Definition} 
+\label{coq:def:path_problem_basic}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition P := reduce_annihilators.P nat T eqN eqT zero1 zero2.
+Lemma P_true : pred_true M P zero.
+Lemma P_cong : pred_congruence M eqM P.
+Lemma P_decompose_add : pred_bop_decompose M P add.
+Lemma P_compose_mul : pred_bop_compose M P mul.
+\end{minted}
+\caption{Path Problem Predicate} 
+\label{coq:def:path_problem_predicate}
+\end{listing}
+
+And we can define our reduction.
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition uop_rap : unary_op M := reduce_annihilators.uop_rap nat T eqN eqT zero1 zero2.
+Definition brel_eq_M :brel M := brel_reduce uop_rap eqM. 
+Definition bop_rap_add : binary_op M := bop_fpr zero P add.
+Definition bop_rap_mul : binary_op M := bop_fpr zero P mul.
+\end{minted}
+\caption{Path Problem Reduction} 
+\label{coq:def:path_problem_Reduction}
+\end{listing}
+
+The rest of the properties can be proved using the properties defined in the predicate reduction and generalized reduction section (not commutative for multiplicative component, and not distributive on both operator).
+
+Finally we can construct our path problem semiring.
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition eqv_proofs_eq_T : eqv_proofs M brel_eq_M
+:= {| 
+     eqv_reflexive   := brel_eq_M_reflexive
+   ; eqv_transitive  := brel_eq_M_transitive
+   ; eqv_symmetric   := brel_eq_M_symmetric
+   ; eqv_congruence  := brel_eq_M_congruence
+   ; eqv_witness     := zero
+|}. 
+\end{minted}
+\caption{Equality Proof} 
+\label{coq:proof:eqv_proofs_eq_T}
+\end{listing}
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition min_proofs  : 
+commutative_selective_semigroup_proofs M brel_eq_M bop_rap_add
+:= {|
+  cssg_associative   := bop_rap_add_associative
+; cssg_congruence    := bop_rap_add_congruence
+; cssg_commutative   := bop_rap_add_commutative
+; cssg_selective     := bop_rap_add_selective                                       
+|}.
+\end{minted}
+\caption{Proof for Min Operator} 
+\label{coq:def:min_proofs}
+\end{listing}
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition app_proofs: 
+semigroup_proofs M brel_eq_M bop_rap_mul
+:= {|
+  sg_associative   := bop_rap_mul_associative
+; sg_congruence    := bop_rap_mul_congruence
+; sg_commutative_d    := bop_rap_mul_commutative_decidable                                                
+|}.
+\end{minted}
+\caption{Proof for Plus Operator} 
+\label{coq:def:app_proofs}
+\end{listing}
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition min_app_non_distributive_dioid_proofs : 
+bioid_proof M brel_eq_M bop_rap_add bop_rap_mul zero one
+:= {|  
+bioid_left_distributive_decidable := bop_left_distributive_add_mul_decidable
+; bioid_right_distributive_decidable := bop_right_distributive_add_mul_decidable
+; bioid_zero_is_add_id     := bop_is_id_add_zero
+; bioid_one_is_mul_id      := bop_is_id_mul_one 
+; bioid_zero_is_mul_ann    := bop_is_ann_mul_zero
+; bioid_one_is_add_ann     := bop_is_ann_add_one
+|}.
+\end{minted}
+\caption{Proof for None Distributive Semiring Property} 
+\label{coq:def:min_app_non_distributive_dioid_proofs}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Definition min_app_non_distributive_dioid : selective_bioid M
+:= {|
+    sbioid_eq         := brel_eq_M
+  ; sbioid_add        := bop_rap_add
+  ; sbioid_mul        := bop_rap_mul                                 
+  ; sbioid_zero       := zero
+  ; sbioid_one        := one
+  ; sbioid_eqv        := eqv_proofs_eq_T
+  ; sbioid_add_pfs    := min_proofs
+  ; sbioid_mul_pfs    := app_proofs
+  ; sbioid_pfs        := min_app_non_distributive_dioid_proofs
+|}.
+\end{minted}
+\caption{Elementary Path Semiring} 
+\label{coq:def:min_app_non_distributive_dioid}
+\end{listing}
+
+Finally we defined and constructed all the stuff we want and all the properties we need to proof. Detailed proof could be found in my Coq file.
 
 \chapter{Evaluation, Summary and Conclusions} 
 
@@ -2076,7 +2415,26 @@ Definition min_plus_dioid (ceiling : nat) : commutative_selective_dioid nat
 %You will generally want to draw some conclusions, and point
 %to potential future work. 
 
+\section{Evaluation to the Result}
+First of all, we first conduct an assessment of the results of our definition of reduction. 
 
+Before we defined the generalized representation, the original representation of reduction was very unimplemented unfriendly as we have seen. The generalized representation of our definition represents the reduced problem set using the reduction, a unary operator, on the equality and binary operators, and it is implementation friendly. Furthermore, our proof in Coq can be extracted to other languages for implementation friendly reasons, such as Occam, Haskell, which is a functional programming language. Because of the impossibility, or difficulty of representing records in these languages, our generalized representation will be very important. The proof of isomorphism between the two representation also helps us to better express and use reduction. It is obvious that the properties of reduction under generalized representation should be more easily to be proved.
+
+At the same time, although the original classical reduction makes us have two more specific properties, it also limits the definition of reduction, so that many types of reduction cannot be classified into it. After our generalized reduction, almost all this type of operation can be defined and classified into it. We can also define more concrete reductions based on generalized reduction, such as our defined predicate reduction. The reasoning of predicate reduction is also very detailed, and the latecomers are able to use its properties directly.
+
+In fact, we have defined the generalized representation and generalized reduction, which also has the advantage that it is very easy to implement a reduction combination. For a reduction, by our definition, it doesn't care whether the problem set has been reduced before. It only cares about the nature of the existing equality/binary operator. So we can easily combine a lot of reduction together, just as we finally defined the path problem.
+
+The entire definition and proof of reduction can be integrated into the existing CAS system to make up for the lack of CAS's in the area of reduction currently.
+
+\section{Summary to the Project}
+Before us, no one had detailed reasoning on reduction. Although many people mentioned the concept of reduction and discussed the properties of it, a constructive reasoning is still necessary. This is also the purpose of our project.
+
+Of course, in the process of our proofing, we have also gone through many detours and there have been many useless or wrong proof directions. For example, we once wanted to add the property of reduction in the definition of semigroup, but we could not solve the problem of reduction combination. For another example, we once wanted to define the reduce annihilator as a separate type of reduction, but later found that the reduce annihilator is actually an example of predicate reduction. There are many other issues like this, and as a topic for research, there is no certain direction. All the steps need to be explored by ourselves. This is the most important thing I learned in the project. We keep all the files we have defined in the Coq folder. Those who are interested can go to the Coq file to view them. 
+
+\section{Conclusion to the Thesis}
+Our discussion of reduction is almost complete. And during the process of reasoning the predicate reduction we confirmed our earliest guess that the classical reduction is only a sufficient condition for associative and distributive, not a necessary and sufficient condition, although we did not find a very meaningful example. In fact, we can provide an example that, similar to the elementary path problem, we define another operator $max$ which is opposite to $min$. It is obvious that $max$ is decomposition, and not preserving order. But we can still prove the associative of it since it is decomposition and the reduced element is the identity to it. And we can also prove the distributive under those two operators. (However, this example does not have practical significance, and we have not yet found an example that is meaningful and satisfies the conditions)
+
+Our proofs cover almost all the properties that will be used. Late adopters only need to provide basic proofs of properties in order to use our proofs and definitions to construct semirings for compounding requirements.
 
 \appendix
 \chapter{Some Code of Proof}

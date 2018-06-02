@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{app\PYGZus{}proofs}\PYG{o}{:}
+\PYG{n}{semigroup\PYGZus{}proofs} \PYG{n}{M} \PYG{n}{brel\PYGZus{}eq\PYGZus{}M} \PYG{n}{bop\PYGZus{}rap\PYGZus{}mul}
+\PYG{o}{:=} \PYG{o}{\PYGZob{}|}
+  \PYG{n}{sg\PYGZus{}associative}   \PYG{o}{:=} \PYG{n}{bop\PYGZus{}rap\PYGZus{}mul\PYGZus{}associative}
+\PYG{o}{;} \PYG{n}{sg\PYGZus{}congruence}    \PYG{o}{:=} \PYG{n}{bop\PYGZus{}rap\PYGZus{}mul\PYGZus{}congruence}
+\PYG{o}{;} \PYG{n}{sg\PYGZus{}commutative\PYGZus{}d}    \PYG{o}{:=} \PYG{n}{bop\PYGZus{}rap\PYGZus{}mul\PYGZus{}commutative\PYGZus{}decidable}
+\PYG{o}{|\PYGZcb{}.}
+\end{Verbatim}

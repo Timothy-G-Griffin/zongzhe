@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{eqv\PYGZus{}proofs\PYGZus{}eq\PYGZus{}T} \PYG{o}{:} \PYG{n}{eqv\PYGZus{}proofs} \PYG{n}{M} \PYG{n}{brel\PYGZus{}eq\PYGZus{}M}
+\PYG{o}{:=} \PYG{o}{\PYGZob{}|}
+     \PYG{n}{eqv\PYGZus{}reflexive}   \PYG{o}{:=} \PYG{n}{brel\PYGZus{}eq\PYGZus{}M\PYGZus{}reflexive}
+   \PYG{o}{;} \PYG{n}{eqv\PYGZus{}transitive}  \PYG{o}{:=} \PYG{n}{brel\PYGZus{}eq\PYGZus{}M\PYGZus{}transitive}
+   \PYG{o}{;} \PYG{n}{eqv\PYGZus{}symmetric}   \PYG{o}{:=} \PYG{n}{brel\PYGZus{}eq\PYGZus{}M\PYGZus{}symmetric}
+   \PYG{o}{;} \PYG{n}{eqv\PYGZus{}congruence}  \PYG{o}{:=} \PYG{n}{brel\PYGZus{}eq\PYGZus{}M\PYGZus{}congruence}
+   \PYG{o}{;} \PYG{n}{eqv\PYGZus{}witness}     \PYG{o}{:=} \PYG{n}{zero}
+\PYG{o}{|\PYGZcb{}.}
+\end{Verbatim}

@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{min\PYGZus{}proofs}  \PYG{o}{:}
+\PYG{n}{commutative\PYGZus{}selective\PYGZus{}semigroup\PYGZus{}proofs} \PYG{n}{T}
+\PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{uop\PYGZus{}list} \PYG{n}{brel\PYGZus{}list\PYGZus{}const}\PYG{o}{)} \PYG{n}{bop\PYGZus{}list\PYGZus{}min}
+\PYG{o}{:=} \PYG{o}{\PYGZob{}|}
+  \PYG{n}{cssg\PYGZus{}associative}   \PYG{o}{:=} \PYG{n}{bop\PYGZus{}list\PYGZus{}min\PYGZus{}associative}
+\PYG{o}{;} \PYG{n}{cssg\PYGZus{}congruence}    \PYG{o}{:=} \PYG{n}{bop\PYGZus{}list\PYGZus{}min\PYGZus{}congruence}
+\PYG{o}{;} \PYG{n}{cssg\PYGZus{}commutative}   \PYG{o}{:=} \PYG{n}{bop\PYGZus{}list\PYGZus{}min\PYGZus{}commutative}
+\PYG{o}{;} \PYG{n}{cssg\PYGZus{}selective}     \PYG{o}{:=} \PYG{n}{bop\PYGZus{}list\PYGZus{}min\PYGZus{}selective}
+\PYG{o}{|\PYGZcb{}.}
+\end{Verbatim}

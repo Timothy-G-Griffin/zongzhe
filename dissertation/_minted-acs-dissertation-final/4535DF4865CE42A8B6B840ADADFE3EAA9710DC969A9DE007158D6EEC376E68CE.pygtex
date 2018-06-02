@@ -1,0 +1,15 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Fixpoint} \PYG{n}{dic\PYGZus{}order} \PYG{o}{(}\PYG{n}{l1} \PYG{n}{l2} \PYG{o}{:} \PYG{k+kt}{list} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:} \PYG{k+kt}{bool} \PYG{o}{:=}
+\PYG{k}{match} \PYG{n}{l1}\PYG{o}{,}\PYG{n}{l2} \PYG{k}{with}
+\PYG{o}{|} \PYG{n}{nil}\PYG{o}{,\PYGZus{}} \PYG{o}{=\PYGZgt{}} \PYG{n+nb+bp}{true}
+\PYG{o}{|} \PYG{o}{\PYGZus{},}\PYG{n}{nil} \PYG{o}{=\PYGZgt{}} \PYG{n+nb+bp}{false}
+\PYG{o}{|} \PYG{n}{x}\PYG{o}{::}\PYG{n}{xl}\PYG{o}{,} \PYG{n}{y} \PYG{o}{::} \PYG{n}{yl} \PYG{o}{=\PYGZgt{}} \PYG{k}{if} \PYG{n}{eqS} \PYG{n}{x} \PYG{n}{y}
+                    \PYG{k}{then} \PYG{n}{dic\PYGZus{}order} \PYG{n}{xl} \PYG{n}{yl}
+                    \PYG{k}{else} \PYG{n}{x} \PYG{o}{\PYGZlt{}?} \PYG{n}{y}
+\PYG{k}{end}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{minS} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{o}{(}\PYG{k+kt}{list} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=}
+  \PYG{o}{λ} \PYG{n}{l1} \PYG{n}{l2}\PYG{o}{,} \PYG{k}{if} \PYG{n}{length} \PYG{n}{l1} \PYG{o}{=?} \PYG{n}{length} \PYG{n}{l2}
+           \PYG{k}{then} \PYG{n}{dic\PYGZus{}minS} \PYG{n}{l1} \PYG{n}{l2}
+           \PYG{k}{else} \PYG{n}{left\PYGZus{}shortest} \PYG{n}{l1} \PYG{n}{l2}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{minT} \PYG{o}{:=} \PYG{n}{bop\PYGZus{}add\PYGZus{}id} \PYG{n}{minS} \PYG{n}{c}\PYG{o}{.}
+\end{Verbatim}

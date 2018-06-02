@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{app} \PYG{o}{:=} \PYG{n}{List}\PYG{o}{.}\PYG{n}{app}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{appS} \PYG{o}{:=} \PYG{n}{app} \PYG{n}{S}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{appT} \PYG{o}{:=} \PYG{n}{bop\PYGZus{}add\PYGZus{}ann} \PYG{n}{appS} \PYG{n}{c}\PYG{o}{.}
+\end{Verbatim}

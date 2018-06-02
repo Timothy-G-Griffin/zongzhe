@@ -36,10 +36,31 @@
 \contentsline {listing}{\numberline {36}{\ignorespaces Distributive For Predicate}}{60}
 \contentsline {listing}{\numberline {37}{\ignorespaces Composition implies Classical}}{60}
 \contentsline {listing}{\numberline {38}{\ignorespaces Preserving Order implies Classical}}{61}
-\contentsline {listing}{\numberline {39}{\ignorespaces Preserving Order implies Classical}}{61}
+\contentsline {listing}{\numberline {39}{\ignorespaces Min Plus With Ceiling Definition}}{61}
 \contentsline {listing}{\numberline {40}{\ignorespaces Properties for the Predicate}}{62}
-\contentsline {listing}{\numberline {41}{\ignorespaces Equality Proof}}{62}
-\contentsline {listing}{\numberline {42}{\ignorespaces Proof for Min Operator}}{62}
-\contentsline {listing}{\numberline {43}{\ignorespaces Proof for Plus Operator}}{62}
-\contentsline {listing}{\numberline {44}{\ignorespaces Proof for Semiring Property}}{63}
-\contentsline {listing}{\numberline {45}{\ignorespaces Min Plus With Ceiling Semiring}}{63}
+\contentsline {listing}{\numberline {41}{\ignorespaces Min Plus With Ceiling Reduction}}{62}
+\contentsline {listing}{\numberline {42}{\ignorespaces Equality Proof}}{62}
+\contentsline {listing}{\numberline {43}{\ignorespaces Proof for Min Operator}}{62}
+\contentsline {listing}{\numberline {44}{\ignorespaces Proof for Plus Operator}}{63}
+\contentsline {listing}{\numberline {45}{\ignorespaces Proof for Semiring Property}}{63}
+\contentsline {listing}{\numberline {46}{\ignorespaces Min Plus With Ceiling Semiring}}{63}
+\contentsline {listing}{\numberline {47}{\ignorespaces Elementary Path Equality}}{64}
+\contentsline {listing}{\numberline {48}{\ignorespaces Elementary Path Additive Component}}{64}
+\contentsline {listing}{\numberline {49}{\ignorespaces Elementary Path Multiplicative Component}}{64}
+\contentsline {listing}{\numberline {50}{\ignorespaces Elementary Path Predicate}}{65}
+\contentsline {listing}{\numberline {51}{\ignorespaces Properties for Min}}{65}
+\contentsline {listing}{\numberline {52}{\ignorespaces Properties for the Predicate}}{65}
+\contentsline {listing}{\numberline {53}{\ignorespaces Elementary Path Reduction}}{65}
+\contentsline {listing}{\numberline {54}{\ignorespaces Equality Proof}}{66}
+\contentsline {listing}{\numberline {55}{\ignorespaces Proof for Min Operator}}{66}
+\contentsline {listing}{\numberline {56}{\ignorespaces Proof for Plus Operator}}{66}
+\contentsline {listing}{\numberline {57}{\ignorespaces Proof for None Distributive Semiring Property}}{67}
+\contentsline {listing}{\numberline {58}{\ignorespaces Elementary Path Semiring}}{67}
+\contentsline {listing}{\numberline {59}{\ignorespaces Path Problem Basic Definition}}{68}
+\contentsline {listing}{\numberline {60}{\ignorespaces Path Problem Predicate}}{68}
+\contentsline {listing}{\numberline {61}{\ignorespaces Path Problem Reduction}}{68}
+\contentsline {listing}{\numberline {62}{\ignorespaces Equality Proof}}{69}
+\contentsline {listing}{\numberline {63}{\ignorespaces Proof for Min Operator}}{69}
+\contentsline {listing}{\numberline {64}{\ignorespaces Proof for Plus Operator}}{69}
+\contentsline {listing}{\numberline {65}{\ignorespaces Proof for None Distributive Semiring Property}}{69}
+\contentsline {listing}{\numberline {66}{\ignorespaces Elementary Path Semiring}}{70}

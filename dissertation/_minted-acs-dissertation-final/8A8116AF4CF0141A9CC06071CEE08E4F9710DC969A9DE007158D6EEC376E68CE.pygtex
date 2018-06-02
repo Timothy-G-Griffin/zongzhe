@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{uop\PYGZus{}nat} \PYG{o}{(}\PYG{n}{ceiling} \PYG{o}{:} \PYG{k+kt}{nat}\PYG{o}{)} \PYG{o}{:} \PYG{n}{unary\PYGZus{}op} \PYG{k+kt}{nat} \PYG{o}{:=} \PYG{n}{uop\PYGZus{}predicate\PYGZus{}reduce} \PYG{n}{ceiling} \PYG{o}{(}\PYG{n}{P} \PYG{n}{ceiling}\PYG{o}{).}
+\PYG{k+kn}{Definition} \PYG{n}{bop\PYGZus{}nat\PYGZus{}min} \PYG{o}{(}\PYG{n}{ceiling} \PYG{o}{:} \PYG{k+kt}{nat}\PYG{o}{)} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{k+kt}{nat} \PYG{o}{:=} \PYG{n}{bop\PYGZus{}fpr} \PYG{n}{ceiling} \PYG{o}{(}\PYG{n}{P} \PYG{n}{ceiling}\PYG{o}{)} \PYG{n}{min}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{bop\PYGZus{}nat\PYGZus{}plus} \PYG{o}{(}\PYG{n}{ceiling} \PYG{o}{:} \PYG{k+kt}{nat}\PYG{o}{)} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{k+kt}{nat} \PYG{o}{:=} \PYG{n}{bop\PYGZus{}fpr} \PYG{n}{ceiling} \PYG{o}{(}\PYG{n}{P} \PYG{n}{ceiling}\PYG{o}{)} \PYG{n}{plus}\PYG{o}{.}
+\end{Verbatim}

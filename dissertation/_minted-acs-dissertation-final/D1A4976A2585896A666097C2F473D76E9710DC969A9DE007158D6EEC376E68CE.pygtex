@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{uop\PYGZus{}list} \PYG{o}{:} \PYG{n}{unary\PYGZus{}op} \PYG{n}{T} \PYG{o}{:=} \PYG{n}{uop\PYGZus{}predicate\PYGZus{}reduce} \PYG{o}{(}\PYG{n}{inl} \PYG{n}{c}\PYG{o}{)} \PYG{n}{P}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{bop\PYGZus{}list\PYGZus{}app} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{T} \PYG{o}{:=} \PYG{n}{bop\PYGZus{}fpr} \PYG{o}{(}\PYG{n}{inl} \PYG{n}{c}\PYG{o}{)} \PYG{n}{P} \PYG{n}{appT}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{bop\PYGZus{}list\PYGZus{}min} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{T} \PYG{o}{:=} \PYG{n}{bop\PYGZus{}fpr} \PYG{o}{(}\PYG{n}{inl} \PYG{n}{c}\PYG{o}{)} \PYG{n}{P} \PYG{n}{minT}\PYG{o}{.}
+\end{Verbatim}

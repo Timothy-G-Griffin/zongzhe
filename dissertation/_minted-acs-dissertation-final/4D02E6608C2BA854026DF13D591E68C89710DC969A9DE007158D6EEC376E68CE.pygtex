@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{brel\PYGZus{}list} \PYG{o}{:} \PYG{err}{∀} \PYG{o}{\PYGZob{}}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{\PYGZcb{},} \PYG{n}{brel} \PYG{n}{S} \PYG{err}{→} \PYG{n}{brel}\PYG{o}{(}\PYG{k+kt}{list} \PYG{n}{S}\PYG{o}{)}
+\PYG{o}{:=} \PYG{k}{fix} \PYG{n}{f} \PYG{o}{\PYGZob{}}\PYG{n}{S}\PYG{o}{\PYGZcb{}} \PYG{n}{U} \PYG{n}{x} \PYG{n}{y} \PYG{o}{:=}
+      \PYG{k}{match} \PYG{n}{x}\PYG{o}{,} \PYG{n}{y} \PYG{k}{with}
+         \PYG{o}{|} \PYG{n}{nil}\PYG{o}{,} \PYG{n}{nil} \PYG{o}{=\PYGZgt{}} \PYG{n+nb+bp}{true}
+         \PYG{o}{|} \PYG{n}{nil}\PYG{o}{,} \PYG{o}{\PYGZus{}} \PYG{o}{=\PYGZgt{}} \PYG{n+nb+bp}{false}
+         \PYG{o}{|} \PYG{o}{\PYGZus{},} \PYG{n}{nil} \PYG{o}{=\PYGZgt{}} \PYG{n+nb+bp}{false}
+         \PYG{o}{|} \PYG{n}{a}\PYG{o}{::}\PYG{n}{tla}\PYG{o}{,} \PYG{n}{b}\PYG{o}{::}\PYG{n}{tlb} \PYG{o}{=\PYGZgt{}} \PYG{n}{andb} \PYG{o}{(}\PYG{n}{U} \PYG{n}{a} \PYG{n}{b}\PYG{o}{)} \PYG{o}{(}\PYG{n}{f} \PYG{n}{U} \PYG{n}{tla} \PYG{n}{tlb}\PYG{o}{)}
+      \PYG{k}{end}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{S} \PYG{o}{:=} \PYG{k+kt}{nat}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{eqS} \PYG{o}{:=} \PYG{n}{Arith}\PYG{o}{.}\PYG{n}{EqNat}\PYG{o}{.}\PYG{n}{beq\PYGZus{}nat}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{brel\PYGZus{}list\PYGZus{}S}  \PYG{o}{:} \PYG{n}{brel} \PYG{o}{(}\PYG{k+kt}{list} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=} \PYG{n}{brel\PYGZus{}list} \PYG{n}{S} \PYG{n}{eqS}\PYG{o}{.}
+\PYG{k+kn}{Variable} \PYG{n}{c} \PYG{o}{:} \PYG{n}{cas\PYGZus{}constant}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{brel\PYGZus{}list\PYGZus{}const} \PYG{o}{:} \PYG{n}{brel} \PYG{o}{(}\PYG{n}{cas\PYGZus{}constant} \PYG{o}{+} \PYG{k+kt}{list} \PYG{n}{S} \PYG{o}{)}
+\PYG{o}{:=} \PYG{n}{brel\PYGZus{}add\PYGZus{}constant} \PYG{n}{brel\PYGZus{}list\PYGZus{}S} \PYG{n}{c}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{T} \PYG{o}{:=} \PYG{n}{cas\PYGZus{}constant} \PYG{o}{+} \PYG{k+kt}{list} \PYG{n}{S}\PYG{o}{.}
+\end{Verbatim}
