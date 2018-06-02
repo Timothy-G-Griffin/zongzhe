@@ -1477,6 +1477,181 @@ Definition bop_pseudo_right_distributive (S : Type) (eq : brel S) (r : unary_op 
 \end{listing}
 
 \subsection{Construction of Semiring}
+Then we need to give a definition of semring together with those proof. Since finally we need to construct two different versions of semiring: distributive semiring with commutative multiplicative component and non-distributive semiring with non-commutative semiring, which implies three different versions of semigroup: commutative selective semigroup, commutative semigroup and non-commutative semigroup, we need to provide separate definition for them.
+
+First, let us define the record of proof of the those properties for binary relationship
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Record eqv_proofs (S : Type) (eq : brel S) :=
+{
+  eqv_reflexive      : brel_reflexive S eq            
+; eqv_transitive     : brel_transitive S eq           
+; eqv_symmetric      : brel_symmetric S eq
+; eqv_congruence     : brel_congruence S eq eq                                      
+; eqv_witness        : S                                      
+}.
+\end{minted}
+\caption{Proof of Properties for Binary Relationship} 
+\label{coq:def:eqv_proofs}
+\end{listing}
+Inside the record, we provide a witness which guarantee the semiring we defined is not a trivial semiring (at least has one element, which is usually the identity of annihilator for an operator in the simiring).
+
+Then we can define our two separate versions of semigroup. We will provide the proof of properties for semigroup at first.
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Record commutative_selective_semigroup_proofs (S: Type) (eq : brel S) (b : binary_op S) := 
+{
+  cssg_associative   : bop_associative S eq b
+; cssg_congruence    : bop_congruence S eq b
+; cssg_commutative   : bop_commutative S eq b
+; cssg_selective     : bop_selective S eq b                                                                            
+}.
+\end{minted}
+\caption{Proof of Properties for Commutative Selective Semigroup} 
+\label{coq:def:commutative_selective_semigroup_proofs}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Record commutative_semigroup_proofs (S: Type) (eq : brel S) (b : binary_op S) := 
+{
+  csg_associative   : bop_associative S eq b
+; csg_congruence    : bop_congruence S eq b
+; csg_commutative   : bop_commutative S eq b                                      
+}.
+\end{minted}
+\caption{Proof of Properties for Commutative Semigroup} 
+\label{coq:def:commutative_semigroup_proofs}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Record semigroup_proofs (S: Type) (eq : brel S) (b : binary_op S) := 
+{
+  sg_associative   : bop_associative S eq b
+; sg_congruence    : bop_congruence S eq b
+; sg_commutative_d : bop_commutative_decidable S eq b                                      
+}.
+\end{minted}
+\caption{Proof of Properties for (None Commutative) Semigroup} 
+\label{coq:def:semigroup_proofs}
+\end{listing}
+
+Then we can construct our semigroup based on these different properties.
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Record commutative_selective_semigroup (S : Type) :=
+{
+   ceq   : brel S      
+;  cbop  : binary_op S
+;  ceqv  : eqv_proofs S ceq               
+;  csgp  : commutative_selective_semigroup_proofs S ceq cbop
+}.
+\end{minted}
+\caption{Commutative Selective Semigroup} 
+\label{coq:def:commutative_selective_semigroup}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Record commutative_semigroup (S : Type) :=
+{
+   ceq   : brel S      
+;  cbop  : binary_op S
+;  ceqv  : eqv_proofs S ceq               
+;  csgp  : commutative_semigroup_proofs S ceq cbop
+}.
+\end{minted}
+\caption{Commutative Semigroup} 
+\label{coq:def:commutative_semigroup}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Record semigroup (S : Type) :=
+{
+   eq   : brel S      
+;  bop  : binary_op S
+;  eqv  : eqv_proofs S eq               
+;  sgp  : semigroup_proofs S eq bop
+}.
+\end{minted}
+\caption{Semigroup} 
+\label{coq:def:semigroup}
+\end{listing}
+
+Next, we will define the proof of properties for a simiring. We also provides two different versions of record, based on the distributive properties.
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Record dioid_proofs (S: Type) (eq : brel S) (add mul : binary_op S) (zero : S) (one : S) :=
+{  
+  dioid_left_distributive  : bop_left_distributive S eq add mul
+; dioid_right_distributive : bop_right_distributive S eq add mul
+; dioid_zero_is_add_id     : bop_is_id S eq add zero
+; dioid_one_is_mul_id      : bop_is_id S eq mul one                                                      
+; dioid_zero_is_mul_ann    : bop_is_ann S eq mul zero
+; dioid_one_is_add_ann     : bop_is_ann S eq add one
+}.
+\end{minted}
+\caption{Proof of Properties for Semiring} 
+\label{coq:def:dioid_proofs}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Record bioid_proof (S: Type) (eq : brel S) (add mul : binary_op S) (zero : S) (one : S) :=
+{  
+  bioid_left_distributive_decidable  : bop_left_distributive_decidable S eq add mul
+; bioid_right_distributive_decidable : bop_right_distributive_decidable S eq add mul
+; bioid_zero_is_add_id     : bop_is_id S eq add zero
+; bioid_one_is_mul_id      : bop_is_id S eq mul one                                                      
+; bioid_zero_is_mul_ann    : bop_is_ann S eq mul zero
+; bioid_one_is_add_ann     : bop_is_ann S eq add one
+}.
+\end{minted}
+\caption{Proof of Properties for Bioid (None Distributive Semiring)} 
+\label{coq:def:bioid_proof}
+\end{listing}
+
+Finally, we can construct our semiring and non-distributive semiring using our previous definition.
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Record commutative_selective_dioid (S : Type) := {
+    csdioid_eq         : brel S  
+  ; csdioid_add        : binary_op S
+  ; csdioid_mul        : binary_op S                                   
+  ; csdioid_zero       : S
+  ; csdioid_one        : S
+  ; csdiode_eqv        : eqv_proofs S csdioid_eq
+  ; csdiode_add_pfs    : commutative_selective_semigroup_proofs S csdioid_eq csdioid_add 
+  ; csdiode_mul_pfs    : commutative_semigroup_proofs S csdioid_eq csdioid_mul 
+  ; csdioid_pfs        : dioid_proofs S csdioid_eq csdioid_add csdioid_mul csdioid_zero csdioid_one
+}.
+\end{minted}
+\caption{Commutative Selective Semiring} 
+\label{coq:def:commutative_selective_dioid}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\scriptsize]{coq}
+Record selective_bioid (S : Type) := {
+  sbioid_eq         : brel S  
+  ; sbioid_add        : binary_op S
+  ; sbioid_mul        : binary_op S                                   
+  ; sbioid_zero       : S
+  ; sbioid_one        : S
+  ; sbioid_eqv        : eqv_proofs S sbioid_eq
+  ; sbioid_add_pfs    : commutative_selective_semigroup_proofs S sbioid_eq sbioid_add 
+  ; sbioid_mul_pfs    : semigroup_proofs S sbioid_eq sbioid_mul 
+  ; sbioid_pfs        : bioid_proof S sbioid_eq sbioid_add sbioid_mul sbioid_zero sbioid_one
+}.
+\end{minted}
+\caption{Selective None Distributive Semiring} 
+\label{coq:def:selective_bioid}
+\end{listing}
+
 \subsection{Traditional Representation of Reduction}
 \subsection{Generalized Representation of Reduction}
 
@@ -1506,6 +1681,9 @@ Definition pred_preserve_order (S : Type) (P : pred S) (eqS : brel S) (bS : bina
 \label{coq:def:predicate}
 \end{listing}
 
+\subsection{Min Plus With Ceiling}
+\subsection{Elementary Path}
+\subsection{Final Path Problem}
 
 \chapter{Evaluation, Summary and Conclusions} 
 

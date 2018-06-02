@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Record} \PYG{n}{dioid\PYGZus{}proofs} \PYG{o}{(}\PYG{n}{S}\PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eq} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{add} \PYG{n}{mul} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{zero} \PYG{o}{:} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{one} \PYG{o}{:} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=}
+\PYG{o}{\PYGZob{}}
+  \PYG{n}{dioid\PYGZus{}left\PYGZus{}distributive}  \PYG{o}{:} \PYG{n}{bop\PYGZus{}left\PYGZus{}distributive} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{add} \PYG{n}{mul}
+\PYG{o}{;} \PYG{n}{dioid\PYGZus{}right\PYGZus{}distributive} \PYG{o}{:} \PYG{n}{bop\PYGZus{}right\PYGZus{}distributive} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{add} \PYG{n}{mul}
+\PYG{o}{;} \PYG{n}{dioid\PYGZus{}zero\PYGZus{}is\PYGZus{}add\PYGZus{}id}     \PYG{o}{:} \PYG{n}{bop\PYGZus{}is\PYGZus{}id} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{add} \PYG{n}{zero}
+\PYG{o}{;} \PYG{n}{dioid\PYGZus{}one\PYGZus{}is\PYGZus{}mul\PYGZus{}id}      \PYG{o}{:} \PYG{n}{bop\PYGZus{}is\PYGZus{}id} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{mul} \PYG{n}{one}
+\PYG{o}{;} \PYG{n}{dioid\PYGZus{}zero\PYGZus{}is\PYGZus{}mul\PYGZus{}ann}    \PYG{o}{:} \PYG{n}{bop\PYGZus{}is\PYGZus{}ann} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{mul} \PYG{n}{zero}
+\PYG{o}{;} \PYG{n}{dioid\PYGZus{}one\PYGZus{}is\PYGZus{}add\PYGZus{}ann}     \PYG{o}{:} \PYG{n}{bop\PYGZus{}is\PYGZus{}ann} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{add} \PYG{n}{one}
+\PYG{o}{\PYGZcb{}.}
+\end{Verbatim}

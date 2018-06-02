@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Record} \PYG{n}{eqv\PYGZus{}proofs} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eq} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=}
+\PYG{o}{\PYGZob{}}
+  \PYG{n}{eqv\PYGZus{}reflexive}      \PYG{o}{:} \PYG{n}{brel\PYGZus{}reflexive} \PYG{n}{S} \PYG{n}{eq}
+\PYG{o}{;} \PYG{n}{eqv\PYGZus{}transitive}     \PYG{o}{:} \PYG{n}{brel\PYGZus{}transitive} \PYG{n}{S} \PYG{n}{eq}
+\PYG{o}{;} \PYG{n}{eqv\PYGZus{}symmetric}      \PYG{o}{:} \PYG{n}{brel\PYGZus{}symmetric} \PYG{n}{S} \PYG{n}{eq}
+\PYG{o}{;} \PYG{n}{eqv\PYGZus{}congruence}     \PYG{o}{:} \PYG{n}{brel\PYGZus{}congruence} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{eq}
+\PYG{o}{;} \PYG{n}{eqv\PYGZus{}witness}        \PYG{o}{:} \PYG{n}{S}
+\PYG{o}{\PYGZcb{}.}
+\end{Verbatim}

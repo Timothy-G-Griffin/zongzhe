@@ -10,4 +10,15 @@
 \contentsline {listing}{\numberline {10}{\ignorespaces Basic Binary Operator Property}}{50}
 \contentsline {listing}{\numberline {11}{\ignorespaces Binary Operator Distributive}}{51}
 \contentsline {listing}{\numberline {12}{\ignorespaces Binary Operator Pseudo Properties}}{51}
-\contentsline {listing}{\numberline {13}{\ignorespaces Predicate Definition and Properties}}{52}
+\contentsline {listing}{\numberline {13}{\ignorespaces Proof of Properties for Binary Relationship}}{52}
+\contentsline {listing}{\numberline {14}{\ignorespaces Proof of Properties for Commutative Selective Semigroup}}{52}
+\contentsline {listing}{\numberline {15}{\ignorespaces Proof of Properties for Commutative Semigroup}}{52}
+\contentsline {listing}{\numberline {16}{\ignorespaces Proof of Properties for (None Commutative) Semigroup}}{52}
+\contentsline {listing}{\numberline {17}{\ignorespaces Commutative Selective Semigroup}}{53}
+\contentsline {listing}{\numberline {18}{\ignorespaces Commutative Semigroup}}{53}
+\contentsline {listing}{\numberline {19}{\ignorespaces Semigroup}}{53}
+\contentsline {listing}{\numberline {20}{\ignorespaces Proof of Properties for Semiring}}{53}
+\contentsline {listing}{\numberline {21}{\ignorespaces Proof of Properties for Bioid (None Distributive Semiring)}}{54}
+\contentsline {listing}{\numberline {22}{\ignorespaces Commutative Selective Semiring}}{54}
+\contentsline {listing}{\numberline {23}{\ignorespaces Selective None Distributive Semiring}}{54}
+\contentsline {listing}{\numberline {24}{\ignorespaces Predicate Definition and Properties}}{55}
