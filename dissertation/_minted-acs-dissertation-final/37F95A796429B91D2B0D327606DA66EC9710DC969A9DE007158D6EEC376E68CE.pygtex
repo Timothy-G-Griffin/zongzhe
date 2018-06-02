@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}ref\PYGZus{}iso} \PYG{o}{:} \PYG{n}{brel\PYGZus{}reflexive} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{o}{\PYGZlt{}\PYGZhy{}\PYGZgt{}} \PYG{n}{brel\PYGZus{}reflexive} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{eqS}\PYG{o}{).}
+\PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}sym\PYGZus{}iso} \PYG{o}{:} \PYG{n}{brel\PYGZus{}symmetric} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{o}{\PYGZlt{}\PYGZhy{}\PYGZgt{}} \PYG{n}{brel\PYGZus{}symmetric} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{eqS}\PYG{o}{).}
+\PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}tran\PYGZus{}iso} \PYG{o}{:} \PYG{n}{brel\PYGZus{}transitive} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{o}{\PYGZlt{}\PYGZhy{}\PYGZgt{}} \PYG{n}{brel\PYGZus{}transitive} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{eqS}\PYG{o}{).}
+\PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}brel\PYGZus{}cong\PYGZus{}iso} \PYG{o}{:} \PYG{n}{brel\PYGZus{}congruence} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{n}{red\PYGZus{}eq} \PYG{o}{\PYGZlt{}\PYGZhy{}\PYGZgt{}}
+                          \PYG{n}{brel\PYGZus{}congruence} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{eqS}\PYG{o}{)} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{eqS}\PYG{o}{).}
+\end{Verbatim}

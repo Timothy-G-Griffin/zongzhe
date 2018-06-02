@@ -1,0 +1,28 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Lemma} \PYG{n}{bop\PYGZus{}fpr\PYGZus{}left\PYGZus{}distributive} \PYG{o}{:}
+  \PYG{err}{∀} \PYG{o}{(}\PYG{n}{s} \PYG{o}{:} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{add} \PYG{n}{mul} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{),}
+     \PYG{n}{pred\PYGZus{}true} \PYG{n}{S} \PYG{n}{P} \PYG{n}{s} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{pred\PYGZus{}congruence} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{P} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{pred\PYGZus{}bop\PYGZus{}decompose} \PYG{n}{S} \PYG{n}{P} \PYG{n}{add} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{pred\PYGZus{}bop\PYGZus{}decompose} \PYG{n}{S} \PYG{n}{P} \PYG{n}{mul} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{bop\PYGZus{}congruence} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{add} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{bop\PYGZus{}congruence} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{mul} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{bop\PYGZus{}is\PYGZus{}id} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{add} \PYG{n}{s} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{bop\PYGZus{}is\PYGZus{}ann} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{mul} \PYG{n}{s} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{bop\PYGZus{}left\PYGZus{}distributive} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{add} \PYG{n}{mul} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{bop\PYGZus{}left\PYGZus{}distributive} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{o}{(}\PYG{n}{uop\PYGZus{}predicate\PYGZus{}reduce} \PYG{n}{s} \PYG{n}{P}\PYG{o}{)} \PYG{n}{eq}\PYG{o}{)}
+                             \PYG{o}{(}\PYG{n}{bop\PYGZus{}fpr} \PYG{n}{s} \PYG{n}{P} \PYG{n}{add}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}fpr} \PYG{n}{s} \PYG{n}{P} \PYG{n}{mul}\PYG{o}{).}
+\PYG{k+kn}{Lemma} \PYG{n}{bop\PYGZus{}fpr\PYGZus{}right\PYGZus{}distributive} \PYG{o}{:}
+  \PYG{err}{∀} \PYG{o}{(}\PYG{n}{s} \PYG{o}{:} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{add} \PYG{n}{mul} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{),}
+     \PYG{n}{pred\PYGZus{}true} \PYG{n}{S} \PYG{n}{P} \PYG{n}{s} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{pred\PYGZus{}congruence} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{P} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{pred\PYGZus{}bop\PYGZus{}decompose} \PYG{n}{S} \PYG{n}{P} \PYG{n}{add} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{pred\PYGZus{}bop\PYGZus{}decompose} \PYG{n}{S} \PYG{n}{P} \PYG{n}{mul} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{bop\PYGZus{}congruence} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{add} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{bop\PYGZus{}congruence} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{mul} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{bop\PYGZus{}is\PYGZus{}id} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{add} \PYG{n}{s} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{bop\PYGZus{}is\PYGZus{}ann} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{mul} \PYG{n}{s} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{bop\PYGZus{}right\PYGZus{}distributive} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{add} \PYG{n}{mul} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+     \PYG{n}{bop\PYGZus{}right\PYGZus{}distributive} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{o}{(}\PYG{n}{uop\PYGZus{}predicate\PYGZus{}reduce} \PYG{n}{s} \PYG{n}{P}\PYG{o}{)} \PYG{n}{eq}\PYG{o}{)}
+                              \PYG{o}{(}\PYG{n}{bop\PYGZus{}fpr} \PYG{n}{s} \PYG{n}{P} \PYG{n}{add}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}fpr} \PYG{n}{s} \PYG{n}{P} \PYG{n}{mul}\PYG{o}{).}
+\end{Verbatim}

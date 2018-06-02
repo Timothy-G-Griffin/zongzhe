@@ -21,4 +21,25 @@
 \contentsline {listing}{\numberline {21}{\ignorespaces Proof of Properties for Bioid (None Distributive Semiring)}}{54}
 \contentsline {listing}{\numberline {22}{\ignorespaces Commutative Selective Semiring}}{54}
 \contentsline {listing}{\numberline {23}{\ignorespaces Selective None Distributive Semiring}}{54}
-\contentsline {listing}{\numberline {24}{\ignorespaces Predicate Definition and Properties}}{55}
+\contentsline {listing}{\numberline {24}{\ignorespaces Traditional Representation of Reduction}}{55}
+\contentsline {listing}{\numberline {25}{\ignorespaces Proof of Properties on Equality}}{55}
+\contentsline {listing}{\numberline {26}{\ignorespaces Proof of Properties on Binary Operator}}{56}
+\contentsline {listing}{\numberline {27}{\ignorespaces Distributive on Binary Operators}}{56}
+\contentsline {listing}{\numberline {28}{\ignorespaces Generalized Representation of Reduction}}{57}
+\contentsline {listing}{\numberline {29}{\ignorespaces Equality Isomorphism Between Two Representation}}{57}
+\contentsline {listing}{\numberline {30}{\ignorespaces Binary Operation Isomorphism Between Two Representation}}{57}
+\contentsline {listing}{\numberline {31}{\ignorespaces Distributive Isomorphism Between Two Representation}}{58}
+\contentsline {listing}{\numberline {32}{\ignorespaces Isomorphism Between Pseudo and Real Properties}}{58}
+\contentsline {listing}{\numberline {33}{\ignorespaces Predicate Definition and Properties}}{59}
+\contentsline {listing}{\numberline {34}{\ignorespaces Predicate Reduction}}{59}
+\contentsline {listing}{\numberline {35}{\ignorespaces Associative For Predicate}}{59}
+\contentsline {listing}{\numberline {36}{\ignorespaces Distributive For Predicate}}{60}
+\contentsline {listing}{\numberline {37}{\ignorespaces Composition implies Classical}}{60}
+\contentsline {listing}{\numberline {38}{\ignorespaces Preserving Order implies Classical}}{61}
+\contentsline {listing}{\numberline {39}{\ignorespaces Preserving Order implies Classical}}{61}
+\contentsline {listing}{\numberline {40}{\ignorespaces Properties for the Predicate}}{62}
+\contentsline {listing}{\numberline {41}{\ignorespaces Equality Proof}}{62}
+\contentsline {listing}{\numberline {42}{\ignorespaces Proof for Min Operator}}{62}
+\contentsline {listing}{\numberline {43}{\ignorespaces Proof for Plus Operator}}{62}
+\contentsline {listing}{\numberline {44}{\ignorespaces Proof for Semiring Property}}{63}
+\contentsline {listing}{\numberline {45}{\ignorespaces Min Plus With Ceiling Semiring}}{63}

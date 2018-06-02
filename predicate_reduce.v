@@ -475,7 +475,7 @@ Proof. intros s bS P_true P_cong is_id H s1 s2 H1 H2.
        discriminate H4.
 Qed.        
 
-Lemma conj2 :
+(* Lemma conj2 :
   ∀ (s : S) (bS : binary_op S),
     pred_true S P s ->
     pred_congruence S eq P -> 
@@ -502,7 +502,7 @@ Lemma conj3 :
     
     pred_preserve_order S P eq bS <-> 
     bop_right_uop_invariant S eq (bop_reduce (uop_predicate_reduce s P) bS) (uop_predicate_reduce s P).
-Admitted.
+Admitted. *)
 
 (*p
 
@@ -540,7 +540,7 @@ Lemma bop_associative_fpr_compositional :
     pred_bop_compose S P bS ->
     bop_congruence S eq bS ->         
     bop_associative S eq bS ->
-        bop_associative S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P bS).      
+    bop_associative S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P bS).      
 Proof. intros s bS Ps P_cong H cong assoc.
        apply bop_full_reduce_left_right_invariant_implies_associative; auto.
        apply uop_predicate_reduce_idempotent; auto.
@@ -665,7 +665,7 @@ Lemma bop_fpr_left_distributive :
      bop_is_id S eq add s ->     
      bop_is_ann S eq mul s ->
      bop_left_distributive S eq add mul ->
-       bop_left_distributive S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P add) (bop_fpr s P mul).
+    bop_left_distributive S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P add) (bop_fpr s P mul).
 Proof. intros s add mul P_true congP dadd dmul cong_add cong_mul s_id s_ann ldist a b c.
        assert (add_false : ∀ (a b : S), P a = false -> P b = false -> P (add a b) = false).
           apply pred_bop_decompose_contrapositive; auto. 

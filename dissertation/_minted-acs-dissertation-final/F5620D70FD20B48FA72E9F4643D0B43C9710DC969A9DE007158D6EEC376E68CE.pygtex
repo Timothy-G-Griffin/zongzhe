@@ -1,0 +1,24 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+  \PYG{k+kn}{Variable} \PYG{n}{refS}   \PYG{o}{:} \PYG{n}{brel\PYGZus{}reflexive} \PYG{n}{S} \PYG{n}{eqS}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{symS}   \PYG{o}{:} \PYG{n}{brel\PYGZus{}symmetric} \PYG{n}{S} \PYG{n}{eqS}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{transS} \PYG{o}{:} \PYG{n}{brel\PYGZus{}transitive} \PYG{n}{S} \PYG{n}{eqS}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{r\PYGZus{}cong}  \PYG{o}{:} \PYG{n}{uop\PYGZus{}congruence} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{r}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{r\PYGZus{}idem}  \PYG{o}{:} \PYG{n}{uop\PYGZus{}idempotent} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{r}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{b\PYGZus{}cong} \PYG{o}{:} \PYG{n}{bop\PYGZus{}congruence} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{b}\PYG{o}{.}
+
+  \PYG{k+kn}{Lemma} \PYG{n}{bop\PYGZus{}full\PYGZus{}reduce\PYGZus{}pseudo\PYGZus{}associative\PYGZus{}implies\PYGZus{}associative} \PYG{o}{:}
+         \PYG{n}{bop\PYGZus{}pseudo\PYGZus{}associative} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{r} \PYG{n}{bS} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+         \PYG{n}{bop\PYGZus{}associative} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{eqS}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}full\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{bS}\PYG{o}{).}
+  \PYG{k+kn}{Lemma} \PYG{n}{bop\PYGZus{}full\PYGZus{}reduce\PYGZus{}associative\PYGZus{}implies\PYGZus{}pseudo\PYGZus{}associative} \PYG{o}{:}
+         \PYG{n}{bop\PYGZus{}associative} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{eqS}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}full\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{bS}\PYG{o}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+         \PYG{n}{bop\PYGZus{}pseudo\PYGZus{}associative} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{r} \PYG{n}{bS}\PYG{o}{.}
+
+  \PYG{k+kn}{Lemma} \PYG{n}{bop\PYGZus{}reduce\PYGZus{}pseudo\PYGZus{}left\PYGZus{}distributivity\PYGZus{}iso} \PYG{o}{:}
+         \PYG{n}{bop\PYGZus{}left\PYGZus{}distributive} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{eq}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}full\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{add}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}full\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{mul}\PYG{o}{).}
+         \PYG{o}{\PYGZlt{}\PYGZhy{}\PYGZgt{}}
+         \PYG{n}{bop\PYGZus{}pseudo\PYGZus{}left\PYGZus{}distributive} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{r} \PYG{n}{add} \PYG{n}{mul}\PYG{o}{.}
+  \PYG{k+kn}{Lemma} \PYG{n}{bop\PYGZus{}reduce\PYGZus{}pseudo\PYGZus{}right\PYGZus{}distributivity\PYGZus{}iso} \PYG{o}{:}
+         \PYG{n}{bop\PYGZus{}right\PYGZus{}distributive} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{eq}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}full\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{add}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}full\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{mul}\PYG{o}{).}
+         \PYG{o}{\PYGZlt{}\PYGZhy{}\PYGZgt{}}
+         \PYG{n}{bop\PYGZus{}pseudo\PYGZus{}right\PYGZus{}distributive} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{r} \PYG{n}{add} \PYG{n}{mul}\PYG{o}{.}
+\end{Verbatim}

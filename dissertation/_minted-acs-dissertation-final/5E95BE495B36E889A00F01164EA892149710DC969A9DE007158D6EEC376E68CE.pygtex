@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}bop\PYGZus{}left\PYGZus{}dist\PYGZus{}iso} \PYG{o}{:} \PYG{n}{bop\PYGZus{}left\PYGZus{}distributive} \PYG{n}{T} \PYG{n}{eqT} \PYG{n}{addT} \PYG{n}{mulT} \PYG{o}{\PYGZlt{}\PYGZhy{}\PYGZgt{}}
+                              \PYG{n}{bop\PYGZus{}left\PYGZus{}distributive} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{eq}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}full\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{add}\PYG{o}{)}
+                                                                         \PYG{o}{(}\PYG{n}{bop\PYGZus{}full\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{mul}\PYG{o}{).}
+\PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}bop\PYGZus{}right\PYGZus{}dist\PYGZus{}iso} \PYG{o}{:} \PYG{n}{bop\PYGZus{}right\PYGZus{}distributive} \PYG{n}{T} \PYG{n}{eqT} \PYG{n}{addT} \PYG{n}{mulT} \PYG{o}{\PYGZlt{}\PYGZhy{}\PYGZgt{}}
+                               \PYG{n}{bop\PYGZus{}right\PYGZus{}distributive} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{eq}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}full\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{add}\PYG{o}{)}
+                                                                           \PYG{o}{(}\PYG{n}{bop\PYGZus{}full\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{mul}\PYG{o}{).}
+\end{Verbatim}

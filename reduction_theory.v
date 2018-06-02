@@ -269,6 +269,33 @@ Proof. split.
          exact J8.
  Qed.
 
+ Lemma red_sel_iso_left :  bop_selective red_Type red_eq red_bop -> bop_selective S (brel_reduce r eqS) (bop_full_reduce r b).
+ Proof. intros H s1 s2. compute.
+  assert (K := H (inj s1) (inj s2)). compute in K.
+  destruct K as [K | K]. left. 
+  assert (A := r_idem (b (r s1) (r s2)) ).
+  exact (transS _ _ _ A K).
+  right. assert (A := r_idem (b (r s1) (r s2)) ).
+  exact (transS _ _ _ A K).
+ Qed.
+
+ Lemma red_sel_iso_right :  bop_selective S (brel_reduce r eqS) (bop_full_reduce r b) -> bop_selective red_Type red_eq red_bop.
+ Proof. intros H1 [s1 p1] [s2 p2]. compute.
+  assert (K := H1 s1 s2). compute in K. 
+  unfold Pr in p1. unfold Pr in p2.
+  destruct K as [K | K]. left. 
+  assert (A := r_idem (b (r s1) (r s2)) ). apply symS in A.
+  assert (B := transS _ _ _ A K).
+  assert (C := b_cong (r s1) (r s2) s1 s2 p1 p2). apply r_cong in C. apply symS in C.
+  assert (D := transS _ _ _ C B).
+  exact (transS _ _ _ D p1).
+  right.
+  assert (A := r_idem (b (r s1) (r s2)) ). apply symS in A.
+  assert (B := transS _ _ _ A K).
+  assert (C := b_cong (r s1) (r s2) s1 s2 p1 p2). apply r_cong in C. apply symS in C.
+  assert (D := transS _ _ _ C B).
+  exact (transS _ _ _ D p2).
+ Qed.
 
 (* 
    Can't use <-> for existentials!  So break up into -> and <- lemmas. 

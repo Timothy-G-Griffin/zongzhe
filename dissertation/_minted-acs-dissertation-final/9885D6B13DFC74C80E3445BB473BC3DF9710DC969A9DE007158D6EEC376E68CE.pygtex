@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}cong\PYGZus{}iso} \PYG{o}{:} \PYG{n}{bop\PYGZus{}congruence} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{n}{red\PYGZus{}bop} \PYG{o}{\PYGZlt{}\PYGZhy{}\PYGZgt{}}
+                     \PYG{n}{bop\PYGZus{}congruence} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{eqS}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}full\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{b}\PYG{o}{).}
+\PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}bop\PYGZus{}ass\PYGZus{}iso} \PYG{o}{:} \PYG{n}{bop\PYGZus{}associative} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{n}{red\PYGZus{}bop} \PYG{o}{\PYGZlt{}\PYGZhy{}\PYGZgt{}}
+                        \PYG{n}{bop\PYGZus{}pseudo\PYGZus{}associative} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{r} \PYG{n}{b}\PYG{o}{.}
+\PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}comm\PYGZus{}iso} \PYG{o}{:}  \PYG{n}{bop\PYGZus{}commutative} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{n}{red\PYGZus{}bop} \PYG{o}{\PYGZlt{}\PYGZhy{}\PYGZgt{}}
+                      \PYG{n}{bop\PYGZus{}commutative} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{eqS}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}full\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{b}\PYG{o}{).}
+\PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}not\PYGZus{}comm\PYGZus{}iso} \PYG{o}{:}  \PYG{n}{bop\PYGZus{}not\PYGZus{}commutative} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{n}{red\PYGZus{}bop} \PYG{o}{\PYGZlt{}\PYGZhy{}\PYGZgt{}}
+                          \PYG{n}{bop\PYGZus{}not\PYGZus{}commutative} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{eqS}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}full\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{b}\PYG{o}{).}
+\PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}sel\PYGZus{}iso} \PYG{o}{:}  \PYG{n}{bop\PYGZus{}selective} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{n}{red\PYGZus{}bop} \PYG{o}{\PYGZlt{}\PYGZhy{}\PYGZgt{}}
+                     \PYG{n}{bop\PYGZus{}selective} \PYG{n}{S} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{eqS}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}full\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{b}\PYG{o}{).}
+\end{Verbatim}

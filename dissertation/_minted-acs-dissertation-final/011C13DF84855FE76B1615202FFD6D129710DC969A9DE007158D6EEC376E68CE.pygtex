@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Lemma} \PYG{n}{P\PYGZus{}congruence} \PYG{o}{(}\PYG{n}{ceiling} \PYG{o}{:} \PYG{k+kt}{nat}\PYG{o}{):} \PYG{n}{pred\PYGZus{}congruence} \PYG{k+kt}{nat} \PYG{n}{brel\PYGZus{}eq\PYGZus{}nat} \PYG{o}{(}\PYG{n}{P} \PYG{n}{ceiling}\PYG{o}{).}
+\PYG{k+kn}{Lemma} \PYG{n}{P\PYGZus{}true} \PYG{o}{(}\PYG{n}{ceiling} \PYG{o}{:} \PYG{k+kt}{nat}\PYG{o}{):} \PYG{n}{pred\PYGZus{}true} \PYG{k+kt}{nat} \PYG{o}{(}\PYG{n}{P} \PYG{n}{ceiling}\PYG{o}{)} \PYG{n}{ceiling}\PYG{o}{.}
+\PYG{k+kn}{Lemma} \PYG{n}{P\PYGZus{}min\PYGZus{}decompose} \PYG{o}{(}\PYG{n}{ceiling} \PYG{o}{:} \PYG{k+kt}{nat}\PYG{o}{):} \PYG{n}{pred\PYGZus{}bop\PYGZus{}decompose} \PYG{k+kt}{nat} \PYG{o}{(}\PYG{n}{P} \PYG{n}{ceiling}\PYG{o}{)} \PYG{n}{min}\PYG{o}{.}
+\PYG{k+kn}{Lemma} \PYG{n}{P\PYGZus{}min\PYGZus{}preserve\PYGZus{}order} \PYG{o}{(}\PYG{n}{ceiling} \PYG{o}{:} \PYG{k+kt}{nat}\PYG{o}{):} \PYG{n}{pred\PYGZus{}preserve\PYGZus{}order} \PYG{k+kt}{nat} \PYG{o}{(}\PYG{n}{P} \PYG{n}{ceiling}\PYG{o}{)} \PYG{n}{brel\PYGZus{}eq\PYGZus{}nat} \PYG{n}{min}\PYG{o}{.}
+\PYG{k+kn}{Lemma} \PYG{n}{P\PYGZus{}plus\PYGZus{}compose} \PYG{o}{(}\PYG{n}{ceiling} \PYG{o}{:} \PYG{k+kt}{nat}\PYG{o}{):} \PYG{n}{pred\PYGZus{}bop\PYGZus{}compose} \PYG{k+kt}{nat} \PYG{o}{(}\PYG{n}{P} \PYG{n}{ceiling}\PYG{o}{)} \PYG{n}{plus}\PYG{o}{.}
+\end{Verbatim}

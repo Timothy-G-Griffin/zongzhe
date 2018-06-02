@@ -1,19 +1,14 @@
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{k+kn}{Definition} \PYG{n}{uop\PYGZus{}preserves\PYGZus{}id} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eq} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{b} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{o}{:} \PYG{n}{unary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=}
   \PYG{err}{∀} \PYG{o}{(}\PYG{n}{s} \PYG{o}{:} \PYG{n}{S}\PYG{o}{),} \PYG{n}{bop\PYGZus{}is\PYGZus{}id} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{b} \PYG{n}{s} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{eq} \PYG{o}{(}\PYG{n}{r} \PYG{n}{s}\PYG{o}{)} \PYG{n}{s} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{.}
-
 \PYG{k+kn}{Definition} \PYG{n}{uop\PYGZus{}preserves\PYGZus{}ann} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eq} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{b} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{o}{:} \PYG{n}{unary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=}
   \PYG{err}{∀} \PYG{o}{(}\PYG{n}{s} \PYG{o}{:} \PYG{n}{S}\PYG{o}{),} \PYG{n}{bop\PYGZus{}is\PYGZus{}ann} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{b} \PYG{n}{s} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{eq} \PYG{o}{(}\PYG{n}{r} \PYG{n}{s}\PYG{o}{)} \PYG{n}{s} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{.}
-
 \PYG{k+kn}{Definition} \PYG{n}{uop\PYGZus{}congruence} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eq} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{o}{:} \PYG{n}{unary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=}
   \PYG{err}{∀} \PYG{o}{(}\PYG{n}{s1} \PYG{n}{s2} \PYG{o}{:} \PYG{n}{S}\PYG{o}{),} \PYG{n}{eq} \PYG{n}{s1} \PYG{n}{s2} \PYG{o}{=} \PYG{n+nb+bp}{true} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{eq} \PYG{o}{(}\PYG{n}{r} \PYG{n}{s1}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{n}{s2}\PYG{o}{)} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{.}
-
 \PYG{k+kn}{Definition} \PYG{n}{uop\PYGZus{}idempotent} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eq} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{o}{:} \PYG{n}{unary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=}
   \PYG{err}{∀} \PYG{n}{s} \PYG{o}{:} \PYG{n}{S}\PYG{o}{,} \PYG{n}{eq} \PYG{o}{(}\PYG{n}{r} \PYG{o}{(}\PYG{n}{r} \PYG{n}{s}\PYG{o}{))} \PYG{o}{(}\PYG{n}{r} \PYG{n}{s}\PYG{o}{)} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{.}
-
 \PYG{k+kn}{Definition} \PYG{n}{bop\PYGZus{}left\PYGZus{}uop\PYGZus{}invariant} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eq} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{b} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{o}{:} \PYG{n}{unary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=}
   \PYG{err}{∀} \PYG{n}{s1} \PYG{n}{s2} \PYG{o}{:} \PYG{n}{S}\PYG{o}{,} \PYG{n}{eq} \PYG{o}{(}\PYG{n}{b} \PYG{o}{(}\PYG{n}{r} \PYG{n}{s1}\PYG{o}{)} \PYG{n}{s2}\PYG{o}{)} \PYG{o}{(}\PYG{n}{b} \PYG{n}{s1} \PYG{n}{s2}\PYG{o}{)}  \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{.}
-
 \PYG{k+kn}{Definition} \PYG{n}{bop\PYGZus{}right\PYGZus{}uop\PYGZus{}invariant} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eq} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{b} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{o}{:} \PYG{n}{unary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=}
   \PYG{err}{∀} \PYG{n}{s1} \PYG{n}{s2} \PYG{o}{:} \PYG{n}{S}\PYG{o}{,} \PYG{n}{eq} \PYG{o}{(}\PYG{n}{b} \PYG{n}{s1} \PYG{o}{(}\PYG{n}{r} \PYG{n}{s2}\PYG{o}{))} \PYG{o}{(}\PYG{n}{b} \PYG{n}{s1} \PYG{n}{s2}\PYG{o}{)}  \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{.}
 \end{Verbatim}

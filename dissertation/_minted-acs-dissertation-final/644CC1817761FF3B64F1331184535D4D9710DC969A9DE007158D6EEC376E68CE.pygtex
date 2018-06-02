@@ -1,16 +1,12 @@
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{k+kn}{Definition} \PYG{n}{brel\PYGZus{}complement} \PYG{o}{:} \PYG{err}{∀} \PYG{o}{\PYGZob{}}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{\PYGZcb{},} \PYG{n}{brel} \PYG{n}{S} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{brel} \PYG{n}{S}
 \PYG{o}{:=} \PYG{o}{λ} \PYG{o}{\PYGZob{}}\PYG{n}{S}\PYG{o}{\PYGZcb{}} \PYG{n}{r} \PYG{n}{x} \PYG{n}{y}\PYG{o}{,}  \PYG{k}{if} \PYG{o}{(}\PYG{n}{r} \PYG{n}{x} \PYG{n}{y}\PYG{o}{)} \PYG{k}{then} \PYG{n+nb+bp}{false} \PYG{k}{else} \PYG{n+nb+bp}{true}\PYG{o}{.}
-
 \PYG{k+kn}{Definition} \PYG{n}{brel\PYGZus{}conjunction} \PYG{o}{:} \PYG{err}{∀} \PYG{o}{\PYGZob{}}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{\PYGZcb{},} \PYG{n}{brel} \PYG{n}{S} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{brel} \PYG{n}{S} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{brel} \PYG{n}{S}
 \PYG{o}{:=} \PYG{o}{λ} \PYG{o}{\PYGZob{}}\PYG{n}{S}\PYG{o}{\PYGZcb{}} \PYG{n}{r1} \PYG{n}{r2} \PYG{n}{x} \PYG{n}{y}\PYG{o}{,}  \PYG{o}{(}\PYG{n}{r1} \PYG{n}{x} \PYG{n}{y}\PYG{o}{)} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{o}{(}\PYG{n}{r2} \PYG{n}{x} \PYG{n}{y}\PYG{o}{).}
-
 \PYG{k+kn}{Definition} \PYG{n}{brel\PYGZus{}llte} \PYG{o}{:} \PYG{err}{∀} \PYG{o}{\PYGZob{}}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{\PYGZcb{},} \PYG{n}{brel} \PYG{n}{S} \PYG{err}{→} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S} \PYG{err}{→} \PYG{n}{brel} \PYG{n}{S}
 \PYG{o}{:=} \PYG{o}{λ} \PYG{o}{\PYGZob{}}\PYG{n}{S}\PYG{o}{\PYGZcb{}} \PYG{n}{eq} \PYG{n}{b} \PYG{n}{x} \PYG{n}{y}\PYG{o}{,} \PYG{n}{eq} \PYG{n}{x} \PYG{o}{(}\PYG{n}{b} \PYG{n}{x} \PYG{n}{y}\PYG{o}{).}
-
 \PYG{k+kn}{Definition} \PYG{n}{brel\PYGZus{}llt} \PYG{o}{:} \PYG{err}{∀} \PYG{o}{\PYGZob{}}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{\PYGZcb{},} \PYG{n}{brel} \PYG{n}{S} \PYG{err}{→} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S} \PYG{err}{→} \PYG{n}{brel} \PYG{n}{S}
 \PYG{o}{:=} \PYG{o}{λ} \PYG{o}{\PYGZob{}}\PYG{n}{S}\PYG{o}{\PYGZcb{}} \PYG{n}{eq} \PYG{n}{b}\PYG{o}{,} \PYG{n}{brel\PYGZus{}conjunction} \PYG{o}{(}\PYG{n}{brel\PYGZus{}llte} \PYG{n}{eq} \PYG{n}{b}\PYG{o}{)} \PYG{o}{(}\PYG{n}{brel\PYGZus{}complement} \PYG{n}{eq}\PYG{o}{).}
-
 \PYG{k+kn}{Definition} \PYG{n}{bop\PYGZus{}llex} \PYG{o}{:} \PYG{err}{∀} \PYG{o}{\PYGZob{}}\PYG{n}{S} \PYG{n}{T} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{\PYGZcb{},} \PYG{n}{brel} \PYG{n}{S} \PYG{err}{→} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S} \PYG{err}{→} \PYG{n}{binary\PYGZus{}op} \PYG{n}{T} \PYG{err}{→} \PYG{n}{binary\PYGZus{}op} \PYG{o}{(}\PYG{n}{S} \PYG{o}{*} \PYG{n}{T}\PYG{o}{)}
 \PYG{o}{:=} \PYG{o}{λ} \PYG{o}{\PYGZob{}}\PYG{n}{S} \PYG{n}{T}\PYG{o}{\PYGZcb{}} \PYG{n}{eq} \PYG{n}{b1} \PYG{n}{b2} \PYG{n}{x} \PYG{n}{y}\PYG{o}{,}
    \PYG{k}{match} \PYG{n}{x}\PYG{o}{,} \PYG{n}{y} \PYG{k}{with}

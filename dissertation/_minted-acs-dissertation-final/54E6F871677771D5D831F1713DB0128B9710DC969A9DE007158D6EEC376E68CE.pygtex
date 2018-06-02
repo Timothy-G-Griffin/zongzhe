@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+  \PYG{k+kn}{Variable} \PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{b} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{r} \PYG{o}{:} \PYG{n}{unary\PYGZus{}op} \PYG{n}{S}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{eqS}    \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{.}
+
+  \PYG{k+kn}{Definition} \PYG{n}{Pr} \PYG{o}{(}\PYG{n}{x} \PYG{o}{:} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=} \PYG{n}{eqS} \PYG{o}{(}\PYG{n}{r} \PYG{n}{x}\PYG{o}{)} \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{.}
+  \PYG{k+kn}{Definition} \PYG{n}{red\PYGZus{}Type}   \PYG{o}{:=} \PYG{o}{\PYGZob{}} \PYG{n}{x} \PYG{o}{:} \PYG{n}{S} \PYG{o}{\PYGZam{}} \PYG{n}{Pr} \PYG{n}{x}\PYG{o}{\PYGZcb{}.}
+  \PYG{k+kn}{Definition} \PYG{n}{red\PYGZus{}eq} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{red\PYGZus{}Type} \PYG{o}{:=} \PYG{o}{λ} \PYG{n}{p1} \PYG{n}{p2}\PYG{o}{,} \PYG{n}{eqS} \PYG{o}{((}\PYG{n}{projT1} \PYG{n}{p1}\PYG{o}{))} \PYG{o}{((}\PYG{n}{projT1} \PYG{n}{p2}\PYG{o}{)).}
+  \PYG{k+kn}{Definition} \PYG{n}{red\PYGZus{}bop} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{red\PYGZus{}Type} \PYG{o}{:=}
+    \PYG{o}{λ} \PYG{n}{p1} \PYG{n}{p2}\PYG{o}{,}  \PYG{n}{existT} \PYG{n}{Pr} \PYG{o}{(}\PYG{n}{bop\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{b} \PYG{o}{(}\PYG{n}{projT1} \PYG{n}{p1}\PYG{o}{)} \PYG{o}{(}\PYG{n}{projT1} \PYG{n}{p2}\PYG{o}{))} \PYG{o}{(}\PYG{n}{Pr\PYGZus{}br} \PYG{n}{p1} \PYG{n}{p2}\PYG{o}{).}
+\end{Verbatim}

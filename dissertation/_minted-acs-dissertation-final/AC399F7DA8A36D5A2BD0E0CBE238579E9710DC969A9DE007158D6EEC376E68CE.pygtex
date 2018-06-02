@@ -1,0 +1,20 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+  \PYG{k+kn}{Definition} \PYG{n}{T} \PYG{o}{:} \PYG{k+kt}{Type} \PYG{o}{:=} \PYG{n}{red\PYGZus{}Type} \PYG{n}{S} \PYG{n}{r} \PYG{n}{eq}\PYG{o}{.}
+  \PYG{k+kn}{Definition} \PYG{n}{eqT} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{T} \PYG{o}{:=} \PYG{n}{red\PYGZus{}eq} \PYG{n}{S} \PYG{n}{r} \PYG{n}{eq}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{add} \PYG{n}{mul} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{.}
+  \PYG{k+kn}{Definition} \PYG{n}{addT} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{T} \PYG{o}{:=} \PYG{n}{red\PYGZus{}bop} \PYG{n}{S} \PYG{n}{add} \PYG{n}{r} \PYG{n}{eq} \PYG{n}{r\PYGZus{}idem}\PYG{o}{.}
+  \PYG{k+kn}{Definition} \PYG{n}{mulT} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{T} \PYG{o}{:=} \PYG{n}{red\PYGZus{}bop} \PYG{n}{S} \PYG{n}{mul} \PYG{n}{r} \PYG{n}{eq} \PYG{n}{r\PYGZus{}idem}\PYG{o}{.}
+
+  \PYG{k+kn}{Lemma} \PYG{n}{addT\PYGZus{}mulT\PYGZus{}left\PYGZus{}distributive} \PYG{o}{:}
+    \PYG{n}{bop\PYGZus{}left\PYGZus{}uop\PYGZus{}invariant} \PYG{n}{S} \PYG{n}{eq} \PYG{o}{(}\PYG{n}{bop\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{add}\PYG{o}{)} \PYG{n}{r} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+    \PYG{n}{bop\PYGZus{}right\PYGZus{}uop\PYGZus{}invariant} \PYG{n}{S} \PYG{n}{eq} \PYG{o}{(}\PYG{n}{bop\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{add}\PYG{o}{)} \PYG{n}{r} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+    \PYG{n}{bop\PYGZus{}right\PYGZus{}uop\PYGZus{}invariant} \PYG{n}{S} \PYG{n}{eq} \PYG{o}{(}\PYG{n}{bop\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{mul}\PYG{o}{)} \PYG{n}{r} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+    \PYG{n}{bop\PYGZus{}left\PYGZus{}distributive} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{add} \PYG{n}{mul} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+    \PYG{n}{bop\PYGZus{}left\PYGZus{}distributive} \PYG{n}{T} \PYG{n}{eqT} \PYG{n}{addT} \PYG{n}{mulT}\PYG{o}{.}
+  \PYG{k+kn}{Lemma} \PYG{n}{addT\PYGZus{}mulT\PYGZus{}right\PYGZus{}distributive} \PYG{o}{:}
+    \PYG{n}{bop\PYGZus{}left\PYGZus{}uop\PYGZus{}invariant} \PYG{n}{S} \PYG{n}{eq} \PYG{o}{(}\PYG{n}{bop\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{add}\PYG{o}{)} \PYG{n}{r} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+    \PYG{n}{bop\PYGZus{}right\PYGZus{}uop\PYGZus{}invariant} \PYG{n}{S} \PYG{n}{eq} \PYG{o}{(}\PYG{n}{bop\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{add}\PYG{o}{)} \PYG{n}{r} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+    \PYG{n}{bop\PYGZus{}left\PYGZus{}uop\PYGZus{}invariant} \PYG{n}{S} \PYG{n}{eq} \PYG{o}{(}\PYG{n}{bop\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{mul}\PYG{o}{)} \PYG{n}{r} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+    \PYG{n}{bop\PYGZus{}right\PYGZus{}distributive} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{add} \PYG{n}{mul} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+    \PYG{n}{bop\PYGZus{}right\PYGZus{}distributive} \PYG{n}{T} \PYG{n}{eqT} \PYG{n}{addT} \PYG{n}{mulT}\PYG{o}{.}
+\end{Verbatim}

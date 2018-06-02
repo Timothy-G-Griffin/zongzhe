@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{brel\PYGZus{}eq\PYGZus{}nat}  \PYG{o}{:} \PYG{n}{brel} \PYG{k+kt}{nat}  \PYG{o}{:=} \PYG{n}{Arith}\PYG{o}{.}\PYG{n}{EqNat}\PYG{o}{.}\PYG{n}{beq\PYGZus{}nat}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{min} \PYG{o}{:=} \PYG{n}{Nat}\PYG{o}{.}\PYG{n}{min}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{plus} \PYG{o}{:=} \PYG{n}{Nat}\PYG{o}{.}\PYG{n}{add}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{P} \PYG{o}{(}\PYG{n}{ceiling} \PYG{o}{:} \PYG{k+kt}{nat}\PYG{o}{):} \PYG{k+kt}{nat} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kt}{bool} \PYG{o}{:=} \PYG{o}{λ} \PYG{n}{n}\PYG{o}{,} \PYG{n}{ceiling} \PYG{o}{\PYGZlt{}=?} \PYG{n}{n}\PYG{o}{.}
+\end{Verbatim}

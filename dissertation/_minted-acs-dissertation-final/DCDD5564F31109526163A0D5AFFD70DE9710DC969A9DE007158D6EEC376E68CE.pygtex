@@ -1,18 +1,13 @@
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{k+kn}{Definition} \PYG{n}{pred} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)}              \PYG{o}{:=} \PYG{n}{S} \PYG{err}{→} \PYG{k+kt}{bool}\PYG{o}{.}
-
 \PYG{k+kn}{Definition} \PYG{n}{pred\PYGZus{}true} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{P} \PYG{o}{:} \PYG{n}{pred} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{s} \PYG{o}{:} \PYG{n}{S}\PYG{o}{)}
   \PYG{o}{:=} \PYG{n}{P} \PYG{n}{s} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{.}
-
 \PYG{k+kn}{Definition} \PYG{n}{pred\PYGZus{}congruence} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eq} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{P} \PYG{o}{:} \PYG{n}{pred} \PYG{n}{S}\PYG{o}{)}
   \PYG{o}{:=} \PYG{err}{∀} \PYG{o}{(}\PYG{n}{a} \PYG{n}{b} \PYG{o}{:} \PYG{n}{S}\PYG{o}{),} \PYG{n}{eq} \PYG{n}{a} \PYG{n}{b} \PYG{o}{=} \PYG{n+nb+bp}{true} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{P} \PYG{n}{a} \PYG{o}{=} \PYG{n}{P} \PYG{n}{b}\PYG{o}{.}
-
 \PYG{k+kn}{Definition} \PYG{n}{pred\PYGZus{}bop\PYGZus{}decompose} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{P} \PYG{o}{:} \PYG{n}{pred} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bS} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)}
   \PYG{o}{:=} \PYG{err}{∀} \PYG{o}{(}\PYG{n}{a} \PYG{n}{b} \PYG{o}{:} \PYG{n}{S}\PYG{o}{),} \PYG{n}{P} \PYG{o}{(}\PYG{n}{bS} \PYG{n}{a} \PYG{n}{b}\PYG{o}{)} \PYG{o}{=} \PYG{n+nb+bp}{true} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{o}{(}\PYG{n}{P} \PYG{n}{a} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{)} \PYG{o}{+} \PYG{o}{(}\PYG{n}{P} \PYG{n}{b} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{).}
-
 \PYG{k+kn}{Definition} \PYG{n}{pred\PYGZus{}bop\PYGZus{}compose} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{P} \PYG{o}{:} \PYG{n}{pred} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bS} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)}
   \PYG{o}{:=} \PYG{err}{∀} \PYG{o}{(}\PYG{n}{a} \PYG{n}{b} \PYG{o}{:} \PYG{n}{S}\PYG{o}{),} \PYG{o}{(}\PYG{n}{P} \PYG{n}{a} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{)} \PYG{o}{+} \PYG{o}{(}\PYG{n}{P} \PYG{n}{b} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{P} \PYG{o}{(}\PYG{n}{bS} \PYG{n}{a} \PYG{n}{b}\PYG{o}{)} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{.}
-
 \PYG{k+kn}{Definition} \PYG{n}{pred\PYGZus{}preserve\PYGZus{}order} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{P} \PYG{o}{:} \PYG{n}{pred} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eqS} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bS} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)}
   \PYG{o}{:=} \PYG{err}{∀} \PYG{o}{(}\PYG{n}{a} \PYG{n}{b} \PYG{o}{:} \PYG{n}{S}\PYG{o}{),} \PYG{n}{eqS} \PYG{o}{(}\PYG{n}{bS} \PYG{n}{a} \PYG{n}{b}\PYG{o}{)} \PYG{n}{a} \PYG{o}{=} \PYG{n+nb+bp}{true} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{P} \PYG{n}{a} \PYG{o}{=} \PYG{n+nb+bp}{true} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{P} \PYG{n}{b} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{.}
 \end{Verbatim}
