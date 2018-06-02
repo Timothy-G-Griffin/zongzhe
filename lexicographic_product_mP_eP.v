@@ -202,7 +202,6 @@ Proof. intros s1 s2 H1.
        assert (C := P_cong _ _ e); rewrite C in H1. left. auto. right. auto.
 Qed.
 
-
 Open Scope bool.
 
 Lemma orb_is_true_left : ∀ b1 b2 : bool, b1 || b2 = true → (b1 = true) + (b2 = true). 
@@ -350,7 +349,26 @@ Qed.
 
 Lemma bop_rap_mul_not_commutative : bop_not_commutative M brel_eq_M bop_rap_mul.
 Proof. exists ((0,inr(1::nil)),(0,inr(2::nil))).
-Admitted.
+       unfold bop_rap_mul,mul,bop_product.
+       unfold bop_fpr,uop_predicate_reduce,mul1,mul2.
+       unfold csdioid_mul,min_plus_ceiling_dioid,min_plus_dioid,bop_nat_plus.
+       unfold bop_fpr,uop_predicate_reduce,bop_full_reduce.
+       unfold P,reduce_annihilators.P. 
+       assert (A := One_not_Zero). unfold one1 in A. rewrite A. simpl.
+       assert (B : min_plus_ceiling_reduction.P ceiling 0 = false).
+       case_eq(ceiling); intro C. unfold zero1 in A. rewrite C in A. compute in A. rewrite C in A. discriminate A.
+       compute. auto.
+       rewrite B. unfold plus. simpl. rewrite B.
+       rewrite A. simpl.
+       unfold bop_list_app,elementary_path.P,bop_fpr,uop_predicate_reduce.
+       unfold appT,bop_add_ann,appS,bop_full_reduce,app. simpl.
+       unfold brel_eq_M,uop_rap,reduce_annihilators.uop_rap,reduce_annihilators.P.
+       unfold brel_reduce,uop_predicate_reduce. rewrite A; simpl.
+       unfold eqT,sbioid_eq,elementary_path_bioid,min_app_non_distributive_dioid.
+       unfold uop_list,uop_predicate_reduce,elementary_path.P,brel_reduce. simpl.
+       rewrite refN. simpl.
+       auto.                     
+Qed.
 
 Lemma bop_rap_mul_commutative_decidable : bop_commutative_decidable M brel_eq_M bop_rap_mul.
 Proof. right. apply bop_rap_mul_not_commutative.
@@ -497,13 +515,71 @@ Proof. apply lexicographic_product.bop_not_right_distributive.
 Qed. 
 
 Lemma bop_not_left_distributive_add_mul : properties.bop_not_left_distributive M brel_eq_M bop_rap_add bop_rap_mul.
-Proof. 
-Admitted.
+Proof. exists ((0,inr (1::nil)), (0,inr (1::nil)),(0,inr (2::3::nil))). 
+       unfold bop_rap_add,add,bop_fpr,bop_full_reduce.
+       unfold uop_predicate_reduce. simpl.
+       assert (A := One_not_Zero). unfold one1 in A. rewrite A. simpl.
+       rewrite refN. rewrite refN.
+       unfold add1,csdioid_add,min_plus_ceiling_dioid,min_plus_dioid. 
+       unfold bop_nat_min,bop_fpr,bop_full_reduce,uop_predicate_reduce.
+       assert (B : min_plus_ceiling_reduction.P ceiling 0 = false).
+       case_eq(ceiling); intro C. unfold zero1 in A. rewrite C in A. compute in A. rewrite C in A. discriminate A.
+       compute. auto. rewrite B. simpl. rewrite B. rewrite A. simpl.
+       unfold bop_rap_mul,bop_fpr,uop_predicate_reduce,bop_full_reduce.
+       simpl. rewrite A. simpl.
+       unfold mul1,csdioid_mul,min_plus_ceiling_dioid,min_plus_dioid.
+       unfold bop_nat_plus,bop_fpr,uop_predicate_reduce,bop_full_reduce.
+       rewrite B. simpl. rewrite B. rewrite A. simpl.
+       rewrite refN. simpl. rewrite A. simpl.
+       assert (C := brel_symmetric_false nat eqN symN _ _ A).
+       rewrite C. rewrite refN. simpl. rewrite B. unfold zero1.
+       assert (D : min_plus_ceiling_reduction.P ceiling ceiling = true). apply min_plus_ceiling_reduction.P_true.
+       rewrite D. 
+       assert (E : min ceiling 0 = 0).
+       case_eq(ceiling). auto. auto.
+       rewrite E. rewrite B. unfold zero1 in C. rewrite C. unfold zero1 in A. rewrite A. simpl.
+       unfold brel_llt.  unfold brel_conjunction. unfold brel_llte.
+       rewrite D. rewrite B. rewrite E. rewrite B. rewrite C. simpl.
+       unfold mul2,sbioid_mul,elementary_path_bioid,min_app_non_distributive_dioid.
+       unfold bop_list_app,appT,bop_fpr,uop_predicate_reduce,bop_full_reduce. simpl.
+       unfold brel_eq_M,uop_rap,brel_reduce,reduce_annihilators.uop_rap,uop_predicate_reduce,reduce_annihilators.P.
+       unfold zero. rewrite refN. simpl. unfold zero1. rewrite A. simpl.
+       rewrite C. auto.
+Qed.
 
 
 Lemma bop_not_right_distributive_add_mul : properties.bop_not_right_distributive M brel_eq_M bop_rap_add bop_rap_mul.
-Proof. 
-Admitted.
+Proof. exists ((0,inr (1::nil)), (0,inr (1::nil)),(0,inr (2::3::nil))). 
+    unfold bop_rap_add,add,bop_fpr,bop_full_reduce.
+    unfold uop_predicate_reduce. simpl.
+    assert (A := One_not_Zero). unfold one1 in A. rewrite A. simpl.
+    rewrite refN. rewrite refN.
+    unfold add1,csdioid_add,min_plus_ceiling_dioid,min_plus_dioid. 
+    unfold bop_nat_min,bop_fpr,bop_full_reduce,uop_predicate_reduce.
+    assert (B : min_plus_ceiling_reduction.P ceiling 0 = false).
+    case_eq(ceiling); intro C. unfold zero1 in A. rewrite C in A. compute in A. rewrite C in A. discriminate A.
+    compute. auto. rewrite B. simpl. rewrite B. rewrite A. simpl.
+    unfold bop_rap_mul,bop_fpr,uop_predicate_reduce,bop_full_reduce.
+    simpl. rewrite A. simpl.
+    unfold mul1,csdioid_mul,min_plus_ceiling_dioid,min_plus_dioid.
+    unfold bop_nat_plus,bop_fpr,uop_predicate_reduce,bop_full_reduce.
+    rewrite B. simpl. rewrite B. rewrite A. simpl.
+    rewrite refN. simpl. rewrite A. simpl.
+    assert (C := brel_symmetric_false nat eqN symN _ _ A).
+    rewrite C. rewrite refN. simpl. rewrite B. unfold zero1.
+    assert (D : min_plus_ceiling_reduction.P ceiling ceiling = true). apply min_plus_ceiling_reduction.P_true.
+    rewrite D. 
+    assert (E : min ceiling 0 = 0).
+    case_eq(ceiling). auto. auto.
+    rewrite E. rewrite B. unfold zero1 in C. rewrite C. unfold zero1 in A. rewrite A. simpl.
+    unfold brel_llt.  unfold brel_conjunction. unfold brel_llte.
+    rewrite D. rewrite B. rewrite E. rewrite B. rewrite C. simpl.
+    unfold mul2,sbioid_mul,elementary_path_bioid,min_app_non_distributive_dioid.
+    unfold bop_list_app,appT,bop_fpr,uop_predicate_reduce,bop_full_reduce. simpl.
+    unfold brel_eq_M,uop_rap,brel_reduce,reduce_annihilators.uop_rap,uop_predicate_reduce,reduce_annihilators.P.
+    unfold zero. rewrite refN. simpl. unfold zero1. rewrite A. simpl.
+    rewrite C. auto.
+Qed.
 
 Lemma bop_left_distributive_add_mul_decidable : bop_left_distributive_decidable M brel_eq_M bop_rap_add bop_rap_mul.
 Proof. right. apply  bop_not_left_distributive_add_mul.

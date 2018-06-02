@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{brel} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)}              \PYG{o}{:=} \PYG{n}{S} \PYG{err}{→} \PYG{n}{S} \PYG{err}{→} \PYG{k+kt}{bool}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{unary\PYGZus{}op} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)}          \PYG{o}{:=} \PYG{n}{S} \PYG{err}{→} \PYG{n}{S}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{binary\PYGZus{}op} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)}         \PYG{o}{:=} \PYG{n}{S} \PYG{err}{→} \PYG{n}{S} \PYG{err}{→} \PYG{n}{S}\PYG{o}{.}
+\end{Verbatim}
