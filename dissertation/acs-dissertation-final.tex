@@ -105,15 +105,15 @@
 %document, although without care this can appear formulaic 
 %and tedious. Your call. 
 
-The discussion of our problem originated from a concept that was mentioned in the L11 Algebraic Path Problem class but was not introduced in detail \cite{griffin_2017}. In L11 class, the concept of reduction was proposed, along with some examples, and was used to solve some problems that we could not solve before. However, in addition to the definition of reduction provided in the lecture, the property of reduction has not been thoroughly discussed. At the same time, although we have found the definition of reduction and practical examples in other papers and thesis before, unfortunately, as in the case of L11, none of them discussed the property of reduction itself in detail and provided a soundness reasoning process. This makes the detailed discussion of reduction a valuable research topic, and becomes to the topic to our project.
+The problem of our dissertation is originated from a concept that was mentioned in the L11 Algebraic Path Problem lecture, which has been introduced but not in detail \cite{griffin_2017}. In L11 lecture, the concept of reduction was proposed, along with some examples, and was used to solve some problems that we could not solve before. However, in addition to the definition of reduction provided in the lecture, the property of reduction has not been thoroughly discussed. At the same time, although we have found the definition of reduction and practical examples in other papers and thesis before, unfortunately, none of them has discussed the property of reduction itself in detail and provided a soundness reasoning process. This makes the detailed discussion of reduction a valuable research topic, and becomes to the topic to our project.
 
 In our research, we will not only conduct detailed reasoning on the properties of reduction, but we will also accomplish the following three goals:
 \begin{itemize}
-  \item The definition in L11 and the definition of reduction in the previous paper are all defined mathematically, which leads to the representation of reduction become implementation unfriendly. Hence we tried to find an implementation friendly representation equivalent to traditional reduction representation.
+  \item The definition in L11 and the definition of reduction in the previous paper are all defined mathematically, which leads to the representation of reduction become implementation unfriendly. Therefore we tried to find an implementation friendly representation equivalent to traditional reduction representation.
   \item The functionality of classical reduction is limited, and it can not represent some reduction (especially one of the reduction we used in the construction of our path problem). We need a more generalized way to define the reduction, the generalized reduction, and also do reasoning on it.
-  \item Based on the application of reduction to the real problems, we define a class of reduction, predicate reduction on the basis of the previous section generalized reduction. Although predicate reduction is more concrete than generalized reduction (which means that there are some reductions that cannot be represented by predicate reduction), it is a fairly generalized reduction, and we can also use it to define a lot of concrete instance of reduction.
+  \item Based on the application of reduction to the real problems, we define a class of reduction, predicate reduction on the basis of generalized reduction. Although predicate reduction is more concrete than generalized reduction (which means that there are some reductions that cannot be represented by predicate reduction), it is a fairly generalized reduction, and we can also use it to define a lot of concrete instance of reduction.
 \end{itemize}
-Finally, we will use the predicate reduction defined earlier, combined with the properties of reduction and some other mathematical structures, to define the path problem we encountered in L11 lecture.
+Finally, we will use the predicate reduction combined with the properties of reduction and some other mathematical structures, to define the path problem we encountered in L11 lecture.
 
 
 \chapter{Background} 
@@ -131,10 +131,11 @@ Finally, we will use the predicate reduction defined earlier, combined with the 
 %the rest of the dissertation. 
 
 \section{Combinator for Algebraic System}
+Initially, let us introduce the concept of CAS, in which we are going to extending the functionality with reduction.
 Combinator for Algebraic system (CAS)\cite{griffin_metarouting_2005} is introduced in $L11$. It is a language to design algebraic systems, in which many algebraic properties are automatically received and people can combine different operators to obtain a new semiring\cite{griffin_metarouting_2005}. We can also generalize a more complex path problem (in other words, we can abstract a more complex path problem with this new semiring, such as the lexicographic products \cite{gurney_lexicographic_2007}). CAS can easily return the properties of those combined-operation semirings and it is already defined in Coq\cite{Coq} (mentioned in $L11$ by Dr Timothy Griffin).
 
 \section{Basic Definition}
-Before all the introductions begin, we first introduce a series of mathematical concepts that we will use in our project and will focus on. 
+Before all the introduction information was mentioned, we first introduce a series of mathematical concepts that we will use in our project and will focus on. 
 Let us begin with our problem set $S$, which is a collection of elements. Here in our project, we force our problem set $S$ to be non-trivial, which means there at least one element inside the problem set.
 
 \subsection{Equality}
@@ -147,12 +148,12 @@ Symmetric: \e{def:eq:symmetric}{\forall a,b \in S, a =_S b \rightarrow b =_S a}
 Transitive: \e{def:eq:transitive}{\forall a,b,c \in S, a =_S b \wedge b=_S c \rightarrow a =_S c}
 
 \subsection{Unary Operator}
-What we need to discuss next is the unary operator acting on $S$, and our subsequent reduction will be expressed as an unary operator. A unary operator $r$ on $S$ is a function on $S$, $r : S \rightarrow S$. 
-For the unary operators, we mainly care about the following properties, and these properties are also mainly discussed later when we discuss the properties of reduction.
+What we need to discuss next is the unary operator on $S$, which will be used to express our reduction. A unary operator $r$ on $S$ is a function on $S$, $r : S \rightarrow S$. 
+For the unary operators, we mainly care about the following properties, and these properties are also mainly discussed later when we are reasoning the properties of reduction.
 
 Congruence: \e{def:uop:congruence}{\forall a,b \in S, a =_S b \rightarrow r(a) =_S r(b)}
 Idempotent: \e{def:uop:idempotent}{\forall a \in S, r(a) =_S r(r(a))}
-Preserve Id: Given a binary operator $\oplus : S \times S \rightarrow S$
+Preserve Identity: Given a binary operator $\oplus : S \times S \rightarrow S$
 \e{def:uop:preserve_id}{\exists i \in S, \forall a \in S, a \oplus i =_S a =_S i \oplus a \rightarrow r(i) =_S i}
 Preserve Annihilator: Given a binary operator $\oplus : S \times S \rightarrow S$
 \e{def:uop:preserve_ann}{\exists a \in S, \forall x \in S, x \oplus a =_S a =_S a \oplus x \rightarrow r(a) =_S a}
@@ -162,7 +163,7 @@ Right Invariant: Given a binary operator $\oplus : S \times S \rightarrow S$
 \e{def:uop:right_invariant}{\forall a,b \in S, a \oplus r(b) =_S a \oplus b}
 
 \subsection{Binary Operator}
-The last thing we need to discuss, and also a major focus of this project is the binary operator under problem set $S$. A binary operator $\oplus$ under $S$ is a function $\oplus : S \times S \rightarrow S$. And we will mainly discuss the following  properties about the binary operator.
+The last thing we need to discuss, and also a major focus of this project is the binary operator on $S$. A binary operator $\oplus$ on $S$ is a function $\oplus : S \times S \rightarrow S$. And we will mainly discuss the following  properties about the binary operator.
 
 Congruence: \e{def:bop:congruence}{\forall a,b,c,d \in S, a =_S b \wedge c =_S d \rightarrow a \oplus c =_S b \oplus d}
 Associative: \e{def:bop:associative}{\forall a,b,c \in S, a \oplus (b \oplus c) =_S (a \oplus b) \oplus c}
@@ -180,17 +181,17 @@ Not Right Distributive: Given another binary operator $\times : S \times S \righ
 
 \section{Semiring and Path Problem}
 The path problem has always fascinated mathematicians and computer scientists. 
-At the very beginning, programmer and scientists designed algorithms to solve each of the path problem. 
-The most famous path problem is the shortest distance problem and there are several well-known algorithm that can solve such a problem: Dijkstra's algorithm, Bellman–Ford algorithm, A* search algorithm and Floyd–Warshall algorithm. People use different primitive metrics and various complicated algorithms to solve different path problems.
+At the very beginning, programmers and scientists designed algorithms to solve each of the path problem. 
+The most famous path problem is the shortest distance problem and there are several well-known algorithms that can solve such a problem: Dijkstra's algorithm, Bellman–Ford algorithm, A* search algorithm and Floyd–Warshall algorithm. People used different primitive metrics and various complicated algorithms to solve different path problems.
 
-However, such an approach has its obvious shortcomings. Even at some point, designing a new algorithm can "steal" the ideas of the original algorithm, people must design a completely new independent algorithm in the face of each new problem (new metric), and this makes it difficult to have a generic (or framework) approach to solve this type of problem.  Even if the path problem has minor changes to the problem, it is difficult for people to solve the new problem by slightly modifying existing algorithms. 
+However, such an approach has its obvious shortcomings. Even at some point, designing a new algorithm can "steal" the ideas of some other algorithms, people must redesign a completely new independent algorithm due to each new problem (new metric), and this makes it difficult to have a generic (or framework) approach to solve this type of problem.  Even if the path problem has minor changes, it is difficult for people to solve the new problem by just slightly modifying the existing algorithms. 
 
 Hence, lots of predecessors have found the algebraic approaches to work around this kind of problem. 
-Using the knowledge of abstract algebra, people find that the routing problem (path problem) can be represent using a data structure called "semiring" $(S,\oplus,\otimes,\bar{0},\bar{1})$\cite{carre_algebra_1971,WONGSEELASHOTE197955,dynerowicz_forwarding_2013,mohri_semiring_2002,gurney_lexicographic_2007}. For example, the popular "shortest path problem" can be represented as $(S, min,+,\infty,0)$\cite{mohri_semiring_2002} and the "maximal capacity path problem" can be represented as $(S, max,min, 0, \infty)$. 
+Using the knowledge of abstract algebra, people find that the routing problem (path problem) can be represent using a mathematical structure called "semiring" $(S,\oplus,\otimes,\bar{0},\bar{1})$\cite{carre_algebra_1971,WONGSEELASHOTE197955,dynerowicz_forwarding_2013,mohri_semiring_2002,gurney_lexicographic_2007}. For example, the popular "shortest path problem" can be represented as $(S, min,+,\infty,0)$\cite{mohri_semiring_2002} and the "maximal capacity path problem" can be represented as $(S, max,min, 0, \infty)$. 
 
-Before we going into our real problem, let us introduce a basic definition, called semiring. This section will start with a basic mathematical structure called "semiring". Then we will mention why semiring will be applied to solve the path problem. 
+Before we going into our real problem, let us introduce a basic definition, called semiring. Then we will discuss the reason that semiring can be applied to solve the path problem. 
 \subsection{Semiring}
-In abstract algebra, a semiring is a data structure $(S,\oplus,\otimes,\bar0,\bar1)$ where $S$ is a set (Type) and $\oplus,\otimes$ are two binary operators $:S\times S \rightarrow S$.
+In abstract algebra, a semiring is a mathematical structure $(S,\oplus,\otimes,\bar0,\bar1)$ where $S$ is a set (Type) and $\oplus,\otimes$ are two binary operators $:S\times S \rightarrow S$.
 
 $(S,\oplus)$ is a commutative semigroup (has associative property) and $(S,\otimes)$ is a semigroup:
 \[
@@ -213,7 +214,7 @@ Finally, $\bar0$ is the  annihilator of $\otimes$:
 \[\forall a \in S, a \otimes \bar{0} = \bar{0} = \bar{0} \otimes a\]
 Some definition will include that $\bar1$ is the annihilator of $\oplus$:
 \[\forall a \in S, a \oplus \bar{1} = \bar{1} = \bar{1} \oplus a\]
-
+And here we will include this propertiy into our definition.
 \subsection{Matrix Semiring and Stability}
 For each semiring $(S,\oplus,\otimes,\bar0,\bar1)$ (that represent the rule of a path problem), we can define a matrix semiring $(M_n(S),\oplus,\otimes,\bar{J},\bar{I})$ to represent the concrete path problem. $M_n(S)$ is a $n\times n$ matrices over $S$,
 \[(A \oplus B)(i,j) = A(i,j)\oplus B(i,j)\]
