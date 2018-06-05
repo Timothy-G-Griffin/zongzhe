@@ -701,10 +701,10 @@ Transitive: we need to proof that $=_S$ is transitive on $\{x \in S | r(x) =_S x
 \[\forall a,b,c \in S, a =^r_S b \wedge b =^r_S c \rightarrow a =^r_S c
 \]
 
-These proof are really trivial and only need the property of idempotent of $r$, which is $\forall a \in S, r(a) = r(r(a))$.
+These proofs are really trivial and only need the property of idempotent of $r$, which is $\forall a \in S, r(a) = r(r(a))$.
 
 \subsubsection{Isomorphic On Binary Operator Properties}
-Next we discuss the properties on binary operator $\oplus$ (and $\otimes$ when we are talking about distributive) between the traditional representation and the generalized representation.
+Next we are going to discuss the properties on binary operator $\oplus$ (and $\otimes$ when we are talking about distributive) between the traditional representation and the generalized representation.
 
 Commutative: we need to proof that $\oplus_r$ is commutative on $\{x \in S | r(x) =_S x\}$ is isomorphic to $\oplus^r$ is commutative on $S$, which means 
 \[\forall a,b \in \{x \in S | r(x) =_S x \}, a \oplus_r b =_S b \oplus_r a \]
@@ -742,12 +742,12 @@ Right Distributive: we need to proof that $\oplus_r$ and $\otimes_r$ are right d
 \[\forall a,b,c \in S, (a \oplus^r b) \otimes^r c =^r_S (a \otimes^r c) \oplus^r (b \otimes^r c)
 \]
 
-These proof will be shown in Coq file and we only need the property of congruence and idempotent of $r$, which is $\forall a \in S, r(a) = r(r(a))$ and $\forall a,b \in S, a =_S b \rightarrow r(a) =_S r(b)$.
+These proofs will be shown in Coq file and we only need the property of congruence and idempotent of $r$, which is $\forall a \in S, r(a) = r(r(a))$ and $\forall a,b \in S, a =_S b \rightarrow r(a) =_S r(b)$.
 
-This proves that our generalized representation of reduction is isomorphic to the traditional representation of reduction, which means all the properties we have proved in the classical reduction section could be used directly into our generalized representation.
+This proves that our generalized representation of reduction is isomorphic to the traditional representation of reduction, which means all the properties we have proved in the classical reduction section using the traditional representation could be used directly into our generalized representation.
 
 \section{Generalized Reduction}
-In our previously defined classical reduction (either in traditional representation or generalized representation), reduction must satisfy four properties that it is congruence, idempotent, left and right invariant. However, the reduction we encounter in reality does not all have the above four properties, especially the left/right invariant properties. In particular, the elementary reduction in the elementary path problem that we mentioned earlier, which will also be used in the later section to construct our final path problem, does not satisfy the properties of the left/right invariant on the $min$ operator. 
+To our previously defined classical reduction (either in traditional representation or generalized representation), reduction must satisfy four properties that it is congruence, idempotent, left and right invariant. However, the reduction we encounter in reality does not have the above four properties, especially the left/right invariant properties. In particular, the elementary reduction in the elementary path problem that we mentioned earlier, which will also be used in the latter section to construct our final path problem, does not satisfy the properties of the left/right invariant on the $min$ operator. 
 
 Assuming $P_1,P_2 \in Path, P_1 \leq P_2, loop(P_1) \wedge \not loop(P_2)$. 
 Then $r(min(P_1,P_2)) = r(P_1) = \infty$.
@@ -756,14 +756,14 @@ However $r(min(r(P_1),P_2)) = r(min(\infty,P_2)) r(P_2) = P_2$.
 Therefore, in order to define our elementary path reduction and also to better represent other reductions, we generalize the definition reduction as: $r$ is a reduction on $S$ if $r$ has the properties of congruence and idempotent, and get rid of the constraint of left/right invariant properties, and we name this kind of reduction as generalized reduction.
 
 Do not confuse generalized representation of reduction with generalized reduction here. 
-Generalized representation of reduction is a new representation of reduction, compared to and isomorphic to the traditional representation of reduction, that is implementation friendly. A reduction that represented by generalized representation could be classical reduction (that has left/right invariant properties) or generalized reduction (left/right invariant properties can be gotten rid of).
-Generalized reduction we defined here is a kind of reduction that is only asked for idempotent and congruence properties without forced to be left/right invariant. Generalized reduction could be represented by using traditional representation or generalized representation.
+Generalized representation of the reduction is a new representation of reduction, compared to and isomorphic to the traditional representation of reduction, that is implementation friendly. A reduction that represented by generalized representation could be classical reduction (that has left/right invariant properties) or generalized reduction (left/right invariant properties can be gotten rid of).
+Generalized reduction we defined here is a type of reduction that is only asked for idempotent and congruence properties without forced to be left/right invariant. Generalized reduction could be represented by using traditional representation or generalized representation.
 
-Because the generalized representation is implementation friendly, and we have proved the isomorphism between the generalized representation and traditional representation, we will use generalized representation to represent reduction in the following paragraph.
+Because the generalized representation is implementation friendly, and we have proved the isomorphism between the generalized representation and traditional representation, we will use generalized representation to represent a reduction in the following paragraph.
 
 \subsection{Properties of Generalized Reduction, Pseudo Associative and Pseudo Distributive}
-We have reasoned about the relationship between reduction and equality/binary operators in the previous section of classical reduction. 
-Since in the last section we have already reached a grossized representation is isomorphic to the traditional representation, and the generalized reduction is just the classical reduction without left/right invariant properties, by assuming that the reduction $r$ is congruence and idempotent, we can have the following conclusion:
+We have reasoned about the relationship between reduction and equality/binary operators in the previous section of the classical reduction. 
+Since in the last section we have already reached a grossing representation is isomorphic to the traditional representation, and the generalized reduction is just the classical reduction without left/right invariant properties, by assuming that the reduction $r$ is congruence and idempotent, we can have the following conclusion:
 
 If $=_S$ is congruence/reflexive/symmetric/transitive on the problem set $S$, then $=^r_S$ is congruence/reflexive/symmetric/transitive on the problem set $S$.
 
@@ -771,11 +771,11 @@ If $\oplus$ has the properties of commutative/selective/congruence on the proble
 
 There is another property that we may be interested in, if $i$/$a$ is the identity/annihilator for $\oplus$ on $S$, and the reduction $r$ has the properties of preserve id/ann (\ref{def:uop:preserve_id},\ref{def:uop:preserve_ann}), then $i$/$a$ is the identity/annihilator for $\oplus^r$ on $S$.
 
-The more troublesome is the properties of associative and distributive. Since the proof used the property of left/right invariant, and we don't have those properties inside generalized reduction by default, we cannot directly get the these two properties. So we conclude that generalized reduction with left/right properties will allow the operator(s) remaining associative and distributive properties.
+The more troublesome is the properties of associative and distributive. Since the proof used the property of left/right invariant, and we do not possess those properties inside generalized reduction by default, we cannot directly get the these two properties. So we conclude that generalized reduction with left/right properties will allow this operator(s) remaining associative and distributive properties.
 
-However, the elementary path reduction we want to define afterwards is only a generalized reduction and does not have left/right invariant properties on the $min$ operator. We still want to discuss the properties and relationship between the reduction and the operator and discuss whether $min$ has associative property under reduction, and discuss whether the entire semiring has distributive properties.
+However, the elementary path reduction we want to define afterwards is only a generalized reduction and does not get left/right invariant properties on the $min$ operator. We still want to discuss the properties and relationship between the reduction and the operator and discuss whether $min$ has associative property under reduction, and discuss whether the entire semiring has distributive properties.
 
-Therefore, we found two sufficient condition, separately for associative properties and distributive properties respectively that we can prove the properties if we can prove the sufficient condition is holding.
+Therefore, we found two sufficient conditions, separately for associative properties and distributive properties respectively that we can prove the properties if we can prove the sufficient condition is holding.
 
 Pseudo Associative:
 \e{gr:def:pseudo_associative}{\forall a,b,c \in S, r(r(r(a)\oplus r(b)) \oplus r(c)) = r(r(a) \oplus r(r(b)\oplus r(c)))}
@@ -824,14 +824,14 @@ $r(r(r(a)) \otimes r(r(r(b) \oplus r(c)))))$
 
 Similar proof for right distributivity. 
 
-So we can conclude that for generalized reduction, although it may not have the property of left/right invariant, if we can directly prove the properties of pseudo associative/pseudo distributive, then we can also prove that binary operator(s) remains associative/distributive under reduction.
+So we can conclude that for the generalized reduction, although it may not have the property of left/right invariant, if we can directly prove the properties of pseudo associative/pseudo distributive, then we can also prove that binary operator(s) remains associative/distributive under reduction.
 
 \section{Predicate Reduction}
-In order to better implement the construction of the path problem we mentioned earlier, we are going to define a type of reduction and perform detailed reasoning on its properties in this section. 
+In order to better implement the construction of the path problem we mentioned earlier, we are about define a type of reduction and perform detailed reasoning on its properties in this section. 
 If we deeply consider our reduction, whether it is to eliminate the path with a loop, or to turn an unqualified element tuple into a specific element -- additive identity/multiplicative annihilator, we can easily find the situation that our reduction is depending on a predicate and reducing the elements that satisfy/not satisfy the condition. Therefore, we call this kind of reduction as predicate reduction.
 
 We define a new type of reduction, predicate reduction based on generalized reduction. 
-Predicate reduction is a kind of generalized reduction, but it is not as much generalized as the generalized reduction. Generalized reduction could define almost all kinds of reductions, but predicate reduction couldn't, and it is the reason why it is not as much generalized as the previous one. For example, when we are talking about the min set $min_\leq = \{ x \in X | \forall y \in X, y \not\leq x \}$, which is introduced as Martelli’s semiring in our previous section, we can't define $min_\leq$ using predicate reduce. The reason is, when we are defining a predicate, the predicate only know the information on its current element, but not the whole problem set. Predicate reduction is still a kind of generalized reduction but not classical reduction because it is not forcing the reduction to have left/right invariant properties. Have or not those properties depends on the predicate inside reduction. For example, we will use predicate reduction to define three different reductions in the later section, two of them (min plus with ceiling and reduction annihilator) has the properties of left/right invariant on both operator, but one of them (elementary path) doesn't on its $min$ operator.
+Predicate reduction is a type of generalized reduction, but it is not as much generalized as the generalized reduction. Generalized reduction could define almost all kinds of reductions, but predicate reduction couldn't, and it is for this reason that it is not as much generalized as the previous one. For example, when we are talking about the min set $min_\leq = \{ x \in X | \forall y \in X, y \not\leq x \}$, which is introduced as Martelli’s semiring in our previous section, we can't define $min_\leq$ using predicate reduce. The cause is, when we are defining a predicate, the predicate only know the information on its current element, but not the whole problem set. Predicate reduction is still a kind of generalized reduction but not classical reduction because it is not forcing the reduction to have left/right invariant properties. Have or not to those properties depends on the predicate inside reduction. For example, we will use predicate reduction to define three different reductions in the later section, two of them (min plus with ceiling and reduction annihilator) has the properties of left/right invariant on both operator, but one of them (elementary path) doesn't on its $min$ operator.
 
 Here comes to our definition. Initially for our problem set $S$, we define a predicate $P$, which is a function from $S$ to $bool$ and we need to provide a specific element $c$ (the predicate reduction will reduce all the element that satisfied the predicate to $c \in S$). Then we can define the predicate reduction as 
 \e{pr:def:def}{\forall a \in S,  r_p(a)=\left\{
@@ -841,11 +841,12 @@ a &  & otherwise
 \end{aligned}
 \right.}
 
-As we mentioned previously, predicate reduction is defined based on the generalized reduction, which means it has all the properties that generalized reduction has. Hence, we are not interested on the properties of equality, congruence, commutative and selective, has identity and has annihilator properties of binary operator any more. We mainly talk about the associative and distributive in the reasoning section (although we may use the properties of has identity and has annihilator during the process of proof).
+As we mentioned previously, predicate reduction is defined based on the generalized reduction, which means it has all the properties that the generalized reduction has. Hence, we are not interested in the properties of equality, congruence, commutative and selective, has identity and has annihilator properties of binary operator any more. We mainly talk about the associative and distributive in the reasoning section (although we may use the properties of has identity and has annihilator during the process of proof).
 
 \subsection{Properties of Predicate}
-In predicate reduction, we hope to explore the properties of predicate reduction that are different from generalized reduction.
-But as the predicate reduction is a kind of generalized reduction, it must have the properties of the idempotent and congruence property, which are $\forall a \in S, r(a) = r(r(a))$ and $\forall a,b\in S, a = b \rightarrow r(a) = r(b)$. So we need to do reasoning on these two properties. For the property of the idempotent, we need to discuss the input element, split the case that the element satisfies the predicate or not. If the element doesn't satisfy the predicate, then $r(a) = a = r(r(a))$. If the element does satisfy the predicate, then $r(a) = c$ and $r(r(a)) = r(c)$, hence we need to prove/provide the property that $c$ must satisfy the predicate \e{pr:proof:p_true}{P(c)}
+In predicate reduction, we hope to be able to explore the properties of predicate reduction that are different from generalized reduction.
+But as the predicate reduction is a kind of generalized reduction, it must have the properties of the idempotent and congruence property, which are $\forall a \in S, r(a) = r(r(a))$ and $\forall a,b\in S, a = b \rightarrow r(a) = r(b)$. So we need to make reasoning on these two properties. For the property of the idempotent, we are required to discuss the input element, split the case that the element satisfies the predicate or not. If the element doesn't satisfy the predicate, then $r(a) = a = r(r(a))$. If the element does satisfy the predicate, then $r(a) = c$ and $r(r(a)) = r(c)$, hence we need to prove/provide the property that $c$ must satisfy the predicate
+\e{pr:proof:p_true}{P(c)}
 For the property of the congruence, we can conclude from 
 \[\forall a,b \in S, r_p(a)=\left\{
 \begin{aligned}
@@ -863,9 +864,9 @@ b &  & otherwise
 Next we need to reduce the binary operator according to the generalize representation we defined earlier using the predicate reduction. For our problem set $S$ and a given binary operator $\oplus$, we defined reduced binary operator as 
 \e{pr:def:binary_operator}{\forall a,b \in S, a \oplus_r b = r_p (r_p(a) \oplus r_p(b))}
 
-Therefore, here we mainly discuss the properties of predicates and their relationship with binary operators, and then try to prove associative/distributive by using pseudo associative/distributive without forcing the left/right invariant on the reduction. In this process we discovered three very interesting properties about predicates. 
+Therefore, here we mainly discuss the properties of predicates and their relationship with binary operators, and then try to prove associative/distributive by utilizing pseudo associative/distributive without forcing the left/right invariant on the reduction. In this process, we discovered three very interesting properties about predicates. 
 
-Before describing these three properties, we first introduce an implicit definition. If our operator is selective, then we actually implicitly define a partial order on the problem set.
+Before describing three properties, we first introduce an implicit definition. If our operator is selective, then we actually implicitly define a partial order on the problem set.
 \[\forall a,b \in S, a \oplus b =_S a \leftrightarrow a \leq b\]
 
 Next we begin to formally introduce our three properties for the predicate.
@@ -907,9 +908,9 @@ Then
 \[\longrightarrow\]
 \[\forall a,b \in S, r_p(r_p(a) \oplus b) =_S r_p(a \oplus b) \bigwedge r_p(a \oplus r_p(b)) =_S r_p(a \oplus b)\]
 
-The detailed proofs will be presented in the later Coq file, and no more details will be given here.
+Detailed proofs will be presented in the later Coq file, and no more details will be given here.
 
-In conjunction with the above proofs and the common properties of the previously mentioned additive/multiplicative, we can draw the following conclusions.
+In conjunction with the above proofs and the universal properties of the previously mentioned additive/multiplicative, we can draw the following conclusions.
 
 1, For a semiring, if the additive component has the properties of preserving order, and the constant $c$ is the identity for the additive component, then the predicate reduction under additive component is classical.
 
@@ -919,7 +920,7 @@ According to our previous proof, we can draw two methods that make operator keep
 
 1, the reduced constant $c$ is the identity to the operator, and the operator has the property of preserving order.
 
-2, the operator has the property of composition.
+2, the operator holds the property of composition.
 
 The reason is that both can infer that reduction is classical on the operator, and we have shown that classical reduction has the property of retaining associative.
 
