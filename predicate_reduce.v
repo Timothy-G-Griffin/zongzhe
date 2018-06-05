@@ -186,9 +186,10 @@ Qed.
 Lemma pred_bop_preserve_order_congrapositive (bS : binary_op S) : 
 pred_preserve_order S P eq bS -> ∀ a b : S, eq (bS a b) a = true → P b = false → P a = false.
 Proof. intros H a b M N.
-     case_eq (P a); intro K.
-     assert (A := H a b M K). rewrite N in A. discriminate. auto.
+    case_eq (P a); intro K.
+    assert (A := H a b M K). rewrite N in A. discriminate. auto.
 Qed.
+       
 
 Lemma pred_bop_preserve_order_congrapositive_v2 (bS : binary_op S) : 
 bop_selective S eq bS ->
@@ -1065,7 +1066,210 @@ Proof. intros s add mul P_true congP dadd dmul cong_add cong_mul s_id s_ann rdis
        assert (K := rdist a b c). exact K.
 Qed.
 
-  
+
+
+(* look at not left distributivity *)
+
+Definition bop_not_left_distributive_witness (S : Type) (r : brel S) (add : binary_op S) (mul : binary_op S) (a : S * S * S)
+  := match a with (s,t,u) => r (mul s (add t u)) (add (mul s t) (mul s u)) = false end.
+
+
+Lemma bop_fpr_not_left_distributive_implies_witnesses_P_false :
+  ∀ (s w1 w2 w3 : S) (add mul : binary_op S),
+     pred_true S P s -> 
+     pred_congruence S eq P ->
+     bop_congruence S eq add ->     
+     bop_congruence S eq mul -> 
+     bop_is_id S eq add s ->     
+     bop_is_ann S eq mul s ->
+     bop_not_left_distributive_witness S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P add) (bop_fpr s P mul) ((w1, w2), w3) ->
+     (P w1 = false) * (P w2 = false) * (P w3 = false). 
+Proof. intros s w1 w2 w3 add mul P_true congP cong_add cong_mul s_id s_ann nLD.
+       compute in nLD. compute in P_true.
+       assert (PLmul : ∀ (x : S),  P(mul s x) = true). intro x. destruct (s_ann x) as [L _]. apply congP in L. rewrite P_true in L. exact L.
+       assert (PRmul : ∀ (x : S),  P(mul x s) = true). intro x. destruct (s_ann x) as [_ R]. apply congP in R. rewrite P_true in R. exact R.        
+       assert (PLadd : ∀ (x : S),  P(add s x) = P x). intro x. destruct (s_id x) as [L _]. apply congP in L. exact L.
+       assert (PRadd : ∀ (x : S),  P(add x s) = P x). intro x. destruct (s_id x) as [_ R]. apply congP in R. exact R.        
+       case_eq(P w1); intro H1; case_eq(P w2); intro H2; case_eq(P w3); intro H3;
+         repeat (
+             try rewrite H1 in nLD;
+             try rewrite H2 in nLD;
+             try rewrite H3 in nLD;
+             try rewrite P_true in nLD;
+             try rewrite PLmul in nLD;
+             try rewrite PRmul in nLD;             
+             try rewrite PLadd in nLD;
+             try rewrite PRadd in nLD; auto                                                  
+           ).
+       rewrite (refS s) in nLD.  discriminate nLD. 
+       rewrite (refS s) in nLD.  discriminate nLD. 
+       rewrite (refS s) in nLD.  discriminate nLD. 
+       rewrite (refS s) in nLD.  discriminate nLD.
+       rewrite (refS s) in nLD.  discriminate nLD.
+
+       assert (K : P (mul w1 (add s w3)) = P (mul w1 w3)).
+         destruct (s_id w3) as [L _]. assert (J := cong_mul _ _ _ _ (refS w1) L). apply congP in J. exact J. 
+       case_eq(P (mul w1 w3)); intro H4;
+         repeat (
+             try rewrite H1 in nLD;
+             try rewrite H2 in nLD;
+             try rewrite H3 in nLD;
+             try rewrite H4 in nLD;
+             try rewrite K in nLD;                          
+             try rewrite P_true in nLD;
+             try rewrite PLmul in nLD;
+             try rewrite PRmul in nLD;             
+             try rewrite PLadd in nLD;
+             try rewrite PRadd in nLD; auto                                                  
+           ).
+       rewrite (refS s) in nLD.  discriminate nLD.       
+       destruct (s_id (mul w1 w3)) as [L1 _].
+       destruct (s_id w3) as [L2 _].
+       assert (J := cong_mul _ _ _ _ (refS w1) L2).
+       apply symS in L1.
+       assert (T := tranS _ _ _ J L1).
+       rewrite T in nLD. discriminate nLD.
+
+       assert (K : P (mul w1 (add w2 s)) = P (mul w1 w2)).
+         destruct (s_id w2) as [_ R]. assert (J := cong_mul _ _ _ _ (refS w1) R). apply congP in J. exact J.        
+       case_eq(P (mul w1 w2)); intro H4;
+         repeat (
+             try rewrite H1 in nLD;
+             try rewrite H2 in nLD;
+             try rewrite H3 in nLD;
+             try rewrite H4 in nLD;
+             try rewrite K in nLD;                          
+             try rewrite P_true in nLD;
+             try rewrite PLmul in nLD;
+             try rewrite PRmul in nLD;             
+             try rewrite PLadd in nLD;
+             try rewrite PRadd in nLD; auto                                                  
+           ).
+       rewrite (refS s) in nLD.  discriminate nLD.
+       destruct (s_id (mul w1 w2)) as [_ R1].
+       destruct (s_id w2) as [_ R2].
+       assert (J := cong_mul _ _ _ _ (refS w1) R2).
+       apply symS in R1.
+       assert (T := tranS _ _ _ J R1).
+       rewrite T in nLD. discriminate nLD.
+Qed.
+
+
+Lemma bop_fpr_not_left_distributive :
+  ∀ (s w1 w2 w3 : S) (add mul : binary_op S),
+     pred_true S P s -> 
+     pred_congruence S eq P ->
+     bop_congruence S eq add ->     
+     bop_congruence S eq mul -> 
+     bop_is_id S eq add s ->     
+     bop_is_ann S eq mul s ->
+     pred_bop_decompose S P add ->
+     pred_bop_decompose S P mul -> 
+     (P w1 = false) * (P w2 = false) * (P w3 = false) ->      
+     bop_not_left_distributive_witness S eq add mul ((w1, w2), w3) ->
+       bop_not_left_distributive_witness S (brel_reduce (uop_predicate_reduce s P) eq) (bop_fpr s P add) (bop_fpr s P mul) ((w1, w2), w3).
+Proof. intros s w1 w2 w3 add mul P_true congP cong_add cong_mul s_id s_ann addD mulD [[H1 H2] H3] nLD. 
+       assert (PLmul : ∀ (x : S),  P(mul s x) = true). intro x. destruct (s_ann x) as [L _]. apply congP in L. rewrite P_true in L. exact L.
+       assert (PRmul : ∀ (x : S),  P(mul x s) = true). intro x. destruct (s_ann x) as [_ R]. apply congP in R. rewrite P_true in R. exact R.        
+       assert (PLadd : ∀ (x : S),  P(add s x) = P x). intro x. destruct (s_id x) as [L _]. apply congP in L. exact L.
+       assert (PRadd : ∀ (x : S),  P(add x s) = P x). intro x. destruct (s_id x) as [_ R]. apply congP in R. exact R.        
+       compute.       
+       case_eq(P (add w2 w3)); intro H4; case_eq(P (mul w1 w2)); intro H5; case_eq(P (mul w1 w3)); intro H6;
+         repeat
+           ( try rewrite P_true; 
+             try rewrite H1;
+             try rewrite H2;
+             try rewrite H3;
+             try rewrite H4;
+             try rewrite H5;
+             try rewrite H6;             
+             try rewrite PLmul;
+             try rewrite PRmul;
+             try rewrite PLadd;
+             try rewrite PRadd;                           
+             auto
+           ).  
+       destruct (addD _ _ H4) as [F | F]. rewrite F in H2. discriminate H2. rewrite F in H3. discriminate H3. 
+       (* 2 *)
+       case_eq(eq s (add s (mul w1 w3))); intro H7.
+          apply congP in H7. rewrite P_true in H7.
+          assert (H8 := PLadd (mul w1 w3)). rewrite H6 in H8. rewrite H8 in H7. discriminate H7. 
+          reflexivity.
+       (* 3 *)          
+       case_eq(eq s (add (mul w1 w2) s)); intro H7.
+          apply congP in H7. rewrite P_true in H7.
+          assert (H8 := PRadd (mul w1 w2)). rewrite H5 in H8. rewrite H8 in H7. discriminate H7. 
+          reflexivity.
+       case_eq(P (add (mul w1 w2) (mul w1 w3))); intro H7.
+          rewrite P_true.
+          destruct (addD _ _ H4) as [F | F]. rewrite F in H2. discriminate H2. rewrite F in H3. discriminate H3.       
+          rewrite H7.
+          case_eq(eq s (add (mul w1 w2) (mul w1 w3))); intro H8.
+             apply congP in H8. rewrite P_true in H8. rewrite H7 in H8. discriminate H8.
+             reflexivity.
+       (* 5 *)              
+       case_eq(P (mul w1 (add w2 w3))); intro H7.
+          rewrite P_true.
+          destruct (mulD _ _ H5) as [F | F]. rewrite F in H1. discriminate H1. rewrite F in H2. discriminate H2. 
+          rewrite H7.
+           case_eq(eq (mul w1 (add w2 w3)) s); intro H8. 
+              apply congP in H8. rewrite P_true in H8. rewrite H7 in H8. discriminate H8.
+              reflexivity.               
+       (* 6 *)
+       case_eq(P (mul w1 (add w2 w3))); intro H7.
+           rewrite P_true.  
+           assert (K : P(add s (mul w1 w3)) = P(mul w1 w3)). destruct (s_id (mul w1 w3)) as [L _]. apply congP in L. exact L. 
+           rewrite H6 in K.
+           case_eq(eq s (add s (mul w1 w3))); intro H8.
+              apply congP in H8. rewrite P_true in H8. rewrite K in H8. discriminate H8.
+              reflexivity.
+          rewrite H7.
+          destruct (mulD _ _ H5) as [F | F]. rewrite F in H1. discriminate H1. rewrite F in H2. discriminate H2.               
+      (* 7 *)
+      case_eq(P (mul w1 (add w2 w3))); intro H7.
+         rewrite P_true.
+         case_eq (eq s (add (mul w1 w2) s) ); intro H8.
+            apply congP in H8. rewrite P_true in H8.
+            destruct (s_id (mul w1 w2)) as [_ R].
+            apply congP in R. rewrite H5 in R. rewrite R in H8. discriminate H8.
+            reflexivity. 
+         rewrite H7. 
+         destruct (mulD _ _ H6) as [F | F]. rewrite F in H1. discriminate H1. rewrite F in H3. discriminate H3.               
+       (* 8 *)
+       case_eq(P (add w2 w3)); intro H7; case_eq(P (add (mul w1 w2) (mul w1 w3))); intro H8; case_eq(P (mul w1 (add w2 w3))); intro H9; 
+         repeat
+           ( try rewrite P_true; 
+             try rewrite H1;
+             try rewrite H2;
+             try rewrite H3;
+             try rewrite H4;
+             try rewrite H5;
+             try rewrite H6;
+             try rewrite H7;
+             try rewrite H8;
+             try rewrite H9;                                       
+             try rewrite PLmul;
+             try rewrite PRmul;
+             try rewrite PLadd;
+             try rewrite PRadd; auto
+           ).
+       rewrite H7 in H4.  discriminate H4. 
+       case_eq(eq (mul w1 (add w2 w3)) s); intro H10.
+          apply congP in H10. rewrite P_true in H10. rewrite H9 in H10. discriminate H10. 
+          reflexivity. 
+       case_eq(eq s (add (mul w1 w2) (mul w1 w3))); intro H10.
+          apply congP in H10. rewrite P_true in H10. rewrite H8 in H10. discriminate H10. 
+          reflexivity. 
+       destruct (mulD _ _ H9) as [F | F]. rewrite F in H1. discriminate H1. rewrite F in H4. discriminate H4.                      
+       case_eq(eq (mul w1 (add w2 w3)) s); intro H10.
+          apply congP in H10. rewrite P_true in H10. rewrite H9 in H10. discriminate H10. 
+          reflexivity.        
+       case_eq(eq s (add (mul w1 w2) (mul w1 w3))); intro H10.
+          apply congP in H10. rewrite P_true in H10. rewrite H8 in H10. discriminate H10. 
+          reflexivity. 
+Qed. 
+
+
 End PredicateReduce.
 
 
