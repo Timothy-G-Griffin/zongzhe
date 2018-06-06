@@ -1,8 +1,8 @@
 \section{Coq Implementation}
 All the aforementioned proofs can be found in my Coq file.
-In the Coq file, we directly admitted (all of these proofs are actually held) some lemma in places where it has nothing to do with our problem (for example, the properties of lexicographic product) or the proof of lemma is trivial true (for example, the proof of $a::as \neq as$).
+In the Coq file, we directly admitted some lemmas in places where it has nothing to do with our problem (for example, the properties of lexicographic product) or the proof of the lemma is trivial true (for example, the proof of $a::as \neq as$).
 
-In thesis, we will list some key definitions and key proofs to help understand the content mentioned above.
+In this section, we will list some key definitions and key proofs to help the reading understand the content mentioned above.
 
 \subsection{Basic Definition}
 First we need to define some basic mathematical concepts in Coq. We define the equality as a binary relationship, the unary operator and the binary operator.
@@ -119,7 +119,7 @@ Definition bop_add_id : ∀ {S : Type}, binary_op S → cas_constant → binary_
 
 \subsection{Basic Properties}
 
-We define the properties that we mentioned in our previous section using Coq.
+Next, we define the properties that we mentioned in our previous section in Coq.
 
 \subsubsection{Properties for Binary Relationship}
 We define the properties of reflexive, symmetric, transitive and congruence for binary relationship (equality).
@@ -140,7 +140,7 @@ Definition brel_congruence (S : Type) (eq : brel S) (r : brel S) :=
 \end{listing}
 
 \subsubsection{Properties for Unary Operator}
-We define the properties of preserve identity/annihilator, congruence, idempotent, left/right invariant for the unary operator (reduction).
+We define the properties of preserving identity/annihilator, congruence, idempotent, left/right invariant for the unary operator (reduction).
 
 \begin{listing}[H]
 \begin{minted}[fontsize=\scriptsize]{coq}
@@ -230,9 +230,9 @@ Definition bop_pseudo_right_distributive (S : Type) (eq : brel S) (r : unary_op 
 \end{listing}
 
 \subsection{Construction of Semiring}
-Then we need to give a definition of semring together with those proof. Since finally we need to construct two different versions of semiring: distributive semiring with commutative multiplicative component and non-distributive semiring with non-commutative semiring, which implies three different versions of semigroup: commutative selective semigroup, commutative semigroup and non-commutative semigroup, we need to provide separate definition for them.
+Then we need to provide a definition of semring together with its proofs. Since finally we need to construct two different versions of semiring: distributive semiring with commutative multiplicative component and non-distributive semiring with non-commutative multiplicative component semiring, which resulting of three different versions of semigroup: commutative selective semigroup, commutative semigroup and non-commutative semigroup, we need to provide separate definition for them.
 
-First, let us define the record of proof of the those properties for binary relationship
+First, let us define the record of proofs of the those properties for binary relationship
 \begin{listing}[H]
 \begin{minted}[fontsize=\scriptsize]{coq}
 Record eqv_proofs (S : Type) (eq : brel S) :=
@@ -247,9 +247,9 @@ Record eqv_proofs (S : Type) (eq : brel S) :=
 \caption{Proof of Properties for Binary Relationship} 
 \label{coq:def:eqv_proofs}
 \end{listing}
-Inside the record, we provide a witness which guarantee the semiring we defined is not a trivial semiring (at least has one element, which is usually the identity of annihilator for an operator in the simiring).
+Inside the record, we provide a witness which guarantee that the semiring we defined is not a trivial semiring (at least has one element, which is usually the identity or annihilator for an operator in the simiring).
 
-Then we can define our two separate versions of semigroup. We will provide the proof of properties for semigroup at first.
+Then we can define our two separate versions of semigroup. We will provide the proof of properties for the semigroup at first.
 \begin{listing}[H]
 \begin{minted}[fontsize=\scriptsize]{coq}
 Record commutative_selective_semigroup_proofs (S: Type) (eq : brel S) (b : binary_op S) := 
@@ -290,7 +290,7 @@ Record semigroup_proofs (S: Type) (eq : brel S) (b : binary_op S) :=
 \label{coq:def:semigroup_proofs}
 \end{listing}
 
-Then we can construct our semigroup based on these different properties.
+Then we can construct our semigroup based on these different properties records.
 \begin{listing}[H]
 \begin{minted}[fontsize=\scriptsize]{coq}
 Record commutative_selective_semigroup (S : Type) :=
@@ -619,7 +619,7 @@ Definition bop_fpr {S : Type} (s : S ) (P : S -> bool) (bS : binary_op S) :=
 \caption{Predicate Reduction} 
 \label{coq:def:predicate_reduction}
 \end{listing}
-As we mentioned in the early section, predicate reduction have all the properties that generalized reduction have. Therefore we only need to concern about the properties that we mentioned that is specific to the predicate reduction.
+As we mentioned in the early section, predicate reduction have all the properties that belongs to generalized reduction. Therefore we only need to concern about the properties that is specific to the predicate reduction.
 \begin{listing}[H]
 \begin{minted}[fontsize=\scriptsize]{coq}
 Lemma bop_pseudo_associative_fpr_decompositional_id :
@@ -676,7 +676,7 @@ Lemma bop_fpr_right_distributive :
 \caption{Distributive For Predicate} 
 \label{coq:proof:predicate_distributive}
 \end{listing}
-As for preserving order or composition, we have proved that if reduction is a classical, we can directly prove associative/distributive properties, so we only need to prove the reduction under operator is classical with preserving order or composition.
+For properties of preserving order and composition, we have proved that reduction is a classical if it has one of such properties, and we can directly prove associative/distributive properties from the classical reduction.
 \begin{listing}[H]
 \begin{minted}[fontsize=\scriptsize]{coq}
 Lemma bop_left_uop_invariant_predicate_reduce :
@@ -721,7 +721,7 @@ Lemma bop_right_uop_invariant_predicate_reduce_v2 :
 \caption{Preserving Order implies Classical} 
 \label{coq:proof:preserve_order_classic}
 \end{listing}
-Next we need to use our predicate reduction to construct three different reductions, and define our path problem semiring.
+Next we need to use our predicate reduction to construct three different reductions, and to define our path problem semiring.
 \subsection{Min Plus With Ceiling}
 Initially we provide the definition of the equality, two binary operators and the predicate for our problem.
 \begin{listing}[H]
@@ -735,9 +735,9 @@ Definition P (ceiling : nat): nat -> bool := λ n, ceiling <=? n.
 \label{coq:def:min_plus_with_ceiling}
 \end{listing}
 
-By using the lemmas in Coq library for $min$ and $+$, we can easily get the properties of those two operators.
+By using the lemmas in Coq library for $min$ and $+$, we can easily get the properties of those two operators, such as commutative, associative, etc.
 
-Then we need to discuss the properties of predicate, and the properties between the predicate and the two binary operators.
+Then we need to discuss the properties of the predicate, and the properties between the predicate and the two binary operators.
 \begin{listing}[H]
 \begin{minted}[fontsize=\scriptsize]{coq}
 Lemma P_congruence (ceiling : nat): pred_congruence nat brel_eq_nat (P ceiling).
@@ -923,7 +923,7 @@ end.
 \label{coq:def:elementary_path_predicate}
 \end{listing}
 
-We also reasoning the properties for the multiplicative component that it has the properties of associative, congruence, selective and commutative.
+We also reasoning the properties for the additive component that it has the properties of associative, congruence, selective and commutative.
 \begin{listing}[H]
 \begin{minted}[fontsize=\scriptsize]{coq}
 Lemma bop_list_minT_commutative : bop_commutative T brel_list_const minT.
@@ -936,7 +936,7 @@ Lemma bop_list_minT_congruence : bop_congruence T brel_list_const minT.
 \end{listing}
 By using the lemmas in Coq library for $app$, we can easily get the properties of the multiplicative component.
 
-Then we need to discuss the properties of predicate, and the properties between the predicate and the two binary operators.
+Then we need to discuss the properties of the predicate, and the properties between the predicate and the two binary operators.
 \begin{listing}[H]
 \begin{minted}[fontsize=\scriptsize]{coq}
 Lemma P_true : pred_true T P (inl c).
