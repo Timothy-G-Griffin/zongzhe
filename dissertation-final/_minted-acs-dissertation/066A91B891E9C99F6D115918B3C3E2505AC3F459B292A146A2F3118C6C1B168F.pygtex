@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{min\PYGZus{}app\PYGZus{}non\PYGZus{}distributive\PYGZus{}dioid\PYGZus{}proofs} \PYG{o}{:}
+\PYG{n}{bioid\PYGZus{}proof} \PYG{n}{T} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{n}{uop\PYGZus{}list} \PYG{n}{brel\PYGZus{}list\PYGZus{}const}\PYG{o}{)}
+\PYG{n}{bop\PYGZus{}list\PYGZus{}min} \PYG{n}{bop\PYGZus{}list\PYGZus{}app} \PYG{o}{(}\PYG{n}{inl} \PYG{n}{c}\PYG{o}{)} \PYG{o}{(}\PYG{n}{inr} \PYG{n}{nil}\PYG{o}{)}
+\PYG{o}{:=} \PYG{o}{\PYGZob{}|}
+  \PYG{n}{bioid\PYGZus{}left\PYGZus{}distributive\PYGZus{}decidable} \PYG{o}{:=} \PYG{n}{bop\PYGZus{}left\PYGZus{}distributive\PYGZus{}min\PYGZus{}app\PYGZus{}decidable}
+\PYG{o}{;} \PYG{n}{bioid\PYGZus{}right\PYGZus{}distributive\PYGZus{}decidable} \PYG{o}{:=} \PYG{n}{bop\PYGZus{}right\PYGZus{}distributive\PYGZus{}min\PYGZus{}app\PYGZus{}decidable}
+\PYG{o}{;} \PYG{n}{bioid\PYGZus{}zero\PYGZus{}is\PYGZus{}add\PYGZus{}id}     \PYG{o}{:=} \PYG{n}{bop\PYGZus{}is\PYGZus{}id\PYGZus{}min}
+\PYG{o}{;} \PYG{n}{bioid\PYGZus{}one\PYGZus{}is\PYGZus{}mul\PYGZus{}id}      \PYG{o}{:=} \PYG{n}{bop\PYGZus{}is\PYGZus{}id\PYGZus{}app}
+\PYG{o}{;} \PYG{n}{bioid\PYGZus{}zero\PYGZus{}is\PYGZus{}mul\PYGZus{}ann}     \PYG{o}{:=} \PYG{n}{bop\PYGZus{}is\PYGZus{}ann\PYGZus{}app}
+\PYG{o}{;} \PYG{n}{bioid\PYGZus{}one\PYGZus{}is\PYGZus{}add\PYGZus{}ann}    \PYG{o}{:=} \PYG{n}{bop\PYGZus{}is\PYGZus{}ann\PYGZus{}min}
+\PYG{o}{|\PYGZcb{}.}
+\end{Verbatim}

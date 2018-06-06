@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{P} \PYG{o}{:=} \PYG{n}{reduce\PYGZus{}annihilators}\PYG{o}{.}\PYG{n}{P} \PYG{k+kt}{nat} \PYG{n}{T} \PYG{n}{eqN} \PYG{n}{eqT} \PYG{n}{zero1} \PYG{n}{zero2}\PYG{o}{.}
+\PYG{k+kn}{Lemma} \PYG{n}{P\PYGZus{}true} \PYG{o}{:} \PYG{n}{pred\PYGZus{}true} \PYG{n}{M} \PYG{n}{P} \PYG{n}{zero}\PYG{o}{.}
+\PYG{k+kn}{Lemma} \PYG{n}{P\PYGZus{}cong} \PYG{o}{:} \PYG{n}{pred\PYGZus{}congruence} \PYG{n}{M} \PYG{n}{eqM} \PYG{n}{P}\PYG{o}{.}
+\PYG{k+kn}{Lemma} \PYG{n}{P\PYGZus{}decompose\PYGZus{}add} \PYG{o}{:} \PYG{n}{pred\PYGZus{}bop\PYGZus{}decompose} \PYG{n}{M} \PYG{n}{P} \PYG{n}{add}\PYG{o}{.}
+\PYG{k+kn}{Lemma} \PYG{n}{P\PYGZus{}compose\PYGZus{}mul} \PYG{o}{:} \PYG{n}{pred\PYGZus{}bop\PYGZus{}compose} \PYG{n}{M} \PYG{n}{P} \PYG{n}{mul}\PYG{o}{.}
+\end{Verbatim}

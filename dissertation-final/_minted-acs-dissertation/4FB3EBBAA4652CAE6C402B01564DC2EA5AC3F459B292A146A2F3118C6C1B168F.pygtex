@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{uop\PYGZus{}rap} \PYG{o}{:} \PYG{n}{unary\PYGZus{}op} \PYG{n}{M} \PYG{o}{:=} \PYG{n}{reduce\PYGZus{}annihilators}\PYG{o}{.}\PYG{n}{uop\PYGZus{}rap} \PYG{k+kt}{nat} \PYG{n}{T} \PYG{n}{eqN} \PYG{n}{eqT} \PYG{n}{zero1} \PYG{n}{zero2}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{brel\PYGZus{}eq\PYGZus{}M} \PYG{o}{:}\PYG{n}{brel} \PYG{n}{M} \PYG{o}{:=} \PYG{n}{brel\PYGZus{}reduce} \PYG{n}{uop\PYGZus{}rap} \PYG{n}{eqM}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{bop\PYGZus{}rap\PYGZus{}add} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{M} \PYG{o}{:=} \PYG{n}{bop\PYGZus{}fpr} \PYG{n}{zero} \PYG{n}{P} \PYG{n}{add}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{bop\PYGZus{}rap\PYGZus{}mul} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{M} \PYG{o}{:=} \PYG{n}{bop\PYGZus{}fpr} \PYG{n}{zero} \PYG{n}{P} \PYG{n}{mul}\PYG{o}{.}
+\end{Verbatim}

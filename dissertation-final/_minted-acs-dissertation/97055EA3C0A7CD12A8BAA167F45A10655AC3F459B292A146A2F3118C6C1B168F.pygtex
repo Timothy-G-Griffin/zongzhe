@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Variable} \PYG{n}{ceiling} \PYG{o}{:} \PYG{k+kt}{nat}\PYG{o}{.}
+\PYG{k+kn}{Variable} \PYG{n}{c} \PYG{o}{:} \PYG{n}{cas\PYGZus{}constant}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{T} \PYG{o}{:=} \PYG{n}{cas\PYGZus{}constant} \PYG{o}{+} \PYG{k+kt}{list} \PYG{k+kt}{nat}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{min\PYGZus{}plus\PYGZus{}ceiling\PYGZus{}dioid} \PYG{o}{:=} \PYG{n}{min\PYGZus{}plus\PYGZus{}dioid} \PYG{n}{ceiling}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{elementary\PYGZus{}path\PYGZus{}bioid} \PYG{o}{:=} \PYG{n}{min\PYGZus{}app\PYGZus{}non\PYGZus{}distributive\PYGZus{}dioid} \PYG{n}{c}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{add1} \PYG{o}{:=} \PYG{n}{csdioid\PYGZus{}add} \PYG{k+kt}{nat} \PYG{n}{min\PYGZus{}plus\PYGZus{}ceiling\PYGZus{}dioid}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{mul1} \PYG{o}{:=} \PYG{n}{csdioid\PYGZus{}mul} \PYG{k+kt}{nat} \PYG{n}{min\PYGZus{}plus\PYGZus{}ceiling\PYGZus{}dioid}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{add2} \PYG{o}{:=} \PYG{n}{sbioid\PYGZus{}add} \PYG{n}{T} \PYG{n}{elementary\PYGZus{}path\PYGZus{}bioid}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{mul2} \PYG{o}{:=} \PYG{n}{sbioid\PYGZus{}mul} \PYG{n}{T} \PYG{n}{elementary\PYGZus{}path\PYGZus{}bioid}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{eqN} \PYG{o}{:=} \PYG{n}{csdioid\PYGZus{}eq} \PYG{k+kt}{nat} \PYG{n}{min\PYGZus{}plus\PYGZus{}ceiling\PYGZus{}dioid}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{eqT} \PYG{o}{:=} \PYG{n}{sbioid\PYGZus{}eq} \PYG{n}{T} \PYG{n}{elementary\PYGZus{}path\PYGZus{}bioid}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{M} \PYG{o}{:=} \PYG{k+kt}{nat} \PYG{o}{*} \PYG{n}{T}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{eqM} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{M} \PYG{o}{:=} \PYG{n}{brel\PYGZus{}product} \PYG{n}{eqN} \PYG{n}{eqT}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{add} \PYG{o}{:}\PYG{n}{binary\PYGZus{}op} \PYG{n}{M} \PYG{o}{:=} \PYG{n}{bop\PYGZus{}llex} \PYG{n}{eqN} \PYG{n}{add1} \PYG{n}{add2}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{mul} \PYG{o}{:}\PYG{n}{binary\PYGZus{}op} \PYG{n}{M}\PYG{o}{:=} \PYG{n}{bop\PYGZus{}product} \PYG{n}{mul1} \PYG{n}{mul2}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{zero1} \PYG{o}{:} \PYG{k+kt}{nat} \PYG{o}{:=} \PYG{n}{ceiling}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{one1}  \PYG{o}{:} \PYG{k+kt}{nat} \PYG{o}{:=} \PYG{l+m+mi}{0}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{zero2} \PYG{o}{:} \PYG{n}{T} \PYG{o}{:=} \PYG{n}{inl} \PYG{n}{c}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{one2}  \PYG{o}{:} \PYG{n}{T} \PYG{o}{:=} \PYG{n}{inr} \PYG{n}{nil}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{zero}  \PYG{o}{:} \PYG{n}{M} \PYG{o}{:=} \PYG{o}{(}\PYG{n}{zero1}\PYG{o}{,}\PYG{n}{zero2}\PYG{o}{).}
+\PYG{k+kn}{Definition} \PYG{n}{one}   \PYG{o}{:} \PYG{n}{M} \PYG{o}{:=} \PYG{o}{(}\PYG{n}{one1}\PYG{o}{,}\PYG{n}{one2}\PYG{o}{).}
+\end{Verbatim}

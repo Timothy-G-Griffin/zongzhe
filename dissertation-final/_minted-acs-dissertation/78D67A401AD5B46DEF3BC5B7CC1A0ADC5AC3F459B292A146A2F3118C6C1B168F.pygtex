@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{min\PYGZus{}plus\PYGZus{}dioid\PYGZus{}proofs} \PYG{o}{(}\PYG{n}{ceiling} \PYG{o}{:} \PYG{k+kt}{nat}\PYG{o}{)} \PYG{o}{:}
+\PYG{n}{dioid\PYGZus{}proofs} \PYG{k+kt}{nat} \PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{o}{(}\PYG{n}{uop\PYGZus{}nat} \PYG{n}{ceiling}\PYG{o}{)} \PYG{n}{brel\PYGZus{}eq\PYGZus{}nat}\PYG{o}{)}
+\PYG{o}{(}\PYG{n}{bop\PYGZus{}nat\PYGZus{}min} \PYG{n}{ceiling}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}nat\PYGZus{}plus} \PYG{n}{ceiling}\PYG{o}{)} \PYG{n}{ceiling}  \PYG{l+m+mi}{0}
+\PYG{o}{:=} \PYG{o}{\PYGZob{}|}
+  \PYG{n}{dioid\PYGZus{}left\PYGZus{}distributive}  \PYG{o}{:=} \PYG{n}{bop\PYGZus{}left\PYGZus{}distributive\PYGZus{}ceiling\PYGZus{}min\PYGZus{}plus} \PYG{n}{ceiling}
+\PYG{o}{;} \PYG{n}{dioid\PYGZus{}right\PYGZus{}distributive} \PYG{o}{:=} \PYG{n}{bop\PYGZus{}right\PYGZus{}distributive\PYGZus{}ceiling\PYGZus{}min\PYGZus{}plus} \PYG{n}{ceiling}
+\PYG{o}{;} \PYG{n}{dioid\PYGZus{}zero\PYGZus{}is\PYGZus{}add\PYGZus{}id}     \PYG{o}{:=} \PYG{n}{bop\PYGZus{}is\PYGZus{}id\PYGZus{}ceiling\PYGZus{}min\PYGZus{}ceiling} \PYG{n}{ceiling}
+\PYG{o}{;} \PYG{n}{dioid\PYGZus{}one\PYGZus{}is\PYGZus{}mul\PYGZus{}id}      \PYG{o}{:=} \PYG{n}{bop\PYGZus{}is\PYGZus{}id\PYGZus{}ceiling\PYGZus{}plus\PYGZus{}zero} \PYG{n}{ceiling}
+\PYG{o}{;} \PYG{n}{dioid\PYGZus{}one\PYGZus{}is\PYGZus{}add\PYGZus{}ann}     \PYG{o}{:=} \PYG{n}{bop\PYGZus{}is\PYGZus{}ann\PYGZus{}ceiling\PYGZus{}min\PYGZus{}zero} \PYG{n}{ceiling}
+\PYG{o}{;} \PYG{n}{dioid\PYGZus{}zero\PYGZus{}is\PYGZus{}mul\PYGZus{}ann}    \PYG{o}{:=} \PYG{n}{bop\PYGZus{}is\PYGZus{}ann\PYGZus{}ceiling\PYGZus{}plus\PYGZus{}ceiling} \PYG{n}{ceiling}
+\PYG{o}{|\PYGZcb{}.}
+\end{Verbatim}

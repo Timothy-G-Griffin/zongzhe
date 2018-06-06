@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{plus\PYGZus{}proofs} \PYG{o}{(}\PYG{n}{ceiling} \PYG{o}{:} \PYG{k+kt}{nat}\PYG{o}{)} \PYG{o}{:}
+\PYG{n}{commutative\PYGZus{}semigroup\PYGZus{}proofs} \PYG{k+kt}{nat}
+\PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{o}{(}\PYG{n}{uop\PYGZus{}nat} \PYG{n}{ceiling}\PYG{o}{)} \PYG{n}{brel\PYGZus{}eq\PYGZus{}nat}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bop\PYGZus{}nat\PYGZus{}plus} \PYG{n}{ceiling}\PYG{o}{)}
+\PYG{o}{:=} \PYG{o}{\PYGZob{}|}
+  \PYG{n}{csg\PYGZus{}associative}   \PYG{o}{:=} \PYG{n}{bop\PYGZus{}nat\PYGZus{}plus\PYGZus{}associative} \PYG{n}{ceiling}
+\PYG{o}{;} \PYG{n}{csg\PYGZus{}congruence}    \PYG{o}{:=} \PYG{n}{bop\PYGZus{}nat\PYGZus{}plus\PYGZus{}congruence} \PYG{n}{ceiling}
+\PYG{o}{;} \PYG{n}{csg\PYGZus{}commutative}    \PYG{o}{:=} \PYG{n}{bop\PYGZus{}nat\PYGZus{}plus\PYGZus{}commutative} \PYG{n}{ceiling}
+\PYG{o}{|\PYGZcb{}.}
+\end{Verbatim}

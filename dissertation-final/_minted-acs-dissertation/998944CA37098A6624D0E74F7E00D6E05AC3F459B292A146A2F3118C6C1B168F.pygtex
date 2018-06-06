@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{brel\PYGZus{}product} \PYG{o}{\PYGZob{}}\PYG{n}{S} \PYG{n}{T} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{\PYGZcb{}} \PYG{o}{(}\PYG{n}{eqS} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eqT} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{T}\PYG{o}{)} \PYG{o}{:} \PYG{n}{brel} \PYG{o}{(}\PYG{n}{S} \PYG{o}{*} \PYG{n}{T}\PYG{o}{)}
+\PYG{o}{:=} \PYG{o}{λ} \PYG{n}{x} \PYG{n}{y}\PYG{o}{,} \PYG{k}{match} \PYG{n}{x}\PYG{o}{,} \PYG{n}{y} \PYG{k}{with}
+          \PYG{o}{|} \PYG{o}{(}\PYG{n}{s1}\PYG{o}{,} \PYG{n}{t1}\PYG{o}{),} \PYG{o}{(}\PYG{n}{s2}\PYG{o}{,} \PYG{n}{t2}\PYG{o}{)} \PYG{o}{=\PYGZgt{}} \PYG{n}{andb} \PYG{o}{(}\PYG{n}{eqS} \PYG{n}{s1} \PYG{n}{s2}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eqT} \PYG{n}{t1} \PYG{n}{t2}\PYG{o}{)}
+          \PYG{k}{end}\PYG{o}{.}
+\end{Verbatim}

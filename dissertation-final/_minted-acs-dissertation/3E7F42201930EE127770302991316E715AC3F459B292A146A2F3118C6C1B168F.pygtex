@@ -1,0 +1,22 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+  \PYG{k+kn}{Variable} \PYG{n}{b\PYGZus{}cong} \PYG{o}{:} \PYG{n}{bop\PYGZus{}congruence} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{b}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{b\PYGZus{}ass}  \PYG{o}{:} \PYG{n}{bop\PYGZus{}associative} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{b}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{b\PYGZus{}sel}  \PYG{o}{:} \PYG{n}{bop\PYGZus{}selective} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{b}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{b\PYGZus{}com}  \PYG{o}{:} \PYG{n}{bop\PYGZus{}commutative} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{b}\PYG{o}{.}
+
+  \PYG{k+kn}{Variable} \PYG{n}{r\PYGZus{}cong}  \PYG{o}{:} \PYG{n}{uop\PYGZus{}congruence} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{r}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{r\PYGZus{}idem}  \PYG{o}{:} \PYG{n}{uop\PYGZus{}idempotent} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{r}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{r\PYGZus{}left}  \PYG{o}{:} \PYG{n}{bop\PYGZus{}left\PYGZus{}uop\PYGZus{}invariant} \PYG{n}{S} \PYG{n}{eqS} \PYG{o}{(}\PYG{n}{bop\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{b}\PYG{o}{)} \PYG{n}{r}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{r\PYGZus{}right} \PYG{o}{:} \PYG{n}{bop\PYGZus{}right\PYGZus{}uop\PYGZus{}invariant} \PYG{n}{S} \PYG{n}{eqS} \PYG{o}{(}\PYG{n}{bop\PYGZus{}reduce} \PYG{n}{r} \PYG{n}{b}\PYG{o}{)} \PYG{n}{r}\PYG{o}{.}
+
+  \PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}bop\PYGZus{}cong} \PYG{o}{:} \PYG{n}{bop\PYGZus{}congruence} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{n}{red\PYGZus{}bop}\PYG{o}{.}
+  \PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}bop\PYGZus{}ass} \PYG{o}{:} \PYG{n}{bop\PYGZus{}associative} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{n}{red\PYGZus{}bop}\PYG{o}{.}
+  \PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}bop\PYGZus{}comm} \PYG{o}{:} \PYG{n}{bop\PYGZus{}commutative} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{n}{red\PYGZus{}bop}\PYG{o}{.}
+  \PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}bop\PYGZus{}sel} \PYG{o}{:} \PYG{n}{bop\PYGZus{}selective} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{n}{red\PYGZus{}bop}\PYG{o}{.}
+  \PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}bop\PYGZus{}id} \PYG{o}{:} \PYG{n}{uop\PYGZus{}preserves\PYGZus{}id} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{b} \PYG{n}{r} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+                     \PYG{n}{bop\PYGZus{}exists\PYGZus{}id} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{b} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+                     \PYG{n}{bop\PYGZus{}exists\PYGZus{}id} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{n}{red\PYGZus{}bop}\PYG{o}{.}
+  \PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}bop\PYGZus{}ann} \PYG{o}{:} \PYG{n}{uop\PYGZus{}preserves\PYGZus{}ann} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{b} \PYG{n}{r} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+                      \PYG{n}{bop\PYGZus{}exists\PYGZus{}ann} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{b} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+                      \PYG{n}{bop\PYGZus{}exists\PYGZus{}ann} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{n}{red\PYGZus{}bop}\PYG{o}{.}
+\end{Verbatim}

@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Record} \PYG{n}{commutative\PYGZus{}selective\PYGZus{}semigroup\PYGZus{}proofs} \PYG{o}{(}\PYG{n}{S}\PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eq} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{b} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=}
+\PYG{o}{\PYGZob{}}
+  \PYG{n}{cssg\PYGZus{}associative}   \PYG{o}{:} \PYG{n}{bop\PYGZus{}associative} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{b}
+\PYG{o}{;} \PYG{n}{cssg\PYGZus{}congruence}    \PYG{o}{:} \PYG{n}{bop\PYGZus{}congruence} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{b}
+\PYG{o}{;} \PYG{n}{cssg\PYGZus{}commutative}   \PYG{o}{:} \PYG{n}{bop\PYGZus{}commutative} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{b}
+\PYG{o}{;} \PYG{n}{cssg\PYGZus{}selective}     \PYG{o}{:} \PYG{n}{bop\PYGZus{}selective} \PYG{n}{S} \PYG{n}{eq} \PYG{n}{b}
+\PYG{o}{\PYGZcb{}.}
+\end{Verbatim}

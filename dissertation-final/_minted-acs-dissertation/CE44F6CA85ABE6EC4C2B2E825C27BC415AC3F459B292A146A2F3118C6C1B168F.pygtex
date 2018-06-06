@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{eqv\PYGZus{}proofs\PYGZus{}eq\PYGZus{}nat} \PYG{o}{(}\PYG{n}{ceiling} \PYG{o}{:} \PYG{k+kt}{nat}\PYG{o}{)} \PYG{o}{:} \PYG{n}{eqv\PYGZus{}proofs} \PYG{k+kt}{nat}
+\PYG{o}{(}\PYG{n}{brel\PYGZus{}reduce} \PYG{o}{(}\PYG{n}{uop\PYGZus{}nat} \PYG{n}{ceiling}\PYG{o}{)} \PYG{n}{brel\PYGZus{}eq\PYGZus{}nat}\PYG{o}{)}
+\PYG{o}{:=} \PYG{o}{\PYGZob{}|}
+     \PYG{n}{eqv\PYGZus{}reflexive}   \PYG{o}{:=} \PYG{n}{brel\PYGZus{}reduce\PYGZus{}nat\PYGZus{}reflexive} \PYG{n}{ceiling}
+   \PYG{o}{;} \PYG{n}{eqv\PYGZus{}transitive}  \PYG{o}{:=} \PYG{n}{brel\PYGZus{}reduce\PYGZus{}nat\PYGZus{}transitive} \PYG{n}{ceiling}
+   \PYG{o}{;} \PYG{n}{eqv\PYGZus{}symmetric}   \PYG{o}{:=} \PYG{n}{brel\PYGZus{}reduce\PYGZus{}nat\PYGZus{}symmetric} \PYG{n}{ceiling}
+   \PYG{o}{;} \PYG{n}{eqv\PYGZus{}congruence}  \PYG{o}{:=} \PYG{n}{brel\PYGZus{}reduce\PYGZus{}nat\PYGZus{}congruence} \PYG{n}{ceiling}
+   \PYG{o}{;} \PYG{n}{eqv\PYGZus{}witness}     \PYG{o}{:=} \PYG{l+m+mi}{0}
+\PYG{o}{|\PYGZcb{}.}
+\end{Verbatim}

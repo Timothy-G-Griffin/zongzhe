@@ -1,0 +1,370 @@
+\relax 
+\@writefile{toc}{\contentsline {chapter}{List of Listings}{iii}}
+\citation{griffin_2017}
+\@writefile{toc}{\contentsline {chapter}{\numberline {1}Introduction}{1}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\citation{griffin_metarouting_2005}
+\citation{griffin_metarouting_2005}
+\citation{gurney_lexicographic_2007}
+\citation{Coq}
+\@writefile{toc}{\contentsline {chapter}{\numberline {2}Background}{3}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}Combinator for an Algebraic System}{3}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}Basic Definition}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Equality}{4}}
+\newlabel{def:eq:congruence}{{2.1}{4}}
+\newlabel{def:eq:reflexive}{{2.2}{4}}
+\newlabel{def:eq:symmetric}{{2.3}{4}}
+\newlabel{def:eq:transitive}{{2.4}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Unary Operator}{4}}
+\newlabel{def:uop:congruence}{{2.5}{4}}
+\newlabel{def:uop:idempotent}{{2.6}{4}}
+\newlabel{def:uop:preserve_id}{{2.7}{4}}
+\newlabel{def:uop:preserve_ann}{{2.8}{4}}
+\newlabel{def:uop:left_invariant}{{2.9}{5}}
+\newlabel{def:uop:right_invariant}{{2.10}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}Binary Operator}{5}}
+\newlabel{def:bop:congruence}{{2.11}{5}}
+\newlabel{def:bop:associative}{{2.12}{5}}
+\newlabel{def:bop:commutative}{{2.13}{5}}
+\newlabel{def:bop:not_commutative}{{2.14}{5}}
+\newlabel{def:bop:selective}{{2.15}{5}}
+\newlabel{def:bop:left_distributive}{{2.16}{5}}
+\newlabel{def:bop:not_left_distributive}{{2.17}{5}}
+\newlabel{def:bop:right_distributive}{{2.18}{5}}
+\citation{carre_algebra_1971}
+\citation{WONGSEELASHOTE197955}
+\citation{dynerowicz_forwarding_2013}
+\citation{mohri_semiring_2002}
+\citation{gurney_lexicographic_2007}
+\citation{mohri_semiring_2002}
+\newlabel{def:bop:not_right_distributive}{{2.19}{6}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Semiring and Path Problem}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Semiring}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Matrix Semiring and Stability}{7}}
+\citation{griffin_2017}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Distributivity and Lexicographic Product}{9}}
+\citation{hedrick_routing_1988}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Global optimality vs. left/right local optimality}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.5}Semiring Representation of Path Problems}{10}}
+\newlabel{example:rip:1}{{2.3.5}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Example of RIP solution 1}}{11}}
+\newlabel{example:rip:2}{{2.3.5}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Example of RIP solution 2}}{12}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Previous Problem in L11}{12}}
+\citation{rekhter_application_1991}
+\newlabel{example:rip:3}{{2.4}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Example of RIP solution 3}}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Possible Solution}{13}}
+\newlabel{eq:lift:def}{{2.20}{14}}
+\newlabel{eq:unionlift:def}{{2.21}{14}}
+\newlabel{eq:path:def}{{2.22}{14}}
+\newlabel{eq:spwp:def}{{2.23}{14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Introduce Reduction into Our Problem}{14}}
+\newlabel{r:def:elementary}{{2.24}{15}}
+\newlabel{r:def:elementary_path}{{2.25}{15}}
+\newlabel{r:def:path_problem}{{2.26}{15}}
+\newlabel{r:def:reduction_annihilator}{{2.27}{15}}
+\newlabel{r:def:reduced_path_problem}{{2.28}{15}}
+\citation{WONGSEELASHOTE197955}
+\citation{gurney_construction_2010}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Mathematical Reasoning and Coq Implementation}{17}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Classical Reduction, Example and Reasoning}{17}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}Origin of the Concept of Reduction}{17}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Classical Reduction Definition}{18}}
+\newlabel{reduction}{{3.1.2}{18}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Illustration of Reduction}}{18}}
+\newlabel{r:def:traditional}{{3.1}{18}}
+\newlabel{r:def:binary_operator}{{3.2}{18}}
+\citation{martelli_gaussian_1976}
+\citation{griffin_2017}
+\newlabel{r:def:congruence}{{3.3}{19}}
+\newlabel{r:def:idempotent}{{3.4}{19}}
+\newlabel{r:def:left_invariant}{{3.5}{19}}
+\newlabel{r:def:right_invariant}{{3.6}{19}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}Example from the L11 Lecture}{19}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.4}Reasoning on Classical Reduction}{20}}
+\newlabel{r:proof:commutative}{{3.7}{20}}
+\newlabel{r:proof:congruence}{{3.8}{21}}
+\newlabel{r:proof:associative}{{3.9}{21}}
+\newlabel{r:proof:left_distributive}{{3.10}{22}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}New Reduction Representation}{22}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Generalised Representation of Equality and Binary Operator}{23}}
+\newlabel{gr:def:eq}{{3.11}{23}}
+\newlabel{gr:def:binary_operator}{{3.12}{24}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Isomorphism between Transitional and Generalised Representation}{24}}
+\@writefile{toc}{\contentsline {subsubsection}{Isomorphic on Equality Properties}{24}}
+\@writefile{toc}{\contentsline {subsubsection}{Isomorphic on Binary Operator Properties}{25}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Generalised Reduction}{27}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Properties of Generalised Reduction, Pseudo Associative, and Pseudo Distributive}{28}}
+\newlabel{gr:def:pseudo_associative}{{3.13}{28}}
+\newlabel{gr:def:pseudo_left_distributive}{{3.14}{29}}
+\newlabel{gr:def:pseudo_right_distributive}{{3.15}{29}}
+\newlabel{gr:proof:associative}{{3.16}{29}}
+\newlabel{gr:proof:left_distributive}{{3.17}{30}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Predicate Reduction}{30}}
+\newlabel{pr:def:def}{{3.18}{31}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Properties of Predicate}{31}}
+\newlabel{pr:proof:p_true}{{3.19}{31}}
+\newlabel{pr:proof:p_cong}{{3.20}{32}}
+\newlabel{pr:def:binary_operator}{{3.21}{32}}
+\newlabel{pr:def:decomposition}{{3.22}{32}}
+\newlabel{pr:def:composition}{{3.23}{32}}
+\newlabel{pr:def:preserve_order}{{3.24}{32}}
+\newlabel{pr:proof:decomposition_contra}{{3.25}{32}}
+\newlabel{pr:proof:composition_contra}{{3.26}{33}}
+\@writefile{toc}{\contentsline {subsubsection}{Predicate and Associative}{34}}
+\@writefile{toc}{\contentsline {subsubsection}{Predicate and Distributive}{35}}
+\@writefile{toc}{\contentsline {subsubsection}{Summary for Predicate Reduction}{36}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}Path Problem Construction}{36}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.1}Min Plus with Ceiling Reduction}{37}}
+\newlabel{pr:def:min_plus_ceiling}{{3.27}{37}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.2}Elementary Path}{39}}
+\newlabel{pf:def:elementary_path_min}{{3.28}{39}}
+\newlabel{pf:def:elementary_path_min_d}{{3.29}{41}}
+\newlabel{pf:def:elementary_path_concat_d}{{3.30}{41}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.3}Lexicographic Product and Direct Product}{43}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.4}Reduce Annihilator}{44}}
+\newlabel{pr:def:reduce_annihilator_p}{{3.31}{45}}
+\newlabel{pr:def:reduce_annihilator_r}{{3.32}{45}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Evaluation, Summary, and Conclusions}{47}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Evaluation to the Result}{47}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Summary to the Project}{48}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Conclusion to the Thesis}{48}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}Some Code of Proof}{51}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {A.1}Coq Implementation}{51}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1.1}Basic Definition}{51}}
+\@writefile{lol}{\contentsline {listing}{\numberline {1}{\ignorespaces Basic Definition}}{51}}
+\newlabel{coq:def:basic}{{1}{51}}
+\@writefile{lol}{\contentsline {listing}{\numberline {2}{\ignorespaces Binary Relationship of Product Type}}{52}}
+\newlabel{coq:def:product_relationship}{{2}{52}}
+\@writefile{lol}{\contentsline {listing}{\numberline {3}{\ignorespaces Direct Product of Binary Operator}}{52}}
+\newlabel{coq:def:direct_product}{{3}{52}}
+\@writefile{lol}{\contentsline {listing}{\numberline {4}{\ignorespaces Lexicographic Product}}{52}}
+\newlabel{coq:def:lexicographic_product}{{4}{52}}
+\@writefile{lol}{\contentsline {listing}{\numberline {5}{\ignorespaces Definition of Adding a Constant}}{52}}
+\newlabel{coq:def:add_const}{{5}{52}}
+\@writefile{lol}{\contentsline {listing}{\numberline {6}{\ignorespaces Construct Binary Operator by Adding Annihilator}}{53}}
+\newlabel{coq:def:add_const_ann}{{6}{53}}
+\@writefile{lol}{\contentsline {listing}{\numberline {7}{\ignorespaces Construct Binary Operator by Adding Identity}}{53}}
+\newlabel{coq:def:add_const_ann}{{7}{53}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1.2}Basic Properties}{53}}
+\@writefile{toc}{\contentsline {subsubsection}{Properties for Binary Relationship}{53}}
+\@writefile{lol}{\contentsline {listing}{\numberline {8}{\ignorespaces Binary Relationship Property}}{53}}
+\newlabel{coq:def:brel_properties}{{8}{53}}
+\@writefile{toc}{\contentsline {subsubsection}{Properties for Unary Operator}{53}}
+\@writefile{lol}{\contentsline {listing}{\numberline {9}{\ignorespaces Unary Operator Property}}{54}}
+\newlabel{coq:def:uop_properties}{{9}{54}}
+\@writefile{toc}{\contentsline {subsubsection}{Properties for Binary Operator}{54}}
+\@writefile{lol}{\contentsline {listing}{\numberline {10}{\ignorespaces Basic Binary Operator Property}}{54}}
+\newlabel{coq:def:binary_properties_basic}{{10}{54}}
+\@writefile{lol}{\contentsline {listing}{\numberline {11}{\ignorespaces Binary Operator Distributive}}{55}}
+\newlabel{coq:def:binary_properties_distributive}{{11}{55}}
+\@writefile{lol}{\contentsline {listing}{\numberline {12}{\ignorespaces Binary Operator Pseudo Properties}}{55}}
+\newlabel{coq:def:binary_properties_pseudo}{{12}{55}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1.3}Construction of Semiring}{55}}
+\@writefile{lol}{\contentsline {listing}{\numberline {13}{\ignorespaces Proof of Properties for Binary Relationship}}{56}}
+\newlabel{coq:def:eqv_proofs}{{13}{56}}
+\@writefile{lol}{\contentsline {listing}{\numberline {14}{\ignorespaces Proof of Properties for Commutative Selective Semigroup}}{56}}
+\newlabel{coq:def:commutative_selective_semigroup_proofs}{{14}{56}}
+\@writefile{lol}{\contentsline {listing}{\numberline {15}{\ignorespaces Proof of Properties for Commutative Semigroup}}{56}}
+\newlabel{coq:def:commutative_semigroup_proofs}{{15}{56}}
+\@writefile{lol}{\contentsline {listing}{\numberline {16}{\ignorespaces Proof of Properties for (None Commutative) Semigroup}}{56}}
+\newlabel{coq:def:semigroup_proofs}{{16}{56}}
+\@writefile{lol}{\contentsline {listing}{\numberline {17}{\ignorespaces Commutative Selective Semigroup}}{57}}
+\newlabel{coq:def:commutative_selective_semigroup}{{17}{57}}
+\@writefile{lol}{\contentsline {listing}{\numberline {18}{\ignorespaces Commutative Semigroup}}{57}}
+\newlabel{coq:def:commutative_semigroup}{{18}{57}}
+\@writefile{lol}{\contentsline {listing}{\numberline {19}{\ignorespaces Semigroup}}{57}}
+\newlabel{coq:def:semigroup}{{19}{57}}
+\@writefile{lol}{\contentsline {listing}{\numberline {20}{\ignorespaces Proof of Properties for Semiring}}{57}}
+\newlabel{coq:def:dioid_proofs}{{20}{57}}
+\@writefile{lol}{\contentsline {listing}{\numberline {21}{\ignorespaces Proof of Properties for Bioid (None Distributive Semiring)}}{58}}
+\newlabel{coq:def:bioid_proof}{{21}{58}}
+\@writefile{lol}{\contentsline {listing}{\numberline {22}{\ignorespaces Commutative Selective Semiring}}{58}}
+\newlabel{coq:def:commutative_selective_dioid}{{22}{58}}
+\@writefile{lol}{\contentsline {listing}{\numberline {23}{\ignorespaces Selective None Distributive Semiring}}{58}}
+\newlabel{coq:def:selective_bioid}{{23}{58}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1.4}Traditional Representation of Reduction and Classical Reduction}{58}}
+\@writefile{lol}{\contentsline {listing}{\numberline {24}{\ignorespaces Traditional Representation of Reduction}}{59}}
+\newlabel{coq:def:traditional_representation}{{24}{59}}
+\@writefile{lol}{\contentsline {listing}{\numberline {25}{\ignorespaces Proof of Properties on Equality}}{59}}
+\newlabel{coq:proof:tr_eq}{{25}{59}}
+\@writefile{lol}{\contentsline {listing}{\numberline {26}{\ignorespaces Proof of Properties on Binary Operator}}{60}}
+\newlabel{coq:proof:tr_bop}{{26}{60}}
+\@writefile{lol}{\contentsline {listing}{\numberline {27}{\ignorespaces Distributive on Binary Operators}}{60}}
+\newlabel{coq:proof:tr_distributive}{{27}{60}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1.5}Generalized Representation of Reduction and Generalized Reduction}{61}}
+\@writefile{lol}{\contentsline {listing}{\numberline {28}{\ignorespaces Generalized Representation of Reduction}}{61}}
+\newlabel{coq:def:generalized_representation}{{28}{61}}
+\@writefile{lol}{\contentsline {listing}{\numberline {29}{\ignorespaces Equality Isomorphism Between Two Representation}}{61}}
+\newlabel{coq:proof:eq_iso}{{29}{61}}
+\@writefile{lol}{\contentsline {listing}{\numberline {30}{\ignorespaces Binary Operation Isomorphism Between Two Representation}}{61}}
+\newlabel{coq:proof:bop_iso}{{30}{61}}
+\@writefile{lol}{\contentsline {listing}{\numberline {31}{\ignorespaces Distributive Isomorphism Between Two Representation}}{62}}
+\newlabel{coq:proof:distributive_iso}{{31}{62}}
+\@writefile{lol}{\contentsline {listing}{\numberline {32}{\ignorespaces Isomorphism Between Pseudo and Real Properties}}{62}}
+\newlabel{coq:proof:pseudo_iso}{{32}{62}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1.6}Predicate Reduction}{62}}
+\@writefile{lol}{\contentsline {listing}{\numberline {33}{\ignorespaces Predicate Definition and Properties}}{63}}
+\newlabel{coq:def:predicate}{{33}{63}}
+\@writefile{lol}{\contentsline {listing}{\numberline {34}{\ignorespaces Predicate Reduction}}{63}}
+\newlabel{coq:def:predicate_reduction}{{34}{63}}
+\@writefile{lol}{\contentsline {listing}{\numberline {35}{\ignorespaces Associative For Predicate}}{63}}
+\newlabel{coq:proof:predicate_associative}{{35}{63}}
+\@writefile{lol}{\contentsline {listing}{\numberline {36}{\ignorespaces Distributive For Predicate}}{64}}
+\newlabel{coq:proof:predicate_distributive}{{36}{64}}
+\@writefile{lol}{\contentsline {listing}{\numberline {37}{\ignorespaces Composition implies Classical}}{64}}
+\newlabel{coq:proof:composition_classic}{{37}{64}}
+\@writefile{lol}{\contentsline {listing}{\numberline {38}{\ignorespaces Preserving Order implies Classical}}{65}}
+\newlabel{coq:proof:preserve_order_classic}{{38}{65}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1.7}Min Plus With Ceiling}{65}}
+\@writefile{lol}{\contentsline {listing}{\numberline {39}{\ignorespaces Min Plus With Ceiling Definition}}{65}}
+\newlabel{coq:def:min_plus_with_ceiling}{{39}{65}}
+\@writefile{lol}{\contentsline {listing}{\numberline {40}{\ignorespaces Properties for the Predicate}}{66}}
+\newlabel{coq:proof:predicate_properties}{{40}{66}}
+\@writefile{lol}{\contentsline {listing}{\numberline {41}{\ignorespaces Min Plus With Ceiling Reduction}}{66}}
+\newlabel{coq:def:min_plus_with_ceiling_reduction}{{41}{66}}
+\@writefile{lol}{\contentsline {listing}{\numberline {42}{\ignorespaces Equality Proof}}{66}}
+\newlabel{coq:proof:eqv_proofs_eq_nat}{{42}{66}}
+\@writefile{lol}{\contentsline {listing}{\numberline {43}{\ignorespaces Proof for Min Operator}}{66}}
+\newlabel{coq:def:min_proofs}{{43}{66}}
+\@writefile{lol}{\contentsline {listing}{\numberline {44}{\ignorespaces Proof for Plus Operator}}{67}}
+\newlabel{coq:def:plus_proofs}{{44}{67}}
+\@writefile{lol}{\contentsline {listing}{\numberline {45}{\ignorespaces Proof for Semiring Property}}{67}}
+\newlabel{coq:def:min_plus_dioid_proofs}{{45}{67}}
+\@writefile{lol}{\contentsline {listing}{\numberline {46}{\ignorespaces Min Plus With Ceiling Semiring}}{67}}
+\newlabel{coq:def:min_plus_dioid}{{46}{67}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1.8}Elementary Path}{67}}
+\@writefile{lol}{\contentsline {listing}{\numberline {47}{\ignorespaces Elementary Path Equality}}{68}}
+\newlabel{coq:def:elementary_path_eq}{{47}{68}}
+\@writefile{lol}{\contentsline {listing}{\numberline {48}{\ignorespaces Elementary Path Additive Component}}{68}}
+\newlabel{coq:def:elementary_path_min}{{48}{68}}
+\@writefile{lol}{\contentsline {listing}{\numberline {49}{\ignorespaces Elementary Path Multiplicative Component}}{68}}
+\newlabel{coq:def:elementary_path_app}{{49}{68}}
+\@writefile{lol}{\contentsline {listing}{\numberline {50}{\ignorespaces Elementary Path Predicate}}{69}}
+\newlabel{coq:def:elementary_path_predicate}{{50}{69}}
+\@writefile{lol}{\contentsline {listing}{\numberline {51}{\ignorespaces Properties for Min}}{69}}
+\newlabel{coq:proof:elementary_path_min}{{51}{69}}
+\@writefile{lol}{\contentsline {listing}{\numberline {52}{\ignorespaces Properties for the Predicate}}{69}}
+\newlabel{coq:proof:predicate_properties}{{52}{69}}
+\@writefile{lol}{\contentsline {listing}{\numberline {53}{\ignorespaces Elementary Path Reduction}}{69}}
+\newlabel{coq:def:elementary_path_reduction}{{53}{69}}
+\@writefile{lol}{\contentsline {listing}{\numberline {54}{\ignorespaces Equality Proof}}{70}}
+\newlabel{coq:proof:eqv_proofs_eq_T}{{54}{70}}
+\@writefile{lol}{\contentsline {listing}{\numberline {55}{\ignorespaces Proof for Min Operator}}{70}}
+\newlabel{coq:def:min_proofs}{{55}{70}}
+\@writefile{lol}{\contentsline {listing}{\numberline {56}{\ignorespaces Proof for Plus Operator}}{70}}
+\newlabel{coq:def:app_proofs}{{56}{70}}
+\@writefile{lol}{\contentsline {listing}{\numberline {57}{\ignorespaces Proof for None Distributive Semiring Property}}{71}}
+\newlabel{coq:def:min_app_non_distributive_dioid_proofs}{{57}{71}}
+\@writefile{lol}{\contentsline {listing}{\numberline {58}{\ignorespaces Elementary Path Semiring}}{71}}
+\newlabel{coq:def:min_app_non_distributive_dioid}{{58}{71}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1.9}Final Path Problem}{71}}
+\@writefile{lol}{\contentsline {listing}{\numberline {59}{\ignorespaces Path Problem Basic Definition}}{72}}
+\newlabel{coq:def:path_problem_basic}{{59}{72}}
+\@writefile{lol}{\contentsline {listing}{\numberline {60}{\ignorespaces Path Problem Predicate}}{72}}
+\newlabel{coq:def:path_problem_predicate}{{60}{72}}
+\@writefile{lol}{\contentsline {listing}{\numberline {61}{\ignorespaces Path Problem Reduction}}{72}}
+\newlabel{coq:def:path_problem_Reduction}{{61}{72}}
+\@writefile{lol}{\contentsline {listing}{\numberline {62}{\ignorespaces Equality Proof}}{73}}
+\newlabel{coq:proof:eqv_proofs_eq_T}{{62}{73}}
+\@writefile{lol}{\contentsline {listing}{\numberline {63}{\ignorespaces Proof for Min Operator}}{73}}
+\newlabel{coq:def:min_proofs}{{63}{73}}
+\@writefile{lol}{\contentsline {listing}{\numberline {64}{\ignorespaces Proof for Plus Operator}}{73}}
+\newlabel{coq:def:app_proofs}{{64}{73}}
+\@writefile{lol}{\contentsline {listing}{\numberline {65}{\ignorespaces Proof for None Distributive Semiring Property}}{73}}
+\newlabel{coq:def:min_app_non_distributive_dioid_proofs}{{65}{73}}
+\bibstyle{unsrt}
+\bibdata{MphilProject}
+\@writefile{lol}{\contentsline {listing}{\numberline {66}{\ignorespaces Elementary Path Semiring}}{74}}
+\newlabel{coq:def:min_app_non_distributive_dioid}{{66}{74}}
+\bibcite{griffin_2017}{1}
+\bibcite{griffin_metarouting_2005}{2}
+\bibcite{gurney_lexicographic_2007}{3}
+\bibcite{Coq}{4}
+\bibcite{carre_algebra_1971}{5}
+\bibcite{WONGSEELASHOTE197955}{6}
+\bibcite{dynerowicz_forwarding_2013}{7}
+\bibcite{mohri_semiring_2002}{8}
+\bibcite{hedrick_routing_1988}{9}
+\bibcite{rekhter_application_1991}{10}
+\bibcite{gurney_construction_2010}{11}
+\bibcite{martelli_gaussian_1976}{12}
+\gdef\minted@oldcachelist{,
+  default-pyg-prefix.pygstyle,
+  xcode.pygstyle,
+  250F514C0E32940AFA4BC55C1A284F215AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  998944CA37098A6624D0E74F7E00D6E05AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  87B029990C20D7C5BA132494384F56B15AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  644CC1817761FF3B64F1331184535D4D5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  289795AB39DDFBC74E58745EABD0C7115AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  4CB2B7B6FB2561F835200A47D9732C345AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  53D84B3162CE8963B52DF45372275CC15AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  D583B1F5C1484F9BF8A7510988944C9A5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  69D5329CE93FE4F7D924699ADB359CB95AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  3BB222F64A9F1182C9C74B338BD8A5345AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  642F2EE192443228E864BA1394966BAA5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  453A9B40A70946CD37A17585765027FF5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  639A160A1BC3192319FF9A10CD66A6175AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  6F6C47521E44837590AC19D1CF5F3B515AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  61DFD2B4A5A320BC955DE93C8A0969195AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  5317A3D1FC5DD784FB4810516014A33B5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  3E65987AB79D0B9668BC14A3BC17A3FF5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  6CC137A642521CA82B748B8AA8AF6C665AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  3B34497853F3626B455BFC4D3729BB4C5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  26E41EDD2D5583935F56E5B96B7C6AB15AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  760A037EF8FF847E0C75C2D4D1951B7B5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  015807AC2513553B46F83E565F131FE85AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  5A557F06C34F739516BFBDB838893FC15AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  54E6F871677771D5D831F1713DB0128B5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  76196A660E727A03C888E665130DB4F45AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  3E7F42201930EE127770302991316E715AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  AC399F7DA8A36D5A2BD0E0CBE238579E5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  266EACEB79D36CAD00950EC781B84E3B5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  37F95A796429B91D2B0D327606DA66EC5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  9885D6B13DFC74C80E3445BB473BC3DF5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  5E95BE495B36E889A00F01164EA892145AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  F5620D70FD20B48FA72E9F4643D0B43C5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  DCDD5564F31109526163A0D5AFFD70DE5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  A4AD91D7A781D66A776FDF2EBC0C76895AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  642D207643254A0A85EF4E122218E3535AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  20650A8A19140B8E2EFCF97088D95B6B5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  41954A0B278F9DF7F716E4BD9A4D5AD85AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  70629E8E932445032E95A13F74B703E45AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  B1E932D56060C6C530FE5DADD0E28B045AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  011C13DF84855FE76B1615202FFD6D125AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  8A8116AF4CF0141A9CC06071CEE08E4F5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  CE44F6CA85ABE6EC4C2B2E825C27BC415AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  0FE22DFB2D8AFEC016ACE7A122B686E65AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  7E5572FB790AADBC20F6610D1FFF8D165AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  78D67A401AD5B46DEF3BC5B7CC1A0ADC5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  8F3C400DEEC56A1EC850A1C23D458E705AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  4D02E6608C2BA854026DF13D591E68C85AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  4535DF4865CE42A8B6B840ADADFE3EAA5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  3C8DA6ADCED9AC720FD3E75ECA38BFC85AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  7C4CEACAD0F2F1AC22D4E45EB8A930365AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  F6DE59C8580EC74E29D851B8F3BA113B5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  BCD7A6B67B8D38B811688BA073905D9C5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  D1A4976A2585896A666097C2F473D76E5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  273543477D726FB93C74CDFE50A96FBA5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  6B7F95CC242AFE927139F34B2CEACA0C5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  63406680579E4141ECFD8C3751913A885AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  066A91B891E9C99F6D115918B3C3E2505AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  02BE38FE3FEB7A922D402D9D40F1408D5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  97055EA3C0A7CD12A8BAA167F45A10655AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  A3C860A3DFB9BB8B295910BE83B2D8FB5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  4FB3EBBAA4652CAE6C402B01564DC2EA5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  FA20C5539E2D3CEFDAC9EE4341660EF75AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  C4D432671219064DDA4006D113F2A8FB5AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  5B57C1B0E1C5B13499799AF8D30D8B275AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  E3E6100B5AB2A0E0E9D3DF03088B9B965AC3F459B292A146A2F3118C6C1B168F.pygtex,
+  CDC9D2DEDA8D7E99717D1077C1F8CCB35AC3F459B292A146A2F3118C6C1B168F.pygtex}

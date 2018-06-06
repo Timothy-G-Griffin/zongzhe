@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{min\PYGZus{}app\PYGZus{}non\PYGZus{}distributive\PYGZus{}dioid} \PYG{o}{:} \PYG{n}{selective\PYGZus{}bioid} \PYG{n}{M}
+\PYG{o}{:=} \PYG{o}{\PYGZob{}|}
+    \PYG{n}{sbioid\PYGZus{}eq}         \PYG{o}{:=} \PYG{n}{brel\PYGZus{}eq\PYGZus{}M}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}add}        \PYG{o}{:=} \PYG{n}{bop\PYGZus{}rap\PYGZus{}add}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}mul}        \PYG{o}{:=} \PYG{n}{bop\PYGZus{}rap\PYGZus{}mul}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}zero}       \PYG{o}{:=} \PYG{n}{zero}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}one}        \PYG{o}{:=} \PYG{n}{one}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}eqv}        \PYG{o}{:=} \PYG{n}{eqv\PYGZus{}proofs\PYGZus{}eq\PYGZus{}T}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}add\PYGZus{}pfs}    \PYG{o}{:=} \PYG{n}{min\PYGZus{}proofs}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}mul\PYGZus{}pfs}    \PYG{o}{:=} \PYG{n}{app\PYGZus{}proofs}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}pfs}        \PYG{o}{:=} \PYG{n}{min\PYGZus{}app\PYGZus{}non\PYGZus{}distributive\PYGZus{}dioid\PYGZus{}proofs}
+\PYG{o}{|\PYGZcb{}.}
+\end{Verbatim}

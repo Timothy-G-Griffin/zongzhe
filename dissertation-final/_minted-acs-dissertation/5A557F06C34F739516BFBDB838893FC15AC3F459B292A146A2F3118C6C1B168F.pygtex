@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Record} \PYG{n}{selective\PYGZus{}bioid} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{:=} \PYG{o}{\PYGZob{}}
+  \PYG{n}{sbioid\PYGZus{}eq}         \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}add}        \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}mul}        \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}zero}       \PYG{o}{:} \PYG{n}{S}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}one}        \PYG{o}{:} \PYG{n}{S}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}eqv}        \PYG{o}{:} \PYG{n}{eqv\PYGZus{}proofs} \PYG{n}{S} \PYG{n}{sbioid\PYGZus{}eq}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}add\PYGZus{}pfs}    \PYG{o}{:} \PYG{n}{commutative\PYGZus{}selective\PYGZus{}semigroup\PYGZus{}proofs} \PYG{n}{S} \PYG{n}{sbioid\PYGZus{}eq} \PYG{n}{sbioid\PYGZus{}add}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}mul\PYGZus{}pfs}    \PYG{o}{:} \PYG{n}{semigroup\PYGZus{}proofs} \PYG{n}{S} \PYG{n}{sbioid\PYGZus{}eq} \PYG{n}{sbioid\PYGZus{}mul}
+  \PYG{o}{;} \PYG{n}{sbioid\PYGZus{}pfs}        \PYG{o}{:} \PYG{n}{bioid\PYGZus{}proof} \PYG{n}{S} \PYG{n}{sbioid\PYGZus{}eq} \PYG{n}{sbioid\PYGZus{}add} \PYG{n}{sbioid\PYGZus{}mul} \PYG{n}{sbioid\PYGZus{}zero} \PYG{n}{sbioid\PYGZus{}one}
+\PYG{o}{\PYGZcb{}.}
+\end{Verbatim}

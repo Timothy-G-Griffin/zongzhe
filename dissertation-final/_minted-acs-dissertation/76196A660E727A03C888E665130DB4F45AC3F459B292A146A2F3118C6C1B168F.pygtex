@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+  \PYG{k+kn}{Variable} \PYG{n}{refS}   \PYG{o}{:} \PYG{n}{brel\PYGZus{}reflexive} \PYG{n}{S} \PYG{n}{eqS}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{symS}   \PYG{o}{:} \PYG{n}{brel\PYGZus{}symmetric} \PYG{n}{S} \PYG{n}{eqS}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{transS} \PYG{o}{:} \PYG{n}{brel\PYGZus{}transitive} \PYG{n}{S} \PYG{n}{eqS}\PYG{o}{.}
+  \PYG{k+kn}{Variable} \PYG{n}{eqS\PYGZus{}cong} \PYG{o}{:} \PYG{n}{brel\PYGZus{}congruence} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{eqS}\PYG{o}{.}
+
+  \PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}ref} \PYG{o}{:} \PYG{n}{brel\PYGZus{}reflexive} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq}\PYG{o}{.}
+  \PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}sym} \PYG{o}{:} \PYG{n}{brel\PYGZus{}symmetric} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq}\PYG{o}{.}
+  \PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}cong} \PYG{o}{:} \PYG{n}{brel\PYGZus{}congruence} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq} \PYG{n}{red\PYGZus{}eq}\PYG{o}{.}
+  \PYG{k+kn}{Lemma} \PYG{n}{red\PYGZus{}trans} \PYG{o}{:} \PYG{n}{brel\PYGZus{}transitive} \PYG{n}{red\PYGZus{}Type} \PYG{n}{red\PYGZus{}eq}\PYG{o}{.}
+\end{Verbatim}

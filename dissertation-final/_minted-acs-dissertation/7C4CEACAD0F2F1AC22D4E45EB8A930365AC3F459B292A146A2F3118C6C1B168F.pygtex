@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Fixpoint} \PYG{n}{elem\PYGZus{}in\PYGZus{}list}  \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)(}\PYG{n}{eqS} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)(}\PYG{n}{x} \PYG{o}{:} \PYG{n}{S}\PYG{o}{)(}\PYG{n}{l} \PYG{o}{:} \PYG{k+kt}{list} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:} \PYG{k+kt}{bool} \PYG{o}{:=}
+\PYG{k}{match} \PYG{n}{l} \PYG{k}{with}
+\PYG{o}{|} \PYG{n}{nil} \PYG{o}{=\PYGZgt{}} \PYG{n+nb+bp}{false}
+\PYG{o}{|} \PYG{n}{y} \PYG{o}{::} \PYG{n}{yl} \PYG{o}{=\PYGZgt{}} \PYG{n}{orb} \PYG{o}{(}\PYG{n}{eqS} \PYG{n}{x} \PYG{n}{y}\PYG{o}{)} \PYG{o}{(}\PYG{n}{elem\PYGZus{}in\PYGZus{}list} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{x} \PYG{n}{yl}\PYG{o}{)}
+\PYG{k}{end}\PYG{o}{.}
+\PYG{k+kn}{Fixpoint} \PYG{n}{dup\PYGZus{}in\PYGZus{}list} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)(}\PYG{n}{eqS} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)(}\PYG{n}{l} \PYG{o}{:} \PYG{k+kt}{list} \PYG{n}{S}\PYG{o}{):} \PYG{k+kt}{bool} \PYG{o}{:=}
+\PYG{k}{match} \PYG{n}{l} \PYG{k}{with}
+\PYG{o}{|} \PYG{n}{nil} \PYG{o}{=\PYGZgt{}} \PYG{n+nb+bp}{false}
+\PYG{o}{|} \PYG{n}{y} \PYG{o}{::} \PYG{n}{yl} \PYG{o}{=\PYGZgt{}}  \PYG{n}{orb} \PYG{o}{(}\PYG{n}{elem\PYGZus{}in\PYGZus{}list} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{y} \PYG{n}{yl}\PYG{o}{)} \PYG{o}{(}\PYG{n}{dup\PYGZus{}in\PYGZus{}list} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{yl}\PYG{o}{)}
+\PYG{k}{end}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{P} \PYG{o}{:} \PYG{n}{T} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kt}{bool} \PYG{o}{:=}  \PYG{o}{λ} \PYG{n}{x}\PYG{o}{,}
+\PYG{k}{match} \PYG{n}{x} \PYG{k}{with}
+\PYG{o}{|} \PYG{n}{inr} \PYG{n}{xl} \PYG{o}{=\PYGZgt{}} \PYG{n}{dup\PYGZus{}in\PYGZus{}list} \PYG{n}{S} \PYG{n}{eqS} \PYG{n}{xl}
+\PYG{o}{|} \PYG{n}{inl} \PYG{o}{\PYGZus{}} \PYG{o}{=\PYGZgt{}} \PYG{n+nb+bp}{true}
+\PYG{k}{end}\PYG{o}{.}
+\end{Verbatim}

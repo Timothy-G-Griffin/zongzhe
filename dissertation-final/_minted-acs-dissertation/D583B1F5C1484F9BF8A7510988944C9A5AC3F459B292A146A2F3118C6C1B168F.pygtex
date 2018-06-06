@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{brel\PYGZus{}reflexive} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=}
+  \PYG{err}{∀} \PYG{n}{s} \PYG{o}{:} \PYG{n}{S}\PYG{o}{,} \PYG{n}{r} \PYG{n}{s} \PYG{n}{s} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{brel\PYGZus{}symmetric} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=}
+    \PYG{err}{∀} \PYG{n}{s} \PYG{n}{t} \PYG{o}{:} \PYG{n}{S}\PYG{o}{,} \PYG{o}{(}\PYG{n}{r} \PYG{n}{s} \PYG{n}{t} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{)} \PYG{err}{→} \PYG{o}{(}\PYG{n}{r} \PYG{n}{t} \PYG{n}{s} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{).}
+\PYG{k+kn}{Definition} \PYG{n}{brel\PYGZus{}transitive} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=}
+  \PYG{err}{∀} \PYG{n}{s} \PYG{n}{t} \PYG{n}{u}\PYG{o}{:} \PYG{n}{S}\PYG{o}{,} \PYG{o}{(}\PYG{n}{r} \PYG{n}{s} \PYG{n}{t} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{)} \PYG{err}{→} \PYG{o}{(}\PYG{n}{r} \PYG{n}{t} \PYG{n}{u} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{)} \PYG{err}{→} \PYG{o}{(}\PYG{n}{r} \PYG{n}{s} \PYG{n}{u} \PYG{o}{=} \PYG{n+nb+bp}{true}\PYG{o}{).}
+\PYG{k+kn}{Definition} \PYG{n}{brel\PYGZus{}congruence} \PYG{o}{(}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{)} \PYG{o}{(}\PYG{n}{eq} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{(}\PYG{n}{r} \PYG{o}{:} \PYG{n}{brel} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=}
+   \PYG{err}{∀} \PYG{n}{s} \PYG{n}{t} \PYG{n}{u} \PYG{n}{v} \PYG{o}{:} \PYG{n}{S}\PYG{o}{,} \PYG{n}{eq} \PYG{n}{s} \PYG{n}{u} \PYG{o}{=} \PYG{n+nb+bp}{true} \PYG{err}{→} \PYG{n}{eq} \PYG{n}{t} \PYG{n}{v} \PYG{o}{=} \PYG{n+nb+bp}{true} \PYG{err}{→} \PYG{n}{r} \PYG{n}{s} \PYG{n}{t} \PYG{o}{=} \PYG{n}{r} \PYG{n}{u} \PYG{n}{v}\PYG{o}{.}
+\end{Verbatim}

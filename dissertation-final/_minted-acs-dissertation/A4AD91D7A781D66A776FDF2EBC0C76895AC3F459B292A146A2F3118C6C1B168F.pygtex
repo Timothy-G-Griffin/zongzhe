@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Definition} \PYG{n}{uop\PYGZus{}predicate\PYGZus{}reduce} \PYG{o}{:} \PYG{err}{∀} \PYG{o}{\PYGZob{}}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{\PYGZcb{},} \PYG{n}{S} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{o}{(}\PYG{n}{S} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kt}{bool}\PYG{o}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{unary\PYGZus{}op} \PYG{n}{S}
+  \PYG{o}{:=} \PYG{o}{λ}  \PYG{o}{\PYGZob{}}\PYG{n}{S}\PYG{o}{\PYGZcb{}} \PYG{n}{s1} \PYG{n}{P} \PYG{n}{s2}\PYG{o}{,}  \PYG{k}{if} \PYG{n}{P} \PYG{n}{s2} \PYG{k}{then} \PYG{n}{s1} \PYG{k}{else} \PYG{n}{s2}\PYG{o}{.}
+\PYG{k+kn}{Definition} \PYG{n}{bop\PYGZus{}fpr} \PYG{o}{\PYGZob{}}\PYG{n}{S} \PYG{o}{:} \PYG{k+kt}{Type}\PYG{o}{\PYGZcb{}} \PYG{o}{(}\PYG{n}{s} \PYG{o}{:} \PYG{n}{S} \PYG{o}{)} \PYG{o}{(}\PYG{n}{P} \PYG{o}{:} \PYG{n}{S} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kt}{bool}\PYG{o}{)} \PYG{o}{(}\PYG{n}{bS} \PYG{o}{:} \PYG{n}{binary\PYGZus{}op} \PYG{n}{S}\PYG{o}{)} \PYG{o}{:=}
+  \PYG{n}{bop\PYGZus{}full\PYGZus{}reduce} \PYG{o}{(}\PYG{n}{uop\PYGZus{}predicate\PYGZus{}reduce} \PYG{n}{s} \PYG{n}{P}\PYG{o}{)} \PYG{n}{bS}\PYG{o}{.}
+\end{Verbatim}

@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Lemma} \PYG{n}{P\PYGZus{}true} \PYG{o}{:} \PYG{n}{pred\PYGZus{}true} \PYG{n}{T} \PYG{n}{P} \PYG{o}{(}\PYG{n}{inl} \PYG{n}{c}\PYG{o}{).}
+\PYG{k+kn}{Lemma} \PYG{n}{P\PYGZus{}congruence} \PYG{o}{:} \PYG{n}{pred\PYGZus{}congruence} \PYG{n}{T} \PYG{n}{brel\PYGZus{}list\PYGZus{}const} \PYG{n}{P}\PYG{o}{.}
+\PYG{k+kn}{Lemma} \PYG{n}{P\PYGZus{}min\PYGZus{}decompose} \PYG{o}{:} \PYG{n}{pred\PYGZus{}bop\PYGZus{}decompose} \PYG{n}{T} \PYG{n}{P} \PYG{n}{minT}\PYG{o}{.}
+\PYG{k+kn}{Lemma} \PYG{n}{P\PYGZus{}app\PYGZus{}compose} \PYG{o}{:} \PYG{n}{pred\PYGZus{}bop\PYGZus{}compose} \PYG{n}{T} \PYG{n}{P} \PYG{n}{appT}\PYG{o}{.}
+\end{Verbatim}

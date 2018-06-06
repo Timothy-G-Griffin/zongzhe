@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{Lemma} \PYG{n}{bop\PYGZus{}list\PYGZus{}minT\PYGZus{}commutative} \PYG{o}{:} \PYG{n}{bop\PYGZus{}commutative} \PYG{n}{T} \PYG{n}{brel\PYGZus{}list\PYGZus{}const} \PYG{n}{minT}\PYG{o}{.}
+\PYG{k+kn}{Lemma} \PYG{n}{bop\PYGZus{}list\PYGZus{}minT\PYGZus{}selective} \PYG{o}{:} \PYG{n}{bop\PYGZus{}selective} \PYG{n}{T} \PYG{n}{brel\PYGZus{}list\PYGZus{}const} \PYG{n}{minT}\PYG{o}{.}
+\PYG{k+kn}{Lemma} \PYG{n}{bop\PYGZus{}list\PYGZus{}minT\PYGZus{}associative} \PYG{o}{:} \PYG{n}{bop\PYGZus{}associative} \PYG{n}{T} \PYG{n}{brel\PYGZus{}list\PYGZus{}const} \PYG{n}{minT}\PYG{o}{.}
+\PYG{k+kn}{Lemma} \PYG{n}{bop\PYGZus{}list\PYGZus{}minT\PYGZus{}congruence} \PYG{o}{:} \PYG{n}{bop\PYGZus{}congruence} \PYG{n}{T} \PYG{n}{brel\PYGZus{}list\PYGZus{}const} \PYG{n}{minT}\PYG{o}{.}
+\end{Verbatim}
