@@ -1,6 +1,9 @@
 .PHONY: all clean 
 
+
 all:
+	rm _CoqProject
+	echo -R $(PWD) CAS > _CoqProject
 	coqc -q -R . CAS  basic.v
 	coqc -q -R . CAS  properties.v
 	coqc -q -R . CAS  structures.v

@@ -564,14 +564,6 @@ Section Distributivity.
          exact H5.
   Qed.
 
-Definition bop_pseudo_left_distributive (S : Type) (eq : brel S) (r : unary_op S) (add mul : binary_op S) 
-  := ∀ a b c : S, 
-  eq (r (mul (r a) (r (add (r b) (r c))))) (r (add (r (mul (r a) (r b))) (r (mul (r a) (r c))))) = true. 
-         
-Definition bop_pseudo_right_distributive (S : Type) (eq : brel S) (r : unary_op S) (add mul : binary_op S) 
-  := ∀ a b c : S, 
-  eq (r (mul (r (add (r b) (r c))) (r a))) (r (add (r (mul (r b) (r a))) (r (mul (r c) (r a))))) = true.
-
 Lemma red_bop_left_dist_iso : bop_left_distributive T eqT addT mulT <-> bop_pseudo_left_distributive S eq r add mul. 
 Proof. split; intro H.
          intros s1 s2 s3.  

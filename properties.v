@@ -113,6 +113,15 @@ Definition bop_left_distributive_decidable (S : Type) (r : brel S) (add : binary
 Definition bop_right_distributive_decidable (S : Type) (r : brel S) (add : binary_op S) (mul : binary_op S) 
 := bop_right_distributive S r add mul + bop_not_right_distributive S r add mul.
 
+Definition bop_pseudo_left_distributive (S : Type) (eq : brel S) (r : unary_op S) (add mul : binary_op S) 
+  := ∀ a b c : S, 
+  eq (r (mul (r a) (r (add (r b) (r c))))) (r (add (r (mul (r a) (r b))) (r (mul (r a) (r c))))) = true. 
+         
+Definition bop_pseudo_right_distributive (S : Type) (eq : brel S) (r : unary_op S) (add mul : binary_op S) 
+  := ∀ a b c : S, 
+  eq (r (mul (r (add (r b) (r c))) (r a))) (r (add (r (mul (r b) (r a))) (r (mul (r c) (r a))))) = true.
+
+
 (* reduction properties *)
 Definition uop_congruence (S : Type) (eq : brel S) (r : unary_op S) := 
   ∀ (s1 s2 : S), eq s1 s2 = true -> eq (r s1) (r s2) = true. 
