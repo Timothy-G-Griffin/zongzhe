@@ -129,13 +129,12 @@ Finally, we will use predicate reduction combined with the properties of reducti
 %material either in the introduction or at appropriate places in 
 %the rest of the dissertation. 
 
-\section{Combinator for an Algebraic System}
-Initially, let us introduce the concept of CAS, in which we are going to extend the functionality with reduction.
-The Combinator for Algebraic systems (CAS)\cite{griffin_metarouting_2005} is entered into $L11$. It is a language for the design of algebraic systems, in which many algebraic properties are automatically received, enabling people to combine different operators to obtain a new semiring\cite{griffin_metarouting_2005}. We can also generalise a more complex path problem (in other words, we can abstract a more complex path problem with this new semiring, such as lexicographic products) \cite{gurney_lexicographic_2007}. CAS can easily return the properties of those combined-operation semirings: this is already defined in Coq\cite{Coq} (mentioned in $L11$ by Dr Timothy Griffin).
+\section{Combinators for Algebraic System}
+Combinators for Algebraic systems (CAS) evalued from the metarouting \cite{griffin_metarouting_2005}. It is a language for the design of algebraic systems, in which many algebraic properties are automatically infered, enabling people to combine different operators to obtain new structures. 
+CAS includes the lexicographic product \cite{gurney_lexicographic_2007} which can be commonly found in metarouting protocol.
 
 \section{Basic Definition}
-Before all the introductory information was mentioned, we first introduced a series of mathematical concepts that will be the focus for our project.  
-Let us begin with our problem set $S$, which is a collection of elements. Here in our project, we force our problem set $S$ to be non-trivial, which means there is at least one element inside the problem set.
+ Let us begin with our problem set $S$, which is a collection of elements. Here in our project, we force our problem set $S$ to be non-trivial, which means there is at least one element inside the problem set.
 
 \subsection{Equality}
 In problem set $S$, the first thing we need to consider is the equality $=_S$. 
@@ -147,7 +146,7 @@ Symmetric: \e{def:eq:symmetric}{\forall a,b \in S, a =_S b \rightarrow b =_S a}
 Transitive: \e{def:eq:transitive}{\forall a,b,c \in S, a =_S b \wedge b=_S c \rightarrow a =_S c}
 
 \subsection{Binary Operator}
-The major focus of this project is the binary operator on $S$. A binary operator $\oplus$ on $S$ is a function $\oplus : S \times S \rightarrow S$. The following properties of the binary operator will be discussed. 
+The major focus of this project is binary operators on $S$. A binary operator $\oplus$ on $S$ is a function $\oplus : S \times S \rightarrow S$. The following properties of the binary operator will be discussed. 
 
 Congruence: \e{def:bop:congruence}{\forall a,b,c,d \in S, a =_S b \wedge c =_S d \rightarrow a \oplus c =_S b \oplus d}
 Associative: \e{def:bop:associative}{\forall a,b,c \in S, a \oplus (b \oplus c) =_S (a \oplus b) \oplus c}
@@ -166,16 +165,17 @@ Not Right Distributive: Given another binary operator $\times : S \times S \righ
 \section{Semiring and Path Problem}
 The path problem has always fascinated mathematicians and computer scientists. 
 At the very beginning, programmers and scientists designed algorithms to solve each path problem. 
-The most famous path of these is the shortest distance problem and there are several well-known algorithms that can solve such problems: Dijkstra's algorithm, Bellman–Ford’s algorithm, A* search algorithm, and Floyd–Warshall’s algorithm. People use different primitive metrics and various complicated algorithms to solve different path problems.
+The most famous path of these is the shortest distance problem and there are several well-known algorithms that can solve such problems: Dijkstra's algorithm, Bellman–Ford’s algorithm, A* search algorithm, and Floyd–Warshall’s algorithm \cite{cormen_introduction_2009}. 
 
-However, such an approach has its obvious shortcomings. At some point, designing a new algorithm can ‘steal’ the ideas of other algorithms, so people must redesign a completely new independent algorithm for each new problem (new metric).  This makes it difficult to use a generic (or framework) approach to solve this type of problem. Even if the path problem has minor changes, it is difficult for people to solve new problems by slightly modifying existing algorithms. 
+%However, such an approach has its obvious shortcomings. At some point, designing a new algorithm can ‘steal’ the ideas of other algorithms, so people must redesign a completely new independent algorithm for each new problem (new metric).  This makes it difficult to use a generic (or framework) approach to solve this type of problem. Even if the path problem has minor changes, it is difficult for people to solve new problems by slightly modifying existing algorithms. 
 
+People use different primitive metrics and various complicated algorithms to solve different path problems.
 Hence, lots of predecessors have found algebraic approaches to resolve this kind of problem. 
 Using the knowledge of abstract algebra, people find that the routing problems (path problems) can be represented using a mathematical structure called a ‘semiring’ $(S,\oplus,\otimes,\bar{0},\bar{1})$\cite{carre_algebra_1971,WONGSEELASHOTE197955,dynerowicz_forwarding_2013,mohri_semiring_2002,gurney_lexicographic_2007}. For example, the popular ‘shortest path problem’ can be represented as $(S, min,+,\infty,0)$\cite{mohri_semiring_2002} and the ‘maximal capacity path problem’ can be represented as $(S, max,min, 0, \infty)$. 
 
 Before explaining our real problem, let us introduce a basic definition of a ‘semiring’. We will then discuss the reason that semiring can be applied to solve the path problem. 
 \subsection{Semiring}
-In abstract algebra, a semiring is a mathematical structure $(S,\oplus,\otimes,\bar0,\bar1)$ where $S$ is a set (Type ) and $\oplus,\otimes$ are two binary operators $:S\times S \rightarrow S$.
+In abstract algebra, a semiring is a mathematical structure $(S,\oplus,\otimes,\bar0,\bar1)$ where $S$ is a set and $\oplus,\otimes$ are two binary operators $:S\times S \rightarrow S$.
 
 $(S,\oplus)$ is a commutative semigroup (has associative property) and $(S,\otimes)$ is a semigroup:
 \[
@@ -200,7 +200,7 @@ Some definition will include that $\bar1$ is the annihilator of $\oplus$:
 \[\forall a \in S, a \oplus \bar{1} = \bar{1} = \bar{1} \oplus a\]
 Here we will include this property in our definition.
 \subsection{Matrix Semiring and Stability}
-For each semiring $(S,\oplus,\otimes,\bar0,\bar1)$ (that represent the calculus of a path problem), we can define a matrix semiring $(M_n(S),\oplus,\otimes,\bar{J},\bar{I})$ to represent the concrete path problem. $M_n(S)$ is a $n\times n$ matrices over $S$,
+For each semiring $(S,\oplus,\otimes,\bar0,\bar1)$ (that represent the metric of a path problem), we can define a matrix semiring $(M_n(S),\oplus,\otimes,\bar{J},\bar{I})$ to represent the configuration of a network. $M_n(S)$ is a $n\times n$ matrices over $S$,
 \[(A \oplus B)(i,j) = A(i,j)\oplus B(i,j)\]
 \[(A \otimes B)(i,j) = \bigoplus_{1\leq q \leq n}A(i,q)\otimes B(q,j)\]
 \[\bar{J}(i,j) = \bar0\]
@@ -209,7 +209,7 @@ For each semiring $(S,\oplus,\otimes,\bar0,\bar1)$ (that represent the calculus 
 \bar1       &      & {i = j}\\
 \bar0     &      & {otherwise}
 \end{array} \right.\]
-So here, we can easily use this matrix to encode any specific path problem and use matrix multiplication to calculate the problem. 
+So here, we can easily use this matrix to encode any specific path problem and use matrix multiplication to calculate a solution. 
 
 For a directed graph $G = (V,E)$ and a weight function $w \in E \rightarrow S$, 
 we can define the weight of a path $p = i_1,i_2, \dots i_k$ as $w(p) = w (i_1,i_2) \otimes w(i_2,i_3)\otimes \dots \otimes w(i_{k-1},i_k)$, while the empty path is given the weight of $\bar1$ and $\bar0$ stands for the infinite path (not path between two nodes).
@@ -246,7 +246,7 @@ Hence, we have $\pi(i,j)$, which is the set of paths from $i$ to $j$, and $\pi^k
 It is worth mentioning that $A^*(i,j)$ may not be well-defined, but if $M_n(S)$ is $k$ stable, then for $A\in M_n(S)$, \[A^*(i,j) = A^{(k)}(i,j)\]
 
 \subsection{Distributivity and Lexicographic Product}
-It is worth mentioning that the properties of distributivity (left and right) play an important role in the computation of the routing problem.
+The properties of distributivity (left and right) play an important role in the computation of the routing problem.
 We have defined $M_n(S)$ the matrix and its related semiring on the given semiring $(S,\oplus,\otimes,\bar0,\bar1)$.
 However, we still need to check the properties of $M_n(S)$, to make sure that it is exactly a semiring.
 Considering the distributivity properties, $M_n(S)$ is left/right distributive if $S$ has distributivity properties.
@@ -263,7 +263,7 @@ Suppose $(S,\oplus_S)$ is a commutative and selective semigroup and $(T,\oplus_t
 
 As mentioned above, we used the lexicographic product when constructing our final path problem and utilised the elementary path reduction. We also added a distinct annihilator to avoid excessive useless calculations. 
 
-These constructs make it difficult to speculate about the properties of our semiring (or new data structure); this is why our project is devoted to research regarding the relationship between reduction and semiring properties.
+%These constructs make it difficult to speculate about the properties of our semiring (or new mathematical structure); this is why our project is devoted to research regarding the relationship between reduction and semiring properties.
 
 \subsection{Global optimality vs. left/right local optimality}
 On the other hand, we are required to discuss how to ensure our approach embraces the algebras that violate distributivity.

@@ -1,19 +1,19 @@
 \contentsline {chapter}{List of Listings}{iii}
 \contentsline {chapter}{\numberline {1}Introduction}{1}
 \contentsline {chapter}{\numberline {2}Background}{3}
-\contentsline {section}{\numberline {2.1}Combinator for an Algebraic System}{3}
+\contentsline {section}{\numberline {2.1}Combinators for Algebraic System}{3}
 \contentsline {section}{\numberline {2.2}Basic Definition}{3}
-\contentsline {subsection}{\numberline {2.2.1}Equality}{4}
+\contentsline {subsection}{\numberline {2.2.1}Equality}{3}
 \contentsline {subsection}{\numberline {2.2.2}Binary Operator}{4}
 \contentsline {section}{\numberline {2.3}Semiring and Path Problem}{5}
-\contentsline {subsection}{\numberline {2.3.1}Semiring}{6}
-\contentsline {subsection}{\numberline {2.3.2}Matrix Semiring and Stability}{7}
+\contentsline {subsection}{\numberline {2.3.1}Semiring}{5}
+\contentsline {subsection}{\numberline {2.3.2}Matrix Semiring and Stability}{6}
 \contentsline {subsection}{\numberline {2.3.3}Distributivity and Lexicographic Product}{8}
-\contentsline {subsection}{\numberline {2.3.4}Global optimality vs. left/right local optimality}{9}
+\contentsline {subsection}{\numberline {2.3.4}Global optimality vs. left/right local optimality}{8}
 \contentsline {section}{\numberline {2.4}Classical Reduction, Example and Reasoning}{9}
 \contentsline {subsection}{\numberline {2.4.1}Origin of the Concept of Reduction}{9}
-\contentsline {subsection}{\numberline {2.4.2}Unary Operator}{10}
-\contentsline {subsection}{\numberline {2.4.3}Classical Reduction Definition}{11}
+\contentsline {subsection}{\numberline {2.4.2}Unary Operator}{9}
+\contentsline {subsection}{\numberline {2.4.3}Classical Reduction Definition}{10}
 \contentsline {subsection}{\numberline {2.4.4}Example from the L11 Lecture}{12}
 \contentsline {subsection}{\numberline {2.4.5}Reasoning on Classical Reduction}{13}
 \contentsline {chapter}{\numberline {3}Mathematical Reasoning and Coq Implementation}{17}

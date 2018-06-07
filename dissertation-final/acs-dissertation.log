@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99998 (TeX Live 2017) (preloaded format=xelatex 2017.12.12)  7 JUN 2018 09:20
+This is XeTeX, Version 3.14159265-2.6-0.99998 (TeX Live 2017) (preloaded format=xelatex 2017.12.12)  7 JUN 2018 09:47
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1987,9 +1987,6 @@ Requested font "cmr6" at 6.0pt
 
  [6]
 Chapter 1.
-
-LaTeX Warning: Citation `griffin_2017' on page 1 undefined on input line 108.
-
 [1
 
 ] [2]
@@ -1998,65 +1995,20 @@ Requested font "[LinLibertine_RB.otf]/OT:script=latn;language=DFLT;+tnum;+lnum;
 mapping=tex-text;" at 17.28pt
  -> /usr/local/texlive/2017/texmf-dist/fonts/opentype/public/libertine/LinLiber
 tine_RB.otf
-
-LaTeX Warning: Citation `griffin_metarouting_2005' on page 3 undefined on input
- line 134.
-
-
-LaTeX Warning: Citation `griffin_metarouting_2005' on page 3 undefined on input
- line 134.
-
-
-LaTeX Warning: Citation `gurney_lexicographic_2007' on page 3 undefined on inpu
-t line 134.
-
-
-LaTeX Warning: Citation `Coq' on page 3 undefined on input line 134.
-
 Requested font "[LinLibertine_RB.otf]/OT:script=latn;language=DFLT;+tnum;+lnum;
 mapping=tex-text;" at 14.4pt
  -> /usr/local/texlive/2017/texmf-dist/fonts/opentype/public/libertine/LinLiber
 tine_RB.otf
-
-Underfull \vbox (badness 4582) has occurred while \output is active []
-
- [3
+[3
 
 ]
-Underfull \vbox (badness 2073) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [4]
-
-LaTeX Warning: Citation `carre_algebra_1971' on page 5 undefined on input line 
-174.
-
-
-LaTeX Warning: Citation `WONGSEELASHOTE197955' on page 5 undefined on input lin
-e 174.
-
-
-LaTeX Warning: Citation `dynerowicz_forwarding_2013' on page 5 undefined on inp
-ut line 174.
-
-
-LaTeX Warning: Citation `mohri_semiring_2002' on page 5 undefined on input line
- 174.
-
-
-LaTeX Warning: Citation `gurney_lexicographic_2007' on page 5 undefined on inpu
-t line 174.
-
-
-LaTeX Warning: Citation `mohri_semiring_2002' on page 5 undefined on input line
- 174.
-
 [5]
-Underfull \vbox (badness 1661) has occurred while \output is active []
+Underfull \vbox (badness 2753) has occurred while \output is active []
 
  [6]
-
-LaTeX Warning: Citation `griffin_2017' on page 7 undefined on input line 232.
-
 [7] [8]
 Overfull \hbox (17.40308pt too wide) in paragraph at lines 275--276
 []\TU/LinLibertine(0)/m/n/12 The right local optimality: Dijkstra’s algorithm: 
@@ -2068,37 +2020,26 @@ T1/cmr/m/n/12 ) = [][] \OML/cmm/m/it/12 R\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 i; q
 
  []
 
-
-LaTeX Warning: Citation `WONGSEELASHOTE197955' on page 9 undefined on input lin
-e 284.
-
 [9]
-
-LaTeX Warning: Citation `gurney_construction_2010' on page 10 undefined on inpu
-t line 286.
-
 File: reduction.pdf Graphic file (type QTm)
-<use  "reduction.pdf" >
+ <use  "reduction.pdf" >
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [10]
-[11]
+Underfull \vbox (badness 6316) has occurred while \output is active []
 
-LaTeX Warning: Citation `martelli_gaussian_1976' on page 12 undefined on input 
-line 327.
+ [11]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
+ [12]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-LaTeX Warning: Citation `griffin_2017' on page 12 undefined on input line 327.
-
-[12] [13] [14] [15] [16
+ [13]
+[14] [15] [16
 
 ]
 Chapter 3.
 [17] [18] [19] [20] [21]
-
-LaTeX Warning: Citation `hedrick_routing_1988' on page 22 undefined on input li
-ne 540.
-
 LaTeX Font Info:    Font shape `TU/LinBiolinum(0)/m/n' will be
 (Font)              scaled to size 12.0pt on input line 546.
 Requested font "[LinBiolinum_R.otf]/OT:script=latn;language=DFLT;+tnum;mapping=
@@ -2123,12 +2064,7 @@ Requested font "[LinBiolinum_R.otf]/OT:script=latn;language=DFLT;+tnum;mapping=
 tex-text;" at 10.95pt
  -> /usr/local/texlive/2017/texmf-dist/fonts/opentype/public/libertine/LinBioli
 num_R.otf
-[22] [23]
-
-LaTeX Warning: Citation `rekhter_application_1991' on page 24 undefined on inpu
-t line 675.
-
-
+ [22] [23]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [24]
@@ -2593,11 +2529,14 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 3323) has occurred while \output is active []
 
  [75])
-No file acs-dissertation.bbl.
-[76] (./acs-dissertation.aux)
+(./acs-dissertation.bbl [76]
+Requested font "[LinLibertine_RI.otf]/OT:script=latn;language=DFLT;+tnum;+lnum;
+mapping=tex-text;" at 12.0pt
+ -> /usr/local/texlive/2017/texmf-dist/fonts/opentype/public/libertine/LinLiber
+tine_RI.otf
+) [77
 
-LaTeX Warning: There were undefined references.
-
+] (./acs-dissertation.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
@@ -2605,12 +2544,12 @@ runsystem(rm acs-dissertation.pyg)...executed.
 
  ) 
 Here is how much of TeX's memory you used:
- 36463 strings out of 493005
- 796874 string characters out of 6134595
- 778851 words of memory out of 5000000
- 39685 multiletter control sequences out of 15000+600000
- 9827 words of font info for 83 fonts, out of 8000000 for 9000
+ 36467 strings out of 493005
+ 797043 string characters out of 6134595
+ 778854 words of memory out of 5000000
+ 39686 multiletter control sequences out of 15000+600000
+ 9835 words of font info for 84 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  55i,13n,87p,10388b,859s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on acs-dissertation.pdf (88 pages).
+Output written on acs-dissertation.pdf (89 pages).

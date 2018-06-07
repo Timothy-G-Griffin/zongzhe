@@ -1,0 +1,63 @@
+\begin{thebibliography}{10}
+
+\bibitem{griffin_2017}
+Timothy Griffin.
+\newblock Algebraic path problem, 2017.
+
+\bibitem{griffin_metarouting_2005}
+Timothy~G. Griffin and Joäo~Luís Sobrinho.
+\newblock Metarouting.
+\newblock In {\em {ACM} {SIGCOMM} {Computer} {Communication} {Review}},
+  volume~35, pages 1--12. ACM, 2005.
+
+\bibitem{gurney_lexicographic_2007}
+Alexander~JT Gurney and Timothy~G. Griffin.
+\newblock Lexicographic products in metarouting.
+\newblock In {\em Network {Protocols}, 2007. {ICNP} 2007. {IEEE}
+  {International} {Conference} on}, pages 113--122. IEEE, 2007.
+
+\bibitem{cormen_introduction_2009}
+Introduction to algorithms.
+\newblock {OCLC}: ocn311310321.
+
+\bibitem{carre_algebra_1971}
+B.~A. CARRÉ.
+\newblock An {Algebra} for {Network} {Routing} {Problems}.
+\newblock {\em IMA Journal of Applied Mathematics}, 7(3):273--294, June 1971.
+
+\bibitem{WONGSEELASHOTE197955}
+Ahnont Wongseelashote.
+\newblock Semirings and path spaces.
+\newblock {\em Discrete Mathematics}, 26(1):55 -- 78, 1979.
+
+\bibitem{dynerowicz_forwarding_2013}
+Seweryn Dynerowicz and Timothy~G. Griffin.
+\newblock On the forwarding paths produced by internet routing algorithms.
+\newblock In {\em Network {Protocols} ({ICNP}), 2013 21st {IEEE}
+  {International} {Conference} on}, pages 1--10. IEEE, 2013.
+
+\bibitem{mohri_semiring_2002}
+Mehryar Mohri.
+\newblock Semiring frameworks and algorithms for shortest-distance problems.
+\newblock {\em Journal of Automata, Languages and Combinatorics},
+  7(3):321--350, 2002.
+
+\bibitem{gurney_construction_2010}
+Alexander James~Telford Gurney.
+\newblock Construction and verification of routing algebras.
+
+\bibitem{martelli_gaussian_1976}
+Alberto Martelli.
+\newblock A gaussian elimination algorithm for the enumeration of cut sets in a
+  graph.
+\newblock 23(1):58--73.
+
+\bibitem{hedrick_routing_1988}
+C.L. Hedrick.
+\newblock Routing information protocol.
+
+\bibitem{rekhter_application_1991}
+Y.~Rekhter and P.~Gross.
+\newblock Application of the border gateway protocol in the internet.
+
+\end{thebibliography}
