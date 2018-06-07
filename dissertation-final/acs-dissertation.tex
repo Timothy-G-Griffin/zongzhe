@@ -20,7 +20,7 @@
 \def\authorcollege{Christ's College\xspace}
 \def\authoremail{zy272@cl.cam.ac.uk}
 \def\dissertationtitle{Extending CAS with Algebraic Reductions}
-\def\wordcount{14,235}
+\def\wordcount{9,779}
 
 
 \usepackage{epsfig,graphicx,parskip,setspace,tabularx,xspace} 
@@ -105,17 +105,30 @@
 %document, although without care this can appear formulaic 
 %and tedious. Your call. 
 
-Our dissertation problem originates from a concept that was mentioned in the L11 Algebraic Path Problem lecture, which has been introduced but not in detail \cite{griffin_2017}.  In the L11 lecture, the concept of reduction was proposed, with examples and was utilised to solve problems that we were unable to solve before. However, in addition to the definition of reduction provided in the lecture, the property of reduction has not been thoroughly discussed. Although we have found the definition of reduction and practical examples in other papers and theses before, unfortunately, none of them have discussed the property of reduction itself or provided a detailed, sound reasoning process.  This makes the detailed discussion of reduction a valuable research topic and thus becomes the topic of our project.
+%Our dissertation problem originates from a concept that was mentioned in the L11 Algebraic Path Problem lecture, which has been introduced but not in detail \cite{griffin_2017}.  In the L11 lecture, the concept of reduction was proposed, with examples and was utilised to solve problems that we were unable to solve before. However, in addition to the definition of reduction provided in the lecture, the property of reduction has not been thoroughly discussed. Although we have found the definition of reduction and practical examples in other papers and theses before, unfortunately, none of them have discussed the property of reduction itself or provided a detailed, sound reasoning process.  This makes the detailed discussion of reduction a valuable research topic and thus becomes the topic of our project.
+%
+%In our research, we will not only conduct detailed reasoning on the properties of reduction, but we will also accomplish the following three goals:
+%\begin{itemize}
+%  \item The definition in L11 and the definition of reduction in the previous paper are all defined mathematically, which leads to the representation of reduction being difficult to implement. Therefore, we looked for an implementation-friendly representation equivalent to a traditional-reduction representation.
+%  \item The functionality of classical reduction is limited, and it cannot represent some reductions (in particular, one of the reductions we used in the construction of our path problem). We will use a more generalised method to define reduction, generalise reduction, and evaluate its reasoning. 
+%  \item Based on the application of reduction to real problems, we define predicate reduction on the basis of generalised reduction. Although predicate reduction is more concrete than generalised reduction (there are some reductions that cannot be represented by predicate reduction), it is a fairly generalised reduction and can be used to define many concrete instances of reduction. 
+%\end{itemize}
+%Finally, we will use predicate reduction combined with the properties of reduction, and some other mathematical structures, to define the path problem we encountered in the L11 lecture.
 
-In our research, we will not only conduct detailed reasoning on the properties of reduction, but we will also accomplish the following three goals:
+Combinators for algebraic systems (CAS) was introduced in the Mphil course L11 the Algebraic Path Problem \cite{griffin_2017}.
+Those lectures briefly mentioned an algebraic construction called a 'reduction' that was first introduced by Wongseelashote in 1979\cite{WONGSEELASHOTE197955}.
+This dissertation attempts to explore the reduction technique in depth.
+In particular, we present the following contributions.
 \begin{itemize}
-  \item The definition in L11 and the definition of reduction in the previous paper are all defined mathematically, which leads to the representation of reduction being difficult to implement. Therefore, we looked for an implementation-friendly representation equivalent to a traditional-reduction representation.
-  \item The functionality of classical reduction is limited, and it cannot represent some reductions (in particular, one of the reductions we used in the construction of our path problem). We will use a more generalised method to define reduction, generalise reduction, and evaluate its reasoning. 
-  \item Based on the application of reduction to real problems, we define predicate reduction on the basis of generalised reduction. Although predicate reduction is more concrete than generalised reduction (there are some reductions that cannot be represented by predicate reduction), it is a fairly generalised reduction and can be used to define many concrete instances of reduction. 
+  \item We develop a new representation of reductions called the full reduced representation, and show that this representation is isomorphic to the traditional representation of reductions introduced by Wongseelashote. Unlike the traditional representation, our representation  can be easily implemented in standard programming languages. See section \ref{def:full_reduced}.
+  \item Motived by examples that arise by modelling internet routing protocols, we discover that we must generalise the theory of reduction.  See section \ref{def:generalised_reduction}.
+  \item Again motived by internet routing protocols, we introduce a new family of generalized reduction. See section \ref{def:predicate_reduction}.
+  \item Finally, all of our work was implemented by Coq theorem prover. This will be integrated into Dr Griffin's Coq based implementation of CAS. See section \ref{coq_implementation}.
 \end{itemize}
-Finally, we will use predicate reduction combined with the properties of reduction, and some other mathematical structures, to define the path problem we encountered in the L11 lecture.
 
-\chapter{Background} 
+Chapter \ref{background} introduces the algebraic background required. Our main contributions are described in Chapter \ref{main_contributions}, while conclusions are presented in the Chapter \ref{conclusion}. The appendix contains fragments of the Coq implementation, and the full implementation can be found in the associated file.
+
+\chapter{Background} \label{background}
 
 %A more extensive coverage of what's required to understand your 
 %work. In general, you should assume the reader has a good undergraduate 
@@ -281,7 +294,7 @@ However, without distributivity, those three solutions may all exist distinctive
 \section{Classical Reduction, Example and Reasoning}
 \subsection{Origin of the Concept of Reduction}
 To better understand reduction and further analyse it in detail, we trace the source to find out if there are any other previous definitions and studies relating to reduction. 
-The earliest definition we could find about reduction came from Ahnont Wongseelashote in 1977\cite{WONGSEELASHOTE197955}. Wongseelashote also encountered the problem similar to ours when studying the path problem in the paper. Our definition of reduction in L11 follows the step of Wongseelashoth in the paper.
+The earliest definition we could find about reduction came from Ahnont Wongseelashote in 1979\cite{WONGSEELASHOTE197955}. Wongseelashote also encountered the problem similar to ours when studying the path problem in the paper. Our definition of reduction in L11 follows the step of Wongseelashoth in the paper.
 
 Next, we found that Alexander James Telford Gurney also mentioned the concept of reduction in his Ph.D thesis\cite{gurney_construction_2010}. Gurney's discussion of reduction is founded on the definition by Wongseelashote and did not focus on reduction for detailed structure proof.
 
@@ -433,13 +446,13 @@ It is also worth mentioning that the property of the distributive is one of the 
 %much. The correct choice will depend on what you're writing up, and
 %your own personal preference.
 
-\chapter{Main Contributions} 
+\chapter{Main Contributions} \label{main_contributions}
 
 %This chapter may be called something else\ldots but in general 
 %the idea is that you have one (or a few) ``meat'' chapters which
 %describe the work you did in technical detail. 
 
-\section{New Reduction Representation}
+\section{New Reduction Representation}\label{def:full_reduced}
 It is obvious that the definition of classical reduction traditional representation is not implementation friendly.
 This is because the traditional reduction representation depicts the actual problem set as $r(S) = \{s\in S|r(s)=_S s\}$ which is a type with record . It is difficult to accurately represent records in most situations. 
 
@@ -545,7 +558,7 @@ This proof will be shown in the Coq \cite{Coq} file and we only need the propert
 This proves that our full reduction representation of reduction is isomorphic to the traditional representation of reduction, which means all the properties we have proved in the classical reduction section using traditional representation could be used directly in our full reduction representation.
 
 
-\section{Generalised Reduction}
+\section{Generalised Reduction}\label{def:generalised_reduction}
 In this section, we consider the need to generalise the classical reduction.
 \subsection{Motivating Example}
 %For each path problem that is represented as a semiring, we can construct a corresponding matrix semiring that represents the concrete problem (for example, the edges and the distances for the shortest path problem). Then, using matrix multiplication and stability of the closure (the semiring), we can solve the real problem of each concrete path problem. However, the simple matrix approach can only solve ‘trivial’ path problems. Complicated problems, for example, the widest shortest path problem that was constructed from the shortest path problem semiring and the widest path problem (maximal capacity path problem) semiring using the lexicographic product, cannot be solved by this ‘traditional’ theory approach. Sometimes, even the method can find an optimal solution; there are no guarantees that all optimal solutions will be found using the classic method.
@@ -670,8 +683,8 @@ Supposed that RIP has converged on the solution $A^*_1$. Now imagine the links o
         edge node {} (1)
 ;
 \end{tikzpicture}
-\label{example:rip:3}
-\caption{Example of RIP solution 3}
+\label{example:rip:2}
+\caption{Example of RIP solution 2}
 \end{figure}
 Since RIP is a distributive protocol, there is no way to restart from the 'true' adjacency matrix
 \[A_2 = 
@@ -714,6 +727,8 @@ Assume $(S,\bullet)$ is a semigroup. Let
 where
 $X \hat\bullet Y = \{x\bullet y |x\in X,y\in Y\}$, and $X,Y \in \mathcal{P}(S)$, which is the set of finite subsets of $S$.
 
+Note that the empty set $\{\}$ is the additive identity and the multiplicative annihilator.
+
 Then for a given graph $G = (V,E)$, we define
 \begin{equation}
   \label{eq:path:def} 
@@ -724,7 +739,7 @@ where . is the concatenation function of the sequence.
 Finally, we get our ‘shortest paths with paths’ semiring from a given graph $G = (V,E)$: 
 \begin{equation}
   \label{eq:spwp:def} 
-  spwp \equiv AddZero(\bar0,(\mathbb{N},min,+) \overrightarrow{\times} path(E))
+  spwp \equiv AddZero(\infty,(\mathbb{N},min,+) \overrightarrow{\times} path(E))
 \end{equation} 
 
 \subsection{Introduce Reduction into Our Problem}
@@ -735,10 +750,27 @@ For a given path $p$, we say $p$ is elementary if there is no node inside $p$ th
 \e{r:def:elementary}{r(X) = \{p\in X | p \mbox{ is elementary }\}}and 
 \e{r:def:elementary_path}{epaths(E) = red_r(paths(E))}
 
-Therefore, our path problem semiring became 
-\e{r:def:path_problem}{AddZero(\bar0,(\mathbb{N},min,+) \overrightarrow{\times} epath(E))}
+The reduction on the additive component does not follow the property of the reduction on the $min$ operation (it does not have left/right invariant property). Imagine we have path $A = \{a,b,c,d\}$ that is longer but does not have loop and $B = \{a,b,b\}$ that is shorter path but does have loop. Then $r(A\oplus B) = r(B) = \infty$ because $B$ is shorter but has a loop, but $r(A\oplus r(B)) = r(A \oplus \infty) = r(A) = A$ because $B$ has loops but $A$ does not. 
+Note that this is new. The presentation in L11 did not go into any detailed there, and did not realized that a generalized of reduction will resolve the problem.
+This is the problem we will resolve in the next section \ref{gr:def}.
 
-However, we still encounter the problem that there exist elements in our problem set that have a path distance value but do not have edges in their path . So, we need to define the second reduction, which turns all elements that do not satisfy the condition into a single element (the $zero$ we added into our semiring).
+
+
+Therefore, our path problem semiring becomes 
+\e{r:def:path_problem}{AddZero(\infty,(\mathbb{N},min,+) \overrightarrow{\times} epath(E))}
+
+However, we still encounter the problem that there exists elements in our problem set that have a path distance value but do not have edges in their path. This iteration can go forever, since all paths have loops in them, and the empty set is legitimate second component for our algebra.
+
+\[
+\begin{bmatrix}
+    (0,\{\epsilon\}) & (1,\{(0,1)\})    & (1,\{(0,2)\})   & (n+1,\{\}) \\
+    (1,\{(1,0)\})    & (0,\{\epsilon\}) & (1,\{(1,2)\})   & (n+1,\{\}) \\
+    (1,\{(2,0)\})    & (1,\{(2,1)\})    & (0,\{\epsilon\})& (n+1,\{\}) \\
+    \infty           & \infty           & \infty          & (0,\{\epsilon\}) \\
+\end{bmatrix}
+\]
+
+So, we need to define the second reduction, which turns all elements that have $\{\}$ as the second component into $\infty$.
 \e{r:def:reduction_annihilator}{
 \begin{array}{rcl} 
 r_2 (inr(\infty)) & = & inr(\infty) \\
@@ -746,30 +778,21 @@ r_2 (inl(s,\{\})) & = & inr(\infty) \\
 r_2 (inl(s,W)) & = & inl(s,W) \\
 \end{array}}
 Therefore, our path problem semiring becomes 
-\e{r:def:reduced_path_problem}{red_{r_2}(AddZero(\bar0,(\mathbb{N},min,+) \overrightarrow{\times} epath(E)))}
+\e{r:def:reduced_path_problem}{red_{r_2}(AddZero(\infty,(\mathbb{N},min,+) \overrightarrow{\times} epath(E)))}
 
-It is useful to mention that we did not discuss the properties of reduction in detail during the L11 course. We also did not know whether the constructed semiring still satisfies the semiring property after the reduction. At the same time, whether some properties of the original operators (such as commutative rules) remain, or not, after reduction, is also a mystery to us.
+This is a movitation for the reduce annihilator reduction in the section \ref{def:reduce_annihilator} (this is a construction that we have generalized to predicate reduction which has been described in section \ref{def:predicate_reduction}).
 
-These are the topics that require our focus during the discussion.
-It is worth mentioning that the first reduction (reduce all paths that are not elementary) does not follow the property of the reduction on the $min$ operation (it does not have left/right invariant property). Imagine we have path $A = \{a,b,c,d\}$ that is longer but does not have loop and $B = \{a,b,b\}$ that is shorter path but does have loop. Then $r(A\oplus B) = r(B) = \infty$ because $B$ is shorter but has a loop, but $r(A\oplus r(B)) = r(A \oplus \infty) = r(A) = A$ because $B$ has loops but $A$ does not.
+%It is also worth noting that the two binary operators we used to construct the elementary path semiring in the later section are not $union$ and $concat$ but $min$ and $concat$. 
+%Such a definition will select the path that has the least number of nodes in the path, instead of finding all qualified paths as in the mathematical definition above. But both definition is meaningful and our later definition will help us resolve the path problem in advance.
 
-Therefore, we are not only discussing the properties of reduction, but also trying to locate another way to represent and define the reduction to solve our path problem.
-
-It is also worth noting that the two binary operators we used to construct the elementary path semiring in the later section are not $union$ and $concat$ but $min$ and $concat$. 
-Such a definition will select the path that has the least number of nodes in the path, instead of finding all qualified paths as in the mathematical definition above. But both definition is meaningful and our later definition will help us resolve the path problem in advance.
-
-\subsection{Generalized Reuduction Definition}
+\subsection{Generalized Reuduction Definition} \label{gr:def}
 To our previously defined classical reduction (either in traditional representation or full reduction representation), reduction must satisfy four properties: congruence, idempotent, left invariant, and right invariant. However, the reduction we encounter in reality does not have the above four properties, especially the left/right invariants. In particular, the elementary reduction in the elementary path problem that we mentioned earlier, which will also be used in the latter section to construct our final path problem, does not satisfy the properties of the left/right invariant on the $min$ operator. 
 
-Assuming $P_1,P_2 \in Path, P_1 \leq P_2, loop(P_1) \wedge \not loop(P_2)$. 
+Assuming $P_1,P_2 \in Path, P_1 \leq P_2, loop(P_1) \wedge \neg loop(P_2)$. 
 Then $r(min(P_1,P_2)) = r(P_1) = \infty$.
 However, $r(min(r(P_1),P_2)) = r(min(\infty,P_2)) r(P_2) = P_2$. 
 
 Therefore, in order to define our elementary path reduction and also to better represent other reductions, we generalise the definition reduction as: $r$ is a reduction on $S$ if $r$ has the properties of congruence and idempotent and gets rid of the constraint of left/right invariant properties; we refer to this kind of reduction as generalised reduction.
-
-Do not confuse full reduction representations of reduction with generalised reduction here. 
-Full reduction representation of reduction is a new representation of reduction, compared to (and isomorphic to) the traditional representation of reduction, which is implementation friendly.  A reduction that is represented by full reduction representation could be classical reduction (that has left/right invariant properties) or generalised reduction (left/right invariant properties that can be removed).
-The generalised reduction we define here is a type of reduction that only asks for idempotent and congruence properties without forcing left/right invariants.  Generalised reduction could be represented using traditional representation or full reduction representation.
 
 Because the full reduction representation is implementation friendly, and we have proved the isomorphism between the full reduction representation and traditional representation, we will use full reduction representation to represent a reduction in the following paragraph.
 
@@ -838,15 +861,15 @@ Similar proof for right distributivity.
 
 So, we can conclude that for the generalised reduction, although it may not have the property of left/right invariants, if we can directly prove the properties of pseudo associative/pseudo distributives, then we can also prove that the binary operator(s) remains associative/distributive under reduction.
 
-\section{Predicate Reduction}
+\section{Predicate Reduction} \label{def:predicate_reduction}
 To better implement the construction of the path problem we mentioned earlier, in this section we will define a type of reduction and perform detailed reasoning on its properties. 
 If we deeply consider our reduction, whether it is to eliminate the path with a loop, or to turn an unqualified element tuple into a specific element (additive identity/multiplicative annihilator), we could easily realise that our reduction depends on a predicate and reduce the elements that satisfy/not satisfy the condition. Therefore, we call this kind of reduction ‘predicate reduction’. 
 
 We define predicate reduction based on generalised reduction. 
 Predicate reduction is a type of generalised reduction, but is less generalised than the generalised reduction.  Generalised reduction could define almost all kinds of reductions, but predicate reduction could not, and it is for this reason that it is not as generalised as the previous one. For example, when we are talking about the min set $min_\leq = \{ x \in X | \forall y \in X, y \not\leq x \}$, which is introduced as Martelli’s semiring in our previous section, we cannot define $min_\leq$ using predicate reduction. This is because when we are defining a predicate, the predicate only knows the information on its current element, but not the whole problem set. Predicate reduction is still a kind of generalised reduction, but not classical reduction, because it is not forcing the reduction to have left/right invariant properties. Having, or not having, those properties depends on the predicate inside reduction. For example, we will use predicate reduction to define three different reductions in a later section. Two of them (min plus with ceiling and reduction annihilator) have the properties of left/right invariants on both operators, but one of them (elementary path) does not have them on its $min$ operator. 
 
-Here is our definition. Initially for our problem set $S$, we define a predicate $P$, which is a function from $S$ to $bool$ and we need to provide a specific element $c$ (the predicate reduction will reduce all the element that satisfied the predicate to $c \in S$). Then we can define the predicate reduction as 
-\e{pr:def:def}{\forall a \in S, r_p(a)=\left\{
+Here is our definition. Initially for our problem set $S$, we define a predicate $P$, which is a function from $S$ to $bool$ and we need to provide a specific element $c$ (the predicate reduction will reduce all the element that satisfied the predicate to $c \in S$). Then we can define the predicate reduction as, for all element $a$ in $S$
+\e{pr:def:def}{r_p(a) \equiv \left\{
 \begin{aligned}
 c &  & P(a) \\
 a &  & otherwise 
@@ -858,36 +881,24 @@ As previously mentioned, predicate reduction is defined based on generalised red
 \subsection{Properties of Predicate}
 In predicate reduction, we hope to be able to explore the properties of predicate reduction that are different from generalized reduction, but as the predicate reduction is a kind of generalised reduction, it must have the properties of the idempotent and congruence properties, which are $\forall a \in S, r(a) = r(r(a))$ and $\forall a,b\in S, a = b \rightarrow r(a) = r(b)$. So, we need to discuss the reasoning on these two properties. For the property of the idempotent, we are required to discuss the input element to split the case of whether the element satisfies the predicate or not. If the element does not satisfy the predicate, then $r(a) = a = r(r(a))$. If the element does satisfy the predicate, then $r(a) = c$ and $r(r(a)) = r(c)$, hence we need to prove/provide the property that $c$ must satisfy the predicate
 \e{pr:proof:p_true}{P(c)}
-For the property of the congruence, we can conclude from 
-\[\forall a,b \in S, r_p(a)=\left\{
-\begin{aligned}
-c &  & P(a) \\
-a &  & otherwise 
-\end{aligned}
-\right. = 
-r_p(b)=\left\{
-\begin{aligned}
-c &  & P(b) \\
-b &  & otherwise 
-\end{aligned}
-\right.\] that we need such a property \e{pr:proof:p_cong}{\forall a,b \in S, a = b \rightarrow P(a) = P(b)} which is the congruence of the predicate $P$.
+Because we need the proof of congruence of reduction \ref{pr:def:def}, we need such a property \e{pr:proof:p_cong}{\forall a,b \in S, a = b \rightarrow P(a) = P(b)} which is the congruence of the predicate $P$.
 
-Next, we need to reduce the binary operator according to the full reduction representation we defined earlier using the predicate reduction. For our problem set $S$ and a given binary operator $\oplus$, we defined the reduced binary operator as 
-\e{pr:def:binary_operator}{\forall a,b \in S, a \oplus_r b = r_p (r_p(a) \oplus r_p(b))}
+Next, we need to reduce the binary operator according to the full reduction representation we defined earlier using the predicate reduction. For our problem set $S$ and a given binary operator $\oplus$, we defined the reduced binary operator as, for all two element $a$ and $b$ in $S$
+\e{pr:def:binary_operator}{a \oplus_r b \equiv r_p (r_p(a) \oplus r_p(b))}
 
 Therefore, here, we mainly discuss the properties of predicates and their relationship with binary operators, and then try to prove associative/distributive by utilising pseudo associative/distributives without forcing left/right invariants on the reduction. During this process, we discovered three very interesting properties about predicates. 
 
 Before describing these three properties, we first introduce an implicit definition. If our operator is selective, then we actually implicitly define a partial order on the problem set.
-\[\forall a,b \in S, a \oplus b =_S a \leftrightarrow a \leq b\]
+\[\forall a,b \in S, a \oplus b =_S a \longleftrightarrow a \leq b\]
 
 Next, we will formally introduce our three properties for the predicate.
 
 Decomposition: \e{pr:def:decomposition}{\forall a,b \in S, P(a \oplus b) \rightarrow P(a) \bigvee P (b)}
 Composition: \e{pr:def:composition}{\forall a,b \in S, P(a) \bigvee P (b) \rightarrow P(a \oplus b)}
 Preserve Order: \e{pr:def:preserve_order}{\forall a,b \in S, a \leq b \wedge P(a) \rightarrow P(b)}
-From the property of decomposition, we can infer that \e{pr:proof:decomposition_contra}{\forall a,b \in S, \not P(a) \bigwedge \not P(b) \rightarrow \not P(a \oplus b)} which means the binary operator will not create elements that satisfy the predicate condition from the elements that do not satisfy the condition.
+From the property of decomposition, we can infer that \e{pr:proof:decomposition_contra}{\forall a,b \in S, \neg P(a) \bigwedge \neg P(b) \rightarrow \neg P(a \oplus b)} which means the binary operator will not create elements that satisfy the predicate condition from the elements that do not satisfy the condition.
 
-From the property of decomposition, we can infer that \e{pr:proof:composition_contra}{\forall a,b \in S, \not P(a \oplus b) \rightarrow \not P(a) \bigwedge \not P(b)} which means the result of the binary operation will decide the predicate condition of its arguments.
+From the property of decomposition, we can infer that \e{pr:proof:composition_contra}{\forall a,b \in S, \neg P(a \oplus b) \rightarrow \neg P(a) \bigwedge \neg P(b)} which means the result of the binary operation will decide the predicate condition of its arguments.
 
 Generally speaking, because our additive component of the semiring is mostly selective, most of our additive components have decomposition properties; we are mainly concerned about whether our additive component preserve the order. At the same time, our multiplicative component always plays the role of an accumulator, which makes the composition property important for multiplicative components.
 
@@ -919,7 +930,7 @@ Then
 \[\longrightarrow\]
 \[\forall a,b \in S, r_p(r_p(a) \oplus b) =_S r_p(a \oplus b) \bigwedge r_p(a \oplus r_p(b)) =_S r_p(a \oplus b)\]
 
-Detailed proof will be presented in the later Coq file, and no more details will be given here.
+Detailed proof can be found in the Coq file, and no more details will be given here.
 
 In conjunction with the above proof and the universal properties of the previously mentioned additive/multiplicative, we can draw the following conclusions.
 
@@ -956,7 +967,7 @@ We take the left distributive property as an example, $\forall a,b,c \in S,$ we 
 
 If any of a, b, c satisfies predicate $P$, the result is definite, and the distributive property remains after reduction.
 
-The most critical problem is that a, b, and c alone do not satisfy predicate $P$, but $a \otimes b$ or $a \otimes c$ does. However, because we have assumed that both operators are decompositions, this completely eliminates the occurrence of such things. This means that if $\not P(a)$, $\not P(b)$, $\not P(c)$, then $\not P(a \otimes b)$ and $\not P(a \otimes c)$, which leads to the property of the left distributive.
+The most critical problem is that a, b, and c alone do not satisfy predicate $P$, but $a \otimes b$ or $a \otimes c$ does. However, because we have assumed that both operators are decompositions, this completely eliminates the occurrence of such things. This means that if $\neg P(a)$, $\neg P(b)$, $\neg P(c)$, then $\neg P(a \otimes b)$ and $\neg P(a \otimes c)$, which leads to the property of the left distributive.
 
 Similar proof is constructed for the right distributive. This means that apart from the classical reduction, we also find another way to prove distributive, such as associative.
 
@@ -972,7 +983,7 @@ In the process of our later constructing/reasoning predicate reduction instance,
   \item reasoning the distributive property if the reduction is not classical
 \end{itemize}
 
-\section{Path Problem Construction}
+\section{Example Applications}
 After the general reasoning of predicate reduction, we used predicate reduction to define three concrete reductions. These three reductions will be used in the construction of our final path problem semiring in this section, and we will carry out detailed reasoning on these three reductions. 
 \subsection{Min Plus with Ceiling Reduction}
 Here we define a reduction based on predicate reduction, which we will use in constructing the final semiring; it is working on $(\mathbb{N},min,+)$, the first part of the path problem. 
@@ -1102,7 +1113,7 @@ Decomposition: because $min_d$ is selective, then it is obvious that $min_d$ is 
 
 Composition: we can prove that $concat_d$ is composition. Considering $p_1,p_2 \in Path$, if either of them has loop inside the path, then the result of the concatenation of them must have a loop. Detailed proof can be found in the Coq file.
 
-Preserving Order: although we defined a selective additive component, which implicitly defines a partial order on $Path$, the order has no relationship with either path, whether it has a loop or not.  Therefore, the additive component $min_d$ does not have the property of a preserving order and we can easily find an example. Imagine $a = inr([1,2,2])$ and $b = inr([1,2,3,4])$, it is obvious that $a \leq_p b$ because $min_d(a,b) = a$. However, by our definition we have $P(a)$ but $\not P(b)$. Similarly, we can prove that the reduction on the $min_d$ is not classical because $r(min_d(r(a),b)) = b$ but $r(min_d(a,b)) = inl(c)$.
+Preserving Order: although we defined a selective additive component, which implicitly defines a partial order on $Path$, the order has no relationship with either path, whether it has a loop or not.  Therefore, the additive component $min_d$ does not have the property of a preserving order and we can easily find an example. Imagine $a = inr([1,2,2])$ and $b = inr([1,2,3,4])$, it is obvious that $a \leq_p b$ because $min_d(a,b) = a$. However, by our definition we have $P(a)$ but $\neg P(b)$. Similarly, we can prove that the reduction on the $min_d$ is not classical because $r(min_d(r(a),b)) = b$ but $r(min_d(a,b)) = inl(c)$.
 
 
 
@@ -1114,7 +1125,7 @@ Thus, we can conclude that our definition of reduction is classical regarding mu
 \begin{itemize}
   \item $\forall a \in (c + Path), min_d(inr([]),n) = inr([]) = min_d(n,inr([]))$ ($inr([])$ is the annihilator for $min_d$)
   \item $\forall a \in (c + Path), concat_d(inr([]),n) = n = concat_d(n,inr([]))$ ($inr([])$ is the identity for $concat_d$)
-  \item $ \not dup([]) \rightarrow \not P(inr[])$ (reduction preserve annihilator/identity for $min$/$+$)
+  \item $ \neg dup([]) \rightarrow \neg P(inr[])$ (reduction preserve annihilator/identity for $min$/$+$)
   \item $min_d$ has the properties of selective, congruence, associative, commutative
   \item $concat_d$ has the properties of congruence and associative
   \item $min_d$ and $concat_d$ are distributive on $(c + Path)$
@@ -1184,7 +1195,7 @@ $\otimes_1$ and $\otimes_2$ are not distributive on $S_2$ $\longrightarrow$ $\op
 
 
 So, we can conclude that our additive component $min^r \bar{\times} min^r_d$ of the path problem has the properties of congruence, associative, commutative, and selective. We can conclude that $(ceiling,inl(c))$ is the identity of $min^r \bar{\times} min^r_d$ and $(0,inr([]))$ is the annihilator of $+^r \times concat^r_d$. $min^r \bar{\times} min^r_d$ and $+^r \times concat^r_d$ are not distributive on $\mathbb{N} \times (c + Path)$.
-\subsection{Reduce Annihilator}
+\subsection{Reduce Annihilator} \label{def:reduce_annihilator}
 Finally, we define our third predicate reduction. The reduction will reduce all the pairs of elements $(x,y) \in X \times Y$ to $(a,b)$, where $a$ is the annihilator for the multiplicative component of $X$ and $b$ is the annihilator for the multiplicative component of $Y$, if $x = a \vee y = b$.
 
 According to our previous reasoning, $(ceiling,inl (c))$ is the identity/annihilator for the additive/multiplicative component of the path problem semiring. Therefore, following the definition, the predicate reduction will reduce all pairs of $(ceiling,\_)$ and $(\_,inl(c))$ to $(ceiling,inl(c))$.
@@ -1212,11 +1223,11 @@ Decomposition: since we have proved (using the properties of lexicographic produ
 
 Composition: it is easy to prove that $+^r \times concat^r_d$ is composition under the predicate. Suppose we have $(n_1,p_1),(n_2,p_2) \in \mathbb{N} \times (c + Path)$, if $P(((n_1,p_1)))$, which means $n_1 = ceiling \vee p_1 = inl(c)$, in both cases, the results of the binary operation will yield a tuple that contains at least one of $ceiling$ or $inl(c)$, leading to the result, satisfying the predicate and proof for $P(((n_2,p_2)))$.
 
-Preserving Order: we can prove that $min^r \bar{\times} min^r_d$ does not have the property of preserving order and provide the counter example. Suppose we have $a = (0,inl (c)), b = (1,inr([])) \in \mathbb{N} \times (c + Path)$, it is obvious that $ a min^r \bar{\times} min^r_d b = a$ by the definition of lexicographic product, and $P(a)$. However, it is also obvious that $\not P(b)$ and that the additive component does not have left/right invariant properties by the example we provided here.
+Preserving Order: we can prove that $min^r \bar{\times} min^r_d$ does not have the property of preserving order and provide the counter example. Suppose we have $a = (0,inl (c)), b = (1,inr([])) \in \mathbb{N} \times (c + Path)$, it is obvious that $ a min^r \bar{\times} min^r_d b = a$ by the definition of lexicographic product, and $P(a)$. However, it is also obvious that $\neg P(b)$ and that the additive component does not have left/right invariant properties by the example we provided here.
 
 Thus, we can conclude that our definition of reduction is classical on a multiplicative component but is not classical on an additive component.
 
-We also know that, by the assumption that $ceiling$ is not 0, $\not P((0,inr([])))$. Hence, the reduction preserves the annihilator/identity for additive/multiplicative components.
+We also know that, by the assumption that $ceiling$ is not 0, $\neg P((0,inr([])))$. Hence, the reduction preserves the annihilator/identity for additive/multiplicative components.
  
 Because our additive component is decomposition, and $(ceiling,inl (c))$ is the identity for $min^r \bar{\times} min^r_d$, and $min^r \bar{\times} min^r_d$ has the property of associative, $min^r \bar{\times} min^r_d$ remains the property of associative after reduction.
 
@@ -1232,7 +1243,10 @@ Thus, we can conclude that \[(\mathbb{N} \times (c + Path),(min^r \bar{\times} m
   \item $(min^r \bar{\times} min^r_d)_a$ and $(+^r \times concat^r_d)_a$ are not distributive on $\mathbb{N} \times (c + Path)$.
 \end{itemize}
 
-\chapter{Evaluation, Summary, and Conclusions} 
+\section {Coq Implementation} \label{coq_implementation}
+It should be emphasized that all of the above development was formalized with in the Coq theorem prover. We feel that this was essential in getting the detail that our theorem worked out correctly. For example, the isomorphism between the traditional representation and the full reduction representation is quite tedious and would be very difficult without automated assistance. The appendix outlines some of the Coq development. The full development can be found in the associated Coq file.
+
+\chapter{Evaluation, Summary, and Conclusions} \label{conclusion}
 
 %For any practical projects, you should almost certainly have
 %some kind of evaluation, and it's often useful to separate 
@@ -1246,11 +1260,9 @@ Thus, we can conclude that \[(\mathbb{N} \times (c + Path),(min^r \bar{\times} m
 %to potential future work. 
 
 \section{Evaluation to the Result}
-First of all, we first assess the results of our definition of reduction. 
-
 Before we defined the full reduction representation, the original representation of reduction was not very implementation friendly, as we have seen. The full reduction representation of our definition represents the reduced problem set using reduction, a unary operator, the equality and binary operators, and is implementation friendly. Furthermore, our proof in Coq can be extracted to other languages for implementation reasons, such as Occam and Haskell, which are functional programming languages.  Because of the difficulty, or even impossibility, of representing records in these languages, our full reduction representation will be very important. The proof of isomorphism between the two representation also helps us to better express and use reduction. It is obvious that the properties of reduction under full reduction representation should be more easily proved.
 
-At the same time, although the original classical reduction gives us two more specific properties, it also limits the definition of reduction, so many types of reduction cannot be classified into it. After our generalised reduction, most of this operation type can be defined and classified into it. We can also define more concrete reductions based on generalised reduction, such as our defined predicate reduction. The reasoning of predicate reduction is also very detailed; latecomers can use its properties directly.
+At the same time, although the original classical reduction gives us two more specific properties, it also limits the definition of reduction, so many types of reduction cannot be classified into it. After our generalised reduction, most of this operation type can be defined and classified into it. We can also define more concrete reductions based on generalised reduction, such as our defined predicate reduction. The reasoning of predicate reduction is also very detailed; others can use its properties directly.
 
 We have defined full reduction representation and generalised reduction, with the advantage that it is very easy to implement a reduction combination. For a reduction, by our definition, it does not matter whether the problem set has been reduced before. All that matters is the nature of the existing equality/binary operator. So, we can easily combine a lot of reduction together, just as we finally defined the path problem.
 
@@ -1264,7 +1276,7 @@ Of course, during this process, we have made many detours and there have been ma
 \section{Conclusion to the Thesis}
 Our discussion of reduction is almost complete. During the process of reasoning the predicate reduction we confirmed, at our earliest guess, was that classical reduction is only a sufficient condition for associative and distributive, although we did not find a very meaningful example. We can provide an example that, similar to the elementary path problem, we defined another operator $max$, which was opposite to $min$. It is obvious that $max$ is decomposition, and not a preserving order. However, we can still prove the associative, since it is decomposition and the reduced element is its identity. We can also prove the distributive under those two operators. However, this example does not have practical significance, and we have not yet found an example that is meaningful and satisfies the conditions.
 
-Our proof covers almost all the properties that will be used. Late adopters only need to provide basic proof of properties to use our proof and definitions to construct semirings for compounding requirements.
+Our proof covers almost all the properties that will be used. Users only need to provide basic proof of properties to use our proof and definitions to construct semirings for compounding requirements.
 
 \appendix
 \chapter{Some Code of Proof}

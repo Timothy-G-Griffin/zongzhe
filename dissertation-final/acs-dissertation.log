@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99998 (TeX Live 2017) (preloaded format=xelatex 2017.12.12)  7 JUN 2018 11:00
+This is XeTeX, Version 3.14159265-2.6-0.99998 (TeX Live 2017) (preloaded format=xelatex 2017.12.12)  7 JUN 2018 12:48
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1992,7 +1992,9 @@ Underfull \vbox (badness 1694) has occurred while \output is active []
 Chapter 1.
 [1
 
-] [2]
+] [2
+
+]
 Chapter 2.
 Requested font "[LinLibertine_RB.otf]/OT:script=latn;language=DFLT;+tnum;+lnum;
 mapping=tex-text;" at 17.28pt
@@ -2002,9 +2004,7 @@ Requested font "[LinLibertine_RB.otf]/OT:script=latn;language=DFLT;+tnum;+lnum;
 mapping=tex-text;" at 14.4pt
  -> /usr/local/texlive/2017/texmf-dist/fonts/opentype/public/libertine/LinLiber
 tine_RB.otf
-[3
-
-]
+[3]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [4]
@@ -2013,7 +2013,7 @@ Underfull \vbox (badness 2753) has occurred while \output is active []
 
  [6]
 [7] [8]
-Overfull \hbox (17.40308pt too wide) in paragraph at lines 275--276
+Overfull \hbox (17.40308pt too wide) in paragraph at lines 288--289
 []\TU/LinLibertine(0)/m/n/12 The right local optimality: Dijkstra’s algorithm: 
 $\OML/cmm/m/it/12 R \OT1/cmr/m/n/12 = (\OML/cmm/m/it/12 R \OMS/cmsy/m/n/12 
  \OML/cmm/m/it/12 A\OT1/cmr/m/n/12 ) \OMS/cmsy/m/n/12 ^^H []$\TU/LinLibertine(0
@@ -2053,25 +2053,25 @@ Underfull \vbox (badness 1360) has occurred while \output is active []
  [20]
 [21]
 LaTeX Font Info:    Font shape `TU/LinBiolinum(0)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 564.
+(Font)              scaled to size 12.0pt on input line 577.
 Requested font "[LinBiolinum_R.otf]/OT:script=latn;language=DFLT;+tnum;mapping=
 tex-text;" at 12.0pt
  -> /usr/local/texlive/2017/texmf-dist/fonts/opentype/public/libertine/LinBioli
 num_R.otf
 LaTeX Font Info:    Font shape `TU/LinBiolinum(0)/m/n' will be
-(Font)              scaled to size 17.28pt on input line 564.
+(Font)              scaled to size 17.28pt on input line 577.
 Requested font "[LinBiolinum_R.otf]/OT:script=latn;language=DFLT;+tnum;mapping=
 tex-text;" at 17.28pt
  -> /usr/local/texlive/2017/texmf-dist/fonts/opentype/public/libertine/LinBioli
 num_R.otf
 LaTeX Font Info:    Font shape `TU/LinBiolinum(0)/bx/n' will be
-(Font)              scaled to size 17.28pt on input line 564.
+(Font)              scaled to size 17.28pt on input line 577.
 Requested font "[LinBiolinum_RB.otf]/OT:script=latn;language=DFLT;+tnum;mapping
 =tex-text;" at 17.28pt
  -> /usr/local/texlive/2017/texmf-dist/fonts/opentype/public/libertine/LinBioli
 num_RB.otf
 LaTeX Font Info:    Font shape `TU/LinBiolinum(0)/m/n' will be
-(Font)              scaled to size 10.95pt on input line 570.
+(Font)              scaled to size 10.95pt on input line 583.
 Requested font "[LinBiolinum_R.otf]/OT:script=latn;language=DFLT;+tnum;mapping=
 tex-text;" at 10.95pt
  -> /usr/local/texlive/2017/texmf-dist/fonts/opentype/public/libertine/LinBioli
@@ -2080,54 +2080,49 @@ num_R.otf
 Underfull \vbox (badness 2582) has occurred while \output is active []
 
  [22]
-[23] [24] [25] [26]
-Overfull \hbox (24.24184pt too wide) in paragraph at lines 776--776
+[23]
+Underfull \vbox (badness 8019) has occurred while \output is active []
+
+ [24]
+[25]
+Overfull \hbox (24.24184pt too wide) in paragraph at lines 799--799
 []\TU/LinLibertine(0)/bx/n/14.4 Properties of Generalised Reduction, Pseudo Ass
 ociative, and Pseudo
  []
 
-[27]
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [28]
-Overfull \hbox (52.80028pt too wide) detected at line 835
+Underfull \vbox (badness 2591) has occurred while \output is active []
+
+ [26]
+[27]
+Overfull \hbox (52.80028pt too wide) detected at line 858
 []
  []
 
-[29]
-Underfull \vbox (badness 3029) has occurred while \output is active []
 
- [30]
-Underfull \vbox (badness 1629) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [31]
-[32]
-Underfull \vbox (badness 1675) has occurred while \output is active []
+ [28]
+[29] [30] [31] [32] [33] [34] [35] [36] [37] [38]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [33]
-[34]
-Underfull \vbox (badness 3503) has occurred while \output is active []
-
- [35]
-[36] [37] [38] [39] [40] [41]
-Overfull \hbox (19.90683pt too wide) in paragraph at lines 1136--1138
+ [39]
+[40]
+Overfull \hbox (19.90683pt too wide) in paragraph at lines 1147--1149
 \TU/LinLibertine(0)/m/n/12 We have already defined the two components needed fo
 r our path problem, $\OT1/cmr/m/n/12 (\U/msb/m/n/12 N\OML/cmm/m/it/12 ; min[]; 
 \OT1/cmr/m/n/12 +[]\OML/cmm/m/it/12 ; ceiling; \OT1/cmr/m/n/12 0)$
  []
 
-[42]
-Overfull \hbox (19.52788pt too wide) in paragraph at lines 1186--1187
+[41] [42]
+Overfull \hbox (19.52788pt too wide) in paragraph at lines 1197--1198
 \TU/LinLibertine(0)/m/n/12 erties of congruence, associative, commutative, and 
 selective. We can conclude that $\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 ceiling; inl
 \OT1/cmr/m/n/12 (\OML/cmm/m/it/12 c\OT1/cmr/m/n/12 ))$
  []
 
 
-Underfull \vbox (badness 4686) has occurred while \output is active []
-
- [43]
-Overfull \hbox (6.55421pt too wide) in paragraph at lines 1190--1191
+Overfull \hbox (6.55421pt too wide) in paragraph at lines 1201--1202
 \TU/LinLibertine(0)/m/n/12 tion, the predicate reduction will reduce all pairs 
 of $\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 ceiling; []\OT1/cmr/m/n/12 )$ \TU/LinLibe
 rtine(0)/m/n/12 and $\OT1/cmr/m/n/12 ([]\OML/cmm/m/it/12 ; inl\OT1/cmr/m/n/12 (
@@ -2136,27 +2131,25 @@ rtine(0)/m/n/12 and $\OT1/cmr/m/n/12 ([]\OML/cmm/m/it/12 ; inl\OT1/cmr/m/n/12 (
 /m/n/12 ))$\TU/LinLibertine(0)/m/n/12 . 
  []
 
-
-Overfull \hbox (13.62538pt too wide) in paragraph at lines 1211--1212
+[43]
+Overfull \hbox (13.62538pt too wide) in paragraph at lines 1222--1223
 []\TU/LinLibertine(0)/m/n/12 Decomposition: since we have proved (using the pro
 perties of lexicographic product), $\OML/cmm/m/it/12 min[][]min[]$
  []
 
-[44]
-Overfull \hbox (33.6918pt too wide) in paragraph at lines 1221--1222
+
+Overfull \hbox (33.6918pt too wide) in paragraph at lines 1232--1233
 []\TU/LinLibertine(0)/m/n/12 Because our additive component is decomposition, a
 nd $\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 ceiling; inl\OT1/cmr/m/n/12 (\OML/cmm/m/i
 t/12 c\OT1/cmr/m/n/12 ))$ \TU/LinLibertine(0)/m/n/12 is the identity for $\OML/
 cmm/m/it/12 min[][]min[]$\TU/LinLibertine(0)/m/n/12 ,
  []
 
-[45] [46]
+[44] [45] [46]
 Chapter 4.
 [47
 
-] [48] [49] [50
-
-]
+] [48]
 Appendix A.
 (./codefile.tex
 \openout4 = `acs-dissertation.pyg'.
@@ -2188,7 +2181,9 @@ tfm
 
 
 (./_minted-acs-dissertation/998944CA37098A6624D0E74F7E00D6E05AC3F459B292A146A2F
-3118C6C1B168F.pygtex) [51]
+3118C6C1B168F.pygtex) [49
+
+]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2208,7 +2203,7 @@ tfm
 
 
 (./_minted-acs-dissertation/4CB2B7B6FB2561F835200A47D9732C345AC3F459B292A146A2F
-3118C6C1B168F.pygtex) [52]
+3118C6C1B168F.pygtex) [50]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2223,7 +2218,7 @@ tfm
 
 
 (./_minted-acs-dissertation/69D5329CE93FE4F7D924699ADB359CB95AC3F459B292A146A2F
-3118C6C1B168F.pygtex) [53]
+3118C6C1B168F.pygtex) [51]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2236,7 +2231,7 @@ tfm
 3118C6C1B168F.pygtex)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [54]
+ [52]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2246,7 +2241,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 (./_minted-acs-dissertation/639A160A1BC3192319FF9A10CD66A6175AC3F459B292A146A2F
-3118C6C1B168F.pygtex) [55]
+3118C6C1B168F.pygtex) [53]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2266,7 +2261,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 (./_minted-acs-dissertation/3E65987AB79D0B9668BC14A3BC17A3FF5AC3F459B292A146A2F
-3118C6C1B168F.pygtex) [56]
+3118C6C1B168F.pygtex) [54]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2289,7 +2284,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 3118C6C1B168F.pygtex)
 Underfull \vbox (badness 1783) has occurred while \output is active []
 
- [57]
+ [55]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2304,7 +2299,7 @@ Underfull \vbox (badness 1783) has occurred while \output is active []
 
 
 (./_minted-acs-dissertation/54E6F871677771D5D831F1713DB0128B5AC3F459B292A146A2F
-3118C6C1B168F.pygtex) [58]
+3118C6C1B168F.pygtex) [56]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2317,7 +2312,7 @@ Underfull \vbox (badness 1783) has occurred while \output is active []
 3118C6C1B168F.pygtex)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [59]
+ [57]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2327,7 +2322,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 (./_minted-acs-dissertation/266EACEB79D36CAD00950EC781B84E3B5AC3F459B292A146A2F
-3118C6C1B168F.pygtex) [60]
+3118C6C1B168F.pygtex) [58]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2342,7 +2337,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 (./_minted-acs-dissertation/5E95BE495B36E889A00F01164EA892145AC3F459B292A146A2F
-3118C6C1B168F.pygtex) [61]
+3118C6C1B168F.pygtex) [59]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2355,7 +2350,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 3118C6C1B168F.pygtex)
 Underfull \vbox (badness 7362) has occurred while \output is active []
 
- [62]
+ [60]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2370,7 +2365,7 @@ Underfull \vbox (badness 7362) has occurred while \output is active []
 
 
 (./_minted-acs-dissertation/20650A8A19140B8E2EFCF97088D95B6B5AC3F459B292A146A2F
-3118C6C1B168F.pygtex) [63]
+3118C6C1B168F.pygtex) [61]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2383,7 +2378,7 @@ Underfull \vbox (badness 7362) has occurred while \output is active []
 3118C6C1B168F.pygtex)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [64]
+ [62]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2393,7 +2388,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 (./_minted-acs-dissertation/011C13DF84855FE76B1615202FFD6D125AC3F459B292A146A2F
-3118C6C1B168F.pygtex) [65]
+3118C6C1B168F.pygtex) [63]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2418,7 +2413,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 (./_minted-acs-dissertation/78D67A401AD5B46DEF3BC5B7CC1A0ADC5AC3F459B292A146A2F
-3118C6C1B168F.pygtex) [66]
+3118C6C1B168F.pygtex) [64]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2431,7 +2426,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 3118C6C1B168F.pygtex)
 Underfull \vbox (badness 1701) has occurred while \output is active []
 
- [67]
+ [65]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2449,7 +2444,7 @@ Underfull \vbox (badness 1701) has occurred while \output is active []
 3118C6C1B168F.pygtex)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [68]
+ [66]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2464,7 +2459,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 (./_minted-acs-dissertation/D1A4976A2585896A666097C2F473D76E5AC3F459B292A146A2F
-3118C6C1B168F.pygtex) [69]
+3118C6C1B168F.pygtex) [67]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2487,7 +2482,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 3118C6C1B168F.pygtex)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [70]
+ [68]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2500,7 +2495,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 3118C6C1B168F.pygtex)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [71]
+ [69]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2520,7 +2515,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 (./_minted-acs-dissertation/C4D432671219064DDA4006D113F2A8FB5AC3F459B292A146A2F
-3118C6C1B168F.pygtex) [72]
+3118C6C1B168F.pygtex) [70]
 \openout4 = `acs-dissertation.pyg'.
 
 
@@ -2538,13 +2533,13 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 3118C6C1B168F.pygtex)
 Underfull \vbox (badness 3323) has occurred while \output is active []
 
- [73])
-(./acs-dissertation.bbl [74]
+ [71])
+(./acs-dissertation.bbl [72]
 Requested font "[LinLibertine_RI.otf]/OT:script=latn;language=DFLT;+tnum;+lnum;
 mapping=tex-text;" at 12.0pt
  -> /usr/local/texlive/2017/texmf-dist/fonts/opentype/public/libertine/LinLiber
 tine_RI.otf
-) [75
+) [73
 
 ] (./acs-dissertation.aux)
 
@@ -2554,12 +2549,12 @@ runsystem(rm acs-dissertation.pyg)...executed.
 
  ) 
 Here is how much of TeX's memory you used:
- 36468 strings out of 493005
- 797050 string characters out of 6134595
- 778858 words of memory out of 5000000
- 39687 multiletter control sequences out of 15000+600000
+ 36477 strings out of 493005
+ 797216 string characters out of 6134595
+ 778953 words of memory out of 5000000
+ 39696 multiletter control sequences out of 15000+600000
  9835 words of font info for 84 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  55i,13n,87p,10388b,859s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on acs-dissertation.pdf (87 pages).
+Output written on acs-dissertation.pdf (85 pages).
