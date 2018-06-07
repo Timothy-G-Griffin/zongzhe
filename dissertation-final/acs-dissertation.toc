@@ -4,55 +4,55 @@
 \contentsline {section}{\numberline {2.1}Combinator for an Algebraic System}{3}
 \contentsline {section}{\numberline {2.2}Basic Definition}{3}
 \contentsline {subsection}{\numberline {2.2.1}Equality}{4}
-\contentsline {subsection}{\numberline {2.2.2}Unary Operator}{4}
-\contentsline {subsection}{\numberline {2.2.3}Binary Operator}{5}
-\contentsline {section}{\numberline {2.3}Semiring and Path Problem}{6}
+\contentsline {subsection}{\numberline {2.2.2}Binary Operator}{4}
+\contentsline {section}{\numberline {2.3}Semiring and Path Problem}{5}
 \contentsline {subsection}{\numberline {2.3.1}Semiring}{6}
 \contentsline {subsection}{\numberline {2.3.2}Matrix Semiring and Stability}{7}
-\contentsline {subsection}{\numberline {2.3.3}Distributivity and Lexicographic Product}{9}
-\contentsline {subsection}{\numberline {2.3.4}Global optimality vs. left/right local optimality}{10}
-\contentsline {subsection}{\numberline {2.3.5}Semiring Representation of Path Problems}{10}
-\contentsline {section}{\numberline {2.4}Previous Problem in L11}{12}
-\contentsline {subsection}{\numberline {2.4.1}Possible Solution}{13}
-\contentsline {subsection}{\numberline {2.4.2}Introduce Reduction into Our Problem}{14}
+\contentsline {subsection}{\numberline {2.3.3}Distributivity and Lexicographic Product}{8}
+\contentsline {subsection}{\numberline {2.3.4}Global optimality vs. left/right local optimality}{9}
+\contentsline {section}{\numberline {2.4}Classical Reduction, Example and Reasoning}{9}
+\contentsline {subsection}{\numberline {2.4.1}Origin of the Concept of Reduction}{9}
+\contentsline {subsection}{\numberline {2.4.2}Unary Operator}{10}
+\contentsline {subsection}{\numberline {2.4.3}Classical Reduction Definition}{11}
+\contentsline {subsection}{\numberline {2.4.4}Example from the L11 Lecture}{12}
+\contentsline {subsection}{\numberline {2.4.5}Reasoning on Classical Reduction}{13}
 \contentsline {chapter}{\numberline {3}Mathematical Reasoning and Coq Implementation}{17}
-\contentsline {section}{\numberline {3.1}Classical Reduction, Example and Reasoning}{17}
-\contentsline {subsection}{\numberline {3.1.1}Origin of the Concept of Reduction}{17}
-\contentsline {subsection}{\numberline {3.1.2}Classical Reduction Definition}{18}
-\contentsline {subsection}{\numberline {3.1.3}Example from the L11 Lecture}{19}
-\contentsline {subsection}{\numberline {3.1.4}Reasoning on Classical Reduction}{20}
-\contentsline {section}{\numberline {3.2}New Reduction Representation}{22}
-\contentsline {subsection}{\numberline {3.2.1}Generalised Representation of Equality and Binary Operator}{23}
-\contentsline {subsection}{\numberline {3.2.2}Isomorphism between Transitional and Generalised Representation}{24}
-\contentsline {subsubsection}{Isomorphic on Equality Properties}{24}
-\contentsline {subsubsection}{Isomorphic on Binary Operator Properties}{25}
+\contentsline {section}{\numberline {3.1}New Reduction Representation}{17}
+\contentsline {subsection}{\numberline {3.1.1}Generalised Representation of Equality and Binary Operator}{18}
+\contentsline {subsection}{\numberline {3.1.2}Isomorphism between Transitional and Generalised Representation}{18}
+\contentsline {subsubsection}{Isomorphic on Equality Properties}{19}
+\contentsline {subsubsection}{Isomorphic on Binary Operator Properties}{20}
+\contentsline {subsection}{\numberline {3.1.3}Semiring Representation of Path Problems}{21}
+\contentsline {section}{\numberline {3.2}Previous Problem in L11}{23}
+\contentsline {subsection}{\numberline {3.2.1}Possible Solution}{25}
+\contentsline {subsection}{\numberline {3.2.2}Introduce Reduction into Our Problem}{25}
 \contentsline {section}{\numberline {3.3}Generalised Reduction}{27}
 \contentsline {subsection}{\numberline {3.3.1}Properties of Generalised Reduction, Pseudo Associative, and Pseudo Distributive}{28}
 \contentsline {section}{\numberline {3.4}Predicate Reduction}{30}
-\contentsline {subsection}{\numberline {3.4.1}Properties of Predicate}{31}
-\contentsline {subsubsection}{Predicate and Associative}{34}
-\contentsline {subsubsection}{Predicate and Distributive}{35}
+\contentsline {subsection}{\numberline {3.4.1}Properties of Predicate}{32}
+\contentsline {subsubsection}{Predicate and Associative}{35}
+\contentsline {subsubsection}{Predicate and Distributive}{36}
 \contentsline {subsubsection}{Summary for Predicate Reduction}{36}
-\contentsline {section}{\numberline {3.5}Path Problem Construction}{36}
+\contentsline {section}{\numberline {3.5}Path Problem Construction}{37}
 \contentsline {subsection}{\numberline {3.5.1}Min Plus with Ceiling Reduction}{37}
 \contentsline {subsection}{\numberline {3.5.2}Elementary Path}{39}
 \contentsline {subsection}{\numberline {3.5.3}Lexicographic Product and Direct Product}{43}
-\contentsline {subsection}{\numberline {3.5.4}Reduce Annihilator}{44}
-\contentsline {chapter}{\numberline {4}Evaluation, Summary, and Conclusions}{47}
-\contentsline {section}{\numberline {4.1}Evaluation to the Result}{47}
-\contentsline {section}{\numberline {4.2}Summary to the Project}{48}
-\contentsline {section}{\numberline {4.3}Conclusion to the Thesis}{48}
-\contentsline {chapter}{\numberline {A}Some Code of Proof}{51}
-\contentsline {section}{\numberline {A.1}Coq Implementation}{51}
-\contentsline {subsection}{\numberline {A.1.1}Basic Definition}{51}
-\contentsline {subsection}{\numberline {A.1.2}Basic Properties}{53}
-\contentsline {subsubsection}{Properties for Binary Relationship}{53}
-\contentsline {subsubsection}{Properties for Unary Operator}{53}
-\contentsline {subsubsection}{Properties for Binary Operator}{54}
-\contentsline {subsection}{\numberline {A.1.3}Construction of Semiring}{55}
-\contentsline {subsection}{\numberline {A.1.4}Traditional Representation of Reduction and Classical Reduction}{58}
-\contentsline {subsection}{\numberline {A.1.5}Generalized Representation of Reduction and Generalized Reduction}{61}
-\contentsline {subsection}{\numberline {A.1.6}Predicate Reduction}{62}
-\contentsline {subsection}{\numberline {A.1.7}Min Plus With Ceiling}{65}
-\contentsline {subsection}{\numberline {A.1.8}Elementary Path}{67}
-\contentsline {subsection}{\numberline {A.1.9}Final Path Problem}{71}
+\contentsline {subsection}{\numberline {3.5.4}Reduce Annihilator}{45}
+\contentsline {chapter}{\numberline {4}Evaluation, Summary, and Conclusions}{49}
+\contentsline {section}{\numberline {4.1}Evaluation to the Result}{49}
+\contentsline {section}{\numberline {4.2}Summary to the Project}{50}
+\contentsline {section}{\numberline {4.3}Conclusion to the Thesis}{50}
+\contentsline {chapter}{\numberline {A}Some Code of Proof}{53}
+\contentsline {section}{\numberline {A.1}Coq Implementation}{53}
+\contentsline {subsection}{\numberline {A.1.1}Basic Definition}{53}
+\contentsline {subsection}{\numberline {A.1.2}Basic Properties}{55}
+\contentsline {subsubsection}{Properties for Binary Relationship}{55}
+\contentsline {subsubsection}{Properties for Unary Operator}{55}
+\contentsline {subsubsection}{Properties for Binary Operator}{56}
+\contentsline {subsection}{\numberline {A.1.3}Construction of Semiring}{57}
+\contentsline {subsection}{\numberline {A.1.4}Traditional Representation of Reduction and Classical Reduction}{60}
+\contentsline {subsection}{\numberline {A.1.5}Generalized Representation of Reduction and Generalized Reduction}{63}
+\contentsline {subsection}{\numberline {A.1.6}Predicate Reduction}{64}
+\contentsline {subsection}{\numberline {A.1.7}Min Plus With Ceiling}{67}
+\contentsline {subsection}{\numberline {A.1.8}Elementary Path}{69}
+\contentsline {subsection}{\numberline {A.1.9}Final Path Problem}{73}
