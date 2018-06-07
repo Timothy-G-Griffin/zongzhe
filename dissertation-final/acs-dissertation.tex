@@ -281,7 +281,7 @@ However, without distributivity, those three solutions may all exist distinctive
 \section{Classical Reduction, Example and Reasoning}
 \subsection{Origin of the Concept of Reduction}
 To better understand reduction and further analyse it in detail, we trace the source to find out if there are any other previous definitions and studies relating to reduction. 
-The earliest definition we could find about reduction came from Ahnont Wongseelashote in 1977\cite{WONGSEELASHOTE197955}. Wongseelashote also encountered the problem similar to ours when studying the path problem in the paper. Our definition of reduction in L11 follows the step of Wongseelashoth in the paper. However, Wongseelashoth only present the concept of reduction in the paper without detailed reasoning or structure proof.
+The earliest definition we could find about reduction came from Ahnont Wongseelashote in 1977\cite{WONGSEELASHOTE197955}. Wongseelashote also encountered the problem similar to ours when studying the path problem in the paper. Our definition of reduction in L11 follows the step of Wongseelashoth in the paper.
 
 Next, we found that Alexander James Telford Gurney also mentioned the concept of reduction in his Ph.D thesis\cite{gurney_construction_2010}. Gurney's discussion of reduction is founded on the definition by Wongseelashote and did not focus on reduction for detailed structure proof.
 
@@ -310,11 +310,11 @@ Therefore, here we refer to the definition of reduction in L11 (also the definit
 \end{figure}
 For a problem set $S$, the reduced problem set under reduction $r: S \rightarrow S$ is represented as 
 \e{r:def:traditional}{r(S) \equiv \{s \in S | r(s) =_S s\}}
-Then for the problem set $S$ that represented as a semigroup $(S,=_S,\oplus)$, the reduced problem set will be represented as $({r(S) \equiv \{s \in S | r(s) =_S s\}},=_S,\oplus_r)$ where 
-\e{r:def:binary_operator}{\forall a, b \in r(S) \equiv \{s \in S | r(s) =_S s\}, a \oplus_r b \equiv r(a \oplus b)}
+Then for the a semigroup $(S,=_S,\oplus)$, the reduced semigroup will be represented as \e{r:def:semirgoup}{{r(S) \equiv (\{s \in S | r(s) =_S s\}},=_S,\oplus_r)} and for two elements $a$ and $b$  in $r(S)$, we have 
+\e{r:def:binary_operator}{a \oplus_r b \equiv r(a \oplus b)}
 It is worth mentioning that although we use reduction to reduce the problem set from $S$ to $\{r(S) \equiv \{s \in S | r(s) =_S s\}$, our equality $=_S$ is still the original equality $=_S$. 
 This can be seen from the figure (\ref{reduction}). Although we only focus on a subset of the original problem set $S$, the equality established in the problem set is still established in this subset. 
-Here are the properties that a reduction $r$ needs to have:
+Here are the properties that a reduction $r$ needs to have \cite{WONGSEELASHOTE197955} :
 
 Congruence: \e{r:def:congruence}{\forall a,b \in S, a =_S b \rightarrow r(a) =_S r(b)}
 Idempotent: \e{r:def:idempotent}{r(a) = r(r(a))} 
@@ -322,11 +322,16 @@ Left Invariant: \e{r:def:left_invariant}{r(a\oplus b) = r(r(a)\oplus b) = r(a\op
 Right Invariant: \e{r:def:right_invariant}{r(a\otimes b) = r(r(a)\otimes b) = r(a\otimes r(b))}
 
 \subsection{Example from the L11 Lecture}
-To help us understand reduction and study its properties, we found another example of reduction in the L11 course.
-
-The reduction is call $min_{\leq}$ (Martelli’s semiring)\cite{martelli_gaussian_1976} (also called min set \cite{griffin_2017}), which means removing all the superset. 
-For a given graph $G = (V,E)$, A cut set $C \in E$ for nodes $i$ and $j$ is a set of edges such there is no path from $i$ to $j$ in the graph $(V, E - C)$. $C$ is minimal if no proper subset of $C$ is a cut set. Martelli’s semiring is such that $A^{(*)}(i, j)$ is the set of all minimal cut sets for $i$ and $j$. 
-So, Martelli’s semiring is represented as \[(S,\oplus,\otimes,\bar0,\bar1)\] where \[S = min_\leq(2^{2^E})\] \[X\oplus Y = min_\leq(\{U \cup V | U \in X, V \in Y\})\] \[X\otimes Y = min_\leq(X \cup Y)\] \[\bar0 = \{\{\}\}\] \[\bar1 = \{\}\]
+For a given graph $G = (V,E)$, A cut set $C \in E$ for nodes $i$ and $j$ is a set of edges such there is no path from $i$ to $j$ in the graph $(V, E - C)$. $C$ is minimal if no proper subset of $C$ is a cut set. Martelli’s semiring \cite{martelli_gaussian_1976} is such that $A^{(*)}(i, j)$ is the set of all minimal cut sets for $i$ and $j$. 
+So, Martelli’s semiring is represented as \[(S,\oplus,\otimes,\bar0,\bar1)\] where 
+\[min_\leq \equiv \{ x \in X | \forall y \in X, y \not\leq x \}\]
+\[S \equiv min_\leq(2^{2^E})\] 
+\[X \hat{\cup} Y \equiv \{U \cup V | U \in X, V \in Y\}\]
+\[X\oplus Y \equiv min_\leq(X \hat{\cup} Y)\] 
+\[X\otimes Y \equiv min_\leq(X \cup Y)\] 
+\[\bar0 \equiv \{\{\}\}\] 
+\[\bar1 \equiv \{\}\]
+The semiring uses two semirgoup reductions. $\oplus$ is the reduction $min_\leq$ over $\hat{\cup}$ and $\otimes$ is the reduction $min_\leq$ over $\cup$.
 Here we can easily prove that $min_\leq$ satisfies our previous definition of reduction. So $min_\leq$ is a classical reduction.
 \subsection{Reasoning on Classical Reduction}
 Next, we need to make a detailed reasoning on the properties of the reduction.
@@ -335,8 +340,8 @@ Because we are talking about classical reduction, we assume that our reduction $
 First, we discuss the properties of equality to the reduced problem set. We assume the equality $=_S$ has the properties of reflexive (\ref{def:eq:reflexive}), symmetric (\ref{def:eq:symmetric}), transitive (\ref{def:eq:transitive}), and congruence (\ref{def:eq:congruence}) on the original problem set $S$.
 Then, because we have mentioned ‘although we use reduction to reduce the problem set from $S$ to $\{r(S) \equiv \{s \in S | r(s) =_S s\} $, we equality $=_S$ is still the original equality $=_S$’, the equality $=_S$ still has the property of reflexive, symmetric, transitive, and congruence on the reduced problem set $\{r(S) \equiv \{s \in S | r(s) =_S s\}$.
 
-Next, we need to discuss the properties of the binary operator under the reduced problem set. 
-Recalling our definition, for a binary operator $\oplus : S \times S \rightarrow S$, the reduced binary operator under reduction $r$ is defined as \[\forall a, b \in r(S) \equiv \{s \in S | r(s) =_S s\}, a \oplus_r b \equiv r(a \oplus b)\]
+%Next, we need to discuss the properties of the binary operator under the reduced problem set. 
+%Recalling our definition, for a binary operator $\oplus : S \times S \rightarrow S$, the reduced binary operator under reduction $r$ is defined as \[\forall a, b \in r(S) \equiv \{s \in S | r(s) =_S s\}, a \oplus_r b \equiv r(a \oplus b)\]
 So, we first assume that the original binary operator $\oplus$ has certain properties on $S$, and then reasoning that these properties remain after reduction ($\oplus_r$ still has the same property under $\{r(S) \equiv \{s \in S | r(s) =_S s\}$).
 
 Commutative: we initially assume that $\oplus$ is commutative under $S$, which is $\forall a,b \in S, a \oplus b =_S b \oplus a$. Then we want to prove that $\forall a,b \in \{s \in S | r(s) =_S s\}, a \oplus_r b =_S b \oplus_r a$.
@@ -428,14 +433,14 @@ It is also worth mentioning that the property of the distributive is one of the 
 %much. The correct choice will depend on what you're writing up, and
 %your own personal preference.
 
-\chapter{Mathematical Reasoning and Coq Implementation} 
+\chapter{Main Contributions} 
 
 %This chapter may be called something else\ldots but in general 
 %the idea is that you have one (or a few) ``meat'' chapters which
 %describe the work you did in technical detail. 
 
 \section{New Reduction Representation}
-It is obvious that our definition of classical reduction traditional representation is not implementation friendly.
+It is obvious that the definition of classical reduction traditional representation is not implementation friendly.
 This is because the traditional reduction representation depicts the actual problem set as $r(S) = \{s\in S|r(s)=_S s\}$ which is a type with record . It is difficult to accurately represent records in most situations. 
 
 Imagine we have two different reductions $r_1$ and $r_2$ for $S$, then the problem set after applying reduction $r_1$ and $r_2$ will be $r_2(r_1(S)) = \{y\in \{x \in S | r_1(x) =_S x\}|r_2(y)=_S y\}$. 
@@ -446,22 +451,29 @@ At the same time, since our real problem set has changed from the original $S$ t
 Our goal is to redefine the equality and binary operators without changing the problem set $S$. 
 Then the reduced problem set based on $(S,=_S,\oplus)$ by reduction $r$ will become $(S,=^r_S,\oplus^r)$, which is still a problem set on $S$, but not $(\{x \in S | r(x) =_S x\}, =,\oplus_r)$. 
 Then we will prove the isomorphism between these two representations.
+\[
+\begin{array}{rcll}
+(S,=_S,\oplus) & \longrightarrow & (\{x \in S | r(x) =_S x\}, =,\oplus_r) & \mbox {traditional representation}\\
+(S,=_S,\oplus) & \longrightarrow & (S,=^r_S,\oplus^r) & \mbox{full reduction representation}
+\end{array}
+\]
 
-\subsection{Generalised Representation of Equality and Binary Operator}
+\subsection{Full Reduction Representation}
 Let us look back at the figure (\ref{reduction}). In the figure, our reduction will reduce the problem set $S$ to a subset of $S$. In our traditional representation, because reduction has already brought the problem set from $S$ to $\{x \in S | r(x) =_S x\}$, which means when we are comparing two elements from the problem set, those two elements are already inside $\{x \in S | r(x) =_S x\}$, we can also directly use the original equality $=_S$.
 
-However, if we want to keep our problem set unchanged as $S$, when we are doing an equality comparison, we must guarantee that the elements we compared are already inside the reduced problem set. Thus, we define the new equality as
-\e{gr:def:eq}{\forall a,b \in S, a =^r_S b \equiv r(a) =_S r(b)}
-
+However, if we want to keep our problem set unchanged as $S$, when we are doing an equality comparison, we must guarantee that the elements we compared are already inside the reduced problem set. Thus, we define the new equality as, for all $a$ and $b$ in $S$,
+\e{gr:def:eq}{a =^r_S b \equiv r(a) =_S r(b)}
 The same reason applies for our binary operator  $\oplus$, because the arguments we need have been reduced to $\{x \in S | r(x) =_S x \}$ for our previous defined $\oplus_r$, we only need to consider that the result of operation must also be in $\{x \in S | r(x) =_S x\}$, so we give the definition above (\ref{r:def:binary_operator}).
-But now, if we want to keep our problem set unchanged as $S$, when we are doing binary operations, we not only need to consider that the result of the operation is in the reduced problem set, but also to ensure that the two arguments of the binary operator are in the reduced problem set. Therefore, we define our binary operator under reduction:
-\e{gr:def:binary_operator}{\forall a,b \in S, a \oplus^r b \equiv r(r(a) \oplus r(b))}
+But now, if we want to keep our problem set unchanged as $S$, when we are doing binary operations, we not only need to consider that the result of the operation is in the reduced problem set, but also to ensure that the two arguments of the binary operator are in the reduced problem set. Therefore, we define our binary operator under reduction: For all elements $a$ and $b$ in $S$,
+\e{gr:def:binary_operator}{a \oplus^r b \equiv r(r(a) \oplus r(b))}
+We call this representation as full reduction because we applied the reduction to both arguments $a$ and $b$ since we can't assume that the already reduced, and to the result of the calculation.
 
-\subsection{Isomorphism between Transitional and Generalised Representation}
-Next, we need to prove that our new generalised representation is isomorphic to the previous traditional representation.
+
+\subsection{Isomorphism between Traditional and Full Reduction Representation}
+Next, we need to prove that our new full reduction representation is isomorphic to the previous traditional representation.
 
 \subsubsection{Isomorphic on Equality Properties}
-First, we discuss the properties on equality between the traditional representation and the generalised representation.
+First, we discuss the properties on equality between the traditional representation and the full reduction representation.
 
 Congruence: we need to prove that $=_S$ is congruence on $\{x \in S | r(x) =_S x\}$ is isomorphic to $=^r_S$ is congruence on $S$, which means 
 \[\forall a,b,c,d \in \{x \in S | r(x) =_S x \}, a =_S b \wedge c =_S d \rightarrow a =_S c = b =_S d \]
@@ -490,7 +502,7 @@ Transitive: we need to prove that $=_S$ is transitive on $\{x \in S | r(x) =_S x
 This proof is really trivial and only needs the property of idempotent of $r$, which is $\forall a \in S, r(a) = r(r(a))$. 
 
 \subsubsection{Isomorphic on Binary Operator Properties}
-Next, we are going to discuss the properties on binary operator $\oplus$ (and $\otimes$ when we are talking about distributive) between the traditional representation and the generalised representation.
+Next, we are going to discuss the properties on binary operator $\oplus$ (and $\otimes$ when we are talking about distributive) between the traditional representation and the full reduction representation.
 
 Commutative: we need to prove that $\oplus_r$ is commutative on $\{x \in S | r(x) =_S x\}$ is isomorphic to $\oplus^r$ is commutative on $S$, which means 
 \[\forall a,b \in \{x \in S | r(x) =_S x \}, a \oplus_r b =_S b \oplus_r a \]
@@ -528,16 +540,22 @@ Right Distributive: we need to prove that $\oplus_r$ and $\otimes_r$ are right d
 \[\forall a,b,c \in S, (a \oplus^r b) \otimes^r c =^r_S (a \otimes^r c) \oplus^r (b \otimes^r c)
 \]
 
-This proof will be shown in the Coq file and we only need the property of congruence and idempotent of $r$, which is $\forall a \in S, r(a) = r(r(a))$ and $\forall a,b \in S, a =_S b \rightarrow r(a) =_S r(b)$.
+This proof will be shown in the Coq \cite{Coq} file and we only need the property of congruence and idempotent of $r$, which is $\forall a \in S, r(a) = r(r(a))$ and $\forall a,b \in S, a =_S b \rightarrow r(a) =_S r(b)$.
 
-This proves that our generalised representation of reduction is isomorphic to the traditional representation of reduction, which means all the properties we have proved in the classical reduction section using traditional representation could be used directly in our generalised representation.
+This proves that our full reduction representation of reduction is isomorphic to the traditional representation of reduction, which means all the properties we have proved in the classical reduction section using traditional representation could be used directly in our full reduction representation.
 
-\subsection{Semiring Representation of Path Problems}
-For each path problem that is represented as a semiring, we can construct a corresponding matrix semiring that represents the concrete problem (for example, the edges and the distances for the shortest path problem). Then, using matrix multiplication and stability of the closure (the semiring), we can solve the real problem of each concrete path problem. However, the simple matrix approach can only solve ‘trivial’ path problems. Complicated problems, for example, the widest shortest path problem that was constructed from the shortest path problem semiring and the widest path problem (maximal capacity path problem) semiring using the lexicographic product, cannot be solved by this ‘traditional’ theory approach. Sometimes, even the method can find an optimal solution; there are no guarantees that all optimal solutions will be found using the classic method.
 
-Therefore, a non-classical algebraic path-finding method is used, so algebras that violate the distribution law can be accepted.  This non-classical theory can handle problems that the simple classical theory cannot handle, such as the problems that cannot be solved by Dijkstra or Bellman-Ford.
-This kind of method is dedicated, initially, to finding the local optimal solution. The local optimal solution is exactly the same as the global optimal solution by some verification or some additional restriction on the computation. For instance, the famous routing information protocol, which is based on distributed Bellman-Ford algorithms, is a non-traditional theory.
-Here, we provide two examples; if we follow the basis of distributed Bellman-Ford algorithm Protocol \cite{hedrick_routing_1988} that calculates the path from $i$ to destination $j$, using the knowledge from its immediate neighbourhood and applying its own path to the neighbour available in the process, we will obtain the result using matrix multiplication. 
+\section{Generalised Reduction}
+In this section, we consider the need to generalise the classical reduction.
+\subsection{Motivating Example}
+%For each path problem that is represented as a semiring, we can construct a corresponding matrix semiring that represents the concrete problem (for example, the edges and the distances for the shortest path problem). Then, using matrix multiplication and stability of the closure (the semiring), we can solve the real problem of each concrete path problem. However, the simple matrix approach can only solve ‘trivial’ path problems. Complicated problems, for example, the widest shortest path problem that was constructed from the shortest path problem semiring and the widest path problem (maximal capacity path problem) semiring using the lexicographic product, cannot be solved by this ‘traditional’ theory approach. Sometimes, even the method can find an optimal solution; there are no guarantees that all optimal solutions will be found using the classic method.
+
+%Therefore, a non-classical algebraic path-finding method is used, so algebras that violate the distribution law can be accepted.  This non-classical theory can handle problems that the simple classical theory cannot handle, such as the problems that cannot be solved by Dijkstra or Bellman-Ford.
+%This kind of method is dedicated, initially, to finding the local optimal solution. The local optimal solution is exactly the same as the global optimal solution by some verification or some additional restriction on the computation. For instance, the famous routing information protocol, which is based on distributed Bellman-Ford algorithms, is a non-traditional theory.
+%Here, we provide two examples; if we follow the basis of distributed Bellman-Ford algorithm Protocol \cite{hedrick_routing_1988} that calculates the path from $i$ to destination $j$, using the knowledge from its immediate neighbourhood and applying its own path to the neighbour available in the process, we will obtain the result using matrix multiplication. 
+
+Consider the figure in \ref{example:rip:1} taken from the RIP protocol \cite{hedrick_routing_1988}. 
+
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
@@ -564,8 +582,8 @@ Here, we provide two examples; if we follow the basis of distributed Bellman-For
 \label{example:rip:1}
 \caption{Example of RIP solution 1}
 \end{figure}
-We will obtain the following initial path problem adjacency matrix by using the RIP protocol.
-\[
+This can be described with an adjacency matrix over $(\mathbb{N},min,+)$ semiring.
+\[A_1 =
 \begin{bmatrix}
     \infty & 1 & 1 & \infty \\
     1 & \infty & 1 & 1 \\
@@ -573,8 +591,8 @@ We will obtain the following initial path problem adjacency matrix by using the 
     \infty & 1 & 10 & \infty \\
 \end{bmatrix}
 \]
-After using the RIP protocol for matrix calculations (multiplication), we will obtain such an adjacency matrix as a result:
-\[
+RIP is a distributive Bellman–Ford’s protocol. Abstractly, we can model this by iterating matrix multiplication. In several iterations, we will obtains solutions.
+\[A^*_1 =
 \begin{bmatrix}
     0 & 1 & 1 & 2 \\
     1 & 0 & 1 & 1 \\
@@ -582,54 +600,57 @@ After using the RIP protocol for matrix calculations (multiplication), we will o
     2 & 1 & 2 & 0 \\
 \end{bmatrix}
 \]
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
-                    thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
+%\begin{figure}[H]
+%\centering
+%\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+%                    thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
+%
+%  \node[main node] (0) {0};
+%  \node[main node] (2) [right of=0] {2};
+%  \node[main node] (1) [above of=2] {1};
+%  \node[main node] (3) [right of=2] {3};
+%
+%\path[every node/.style={font=\sffamily\small}]
+%    (0) edge node {1} (2)
+%        edge node {1} (1)
+%	(1) edge node {} (0)
+%        edge node {1} (2)
+%    (2) edge node {} (0)
+%        edge node {} (1)
+%        edge node {10} (3)
+%    (3) 
+%        edge node {} (2)
+%;
+%\end{tikzpicture}
+%\label{example:rip:2}
+%\caption{Example of RIP solution 2}
+%\end{figure}
+%Then for example 2, we will get the following initial path problem adjacency matrix.
+%\[
+%\begin{bmatrix}
+%    \infty & 1 & 1 & \infty \\
+%    1 & \infty & 1 & \infty \\
+%    1 & 1 & \infty & 10 \\
+%    \infty & \infty & 10 & \infty \\
+%\end{bmatrix}
+%\]
+%After using the RIP protocol for matrix calculations (multiplication), we obtained such an adjacency matrix as the result:
+%\[
+%\begin{bmatrix}
+%    0 & 1 & 1 & 11 \\
+%    1 & 0 & 1 & 11 \\
+%    1 & 1 & 0 & 10 \\
+%    11 & 11 & 10 & 0 \\
+%\end{bmatrix}
+%\]
 
-  \node[main node] (0) {0};
-  \node[main node] (2) [right of=0] {2};
-  \node[main node] (1) [above of=2] {1};
-  \node[main node] (3) [right of=2] {3};
+\subsection{Previous Problem in L11}
+%However, RIP will also have a series of problems. For example, when a node has no edges connected to all other nodes, the RIP matrix calculation (without pre-limiting the maximum number of calculation steps) will continue infinitely. Even if the maximum number of calculation steps is set in advance, RIP still has some deficiencies. 
+%This leads to the problem that not all real-world problems can be solved directly using the simple matrix semiring. 
+%For instance, we may meet the following situation where node 3 is not connected to all other nodes.
 
-\path[every node/.style={font=\sffamily\small}]
-    (0) edge node {1} (2)
-        edge node {1} (1)
-	(1) edge node {} (0)
-        edge node {1} (2)
-    (2) edge node {} (0)
-        edge node {} (1)
-        edge node {10} (3)
-    (3) 
-        edge node {} (2)
-;
-\end{tikzpicture}
-\label{example:rip:2}
-\caption{Example of RIP solution 2}
-\end{figure}
-Then for example 2, we will get the following initial path problem adjacency matrix.
-\[
-\begin{bmatrix}
-    \infty & 1 & 1 & \infty \\
-    1 & \infty & 1 & \infty \\
-    1 & 1 & \infty & 10 \\
-    \infty & \infty & 10 & \infty \\
-\end{bmatrix}
-\]
-After using the RIP protocol for matrix calculations (multiplication), we obtained such an adjacency matrix as the result:
-\[
-\begin{bmatrix}
-    0 & 1 & 1 & 11 \\
-    1 & 0 & 1 & 11 \\
-    1 & 1 & 0 & 10 \\
-    11 & 11 & 10 & 0 \\
-\end{bmatrix}
-\]
+Supposed that RIP has converged on the solution $A^*_1$. Now imagine the links on node 3 fail.
 
-\section{Previous Problem in L11}
-However, RIP will also have a series of problems. For example, when a node has no edges connected to all other nodes, the RIP matrix calculation (without pre-limiting the maximum number of calculation steps) will continue infinitely. Even if the maximum number of calculation steps is set in advance, RIP still has some deficiencies. 
-This leads to the problem that not all real-world problems can be solved directly using the simple matrix semiring. 
-For instance, we may meet the following situation where node 3 is not connected to all other nodes.
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
@@ -652,8 +673,8 @@ For instance, we may meet the following situation where node 3 is not connected 
 \label{example:rip:3}
 \caption{Example of RIP solution 3}
 \end{figure}
-We will obtain the following initial path problem matrix.
-\[
+Since RIP is a distributive protocol, there is no way to restart from the 'true' adjacency matrix
+\[A_2 = 
 \begin{bmatrix}
     0 & 1 & 1 & \infty \\
     1 & 0 & 1 & \infty \\
@@ -661,6 +682,7 @@ We will obtain the following initial path problem matrix.
     \infty & \infty & \infty & 0 \\
 \end{bmatrix}
 \]
+Instead, it starts the iteration in the state of $A^*_1$.
 After using the RIP protocol for n-step matrix calculations (multiplication), a matrix such as this was obtained:
 \[
 \begin{bmatrix}
@@ -671,7 +693,7 @@ After using the RIP protocol for n-step matrix calculations (multiplication), a 
 \end{bmatrix}
 \]
 The result shows that if we do not limit the number of steps in the calculation, even though we may get the results of the path we need in the early steps (e.g. the path from $a$ to $b$), but a better solution for the entire matrix may be found after many steps (or the calculation will be infinite, which is shown in this example). 
-\subsection{Possible Solution}
+\subsection{Adding Explicit Path to Shortest Pat}
 Therefore, in the course of L11, instead of using RIP and a simple matrix semiring approach, we used another protocol called BGP \cite{rekhter_application_1991}. We started from the simple $(\mathbb{N},min,+)$ semiring that calculated the shortest distance and used the lexicographic product to construct a new semiring that contained the shortest-path metric and the set of its path.
 
 Here we need to define some new operators/new rules for our semigroup.
@@ -707,19 +729,9 @@ Finally, we get our ‘shortest paths with paths’ semiring from a given graph 
 
 \subsection{Introduce Reduction into Our Problem}
 We come to a problem when we are using $spwp$ for doing calculations; because there may be loops in our $path(E)$, we need a lot of extra computation to prove that the paths that have loops are not the shortest paths.
-To eliminate these paths with loops, we introduced a new concept called reduction.
+To eliminate these paths with loops, we introduced the reduction into our problem.
 
-If $(S,\oplus,\otimes)$ is a semiring and $r$ is a function from $S$ to $S$, then $r$ is a reduction if $\forall a,b \in S$, 
-\[r(a) = r(r(a))\]
-\[r(a\oplus b) = r(r(a)\oplus b) = r(a\oplus r(b))\] and 
-\[r(a\otimes b) = r(r(a)\otimes b) = r(a\otimes r(b))\]
-
-And, if $(S,\oplus,\otimes)$ is a semiring and $r$ is a reduction, then $red_r(S) = (S_r,\oplus_r,\otimes_r)$, where 
-\[S_r = \{s\in S|r(s)= s\}\]
-\[x\oplus_r y = r(x\oplus y)\]
-\[x\otimes_r y = r(x\otimes y)\]
-
-After that we went back to our path problem where, for a given path $p$, we say $p$ is elementary if there is no node inside $p$ that is repeated. Then we can define our elementary path using the reduction 
+For a given path $p$, we say $p$ is elementary if there is no node inside $p$ that is repeated. Then we can define our elementary path using the reduction 
 \e{r:def:elementary}{r(X) = \{p\in X | p \mbox{ is elementary }\}}and 
 \e{r:def:elementary_path}{epaths(E) = red_r(paths(E))}
 
@@ -746,8 +758,8 @@ Therefore, we are not only discussing the properties of reduction, but also tryi
 It is also worth noting that the two binary operators we used to construct the elementary path semiring in the later section are not $union$ and $concat$ but $min$ and $concat$. 
 Such a definition will select the path that has the least number of nodes in the path, instead of finding all qualified paths as in the mathematical definition above. But both definition is meaningful and our later definition will help us resolve the path problem in advance.
 
-\section{Generalised Reduction}
-To our previously defined classical reduction (either in traditional representation or generalised representation), reduction must satisfy four properties: congruence, idempotent, left invariant, and right invariant. However, the reduction we encounter in reality does not have the above four properties, especially the left/right invariants. In particular, the elementary reduction in the elementary path problem that we mentioned earlier, which will also be used in the latter section to construct our final path problem, does not satisfy the properties of the left/right invariant on the $min$ operator. 
+\subsection{Generalized Reuduction Definition}
+To our previously defined classical reduction (either in traditional representation or full reduction representation), reduction must satisfy four properties: congruence, idempotent, left invariant, and right invariant. However, the reduction we encounter in reality does not have the above four properties, especially the left/right invariants. In particular, the elementary reduction in the elementary path problem that we mentioned earlier, which will also be used in the latter section to construct our final path problem, does not satisfy the properties of the left/right invariant on the $min$ operator. 
 
 Assuming $P_1,P_2 \in Path, P_1 \leq P_2, loop(P_1) \wedge \not loop(P_2)$. 
 Then $r(min(P_1,P_2)) = r(P_1) = \infty$.
@@ -755,11 +767,11 @@ However, $r(min(r(P_1),P_2)) = r(min(\infty,P_2)) r(P_2) = P_2$.
 
 Therefore, in order to define our elementary path reduction and also to better represent other reductions, we generalise the definition reduction as: $r$ is a reduction on $S$ if $r$ has the properties of congruence and idempotent and gets rid of the constraint of left/right invariant properties; we refer to this kind of reduction as generalised reduction.
 
-Do not confuse generalised representations of reduction with generalised reduction here. 
-Generalised representation of reduction is a new representation of reduction, compared to (and isomorphic to) the traditional representation of reduction, which is implementation friendly.  A reduction that is represented by generalised representation could be classical reduction (that has left/right invariant properties) or generalised reduction (left/right invariant properties that can be removed).
-The generalised reduction we define here is a type of reduction that only asks for idempotent and congruence properties without forcing left/right invariants.  Generalised reduction could be represented using traditional representation or generalised representation.
+Do not confuse full reduction representations of reduction with generalised reduction here. 
+Full reduction representation of reduction is a new representation of reduction, compared to (and isomorphic to) the traditional representation of reduction, which is implementation friendly.  A reduction that is represented by full reduction representation could be classical reduction (that has left/right invariant properties) or generalised reduction (left/right invariant properties that can be removed).
+The generalised reduction we define here is a type of reduction that only asks for idempotent and congruence properties without forcing left/right invariants.  Generalised reduction could be represented using traditional representation or full reduction representation.
 
-Because the generalised representation is implementation friendly, and we have proved the isomorphism between the generalised representation and traditional representation, we will use generalised representation to represent a reduction in the following paragraph.
+Because the full reduction representation is implementation friendly, and we have proved the isomorphism between the full reduction representation and traditional representation, we will use full reduction representation to represent a reduction in the following paragraph.
 
 \subsection{Properties of Generalised Reduction, Pseudo Associative, and Pseudo Distributive}
 We have reasoned about the relationship between reduction and equality/binary operators in the previous section regarding classical reduction. 
@@ -860,7 +872,7 @@ b &  & otherwise
 \end{aligned}
 \right.\] that we need such a property \e{pr:proof:p_cong}{\forall a,b \in S, a = b \rightarrow P(a) = P(b)} which is the congruence of the predicate $P$.
 
-Next, we need to reduce the binary operator according to the generalised representation we defined earlier using the predicate reduction. For our problem set $S$ and a given binary operator $\oplus$, we defined the reduced binary operator as 
+Next, we need to reduce the binary operator according to the full reduction representation we defined earlier using the predicate reduction. For our problem set $S$ and a given binary operator $\oplus$, we defined the reduced binary operator as 
 \e{pr:def:binary_operator}{\forall a,b \in S, a \oplus_r b = r_p (r_p(a) \oplus r_p(b))}
 
 Therefore, here, we mainly discuss the properties of predicates and their relationship with binary operators, and then try to prove associative/distributive by utilising pseudo associative/distributives without forcing left/right invariants on the reduction. During this process, we discovered three very interesting properties about predicates. 
@@ -1236,11 +1248,11 @@ Thus, we can conclude that \[(\mathbb{N} \times (c + Path),(min^r \bar{\times} m
 \section{Evaluation to the Result}
 First of all, we first assess the results of our definition of reduction. 
 
-Before we defined the generalised representation, the original representation of reduction was not very implementation friendly, as we have seen. The generalised representation of our definition represents the reduced problem set using reduction, a unary operator, the equality and binary operators, and is implementation friendly. Furthermore, our proof in Coq can be extracted to other languages for implementation reasons, such as Occam and Haskell, which are functional programming languages.  Because of the difficulty, or even impossibility, of representing records in these languages, our generalised representation will be very important. The proof of isomorphism between the two representation also helps us to better express and use reduction. It is obvious that the properties of reduction under generalised representation should be more easily proved.
+Before we defined the full reduction representation, the original representation of reduction was not very implementation friendly, as we have seen. The full reduction representation of our definition represents the reduced problem set using reduction, a unary operator, the equality and binary operators, and is implementation friendly. Furthermore, our proof in Coq can be extracted to other languages for implementation reasons, such as Occam and Haskell, which are functional programming languages.  Because of the difficulty, or even impossibility, of representing records in these languages, our full reduction representation will be very important. The proof of isomorphism between the two representation also helps us to better express and use reduction. It is obvious that the properties of reduction under full reduction representation should be more easily proved.
 
 At the same time, although the original classical reduction gives us two more specific properties, it also limits the definition of reduction, so many types of reduction cannot be classified into it. After our generalised reduction, most of this operation type can be defined and classified into it. We can also define more concrete reductions based on generalised reduction, such as our defined predicate reduction. The reasoning of predicate reduction is also very detailed; latecomers can use its properties directly.
 
-We have defined generalised representation and generalised reduction, with the advantage that it is very easy to implement a reduction combination. For a reduction, by our definition, it does not matter whether the problem set has been reduced before. All that matters is the nature of the existing equality/binary operator. So, we can easily combine a lot of reduction together, just as we finally defined the path problem.
+We have defined full reduction representation and generalised reduction, with the advantage that it is very easy to implement a reduction combination. For a reduction, by our definition, it does not matter whether the problem set has been reduced before. All that matters is the nature of the existing equality/binary operator. So, we can easily combine a lot of reduction together, just as we finally defined the path problem.
 
 %The entire definition and proof of reduction can be integrated into the existing CAS system to make up for the lack of CASs in this area of reduction.
 %

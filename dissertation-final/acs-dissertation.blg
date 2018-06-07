@@ -13,45 +13,45 @@ Warning--entry type for "cormen_introduction_2009" isn't style-file defined
 --line 151 of file MphilProject.bib
 Warning--empty journal in martelli_gaussian_1976
 Warning--empty year in martelli_gaussian_1976
-You've used 12 entries,
+You've used 13 entries,
             1791 wiz_defined-function locations,
-            517 strings with 5128 characters,
-and the built_in function-call counts, 2453 in all, are:
-= -- 228
-> -- 61
+            521 strings with 5181 characters,
+and the built_in function-call counts, 2553 in all, are:
+= -- 236
+> -- 62
 < -- 4
-+ -- 27
++ -- 28
 - -- 15
 * -- 125
-:= -- 347
-add.period$ -- 34
-call.type$ -- 12
-change.case$ -- 12
+:= -- 356
+add.period$ -- 36
+call.type$ -- 13
+change.case$ -- 13
 chr.to.int$ -- 0
-cite$ -- 14
-duplicate$ -- 116
-empty$ -- 289
+cite$ -- 15
+duplicate$ -- 121
+empty$ -- 307
 format.name$ -- 15
-if$ -- 577
+if$ -- 604
 int.to.chr$ -- 0
-int.to.str$ -- 12
+int.to.str$ -- 13
 missing$ -- 7
-newline$ -- 58
+newline$ -- 62
 num.names$ -- 11
-pop$ -- 52
+pop$ -- 58
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 78
+skip$ -- 84
 stack$ -- 0
 substring$ -- 160
-swap$ -- 34
+swap$ -- 35
 text.length$ -- 4
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 2
 while$ -- 27
-width$ -- 14
-write$ -- 117
+width$ -- 15
+write$ -- 124
 (There were 6 warnings)

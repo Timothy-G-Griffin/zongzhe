@@ -52,6 +52,10 @@ Alberto Martelli.
   graph.
 \newblock 23(1):58--73.
 
+\bibitem{Coq}
+The {Coq} proof assistant.
+\newblock {https://coq.inria.fr}.
+
 \bibitem{hedrick_routing_1988}
 C.L. Hedrick.
 \newblock Routing information protocol.
