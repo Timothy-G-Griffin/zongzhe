@@ -499,8 +499,8 @@ And we can prove the properties of distributive of two binary operators.
 
 Here we only list the lemma as a skeleton for what we need to prove, detailed proof could be found in Coq file.
 
-\subsection{Generalized Representation of Reduction and Generalized Reduction}
-Then we can define our generalized representation of reduction.
+\subsection{Full Reduction Representation of Reduction and Generalized Reduction}
+Then we can define our full reduction representation of reduction.
 \begin{listing}[H]
 \begin{minted}[fontsize=\scriptsize]{coq}
   Definition brel_reduce {S : Type} (r : unary_op S) (eq : brel S) : brel S
@@ -510,8 +510,8 @@ Then we can define our generalized representation of reduction.
   Definition bop_full_reduce {S : Type} (r : unary_op S) (b : binary_op S) : binary_op S
   := λ x y,  r(b (r x) (r y)).   
 \end{minted}
-\caption{Generalized Representation of Reduction} 
-\label{coq:def:generalized_representation}
+\caption{Full Reduction Representation of Reduction} 
+\label{coq:def:full_reduction_representation}
 \end{listing}
 In the case that the reduction is classical, bop\_reduce will equal to bop\_full\_reduce, otherwise we give a way that the reduction can only have the properties of congruence and idempotent with out left/right invariant.
 
@@ -641,7 +641,7 @@ Lemma bop_pseudo_associative_fpr_decompositional_ann :
     bop_pseudo_associative S eq (uop_predicate_reduce s P) bS.
 
 \end{minted}
-\caption{Associative For Predicate} 
+\caption{Associative For Predicate Reduction} 
 \label{coq:proof:predicate_associative}
 \end{listing}
 \begin{listing}[H]
@@ -673,7 +673,7 @@ Lemma bop_fpr_right_distributive :
      bop_right_distributive S (brel_reduce (uop_predicate_reduce s P) eq) 
                               (bop_fpr s P add) (bop_fpr s P mul).
 \end{minted}
-\caption{Distributive For Predicate} 
+\caption{Distributive For Predicate Reduction} 
 \label{coq:proof:predicate_distributive}
 \end{listing}
 For properties of preserving order and composition, we have proved that reduction is a classical if it has one of such properties, and we can directly prove associative/distributive properties from the classical reduction.

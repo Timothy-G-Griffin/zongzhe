@@ -25,15 +25,15 @@
 \contentsline {listing}{\numberline {25}{\ignorespaces Proof of Properties on Equality}}{57}
 \contentsline {listing}{\numberline {26}{\ignorespaces Proof of Properties on Binary Operator}}{58}
 \contentsline {listing}{\numberline {27}{\ignorespaces Distributive on Binary Operators}}{58}
-\contentsline {listing}{\numberline {28}{\ignorespaces Generalized Representation of Reduction}}{59}
+\contentsline {listing}{\numberline {28}{\ignorespaces Full Reduction Representation of Reduction}}{59}
 \contentsline {listing}{\numberline {29}{\ignorespaces Equality Isomorphism Between Two Representation}}{59}
 \contentsline {listing}{\numberline {30}{\ignorespaces Binary Operation Isomorphism Between Two Representation}}{59}
 \contentsline {listing}{\numberline {31}{\ignorespaces Distributive Isomorphism Between Two Representation}}{60}
 \contentsline {listing}{\numberline {32}{\ignorespaces Isomorphism Between Pseudo and Real Properties}}{60}
 \contentsline {listing}{\numberline {33}{\ignorespaces Predicate Definition and Properties}}{61}
 \contentsline {listing}{\numberline {34}{\ignorespaces Predicate Reduction}}{61}
-\contentsline {listing}{\numberline {35}{\ignorespaces Associative For Predicate}}{61}
-\contentsline {listing}{\numberline {36}{\ignorespaces Distributive For Predicate}}{62}
+\contentsline {listing}{\numberline {35}{\ignorespaces Associative For Predicate Reduction}}{61}
+\contentsline {listing}{\numberline {36}{\ignorespaces Distributive For Predicate Reduction}}{62}
 \contentsline {listing}{\numberline {37}{\ignorespaces Composition implies Classical}}{62}
 \contentsline {listing}{\numberline {38}{\ignorespaces Preserving Order implies Classical}}{63}
 \contentsline {listing}{\numberline {39}{\ignorespaces Min Plus With Ceiling Definition}}{63}
